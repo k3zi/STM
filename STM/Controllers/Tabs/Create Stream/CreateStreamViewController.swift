@@ -160,7 +160,9 @@ class CreateStreamViewController: KZScrollViewController {
         }
         
         let vc = HostViewController()
-        vc.start(streamTypeSegmentControl.selectedSegmentIndex == 0 ? .Global : .Local, name: name, passcode: privacySwitch.on ? (passcodeTextField.text ?? "") : "" , description: description) { (nothing, error) -> Void in
+        let streamType = streamTypeSegmentControl.selectedSegmentIndex == 0 ? StreamType.Global : StreamType.Local
+        let passcodeString = privacySwitch.on ? (passcodeTextField.text ?? "") : ""
+        vc.start(streamType, name: name, passcode: passcodeString, description: description) { (nothing, error) -> Void in
             if error == nil {
                 self.navigationController?.tabBarController?.presentViewController(vc, animated: true, completion: nil)
             }

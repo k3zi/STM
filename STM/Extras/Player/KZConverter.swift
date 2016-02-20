@@ -9,6 +9,8 @@
 import Foundation
 import AVFoundation
 import AudioToolbox
+// swiftlint:disable trailing_whitespace
+// swiftlint:disable line_length
 /*
 class KZConverter {
     var render_converter = AudioConverterRef()

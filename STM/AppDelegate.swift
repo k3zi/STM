@@ -111,7 +111,10 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     }
     
     class func del() -> AppDelegate {
-        return UIApplication.sharedApplication().delegate as! AppDelegate
+        if let del = UIApplication.sharedApplication().delegate as? AppDelegate {
+            return del
+        }
+        
+        return AppDelegate()
     }
 }
-

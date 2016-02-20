@@ -113,7 +113,8 @@ class CreateAccountViewController: KZViewController {
             return showError("No Email Entered")
         }
         
-        Constants.Network.POST("/createAccount", parameters: ["displayName" : displayName, "username": username, "password": password, "email": email], completionHandler: { (response, error) -> Void in
+        let params = ["displayName" : displayName, "username": username, "password": password, "email": email]
+        Constants.Network.POST("/createAccount", parameters: params, completionHandler: { (response, error) -> Void in
             self.handleResponse(response, error: error, successCompletion: { (result) -> Void in
                 if let vc = self.presentingViewController {
                     vc.dismissViewControllerAnimated(true, completion: nil)

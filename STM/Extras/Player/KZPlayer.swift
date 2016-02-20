@@ -43,6 +43,7 @@ protocol KZPlayerDelegate {
 }
 
 //MARK: Main Player
+// swiftlint:disable force_try
 class KZPlayer: NSObject {
     var converter = KZConverter()
     var inner = KZPlayerInner()
@@ -67,6 +68,7 @@ class KZPlayer: NSObject {
     var volumeView = MPVolumeView()
     var musicPaused = false
     var reachedEnd = false
+    var engine = FUXEngine()
     
     /// ------ Library ------- ///
     var realm: Realm?
@@ -112,7 +114,7 @@ extension KZPlayer {
             window.addSubview(volumeView)
         }
         
-        (UIApplication.sharedApplication().delegate as! AppDelegate).window?.addSubview(volumeView)
+        AppDelegate.del().window?.addSubview(volumeView)
         volumeView.hidden = true
         
         MPRemoteCommandCenter.sharedCommandCenter().playCommand.addTarget(self, action: Selector("play"))
@@ -315,35 +317,19 @@ extension KZPlayer {
         self.crossFading = true
         
         if play(item, channel: inactivePlayer(), silent: true) {
-            PRTween.sharedInstance().removeAllTweenOperations()
-            
-            let period1 = PRTweenPeriod.periodWithStartValue(CGFloat(volume(activePlayer)), endValue: CGFloat(1), duration: CGFloat(crossFadeDuration)) as! PRTweenPeriod
-            let period2 = PRTweenPeriod.periodWithStartValue(CGFloat(volume(inactivePlayer())), endValue: CGFloat(0), duration: CGFloat(crossFadeDuration)) as! PRTweenPeriod
-            
-            let operation1 = PRTweenOperation()
-            operation1.period = period1
-            operation1.target = self
-            operation1.timingFunction = PRTweenTimingFunctionLinear
-            operation1.updateBlock = { (p: PRTweenPeriod!) in
-                self.inner.setVolume(Float(p.tweenedValue), forPlayer: Int32(self.activePlayer))
-            }
-            operation1.completeBlock = { (completed: Bool) -> Void in
+            let tween1 = FUXTween.Tween(Float(crossFadeDuration), fromToValueFunc(from: volume(activePlayer), to: 1.0, valueFunc: { (value) -> () in
+                self.inner.setVolume(value, forPlayer: Int32(self.activePlayer))
+            }))
+
+            engine + createOnComplete(tween1, onComplete: { () -> () in
                 if currentCFCount == self.crossFadeCount {
                     self.crossFading = false
-                    
                 }
-            }
+            })
             
-            let operation2 = PRTweenOperation()
-            operation2.period = period2
-            operation2.target = self
-            operation2.timingFunction = PRTweenTimingFunctionLinear
-            operation2.updateBlock = { (p: PRTweenPeriod!) in
-                self.inner.setVolume(Float(p.tweenedValue), forPlayer: Int32(self.inactivePlayer()))
-            }
-            
-            PRTween.sharedInstance().addTweenOperation(operation1)
-            PRTween.sharedInstance().addTweenOperation(operation2)
+            engine + FUXTween.Tween(Float(crossFadeDuration), fromToValueFunc(from: volume(inactivePlayer()), to: 0.0, valueFunc: { (value) -> () in
+                self.inner.setVolume(value, forPlayer: Int32(self.activePlayer))
+            }))
         }
     }
 }
@@ -406,8 +392,8 @@ extension KZPlayer {
 
 //MARK: Library
 extension KZPlayer {
-    func find(q: String) -> Results<KZPlayerItem> {
-        return self.allItems!.filter("title CONTAINS[c] %@ OR artist CONTAINS[c] %@ OR album CONTAINS[c] %@ OR albumArtist CONTAINS[c] %@", q, q, q, q)
+    func find(query: String) -> Results<KZPlayerItem> {
+        return self.allItems!.filter("title CONTAINS[c] %@ OR artist CONTAINS[c] %@ OR album CONTAINS[c] %@ OR albumArtist CONTAINS[c] %@", query, query, query, query)
     }
     
     //MARK: Session

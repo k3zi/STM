@@ -9,23 +9,23 @@
 import UIKit
 
 infix operator >>> { associativity left }
-public func >>> (l: Float, r: FUXTween) -> FUXTween {
-    return FUXTween.Delay(l, Box(r))
+public func >>> (left: Float, right: FUXTween) -> FUXTween {
+    return FUXTween.Delay(left, Box(right))
 }
 
 infix operator ~ { associativity left }
-public func ~ (l: Float, r: FUXValue) -> FUXTween {
-    return tween(duration: l, value: r)
+public func ~ (left: Float, right: FUXValue) -> FUXTween {
+    return tween(duration: left, value: right)
 }
 
 infix operator + { associativity left }
-public func + (l: FUXValue, r: FUXValue) -> FUXValue {
-    return FUXValue.Values([ Box(l), Box(r) ])
+public func + (left: FUXValue, right: FUXValue) -> FUXValue {
+    return FUXValue.Values([ Box(left), Box(right) ])
 }
 
 infix operator >>| { associativity left }
-public func >>| (l: FUXTween, r: () -> ()) -> FUXTween {
-    return createOnComplete(l, onComplete: r)
+public func >>| (left: FUXTween, right: () -> ()) -> FUXTween {
+    return createOnComplete(left, onComplete: right)
 }
 
 

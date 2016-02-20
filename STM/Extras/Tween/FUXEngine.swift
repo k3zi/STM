@@ -10,8 +10,8 @@ import UIKit
 import QuartzCore
 
 infix operator + { associativity left}
-public func + (l: FUXEngine, r: FUXTween) -> FUXTween {
-    return l.addTween(r)
+public func + (left: FUXEngine, right: FUXTween) -> FUXTween {
+    return left.addTween(right)
 }
 
 class FUXTweenStorage {

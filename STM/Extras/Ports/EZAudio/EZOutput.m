@@ -38,6 +38,7 @@
     YBAudioUnitGraph *graph;
     YBAudioUnitNode *ioNode;
     double currentSampleRate;
+    int callCount;
 }
 @end
 
@@ -150,11 +151,17 @@ static OSStatus EQConverterRenderCallback(void *inRefCon, AudioUnitRenderActionF
             NSLog(@"error creating audio converter: %d",(int)st);
         }
     }
-    @autoreleasepool {
-        NSData *data = [NSData dataWithBytes:audioBufferList->mBuffers[0].mData length:audioBufferList->mBuffers[0].mDataByteSize];
-        [self playedDataPCM:data frames:(int)data.length];
-        data = nil;
+    
+    if(callCount == 2) {
+        @autoreleasepool {
+            NSData *data = [NSData dataWithBytes:audioBufferList->mBuffers[0].mData length:audioBufferList->mBuffers[0].mDataByteSize];
+            [self playedDataPCM:data frames:(int)data.length];
+            data = nil;
+        }
+        callCount = 0;
     }
+    callCount++;
+    
     if(!self.aacEncode) {
         NSData *data = [NSData dataWithBytes:audioBufferList->mBuffers[0].mData length:audioBufferList->mBuffers[0].mDataByteSize];
         [self.outputDataSource playedData:data frames:(int)data.length];
@@ -197,12 +204,11 @@ static OSStatus EQConverterRenderCallback(void *inRefCon, AudioUnitRenderActionF
     }
 }
 
-- (void)playedDataPCM:(NSData *)buffer frames:(int)frames{
+- (void)playedDataPCM:(NSData *)buffer frames:(int)frames {
     if([UIApplication sharedApplication].applicationState == UIApplicationStateActive) {
         size_t length = frames;
         NSInteger sampleTally = 0;
-        
-        NSInteger samplesPerPixel = floor((length / [EZOutput sharedOutput].outputASBD.mBytesPerFrame)/40);
+        NSInteger samplesPerPixel = floor((length / [EZOutput sharedOutput].outputASBD.mBytesPerFrame)/41);
         NSMutableData *fullSongData = [NSMutableData data];
         SInt16 maxValue = 0;
         float power = [[EZOutput sharedOutput].mixerNode averagePower];
@@ -218,7 +224,7 @@ static OSStatus EQConverterRenderCallback(void *inRefCon, AudioUnitRenderActionF
             NSMutableData *data = [NSMutableData dataWithLength:length];
             memcpy(data.mutableBytes, buffer.bytes, frames);
             
-            SInt16 * samples = (SInt16*) data.mutableBytes;
+            SInt16 *samples = (SInt16 *) data.mutableBytes;
             int sampleCount = (int)length / (int)[EZOutput sharedOutput].outputASBD.mBytesPerFrame;
             
             for (int i = 0; i < sampleCount; i++) {

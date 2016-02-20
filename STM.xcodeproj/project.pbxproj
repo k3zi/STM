@@ -435,11 +435,12 @@
 			isa = PBXNativeTarget;
 			buildConfigurationList = EA09CABB1C5C41510067FF6A /* Build configuration list for PBXNativeTarget "STM" */;
 			buildPhases = (
+				EAB0E6A41C78D66D008945FF /* ShellScript */,
 				3B0FDC848503BB3AF0F36EE8 /* Check Pods Manifest.lock */,
 				EA09CAA51C5C41510067FF6A /* Sources */,
 				EA09CAA61C5C41510067FF6A /* Frameworks */,
 				EA09CAA71C5C41510067FF6A /* Resources */,
-				EA09CAC91C5C62720067FF6A /* ShellScript */,
+				EA09CAC91C5C62720067FF6A /* Run Script */,
 				C8BB1B58104A4B92E3BFF9F4 /* Embed Pods Frameworks */,
 				995E2A85AD31DC2FF9851682 /* Copy Pods Resources */,
 			);
@@ -551,7 +552,21 @@
 			shellScript = "\"${SRCROOT}/Pods/Target Support Files/Pods-STM/Pods-STM-frameworks.sh\"\n";
 			showEnvVarsInLog = 0;
 		};
-		EA09CAC91C5C62720067FF6A /* ShellScript */ = {
+		EA09CAC91C5C62720067FF6A /* Run Script */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+			);
+			name = "Run Script";
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "#!/bin/bash\nbuildNumber=$(/usr/libexec/PlistBuddy -c \"Print CFBundleVersion\" \"$INFOPLIST_FILE\")\nbuildNumber=$(($buildNumber + 1))\n/usr/libexec/PlistBuddy -c \"Set :CFBundleVersion $buildNumber\" \"$INFOPLIST_FILE\"";
+		};
+		EAB0E6A41C78D66D008945FF /* ShellScript */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
@@ -562,7 +577,7 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "#!/bin/bash\nbuildNumber=$(/usr/libexec/PlistBuddy -c \"Print CFBundleVersion\" \"$INFOPLIST_FILE\")\nbuildNumber=$(($buildNumber + 1))\n/usr/libexec/PlistBuddy -c \"Set :CFBundleVersion $buildNumber\" \"$INFOPLIST_FILE\"";
+			shellScript = "if which swiftlint >/dev/null; then\n    swiftlint\nelse\n    echo \"warning: SwiftLint not installed, download from https://github.com/realm/SwiftLint\"\nfi";
 		};
 /* End PBXShellScriptBuildPhase section */
 

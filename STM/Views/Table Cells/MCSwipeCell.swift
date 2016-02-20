@@ -30,6 +30,10 @@ enum MCSwipeTableViewCellMode {
 
 typealias MCSwipeCompletionBlock = (cell: MCSwipeCell, state: MCSwipeTableViewCellState, mode: MCSwipeTableViewCellMode) -> Void
 
+// swiftlint:disable variable_name
+// swiftlint:disable type_body_length
+// swiftlint:disable body_length
+// swiftlint:disable line_length
 class MCSwipeCell: KZTableViewCell {
     let _panGestureRecognizer = UIPanGestureRecognizer()
     var _contentScreenshotView: UIImageView?
