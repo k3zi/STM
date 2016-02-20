@@ -39,10 +39,11 @@ class HostViewController: KZViewController {
 	let gradientColorView = UIView()
 	let visualizer = STMVisualizer()
 
-	let infoHolderView = UIView()
-	let infoLabel1 = UILabel()
-	let infoLabel2 = UILabel()
-	let infoLabel3 = UILabel()
+	let songInfoHolderView = UIView()
+	var songInfoHolderViewTopPadding: NSLayoutConstraint? = nil
+	let songInfoLabel1 = UILabel()
+	let songInfoLabel2 = UILabel()
+	let songInfoLabel3 = UILabel()
 
 	let switcherControl = UISegmentedControl(items: ["Songs", "Queue", "Comments", "Settings"])
 	let switcherControlHolder = UIView()
@@ -69,7 +70,7 @@ class HostViewController: KZViewController {
 
 	let bottomBlurBar = UIToolbar()
 	var bottomBlurBarConstraint: NSLayoutConstraint?
-	let infoHolder = HostInfoHolderView()
+	let streamInfoHolder = HostInfoHolderView()
 
 	let micToggleBT = ExtendedButton()
 	let micIndicatorView = UIView()
@@ -89,7 +90,7 @@ class HostViewController: KZViewController {
 		NSTimer.scheduledTimerWithTimeInterval(1.5, target: self, selector: Selector("refresh"), userInfo: nil, repeats: true)
 	}
 
-    //MARK: Constraints
+	// MARK: Constraints
 	override func setupConstraints() {
 		super.setupConstraints()
 
@@ -105,23 +106,23 @@ class HostViewController: KZViewController {
 		visualizer.autoPinEdgesToSuperviewEdgesWithInsets(UIEdgeInsets(top: 0, left: 0, bottom: 0, right: 0))
 
 		// Info Holder
-		infoHolderView.autoAlignAxisToSuperviewAxis(.Horizontal)
-		infoHolderView.autoAlignAxisToSuperviewAxis(.Vertical)
-		infoHolderView.autoPinEdgeToSuperviewEdge(.Left, withInset: 20)
-		infoHolderView.autoPinEdgeToSuperviewEdge(.Right, withInset: 20)
+		songInfoHolderViewTopPadding = songInfoHolderView.autoAlignAxis(.Horizontal, toSameAxisOfView: topView, withOffset: 5)
+		songInfoHolderView.autoAlignAxisToSuperviewAxis(.Vertical)
+		songInfoHolderView.autoPinEdgeToSuperviewEdge(.Left, withInset: 20)
+		songInfoHolderView.autoPinEdgeToSuperviewEdge(.Right, withInset: 20)
 
-		infoLabel1.autoPinEdgeToSuperviewEdge(.Top)
-		infoLabel1.autoPinEdgeToSuperviewEdge(.Left)
-		infoLabel1.autoPinEdgeToSuperviewEdge(.Right)
+		songInfoLabel1.autoPinEdgeToSuperviewEdge(.Top)
+		songInfoLabel1.autoPinEdgeToSuperviewEdge(.Left)
+		songInfoLabel1.autoPinEdgeToSuperviewEdge(.Right)
 
-		infoLabel2.autoPinEdge(.Top, toEdge: .Bottom, ofView: infoLabel1, withOffset: 5)
-		infoLabel2.autoPinEdgeToSuperviewEdge(.Left)
-		infoLabel2.autoPinEdgeToSuperviewEdge(.Right)
+		songInfoLabel2.autoPinEdge(.Top, toEdge: .Bottom, ofView: songInfoLabel1, withOffset: 5)
+		songInfoLabel2.autoPinEdgeToSuperviewEdge(.Left)
+		songInfoLabel2.autoPinEdgeToSuperviewEdge(.Right)
 
-		infoLabel3.autoPinEdge(.Top, toEdge: .Bottom, ofView: infoLabel2, withOffset: 5)
-		infoLabel3.autoPinEdgeToSuperviewEdge(.Left)
-		infoLabel3.autoPinEdgeToSuperviewEdge(.Right)
-		infoLabel3.autoPinEdgeToSuperviewEdge(.Bottom)
+		songInfoLabel3.autoPinEdge(.Top, toEdge: .Bottom, ofView: songInfoLabel2, withOffset: 5)
+		songInfoLabel3.autoPinEdgeToSuperviewEdge(.Left)
+		songInfoLabel3.autoPinEdgeToSuperviewEdge(.Right)
+		songInfoLabel3.autoPinEdgeToSuperviewEdge(.Bottom)
 
 		// Segment Control
 		switcherControlHolder.autoPinEdge(.Top, toEdge: .Bottom, ofView: topView)
@@ -176,8 +177,8 @@ class HostViewController: KZViewController {
 		bottomBlurBar.autoPinEdgeToSuperviewEdge(.Right)
 		bottomBlurBarConstraint = bottomBlurBar.autoPinEdgeToSuperviewEdge(.Bottom, withInset: -44)
 
-		infoHolder.autoPinEdgeToSuperviewEdge(.Top, withInset: 14)
-		infoHolder.autoAlignAxisToSuperviewAxis(.Vertical)
+		streamInfoHolder.autoPinEdgeToSuperviewEdge(.Top, withInset: 14)
+		streamInfoHolder.autoAlignAxisToSuperviewAxis(.Vertical)
 
 		micToggleBT.autoPinEdgeToSuperviewEdge(.Top, withInset: 11)
 		micToggleBT.autoPinEdgeToSuperviewEdge(.Right, withInset: 11)
@@ -191,7 +192,7 @@ class HostViewController: KZViewController {
 		micIndicatorView.autoPinEdgesToSuperviewEdgesWithInsets(UIEdgeInsetsZero, excludingEdge: .Left)
 	}
 
-    //MARK: Setup Views
+	// MARK: Setup Views
 	func setupTopView() {
 		topView.backgroundColor = RGB(255)
 		view.addSubview(topView)
@@ -208,18 +209,18 @@ class HostViewController: KZViewController {
 
 		topView.addSubview(visualizer)
 
-		topView.addSubview(infoHolderView)
-			[infoLabel1, infoLabel2, infoLabel3].forEach { (label) -> () in
+		topView.addSubview(songInfoHolderView)
+		[songInfoLabel1, songInfoLabel2, songInfoLabel3].forEach { (label) -> () in
 			label.textAlignment = .Center
 			label.textColor = RGB(255)
-			if label != infoLabel1 {
+			if label != songInfoLabel1 {
 				label.alpha = 0.66
 				label.font = UIFont.systemFontOfSize(13, weight: UIFontWeightMedium)
 			} else {
 				label.text = "No Song Playing"
 				label.font = UIFont.systemFontOfSize(18, weight: UIFontWeightMedium)
 			}
-			infoHolderView.addSubview(label)
+			songInfoHolderView.addSubview(label)
 		}
 	}
 
@@ -296,10 +297,10 @@ class HostViewController: KZViewController {
 		bottomBlurBar.layer.shadowOpacity = 0.2
 		view.addSubview(bottomBlurBar)
 
-		infoHolder.listeners = 0
-		infoHolder.bandwidth = 0
-		infoHolder.comments = 0
-		bottomBlurBar.addSubview(infoHolder)
+		streamInfoHolder.listeners = 0
+		streamInfoHolder.bandwidth = 0
+		streamInfoHolder.comments = 0
+		bottomBlurBar.addSubview(streamInfoHolder)
 
 		micToggleBT.setImage(UIImage(named: "toolbar_micOff"), forState: .Normal)
 		micToggleBT.setImage(UIImage(named: "toolbar_micOn"), forState: .Selected)
@@ -324,14 +325,14 @@ class HostViewController: KZViewController {
 
 	// MARK: View Changes/Updates
 
-    /**
-    Dismiss the host player view controller
-    */
-    func dismiss() {
-        if let vc = presentingViewController {
-            vc.dismissViewControllerAnimated(true, completion: nil)
-        }
-    }
+	/**
+	 Dismiss the host player view controller
+	 */
+	func dismiss() {
+		if let vc = presentingViewController {
+			vc.dismissViewControllerAnimated(true, completion: nil)
+		}
+	}
 
 	/**
 	 Toggles the extended layout of the toolbar
@@ -395,7 +396,7 @@ class HostViewController: KZViewController {
 	 Refreshes various times & numbers
 	 */
 	func refresh() {
-		infoHolder.bandwidth = statsPacketsReceived
+		streamInfoHolder.bandwidth = statsPacketsReceived
 	}
 
 	func refreshRecordingLabel() {
@@ -432,13 +433,15 @@ class HostViewController: KZViewController {
 					}, completion: nil)
 			}
 
-			infoLabel1.text = song.title
-			infoLabel2.text = song.artist
-			infoLabel3.text = song.album
+			songInfoLabel1.text = song.title
+			songInfoLabel2.text = song.artist
+			songInfoLabel3.text = song.album
+            songInfoHolderViewTopPadding?.constant = -5
 		} else {
-			infoLabel1.text = "No Song Playing"
-			infoLabel2.text = nil
-			infoLabel3.text = nil
+			songInfoLabel1.text = "No Song Playing"
+			songInfoLabel2.text = nil
+			songInfoLabel3.text = nil
+            songInfoHolderViewTopPadding?.constant = 5
 		}
 	}
 
@@ -642,9 +645,9 @@ extension HostViewController: EZOutputDataSource {
 			if let streamID = stream.id {
 				if let securityHash = stream.securityHash {
 					if let baseURL = NSURL(string: Constants.baseURL) {
-                        let oForcePolling = SocketIOClientOption.ForcePolling(true)
-                        let oHost = SocketIOClientOption.Nsp("/host")
-                        let oAuth = SocketIOClientOption.ConnectParams(["streamID": streamID, "securityHash": securityHash, "userID": userID, "stmHash": Constants.Config.streamHash])
+						let oForcePolling = SocketIOClientOption.ForcePolling(true)
+						let oHost = SocketIOClientOption.Nsp("/host")
+						let oAuth = SocketIOClientOption.ConnectParams(["streamID": streamID, "securityHash": securityHash, "userID": userID, "stmHash": Constants.Config.streamHash])
 						let options = [oForcePolling, oHost, oAuth] as Set<SocketIOClientOption>
 						self.socket = SocketIOClient(socketURL: baseURL, options: options)
 						if let socket = self.socket {
