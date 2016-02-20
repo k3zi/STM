@@ -13,6 +13,7 @@ class SettingJoinedView: UIView {
     var control: UIView
 
     init(text: String, control: UIView) {
+        self.textLabel.numberOfLines = 0
         self.textLabel.text = text
         self.control = control
         super.init(frame:CGRect.zero)
@@ -28,6 +29,7 @@ class SettingJoinedView: UIView {
         textLabel.autoPinEdgeToSuperviewEdge(.Top, withInset: 12, relation: .GreaterThanOrEqual)
         textLabel.autoPinEdgeToSuperviewEdge(.Left, withInset: 12)
         textLabel.autoPinEdgeToSuperviewEdge(.Bottom, withInset: 12, relation: .GreaterThanOrEqual)
+        textLabel.autoMatchDimension(.Width, toDimension: .Width, ofView: self, withMultiplier: 0.4, relation: .LessThanOrEqual)
 
         control.autoPinEdgeToSuperviewEdge(.Top, withInset: 12, relation: .GreaterThanOrEqual)
         control.autoPinEdge(.Left, toEdge: .Right, ofView: textLabel, withOffset: 16)
@@ -35,6 +37,18 @@ class SettingJoinedView: UIView {
         control.autoPinEdgeToSuperviewEdge(.Bottom, withInset: 12, relation: .GreaterThanOrEqual)
 
         control.autoAlignAxis(.Horizontal, toSameAxisOfView: textLabel)
+    }
+
+    func setPrevChain(prevChain: UIView?) {
+        if let prevChain = prevChain as? SettingJoinedView {
+            self.textLabel.autoMatchDimension(.Width, toDimension: .Width, ofView: prevChain.textLabel)
+        }
+    }
+
+    override func layoutSubviews() {
+        super.layoutSubviews()
+        self.textLabel.preferredMaxLayoutWidth = self.textLabel.frame.width
+        super.layoutSubviews()
     }
 
     required init?(coder aDecoder: NSCoder) {

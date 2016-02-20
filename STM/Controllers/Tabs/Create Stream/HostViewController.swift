@@ -66,9 +66,11 @@ class HostViewController: KZViewController {
 
     let settingsHeaderMicrophone = UILabel.styledForSettingsHeader("MICROPHONE")
     var micVolumeSettingView = UIView()
-	let micVolumeSlider = UISlider()
+    let micVolumeSlider = UISlider()
+    var micActiveMusicVolumeSettingView = UIView()
 	let micActiveMusicVolumeSlider = UISlider()
-	let micInactiveMusicVolumeSlider = UISlider()
+	let musicVolumeSlider = UISlider()
+    var micFadeTimeSettingView = UIView()
 	let micFadeTimeSlider = UISlider()
 
 	let bottomBlurBar = UIToolbar()
@@ -186,6 +188,14 @@ class HostViewController: KZViewController {
         micVolumeSettingView.autoPinEdgeToSuperviewEdge(.Left)
         micVolumeSettingView.autoPinEdgeToSuperviewEdge(.Right)
 
+        micActiveMusicVolumeSettingView.autoPinEdge(.Top, toEdge: .Bottom, ofView: micVolumeSettingView)
+        micActiveMusicVolumeSettingView.autoPinEdgeToSuperviewEdge(.Left)
+        micActiveMusicVolumeSettingView.autoPinEdgeToSuperviewEdge(.Right)
+
+        micFadeTimeSettingView.autoPinEdge(.Top, toEdge: .Bottom, ofView: micActiveMusicVolumeSettingView)
+        micFadeTimeSettingView.autoPinEdgeToSuperviewEdge(.Left)
+        micFadeTimeSettingView.autoPinEdgeToSuperviewEdge(.Right)
+
 		// Toolbar
 		bottomBlurBar.autoSetDimension(.Height, toSize: 88)
 		bottomBlurBar.autoPinEdge(.Top, toEdge: .Bottom, ofView: switcherScrollView)
@@ -277,6 +287,7 @@ class HostViewController: KZViewController {
 	}
 
 	func setupSettingsContentView() {
+        //***************STATUS**************\\
         settingsContentView.addSubview(settingsHeaderStatus)
 
         broadcastingStatusBG.backgroundColor = RGB(220)
@@ -299,17 +310,29 @@ class HostViewController: KZViewController {
 		recordingStatusLabel.clipsToBounds = true
 		broadcastingStatusBG.addSubview(recordingStatusLabel)
 
+        //***********MICROPHONE**********\\
         settingsContentView.addSubview(settingsHeaderMicrophone)
 
-        micVolumeSettingView = SettingJoinedView(text: "Microphone Volume", control: micVolumeSlider)
+        micVolumeSlider.value = 1.0
+        let micVolumeSettingView = SettingJoinedView(text: "Microphone Volume", control: micVolumeSlider)
+        self.micVolumeSettingView = micVolumeSettingView
         settingsContentView.addSubview(micVolumeSettingView)
-		micVolumeSlider.value = 1.0
-		micActiveMusicVolumeSlider.value = 0.2
-		micInactiveMusicVolumeSlider.value = 1.0
 
-		micFadeTimeSlider.minimumValue = 0.0
-		micFadeTimeSlider.maximumValue = 10.0
-		micFadeTimeSlider.value = 2.0
+        micActiveMusicVolumeSlider.value = 0.2
+        let micActiveMusicVolumeSettingView = SettingJoinedView(text: "Music Volume When Mic Active", control: micActiveMusicVolumeSlider)
+        self.micActiveMusicVolumeSettingView = micActiveMusicVolumeSettingView
+        settingsContentView.addSubview(micActiveMusicVolumeSettingView)
+        micActiveMusicVolumeSettingView.setPrevChain(micVolumeSettingView)
+
+        micFadeTimeSlider.minimumValue = 0.0
+        micFadeTimeSlider.maximumValue = 10.0
+        micFadeTimeSlider.value = 2.0
+        let micFadeTimeSettingView = SettingJoinedView(text: "Microphone Fade Time", control: micFadeTimeSlider)
+        self.micFadeTimeSettingView = micFadeTimeSettingView
+        settingsContentView.addSubview(micFadeTimeSettingView)
+        micFadeTimeSettingView.setPrevChain(micActiveMusicVolumeSettingView)
+
+		musicVolumeSlider.value = 1.0
 	}
 
 	func setupToolbar() {
@@ -382,7 +405,7 @@ class HostViewController: KZViewController {
 
 		let bus0Volume = EZOutput.sharedOutput().mixerNode.volumeForBus(0)
 		let bus1Volume = EZOutput.sharedOutput().mixerNode.volumeForBus(1)
-		let bus0ToVolume = micToggleBT.selected ? micActiveMusicVolumeSlider.value : micInactiveMusicVolumeSlider.value
+		let bus0ToVolume = micToggleBT.selected ? micActiveMusicVolumeSlider.value : musicVolumeSlider.value
 		let bus1ToVolume = micToggleBT.selected ? micVolumeSlider.value : 0.0
 
 		engine + FUXTween.Tween(micFadeTimeSlider.value, fromToValueFunc(from: bus0Volume, to: bus0ToVolume, valueFunc: { (value) -> () in
