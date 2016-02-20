@@ -165,7 +165,6 @@ class HostViewController: KZViewController {
 		// Settings Content View
 		settingsContentView.autoPinEdgesToSuperviewEdges()
 		settingsContentView.autoMatchDimension(.Width, toDimension: .Width, ofView: settingsScrollView)
-		settingsContentView.autoMatchDimension(.Height, toDimension: .Height, ofView: settingsScrollView)
 
 		// Settings
         settingsHeaderStatus.autoPinEdgesToSuperviewEdgesWithInsets(UIEdgeInsetsZero, excludingEdge: .Bottom)
@@ -206,6 +205,7 @@ class HostViewController: KZViewController {
         micFadeTimeSettingView.autoPinEdge(.Top, toEdge: .Bottom, ofView: micActiveMusicVolumeSettingView)
         micFadeTimeSettingView.autoPinEdgeToSuperviewEdge(.Left)
         micFadeTimeSettingView.autoPinEdgeToSuperviewEdge(.Right)
+        micFadeTimeSettingView.autoPinEdgeToSuperviewEdge(.Bottom, withInset: 0, relation: .GreaterThanOrEqual)
 
 		// Toolbar
 		bottomBlurBar.autoSetDimension(.Height, toSize: 88)
