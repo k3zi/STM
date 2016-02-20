@@ -41,6 +41,7 @@ public final class SocketEngine: NSObject, SocketEnginePollable, SocketEngineWeb
     public private(set) var closed = false
     public private(set) var connected = false
     public private(set) var cookies: [NSHTTPCookie]?
+    public private(set) var doubleEncodeUTF8 = true
     public private(set) var extraHeaders: [String: String]?
     public private(set) var fastUpgrade = false
     public private(set) var forcePolling = false
@@ -88,18 +89,20 @@ public final class SocketEngine: NSObject, SocketEnginePollable, SocketEngineWeb
             switch option {
             case let .ConnectParams(params):
                 connectParams = params
+            case let .Cookies(cookies):
+                self.cookies = cookies
+            case let .DoubleEncodeUTF8(encode):
+                doubleEncodeUTF8 = encode
+            case let .ExtraHeaders(headers):
+                extraHeaders = headers
             case let .SessionDelegate(delegate):
                 sessionDelegate = delegate
             case let .ForcePolling(force):
                 forcePolling = force
             case let .ForceWebsockets(force):
                 forceWebsockets = force
-            case let .Cookies(cookies):
-                self.cookies = cookies
             case let .Path(path):
                 socketPath = path
-            case let .ExtraHeaders(headers):
-                extraHeaders = headers
             case let .VoipEnabled(enable):
                 voipEnabled = enable
             case let .Secure(secure):
@@ -202,9 +205,12 @@ public final class SocketEngine: NSObject, SocketEnginePollable, SocketEngineWeb
             postSendClose(nil, nil, nil)
         } else {
             // We need to take special care when we're polling that we send it ASAP
-            postWait.append(String(SocketEnginePacketType.Close.rawValue))
-            let req = createRequestForPostWithPostWait()
-            doRequest(req, withCallback: postSendClose)
+            // Also make sure we're on the emitQueue since we're touching postWait
+            dispatch_sync(emitQueue) {
+                self.postWait.append(String(SocketEnginePacketType.Close.rawValue))
+                let req = self.createRequestForPostWithPostWait()
+                self.doRequest(req, withCallback: postSendClose)
+            }
         }
     }
 
@@ -378,9 +384,8 @@ public final class SocketEngine: NSObject, SocketEnginePollable, SocketEngineWeb
 
     public func open() {
         if connected {
-            DefaultSocketLogger.Logger.error("Engine tried opening while connected. This is probably a programming error. "
-                + "Abandoning open attempt", type: logType)
-            return
+            DefaultSocketLogger.Logger.error("Engine tried opening while connected. Assuming this was a reconnect", type: logType)
+            close("reconnect")
         }
         
         DefaultSocketLogger.Logger.log("Starting engine", type: logType)
@@ -430,7 +435,7 @@ public final class SocketEngine: NSObject, SocketEnginePollable, SocketEngineWeb
             return
         }
 
-        if fromPolling && type != .Noop {
+        if fromPolling && type != .Noop && doubleEncodeUTF8 {
             fixedString = fixDoubleUTF8(message)
         } else {
             fixedString = message

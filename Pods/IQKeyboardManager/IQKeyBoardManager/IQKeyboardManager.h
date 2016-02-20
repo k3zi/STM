@@ -1,7 +1,7 @@
 //
 // IQKeyboardManager.h
 // https://github.com/hackiftekhar/IQKeyboardManager
-// Copyright (c) 2013-15 Iftekhar Qurashi.
+// Copyright (c) 2013-16 Iftekhar Qurashi.
 //
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
@@ -103,6 +103,11 @@ extern NSInteger const kIQPreviousNextButtonToolbarTag;
 @property(nullable, nonatomic, strong) UIColor *toolbarTintColor;
 
 /**
+ Toolbar done button icon, If nothing is provided then check toolbarDoneBarButtonItemText to draw done button.
+ */
+@property(nullable, nonatomic, strong) UIImage *toolbarDoneBarButtonItemImage;
+
+/**
  Toolbar done button text, If nothing is provided then system default 'UIBarButtonSystemItemDone' will be used.
  */
 @property(nullable, nonatomic, strong) NSString *toolbarDoneBarButtonItemText;
@@ -179,15 +184,6 @@ extern NSInteger const kIQPreviousNextButtonToolbarTag;
  */
 - (BOOL)goNext;
 
-///----------------------------
-/// @name UIScrollView handling
-///----------------------------
-
-/**
- Restore scrollViewContentOffset when resigning from scrollView. Default is NO.
- */
-@property(nonatomic, assign) BOOL shouldRestoreScrollViewContentOffset __attribute__ ((deprecated("Please use IQUIScrollView+Additions category instead. This property will be removed from here in future release.")));
-
 ///------------------------------------------------
 /// @name UISound handling
 ///------------------------------------------------
@@ -222,7 +218,6 @@ extern NSInteger const kIQPreviousNextButtonToolbarTag;
  
  @param disabledClass Class in which library should not adjust view to show textField.
  */
--(void)disableInViewControllerClass:(nonnull Class)disabledClass __attribute__ ((deprecated("This method is replaced with disableDistanceHandlingInViewControllerClass: method to adopt more graceful method name. Some developers confuses with this method name. This method will be removed in upcoming release.")));
 -(void)disableDistanceHandlingInViewControllerClass:(nonnull Class)disabledClass;
 
 /**
@@ -230,7 +225,6 @@ extern NSInteger const kIQPreviousNextButtonToolbarTag;
  
  @param disabledClass Class in which library should re-enable adjust view to show textField.
  */
--(void)removeDisableInViewControllerClass:(nonnull Class)disabledClass __attribute__ ((deprecated("This method is replaced with removeDisableDistanceHandlingInViewControllerClass: method to adopt more graceful method name. Some developers confuses with this method name. This method will be removed in upcoming release.")));
 -(void)removeDisableDistanceHandlingInViewControllerClass:(nonnull Class)disabledClass;
 
 /**

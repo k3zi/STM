@@ -1,7 +1,7 @@
 //
 //  IQKeyboardManagerConstants.h
 // https://github.com/hackiftekhar/IQKeyboardManager
-// Copyright (c) 2013-15 Iftekhar Qurashi.
+// Copyright (c) 2013-16 Iftekhar Qurashi.
 //
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
@@ -59,17 +59,6 @@ typedef NS_ENUM(NSInteger, IQAutoToolbarManageBehaviour) {
 ///-------------------
 
 #define IQLocalizedString(key, comment) [[NSBundle bundleWithPath:[[NSBundle mainBundle] pathForResource:@"IQKeyboardManager" ofType:@"bundle"]] localizedStringForKey:(key) value:@"" table:@"IQKeyboardManager"]
-
-
-/* XCode 5.0 Compatibility for NS_DESIGNATED_INITIALIZER*/
-#ifndef NS_DESIGNATED_INITIALIZER
-    #if __has_attribute(objc_designated_initializer)
-        #define NS_DESIGNATED_INITIALIZER __attribute__((objc_designated_initializer))
-    #else
-        #define NS_DESIGNATED_INITIALIZER
-    #endif
-#endif
-
 
 #endif
 

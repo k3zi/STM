@@ -308,13 +308,14 @@ public class WebSocket : NSObject, NSStreamDelegate {
         
         let bytes = UnsafePointer<UInt8>(data.bytes)
         var timeout = 5000000 //wait 5 seconds before giving up
-        writeQueue.addOperationWithBlock { [unowned self] in
+        writeQueue.addOperationWithBlock { [weak self] in
+            guard let this = self else { return }
             while !outStream.hasSpaceAvailable {
                 usleep(100) //wait until the socket is ready
                 timeout -= 100
                 if timeout < 0 {
-                    self.cleanupStream()
-                    self.doDisconnect(self.errorWithDetail("write wait timed out", code: 2))
+                    this.cleanupStream()
+                    this.doDisconnect(this.errorWithDetail("write wait timed out", code: 2))
                     return
                 } else if outStream.streamError != nil {
                     return //disconnectStream will be called.
@@ -436,7 +437,7 @@ public class WebSocket : NSObject, NSStreamDelegate {
         var totalSize = 0
         for i in 0..<bufferLen {
             if buffer[i] == CRLFBytes[k] {
-                k++
+                k += 1
                 if k == 3 {
                     totalSize = i + 1
                     break
@@ -659,7 +660,7 @@ public class WebSocket : NSObject, NSStreamDelegate {
             }
             if let response = response {
                 response.bytesLeft -= Int(len)
-                response.frameCount++
+                response.frameCount += 1
                 response.isFin = isFin > 0 ? true : false
                 if isNew {
                     readStack.append(response)
@@ -957,7 +958,7 @@ private class SSLSecurity {
                 for serverCert in serverCerts {
                     for cert in certs {
                         if cert == serverCert {
-                            trustedCount++
+                            trustedCount += 1
                             break
                         }
                     }

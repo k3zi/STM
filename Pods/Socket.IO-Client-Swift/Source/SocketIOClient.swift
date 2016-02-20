@@ -165,13 +165,13 @@ public final class SocketIOClient: NSObject, SocketEngineClient, SocketParsable 
         } else {
             engine?.open()
         }
-
+        
         guard timeoutAfter != 0 else { return }
 
         let time = dispatch_time(DISPATCH_TIME_NOW, Int64(timeoutAfter) * Int64(NSEC_PER_SEC))
 
         dispatch_after(time, handleQueue) {[weak self] in
-            if let this = self where this.status != .Connected {
+            if let this = self where this.status != .Connected || this.status != .Closed {
                 this.status = .Closed
                 this.engine?.close("Connect timeout")
 
@@ -214,9 +214,7 @@ public final class SocketIOClient: NSObject, SocketEngineClient, SocketParsable 
     }
 
     func didDisconnect(reason: String) {
-        guard status != .Closed else {
-            return
-        }
+        guard status != .Closed else { return }
 
         DefaultSocketLogger.Logger.log("Disconnected: %@", type: logType, args: reason)
 
@@ -309,9 +307,7 @@ public final class SocketIOClient: NSObject, SocketEngineClient, SocketParsable 
         if status == .Closed || !reconnects {
             didDisconnect(reason)
         } else if status != .Reconnecting {
-            status = .Reconnecting
-            handleEvent("reconnect", data: [reason], isInternalMessage: true)
-            tryReconnect()
+            tryReconnectWithReason(reason)
         }
     }
 
@@ -456,7 +452,7 @@ public final class SocketIOClient: NSObject, SocketEngineClient, SocketParsable 
      Tries to reconnect to the server.
      */
     public func reconnect() {
-        tryReconnect()
+        tryReconnectWithReason("manual reconnect")
     }
 
     /**
@@ -467,9 +463,10 @@ public final class SocketIOClient: NSObject, SocketEngineClient, SocketParsable 
         handlers.removeAll(keepCapacity: false)
     }
 
-    private func tryReconnect() {
+    private func tryReconnectWithReason(reason: String) {
         if reconnectTimer == nil {
             DefaultSocketLogger.Logger.log("Starting reconnect", type: logType)
+            handleEvent("reconnect", data: [reason], isInternalMessage: true)
 
             status = .Reconnecting
 
