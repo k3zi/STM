@@ -57,8 +57,11 @@ class STMVisualizer: UIView {
         }
 
         let barConstraint = barConstraints[index]
-        barConstraint.constant = height
-        bars[index].layoutIfNeeded()
+        UIView.animateWithDuration(1.0, delay: 0.0, options: .BeginFromCurrentState, animations: { () -> Void in
+            barConstraint.constant = height
+            self.bars[index].layoutIfNeeded()
+            }, completion: nil)
+
     }
 
     required init?(coder aDecoder: NSCoder) {

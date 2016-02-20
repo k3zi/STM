@@ -10,10 +10,17 @@ import UIKit
 
 class SettingJoinedView: UIView {
     var textLabel = UILabel()
+    var detailLabel = UILabel()
+    var holdingView = UILabel()
     var control: UIView
 
-    init(text: String, control: UIView) {
+    init(text: String, detailText: String = "", control: UIView) {
+        self.textLabel.font = UIFont.systemFontOfSize(16, weight: UIFontWeightMedium)
         self.textLabel.numberOfLines = 0
+        self.detailLabel.font = UIFont.systemFontOfSize(13, weight: UIFontWeightLight)
+        self.detailLabel.numberOfLines = 0
+
+        self.detailLabel.text = detailText
         self.textLabel.text = text
         self.control = control
         super.init(frame:CGRect.zero)
@@ -23,31 +30,43 @@ class SettingJoinedView: UIView {
 
     func setup() {
         self.translatesAutoresizingMaskIntoConstraints = false
-        self.addSubview(textLabel)
+        self.addSubview(holdingView)
+        holdingView.addSubview(textLabel)
         self.addSubview(control)
 
-        textLabel.autoPinEdgeToSuperviewEdge(.Top, withInset: 12, relation: .GreaterThanOrEqual)
-        textLabel.autoPinEdgeToSuperviewEdge(.Left, withInset: 12)
-        textLabel.autoPinEdgeToSuperviewEdge(.Bottom, withInset: 12, relation: .GreaterThanOrEqual)
-        textLabel.autoMatchDimension(.Width, toDimension: .Width, ofView: self, withMultiplier: 0.4, relation: .LessThanOrEqual)
+        holdingView.autoPinEdgeToSuperviewEdge(.Top, withInset: 18, relation: .GreaterThanOrEqual)
+        holdingView.autoPinEdgeToSuperviewEdge(.Left, withInset: 18)
+        holdingView.autoMatchDimension(.Width, toDimension: .Width, ofView: self, withMultiplier: 0.4, relation: .LessThanOrEqual)
+        holdingView.autoPinEdgeToSuperviewEdge(.Bottom, withInset: 18, relation: .GreaterThanOrEqual)
 
-        control.autoPinEdgeToSuperviewEdge(.Top, withInset: 12, relation: .GreaterThanOrEqual)
-        control.autoPinEdge(.Left, toEdge: .Right, ofView: textLabel, withOffset: 16)
-        control.autoPinEdgeToSuperviewEdge(.Right, withInset: 12)
-        control.autoPinEdgeToSuperviewEdge(.Bottom, withInset: 12, relation: .GreaterThanOrEqual)
+        textLabel.autoPinEdgesToSuperviewEdgesWithInsets(UIEdgeInsetsZero, excludingEdge: .Bottom)
 
-        control.autoAlignAxis(.Horizontal, toSameAxisOfView: textLabel)
+        if detailLabel.text?.characters.count == 0 {
+            textLabel.autoPinEdgeToSuperviewEdge(.Bottom)
+        } else {
+            holdingView.addSubview(detailLabel)
+            detailLabel.autoPinEdge(.Top, toEdge: .Bottom, ofView: textLabel, withOffset: 4)
+            detailLabel.autoPinEdgesToSuperviewEdgesWithInsets(UIEdgeInsetsZero, excludingEdge: .Top)
+        }
+
+        control.autoPinEdgeToSuperviewEdge(.Top, withInset: 18, relation: .GreaterThanOrEqual)
+        control.autoPinEdge(.Left, toEdge: .Right, ofView: holdingView, withOffset: 50)
+        control.autoPinEdgeToSuperviewEdge(.Right, withInset: 18)
+        control.autoPinEdgeToSuperviewEdge(.Bottom, withInset: 18, relation: .GreaterThanOrEqual)
+
+        control.autoAlignAxis(.Horizontal, toSameAxisOfView: holdingView)
     }
 
     func setPrevChain(prevChain: UIView?) {
         if let prevChain = prevChain as? SettingJoinedView {
-            self.textLabel.autoMatchDimension(.Width, toDimension: .Width, ofView: prevChain.textLabel)
+            self.holdingView.autoMatchDimension(.Width, toDimension: .Width, ofView: prevChain.holdingView)
         }
     }
 
     override func layoutSubviews() {
         super.layoutSubviews()
         self.textLabel.preferredMaxLayoutWidth = self.textLabel.frame.width
+        self.detailLabel.preferredMaxLayoutWidth = self.detailLabel.frame.width
         super.layoutSubviews()
     }
 
