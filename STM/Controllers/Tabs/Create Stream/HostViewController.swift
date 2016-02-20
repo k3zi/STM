@@ -64,11 +64,14 @@ class HostViewController: KZViewController {
 	let recordingStatusLabel = UILabel()
 	let broadcastingStatusBG = UIView()
 
+    let settingsHeaderPlayback = UILabel.styledForSettingsHeader("PLAYBACK")
+
     let settingsHeaderMicrophone = UILabel.styledForSettingsHeader("MICROPHONE")
     var micVolumeSettingView = UIView()
     let micVolumeSlider = UISlider()
     var micActiveMusicVolumeSettingView = UIView()
 	let micActiveMusicVolumeSlider = UISlider()
+    var musicVolumeSettingView = UIView()
 	let musicVolumeSlider = UISlider()
     var micFadeTimeSettingView = UIView()
 	let micFadeTimeSlider = UISlider()
@@ -180,7 +183,15 @@ class HostViewController: KZViewController {
 		recordingStatusLabel.autoPinEdgeToSuperviewEdge(.Right, withInset: 22)
 		recordingStatusLabel.autoMatchDimension(.Height, toDimension: .Height, ofView: recordSwitch)
 
-        settingsHeaderMicrophone.autoPinEdge(.Top, toEdge: .Bottom, ofView: broadcastingStatusBG)
+        settingsHeaderPlayback.autoPinEdge(.Top, toEdge: .Bottom, ofView: broadcastingStatusBG)
+        settingsHeaderPlayback.autoPinEdgeToSuperviewEdge(.Left)
+        settingsHeaderPlayback.autoPinEdgeToSuperviewEdge(.Right)
+
+        musicVolumeSettingView.autoPinEdge(.Top, toEdge: .Bottom, ofView: settingsHeaderPlayback)
+        musicVolumeSettingView.autoPinEdgeToSuperviewEdge(.Left)
+        musicVolumeSettingView.autoPinEdgeToSuperviewEdge(.Right)
+
+        settingsHeaderMicrophone.autoPinEdge(.Top, toEdge: .Bottom, ofView: musicVolumeSettingView)
         settingsHeaderMicrophone.autoPinEdgeToSuperviewEdge(.Left)
         settingsHeaderMicrophone.autoPinEdgeToSuperviewEdge(.Right)
 
@@ -287,7 +298,7 @@ class HostViewController: KZViewController {
 	}
 
 	func setupSettingsContentView() {
-        //***************STATUS**************\\
+        //***********STATUS**********\\
         settingsContentView.addSubview(settingsHeaderStatus)
 
         broadcastingStatusBG.backgroundColor = RGB(220)
@@ -310,6 +321,14 @@ class HostViewController: KZViewController {
 		recordingStatusLabel.clipsToBounds = true
 		broadcastingStatusBG.addSubview(recordingStatusLabel)
 
+        //***********PLAYBACK**********\\
+        settingsContentView.addSubview(settingsHeaderPlayback)
+
+        musicVolumeSlider.value = 1.0
+        let musicVolumeSettingView = SettingJoinedView(text: "Music Volume", control: musicVolumeSlider)
+        self.musicVolumeSettingView = musicVolumeSettingView
+        settingsContentView.addSubview(musicVolumeSettingView)
+
         //***********MICROPHONE**********\\
         settingsContentView.addSubview(settingsHeaderMicrophone)
 
@@ -317,6 +336,7 @@ class HostViewController: KZViewController {
         let micVolumeSettingView = SettingJoinedView(text: "Microphone Volume", control: micVolumeSlider)
         self.micVolumeSettingView = micVolumeSettingView
         settingsContentView.addSubview(micVolumeSettingView)
+        micVolumeSettingView.setPrevChain(musicVolumeSettingView)
 
         micActiveMusicVolumeSlider.value = 0.2
         let micActiveMusicVolumeSettingView = SettingJoinedView(text: "Music Volume When Mic Active", control: micActiveMusicVolumeSlider)
@@ -331,8 +351,6 @@ class HostViewController: KZViewController {
         self.micFadeTimeSettingView = micFadeTimeSettingView
         settingsContentView.addSubview(micFadeTimeSettingView)
         micFadeTimeSettingView.setPrevChain(micActiveMusicVolumeSettingView)
-
-		musicVolumeSlider.value = 1.0
 	}
 
 	func setupToolbar() {
