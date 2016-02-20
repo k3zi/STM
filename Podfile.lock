@@ -1,5 +1,6 @@
 PODS:
   - AeroGearHttp (0.4.1)
+  - Audiobus (2.3.1)
   - CocoaSecurity (1.2.4)
   - DateTools (1.7.0)
   - Gloss (0.6.2)
@@ -8,9 +9,8 @@ PODS:
   - KILabel (1.0.1)
   - Kingfisher (2.0.1)
   - KMPlaceholderTextView (1.1.1)
-  - KZ (1.3.6):
+  - KZ (1.3.73):
     - PureLayout
-    - Reusable
   - M13ProgressSuite (1.2.7)
   - ObjectMapper (1.1.1)
   - PRTween (0.1.0)
@@ -30,6 +30,7 @@ PODS:
 
 DEPENDENCIES:
   - AeroGearHttp
+  - Audiobus
   - DateTools
   - Gloss
   - Hashids-Swift
@@ -37,7 +38,7 @@ DEPENDENCIES:
   - KILabel
   - Kingfisher
   - KMPlaceholderTextView
-  - KZ (from `https://github.com/k3zi/KZ.git`)
+  - KZ
   - M13ProgressSuite
   - ObjectMapper
   - PRTween
@@ -50,17 +51,9 @@ DEPENDENCIES:
   - Socket.IO-Client-Swift
   - SpinKit
 
-EXTERNAL SOURCES:
-  KZ:
-    :git: https://github.com/k3zi/KZ.git
-
-CHECKOUT OPTIONS:
-  KZ:
-    :commit: e774bdf5053e7b94956caf08363bebedb7fa23a3
-    :git: https://github.com/k3zi/KZ.git
-
 SPEC CHECKSUMS:
   AeroGearHttp: 4c0fe1065817199bc4b64b17deec68e9d7c341fe
+  Audiobus: d75ef3f0d625abf3007a147548423e76ca61043d
   CocoaSecurity: d288a6f87e0f363823d2cb83e753814a6944f71a
   DateTools: 53288ee8b905fdc75897a1e6b5cc0144b14cba60
   Gloss: 22fd970682b5449e08e2f41c5087eefe7d7d084b
@@ -69,7 +62,7 @@ SPEC CHECKSUMS:
   KILabel: 4797807cdc0b4992dad8bf91175ddc973c3b569b
   Kingfisher: 3af2020040453f710507819e6aa5f5721da03d9b
   KMPlaceholderTextView: 686edec818f5727728eaf8c2e9e70177692d3d53
-  KZ: 14369da760626073ce9afca279defcb69d9a848e
+  KZ: 5af89b388465421da5ffef901a0c03b2bfaf2bea
   M13ProgressSuite: 03d194af6359da440641ba758aed5a18b0386a86
   ObjectMapper: 4143abed1dbd49b73d75092fe8fa1c88ed6434b7
   PRTween: 6c58c7e32ebcf31e33e6a6e6bc727ebef3b668ef

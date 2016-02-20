@@ -3,7 +3,8 @@ use_frameworks!
 
 target 'STM' do
 
-pod 'KZ', :git => 'https://github.com/k3zi/KZ.git'
+pod 'KZ'
+pod 'Audiobus'
 pod 'AeroGearHttp'
 pod 'DateTools'
 pod 'PureLayout'
