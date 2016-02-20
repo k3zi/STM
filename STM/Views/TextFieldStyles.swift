@@ -17,16 +17,16 @@ extension UITextField {
         textField.clipsToBounds = true
         textField.layer.cornerRadius = 10
         textField.textAlignment = .Center
-        
+
         return textField
     }
-    
+
     func unstyleField() {
         spellCheckingType = .No
         autocorrectionType = .No
         autocapitalizationType = .None
     }
-    
+
     func protectField() {
         secureTextEntry = true
         unstyleField()

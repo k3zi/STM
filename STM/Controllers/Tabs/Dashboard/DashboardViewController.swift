@@ -9,13 +9,13 @@
 import UIKit
 
 class DashboardViewController: KZViewController {
-    
+
     override func viewDidLoad() {
         super.viewDidLoad()
-        
+
         if let window = AppDelegate.del().window as? Window {
             window.screenIsReady = true
         }
     }
-    
+
 }

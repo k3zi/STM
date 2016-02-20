@@ -20,7 +20,7 @@ extension UIButton {
         button.layer.cornerRadius = 10
         button.layer.borderColor = RGB(255).CGColor
         button.layer.borderWidth = 2
-        
+
         return button
     }
 }

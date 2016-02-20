@@ -10,26 +10,26 @@ import UIKit
 
 class GradientView: UIView {
     var gradientLayer = CAGradientLayer()
-    
-    override init (frame : CGRect) {
+
+    override init (frame: CGRect) {
         super.init(frame : frame)
-        
+
         gradientLayer.frame = self.bounds
         gradientLayer.colors = [UIColor.redColor().CGColor, UIColor.whiteColor().CGColor]
         self.layer.addSublayer(gradientLayer)
     }
-    
+
     convenience init () {
         self.init(frame:CGRect.zero)
     }
-    
+
     required init?(coder aDecoder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
-    
+
     override func layoutSubviews() {
         super.layoutSubviews()
-        
+
         gradientLayer.frame = self.bounds
     }
 }

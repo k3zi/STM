@@ -11,25 +11,25 @@ import RealmSwift
 
 class KZPlayerPlaylist: Object {
     let items = List<KZPlayerPlaylistItem>()
-    
+
     func add(item: KZPlayerItem) {
         let newItem = KZPlayerPlaylistItem(orig: item)
         newItem.order = items.count + 1
         items.append(newItem)
     }
-    
+
     func addItems(items: [KZPlayerItem]) {
         for item in items {
             add(item)
         }
     }
-    
+
     func remove(index: Int) {
         items.removeAtIndex(index)
     }
-    
-    func exchange(from: Int, to: Int) {
-        items.swap(from, to)
+
+    func exchange(fromRow: Int, toRow: Int) {
+        items.swap(fromRow, toRow)
     }
 }
 

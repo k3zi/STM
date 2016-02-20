@@ -88,7 +88,7 @@ class HostViewController: KZViewController {
 
 		NSTimer.scheduledTimerWithTimeInterval(1.5, target: self, selector: Selector("refresh"), userInfo: nil, repeats: true)
 	}
-    
+
     //MARK: Constraints
 	override func setupConstraints() {
 		super.setupConstraints()
@@ -323,7 +323,7 @@ class HostViewController: KZViewController {
 	// **********************************************************************
 
 	// MARK: View Changes/Updates
-    
+
     /**
     Dismiss the host player view controller
     */
@@ -332,7 +332,7 @@ class HostViewController: KZViewController {
             vc.dismissViewControllerAnimated(true, completion: nil)
         }
     }
-    
+
 	/**
 	 Toggles the extended layout of the toolbar
 
@@ -554,8 +554,8 @@ extension HostViewController {
 		let hud = M13ProgressHUD(progressView: progressView)
 		if let hud = hud {
 			hud.frame = (AppDelegate.del().window?.bounds)!
-			hud.progressViewSize = CGSizeMake(60, 60)
-			hud.animationPoint = CGPointMake(UIScreen.mainScreen().bounds.size.width / 2, UIScreen.mainScreen().bounds.size.height / 2)
+			hud.progressViewSize = CGSize(width: 60, height: 60)
+			hud.animationPoint = CGPoint(x: UIScreen.mainScreen().bounds.size.width / 2, y: UIScreen.mainScreen().bounds.size.height / 2)
 			hud.status = "Setting Up Stream"
 			hud.applyBlurToBackground = true
 			hud.maskType = M13ProgressHUDMaskTypeIOS7Blur
@@ -593,8 +593,8 @@ extension HostViewController {
 		let hud = M13ProgressHUD(progressView: progressView)
 		if let hud = hud {
 			hud.frame = (AppDelegate.del().window?.bounds)!
-			hud.progressViewSize = CGSizeMake(60, 60)
-			hud.animationPoint = CGPointMake(UIScreen.mainScreen().bounds.size.width / 2, UIScreen.mainScreen().bounds.size.height / 2)
+			hud.progressViewSize = CGSize(width: 60, height: 60)
+			hud.animationPoint = CGPoint(x: UIScreen.mainScreen().bounds.size.width / 2, y: UIScreen.mainScreen().bounds.size.height / 2)
 			hud.status = "Starting Stream"
 			hud.applyBlurToBackground = true
 			hud.maskType = M13ProgressHUDMaskTypeIOS7Blur

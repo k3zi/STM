@@ -125,9 +125,9 @@ public func viewRotationValue(view view: UIView, from: CGFloat, to: CGFloat) -> 
 public func backgroundColor(view view: UIView, to: UIColor) -> FUXValue {
     let from = view.backgroundColor!
     return FUXValue.Value({ tweenValue in
-        let fromColors = CGColorGetComponents(from.CGColor);
-        let toColors = CGColorGetComponents(to.CGColor);
-        
+        let fromColors = CGColorGetComponents(from.CGColor)
+        let toColors = CGColorGetComponents(to.CGColor)
+
         let red = CGFloat(Float(fromColors[0]) * (1 - tweenValue) + Float(toColors[0]) * tweenValue)
         let green = CGFloat(Float(fromColors[1]) * (1 - tweenValue) + Float(toColors[1]) * tweenValue)
         let blue = CGFloat(Float(fromColors[2]) * (1 - tweenValue) + Float(toColors[2]) * tweenValue)

@@ -49,41 +49,41 @@ class KZPlayer: NSObject {
     var inner = KZPlayerInner()
     var auFile1: EZAudioFile?
     var auFile2: EZAudioFile?
-    
+
     var activePlayer = 1
     var wasStopped = false
-    
+
     var item1: KZPlayerItem?
     var item2: KZPlayerItem?
-    
+
     var settings = Settings()
     var delegate: KZPlayerDelegate?
-    
+
     var crossFading = false
     var crossFadeDuration = 5.0, crossFadeTime = 5.0
     var crossFadeCount = 1
-    
+
     //Volume
     var averagePower: Float = 0.0
     var volumeView = MPVolumeView()
     var musicPaused = false
     var reachedEnd = false
     var engine = FUXEngine()
-    
+
     /// ------ Library ------- ///
     var realm: Realm?
     let thread = dispatch_queue_create("com.stormedgeapps.KZPlayer", DISPATCH_QUEUE_SERIAL)
     var allItems: Results<KZPlayerItem>?
-    
+
     var itemArray: Results<KZPlayerItem>?
     var shuffledArray: Results<KZPlayerItem>?
     var upNextItems: Results<KZPlayerUpNextItem>?
-    
+
     override init() {
         super.init()
         inner.delegate = self
         setUpAudioSession()
-        
+
         //Setup Library
         dispatch_sync(thread) { () -> Void in
             self.realm = try! Realm()
@@ -104,32 +104,32 @@ extension KZPlayer {
         } catch {
             print("Error starting audio sesssion")
         }
-        
-        volumeView.frame = CGRectMake(-2000, -2000, 0, 0)
+
+        volumeView.frame = CGRect(x: -2000, y: -2000, width: 0, height: 0)
         volumeView.alpha = 0.1
         volumeView.userInteractionEnabled = false
-        
+
         if UIApplication.sharedApplication().windows.count > 0 {
             let window = UIApplication.sharedApplication().windows[0]
             window.addSubview(volumeView)
         }
-        
+
         AppDelegate.del().window?.addSubview(volumeView)
         volumeView.hidden = true
-        
+
         MPRemoteCommandCenter.sharedCommandCenter().playCommand.addTarget(self, action: Selector("play"))
         MPRemoteCommandCenter.sharedCommandCenter().pauseCommand.addTarget(self, action: Selector("pause"))
         MPRemoteCommandCenter.sharedCommandCenter().nextTrackCommand.addTarget(self, action: Selector("next"))
-        
+
         MPRemoteCommandCenter.sharedCommandCenter().playCommand.enabled = true
         MPRemoteCommandCenter.sharedCommandCenter().pauseCommand.enabled = true
         MPRemoteCommandCenter.sharedCommandCenter().nextTrackCommand.enabled = true
         MPRemoteCommandCenter.sharedCommandCenter().previousTrackCommand.enabled = false
     }
-    
+
     func updateNowPlayingInfo(item: KZPlayerItem) {
         let center = MPNowPlayingInfoCenter.defaultCenter()
-        
+
         var dict = [String : AnyObject]()
         dict[MPMediaItemPropertyTitle] = item.title ?? ""
         dict[MPMediaItemPropertyArtist] = item.artist ?? ""
@@ -140,11 +140,11 @@ extension KZPlayer {
         center.nowPlayingInfo = dict
         MPRemoteCommandCenter.sharedCommandCenter().likeCommand.active = item.liked
     }
-    
+
     func toggleLike() {
         if let item = itemForChannel() {
             MPRemoteCommandCenter.sharedCommandCenter().likeCommand.active = !item.liked
-            
+
             if item.liked {
                 unLikeItem(item)
             } else {
@@ -159,12 +159,12 @@ extension KZPlayer: EZAudioFileDelegate, KZPlayerInnerDelegate {
     //Play Collection
     func play(items: Results<KZPlayerItem>?, shuffle: Bool = false) {
         reset()
-        
+
         setCollection(items, shuffle: shuffle)
         if shuffle {
             settings.shuffleMode = .Shuffle
         }
-        
+
         if let collection = shuffle ? shuffledArray : itemArray {
             if collection.count > 0 {
                 let item = collection[0]
@@ -176,37 +176,37 @@ extension KZPlayer: EZAudioFileDelegate, KZPlayerInnerDelegate {
             }
         }
     }
-    
+
     //Play Single Item
     func play(item: KZPlayerItem, var channel: Int = -1, silent: Bool = false) -> Bool {
         if channel == -1 {
             channel = activePlayer
         }
-        
+
         if silent {
             inner.setVolume(0.0, forPlayer: Int32(channel))
         } else {
             inner.setVolume(1.0, forPlayer: Int32(channel))
         }
         self.setPlayerForChannel(EZAudioFile(URL: item.fileURL(), andDelegate: self, outputFormat: inner.audioStreamBasicDescription()), channel: channel)
-        
+
         activePlayer = channel
         setItemForChannel(item)
         updateNowPlayingInfo(item)
-        
+
         self.play()
         return true
     }
-    
+
     func play() {
         inner.startPlayback()
         musicPaused = false
     }
-    
+
     func pause() {
         self.musicPaused = true
     }
-    
+
     func togglePlay() {
         if !musicPaused {
             pause()
@@ -214,46 +214,46 @@ extension KZPlayer: EZAudioFileDelegate, KZPlayerInnerDelegate {
             play()
         }
     }
-    
+
     func next() {
         playerCompleted(activePlayer, force: true)
     }
-    
+
     func setSpeed(var value: AudioUnitParameterValue, channel: Int = -1) {
         if value < 1 || value > 16 {
             value = 4
         }
-        
+
         inner.setRateValue(value)
     }
-    
+
     var systemVolume: Float {
         set {
-            if let view = volumeView.subviews.first as? UISlider{
+            if let view = volumeView.subviews.first as? UISlider {
                 view.value = newValue
             }
         }
-        
+
         get {
-            if let view = volumeView.subviews.first as? UISlider{
+            if let view = volumeView.subviews.first as? UISlider {
                 return view.value
             }
             return 0.0
         }
     }
-    
+
     func volume(channel: Int = -1) -> Float {
         return inner.volumeForPlayer(Int32(channel))
     }
-    
+
     func setVolume(value: Float, var channel: Int = -1) {
         if channel == -1 {
             channel = activePlayer
         }
-        
+
         inner.setVolume(value, forPlayer: Int32(channel))
     }
-    
+
     func playerCompleted(channel: Int, force: Bool = false) {
         if force || (!self.wasStopped && !(self.settings.crossFadeMode == .CrossFade)) {
             dispatch_async(thread) { () -> Void in
@@ -267,7 +267,7 @@ extension KZPlayer: EZAudioFileDelegate, KZPlayerInnerDelegate {
             }
         }
     }
-    
+
     func shouldFillAudio1BufferList(audioBufferList: UnsafeMutablePointer<AudioBufferList>, frames: UInt32) {
         if !musicPaused {
             if let auFile1 = auFile1 {
@@ -285,7 +285,7 @@ extension KZPlayer: EZAudioFileDelegate, KZPlayerInnerDelegate {
             }
         }
     }
-    
+
     func shouldFillAudio2BufferList(audioBufferList: UnsafeMutablePointer<AudioBufferList>, frames: UInt32) {
         if !musicPaused {
             if let auFile2 = auFile2 {
@@ -303,7 +303,7 @@ extension KZPlayer: EZAudioFileDelegate, KZPlayerInnerDelegate {
             }
         }
     }
-    
+
     func hasDataWithMic(audioBufferList: UnsafeMutablePointer<AudioBufferList>, numberOfFrames frames: UInt32, format: AudioStreamBasicDescription) {
         self.converter.pipeData(audioBufferList, format: format)
     }
@@ -315,7 +315,7 @@ extension KZPlayer {
         crossFadeCount += 1
         let currentCFCount = crossFadeCount
         self.crossFading = true
-        
+
         if play(item, channel: inactivePlayer(), silent: true) {
             let tween1 = FUXTween.Tween(Float(crossFadeDuration), fromToValueFunc(from: volume(activePlayer), to: 1.0, valueFunc: { (value) -> () in
                 self.inner.setVolume(value, forPlayer: Int32(self.activePlayer))
@@ -326,7 +326,7 @@ extension KZPlayer {
                     self.crossFading = false
                 }
             })
-            
+
             engine + FUXTween.Tween(Float(crossFadeDuration), fromToValueFunc(from: volume(inactivePlayer()), to: 0.0, valueFunc: { (value) -> () in
                 self.inner.setVolume(value, forPlayer: Int32(self.activePlayer))
             }))
@@ -339,51 +339,51 @@ extension KZPlayer {
     func channelForPlayer(player: EZAudioFile) -> Int {
         return player == auFile1 ? 1 : 2
     }
-    
+
     func playerForChannel(var channel: Int = -1) -> EZAudioFile? {
         if channel == -1 {
             channel = activePlayer
         }
-        
+
         return channel == 1 ? auFile1 : auFile2
     }
-    
+
     func itemForChannel(var channel: Int = -1) -> KZPlayerItem? {
         if channel == -1 {
             channel = activePlayer
         }
-        
+
         return channel == 1 ? item1 : item2
     }
-    
+
     func setItemForChannel(item: KZPlayerItem, var channel: Int = -1) {
         if channel == -1 {
             channel = activePlayer
         }
-        
+
         if channel == 1 {
             item1 = item
         } else {
             item2 = item
         }
     }
-    
+
     func setPlayerForChannel(player: EZAudioFile, var channel: Int = -1) {
         if channel == -1 {
             channel = activePlayer
         }
-        
+
         if channel == 1 {
             auFile1 = player
         } else {
             auFile2 = player
         }
     }
-    
+
     func inactivePlayer() -> Int {
         return activePlayer == 1 ? 2 : 1
     }
-    
+
     func reset() {
         activePlayer = 1
         averagePower = 0.0
@@ -395,22 +395,22 @@ extension KZPlayer {
     func find(query: String) -> Results<KZPlayerItem> {
         return self.allItems!.filter("title CONTAINS[c] %@ OR artist CONTAINS[c] %@ OR album CONTAINS[c] %@ OR albumArtist CONTAINS[c] %@", query, query, query, query)
     }
-    
+
     //MARK: Session
     func rotateSongs() -> KZPlayerItem? {
         if settings.repeatMode == .RepeatSong {
             return itemForChannel()
         }
-        
+
         var x: KZPlayerItem?
-        
+
         if let item = self.popUpNext() {
             x = item
         } else if let collection = (settings.shuffleMode == .Shuffle ? self.shuffledArray : self.itemArray) {
             if collection.count > 0 {
                 x = collection[0]
             }
-            
+
             if let item = itemForChannel() {
                 if let position = collection.indexOf(item) {
                     if (position + 1) < collection.count {
@@ -425,10 +425,10 @@ extension KZPlayer {
                 }
             }
         }
-        
+
         return x
     }
-    
+
     func setCollection(items: Results<KZPlayerItem>?, shuffle: Bool) {
         itemArray = items
         if shuffle {
@@ -439,18 +439,18 @@ extension KZPlayer {
             }
         }
     }
-    
+
     func addUpNext(orig: KZPlayerItem) {
         let newItem = KZPlayerUpNextItem(orig: orig)
         try! self.realm!.write {
             self.realm!.add(newItem)
         }
     }
-    
+
     func popUpNext() -> KZPlayerUpNextItem? {
-        
+
         var x: KZPlayerUpNextItem?
-        
+
         if self.upNextItems!.count > 0 {
             if let item = self.upNextItems?.first {
                 try! self.realm!.write {
@@ -459,12 +459,12 @@ extension KZPlayer {
                 x = item
             }
         }
-        
+
         return x
     }
-    
+
     //MARK: Song Interaction
-    
+
     func likeItem(var item: KZPlayerItem) {
         dispatch_sync(thread) { () -> Void in
             try! self.realm!.write {
@@ -473,7 +473,7 @@ extension KZPlayer {
             }
         }
     }
-    
+
     func unLikeItem(var item: KZPlayerItem) {
         dispatch_sync(thread) { () -> Void in
             try! self.realm!.write {
@@ -482,18 +482,18 @@ extension KZPlayer {
             }
         }
     }
-    
-    
+
+
     //MARK: MediaPlayer Abstraction
-    
+
     private func getAllItems() -> [MPMediaItem] {
         let predicate1 = MPMediaPropertyPredicate(value: MPMediaType.AnyAudio.rawValue, forProperty: MPMediaItemPropertyMediaType)
         let predicate12 = MPMediaPropertyPredicate(value: 0, forProperty: MPMediaItemPropertyIsCloudItem)
         let query = MPMediaQuery(filterPredicates: [predicate1, predicate12])
-        
+
         return query.items!
     }
-    
+
     private func saveItems(items: [MPMediaItem]) {
         var changed = false
         for item in items {
@@ -508,7 +508,7 @@ extension KZPlayer {
                 }
             }
         }
-        
+
         if changed {
             NSNotificationCenter.defaultCenter().postNotificationName("KZPlayerLibraryDataChanged", object: nil)
         }

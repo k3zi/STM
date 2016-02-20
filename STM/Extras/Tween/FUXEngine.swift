@@ -27,7 +27,7 @@ class FUXTweenStorage {
     var yoyo = false
     var speedSet = false
     var name = ""
-    
+
     init(_ value: FUXTween, _ name: String) {
         self.tween = value
         self.name = name
@@ -48,12 +48,12 @@ public class FUXEngine: NSObject {
         let storedTween = FUXTweenStorage(tween, name)
         _tweens.append(storedTween)
 
-        if (_tweens.count > 0 && !_isRunning) {
+        if _tweens.count > 0 && !_isRunning {
             setupDisplayLink()
         }
         return tween
     }
-    
+
     public func removeTweenByName(name: String) {
         var index = 0
         for tween in _tweens {
@@ -67,15 +67,15 @@ public class FUXEngine: NSObject {
             stopDisplayLink()
         }
     }
-    
+
     public func pause() {
         stopDisplayLink()
     }
-    
+
     public func resume() {
         setupDisplayLink()
     }
-    
+
     private func setupDisplayLink() {
         _displayLink = CADisplayLink(target: self, selector: Selector("update:"))
         _displayLink.addToRunLoop(NSRunLoop.mainRunLoop(), forMode: NSRunLoopCommonModes)
@@ -88,7 +88,7 @@ public class FUXEngine: NSObject {
     }
 
     func update(displayLink: CADisplayLink) {
-        
+
         var index = 0
         for storedTween in _tweens {
             if !storedTween.isFinished {
@@ -96,18 +96,18 @@ public class FUXEngine: NSObject {
                 storedTween.currentTweenValue = storedTween.currentRelativeTime
                 parseTween(storedTween.tween, storedTween)
                 index++
-            } else  {
+            } else {
                 _tweens.removeAtIndex(index)
             }
         }
-        
-        if (_tweens.count == 0 && _isRunning) {
+
+        if _tweens.count == 0 && _isRunning {
             stopDisplayLink()
         }
     }
-    
+
     private func parseTween(tween: FUXTween, _ storedTween: FUXTweenStorage) {
-        
+
         switch tween {
             case .Tween(let duration, let value):
                 parseValue(value, storedTween.currentTweenValue)
@@ -120,12 +120,12 @@ public class FUXEngine: NSObject {
                 } else if storedTween.currentRelativeTime == 0 && storedTween.speed < 0 {
                     runFinished = true
                 }
-                
+
                 storedTween.currentTime += Float(_displayLink.duration) * Float(_displayLink.frameInterval) * storedTween.speed
                 let time = fmaxf(0, storedTween.currentTime) / duration
                 let checkedTime = fminf(1, fmaxf(0, time))
                 storedTween.currentRelativeTime = checkedTime
-                
+
                 if runFinished {
                     if !storedTween.yoyo {
                         if storedTween.repeatCount == storedTween.repeatTotal {
@@ -179,9 +179,9 @@ public class FUXEngine: NSObject {
             print("FUX Tween Engine")
         }
     }
-    
+
     private func parseValue(value: FUXValue, _ tweenValue: Float) {
-        
+
         switch value {
             case .Value(let valueFunc):
                 valueFunc(tweenValue)
