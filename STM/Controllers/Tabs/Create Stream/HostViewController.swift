@@ -59,10 +59,13 @@ class HostViewController: KZViewController {
 	let searchBar = UISearchBar()
 	let searchResults = [Any]()
 
-	let recordSwitch = UISwitch()
+	let settingsHeaderStatus = UILabel.styledForSettingsHeader("STATUS")
+    let recordSwitch = UISwitch()
 	let recordingStatusLabel = UILabel()
 	let broadcastingStatusBG = UIView()
 
+    let settingsHeaderMicrophone = UILabel.styledForSettingsHeader("MICROPHONE")
+    var micVolumeSettingView = UIView()
 	let micVolumeSlider = UISlider()
 	let micActiveMusicVolumeSlider = UISlider()
 	let micInactiveMusicVolumeSlider = UISlider()
@@ -160,7 +163,12 @@ class HostViewController: KZViewController {
 		settingsContentView.autoMatchDimension(.Height, toDimension: .Height, ofView: settingsScrollView)
 
 		// Settings
-		broadcastingStatusBG.autoPinEdgesToSuperviewEdgesWithInsets(UIEdgeInsetsZero, excludingEdge: .Bottom)
+        settingsHeaderStatus.autoPinEdgesToSuperviewEdgesWithInsets(UIEdgeInsetsZero, excludingEdge: .Bottom)
+
+        broadcastingStatusBG.autoPinEdge(.Top, toEdge: .Bottom, ofView: settingsHeaderStatus)
+        broadcastingStatusBG.autoPinEdgeToSuperviewEdge(.Left)
+        broadcastingStatusBG.autoPinEdgeToSuperviewEdge(.Right)
+
 		recordSwitch.autoPinEdgeToSuperviewEdge(.Top, withInset: 22)
 		recordSwitch.autoPinEdgeToSuperviewEdge(.Left, withInset: 22)
 		recordSwitch.autoPinEdgeToSuperviewEdge(.Bottom, withInset: 22)
@@ -169,6 +177,14 @@ class HostViewController: KZViewController {
 		recordingStatusLabel.autoPinEdge(.Left, toEdge: .Right, ofView: recordSwitch, withOffset: 22)
 		recordingStatusLabel.autoPinEdgeToSuperviewEdge(.Right, withInset: 22)
 		recordingStatusLabel.autoMatchDimension(.Height, toDimension: .Height, ofView: recordSwitch)
+
+        settingsHeaderMicrophone.autoPinEdge(.Top, toEdge: .Bottom, ofView: broadcastingStatusBG)
+        settingsHeaderMicrophone.autoPinEdgeToSuperviewEdge(.Left)
+        settingsHeaderMicrophone.autoPinEdgeToSuperviewEdge(.Right)
+
+        micVolumeSettingView.autoPinEdge(.Top, toEdge: .Bottom, ofView: settingsHeaderMicrophone)
+        micVolumeSettingView.autoPinEdgeToSuperviewEdge(.Left)
+        micVolumeSettingView.autoPinEdgeToSuperviewEdge(.Right)
 
 		// Toolbar
 		bottomBlurBar.autoSetDimension(.Height, toSize: 88)
@@ -261,7 +277,9 @@ class HostViewController: KZViewController {
 	}
 
 	func setupSettingsContentView() {
-		broadcastingStatusBG.backgroundColor = RGB(220)
+        settingsContentView.addSubview(settingsHeaderStatus)
+
+        broadcastingStatusBG.backgroundColor = RGB(220)
 		settingsContentView.addSubview(broadcastingStatusBG)
 
 		recordSwitch.tintColor = RGB(255)
@@ -281,6 +299,10 @@ class HostViewController: KZViewController {
 		recordingStatusLabel.clipsToBounds = true
 		broadcastingStatusBG.addSubview(recordingStatusLabel)
 
+        settingsContentView.addSubview(settingsHeaderMicrophone)
+
+        micVolumeSettingView = SettingJoinedView(text: "Microphone Volume", control: micVolumeSlider)
+        settingsContentView.addSubview(micVolumeSettingView)
 		micVolumeSlider.value = 1.0
 		micActiveMusicVolumeSlider.value = 0.2
 		micInactiveMusicVolumeSlider.value = 1.0

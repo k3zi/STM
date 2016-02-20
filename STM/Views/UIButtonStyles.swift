@@ -1,5 +1,5 @@
 //
-//  ButtonStyles.swift
+//  UIButtonStyles.swift
 //  STM
 //
 //  Created by Kesi Maduka on 1/29/16.
