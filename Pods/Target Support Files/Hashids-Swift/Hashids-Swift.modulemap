@@ -1,0 +1,6 @@
+framework module Hashids_Swift {
+  umbrella header "Hashids-Swift-umbrella.h"
+
+  export *
+  module * { export * }
+}

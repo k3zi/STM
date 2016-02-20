@@ -1,0 +1,773 @@
+// !$*UTF8*$!
+{
+	archiveVersion = 1;
+	classes = {
+	};
+	objectVersion = 46;
+	objects = {
+
+/* Begin PBXBuildFile section */
+		4A9964A6337DD33DF5D797DE /* Pods_STM.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C247DFB18D94178F4088028F /* Pods_STM.framework */; };
+		EA01AF8A1C5CB3C500F56792 /* SignInViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = EA01AF891C5CB3C500F56792 /* SignInViewController.swift */; };
+		EA01AF911C5CB8DC00F56792 /* DashboardViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = EA01AF901C5CB8DC00F56792 /* DashboardViewController.swift */; };
+		EA01AF931C5CBCA600F56792 /* STMUser.swift in Sources */ = {isa = PBXBuildFile; fileRef = EA01AF921C5CBCA600F56792 /* STMUser.swift */; };
+		EA01AF961C5CC48700F56792 /* CreateStreamViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = EA01AF951C5CC48700F56792 /* CreateStreamViewController.swift */; };
+		EA01AF981C5CD67E00F56792 /* HostViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = EA01AF971C5CD67E00F56792 /* HostViewController.swift */; };
+		EA09CAAD1C5C41510067FF6A /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = EA09CAAC1C5C41510067FF6A /* AppDelegate.swift */; };
+		EA09CAB41C5C41510067FF6A /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = EA09CAB31C5C41510067FF6A /* Assets.xcassets */; };
+		EA09CAC41C5C5CD30067FF6A /* InitialViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = EA09CAC31C5C5CD30067FF6A /* InitialViewController.swift */; };
+		EA09CAC61C5C5D040067FF6A /* Window.swift in Sources */ = {isa = PBXBuildFile; fileRef = EA09CAC51C5C5D040067FF6A /* Window.swift */; };
+		EA09CAC81C5C5D170067FF6A /* Constants.swift in Sources */ = {isa = PBXBuildFile; fileRef = EA09CAC71C5C5D170067FF6A /* Constants.swift */; };
+		EA09CACB1C5C63A20067FF6A /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = EA09CACA1C5C63A20067FF6A /* LaunchScreen.storyboard */; };
+		EA09CAD01C5C84B00067FF6A /* ButtonStyles.swift in Sources */ = {isa = PBXBuildFile; fileRef = EA09CACF1C5C84B00067FF6A /* ButtonStyles.swift */; };
+		EA09CAD21C5C85AF0067FF6A /* CreateAccountViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = EA09CAD11C5C85AF0067FF6A /* CreateAccountViewController.swift */; };
+		EA09CAD41C5C86430067FF6A /* TextFieldStyles.swift in Sources */ = {isa = PBXBuildFile; fileRef = EA09CAD31C5C86430067FF6A /* TextFieldStyles.swift */; };
+		EA09CAD71C5C89A50067FF6A /* NavigationController.swift in Sources */ = {isa = PBXBuildFile; fileRef = EA09CAD61C5C89A50067FF6A /* NavigationController.swift */; };
+		EA24C0631C683F8300FE4DD0 /* MCSwipeCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = EA24C0621C683F8300FE4DD0 /* MCSwipeCell.swift */; };
+		EA24C0651C68418600FE4DD0 /* UpNextSongCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = EA24C0641C68418600FE4DD0 /* UpNextSongCell.swift */; };
+		EA27B1FC1C5D2D05006F269D /* STMStream.swift in Sources */ = {isa = PBXBuildFile; fileRef = EA27B1FB1C5D2D05006F269D /* STMStream.swift */; };
+		EA27B2021C5D3312006F269D /* KZPlayer.swift in Sources */ = {isa = PBXBuildFile; fileRef = EA27B1FE1C5D3312006F269D /* KZPlayer.swift */; };
+		EA27B2031C5D3312006F269D /* KZPlayerItem.swift in Sources */ = {isa = PBXBuildFile; fileRef = EA27B1FF1C5D3312006F269D /* KZPlayerItem.swift */; };
+		EA27B2041C5D3312006F269D /* KZPlayerPlaylist.swift in Sources */ = {isa = PBXBuildFile; fileRef = EA27B2001C5D3312006F269D /* KZPlayerPlaylist.swift */; };
+		EA27B2051C5D3312006F269D /* KZPlayerTag.swift in Sources */ = {isa = PBXBuildFile; fileRef = EA27B2011C5D3312006F269D /* KZPlayerTag.swift */; };
+		EA27B20A1C5D781E006F269D /* KZConverter.swift in Sources */ = {isa = PBXBuildFile; fileRef = EA27B2091C5D781E006F269D /* KZConverter.swift */; };
+		EA481DE81C630EED008E3E6E /* SelectSongCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = EA481DE71C630EED008E3E6E /* SelectSongCell.swift */; };
+		EA4E49481C613F7C00CB40D7 /* HostStreamCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = EA4E49471C613F7C00CB40D7 /* HostStreamCell.swift */; };
+		EA4E494B1C61416400CB40D7 /* Label.swift in Sources */ = {isa = PBXBuildFile; fileRef = EA4E494A1C61416400CB40D7 /* Label.swift */; };
+		EA4E494D1C617FA000CB40D7 /* GradientView.swift in Sources */ = {isa = PBXBuildFile; fileRef = EA4E494C1C617FA000CB40D7 /* GradientView.swift */; };
+		EA4F49371C5EBF4100103559 /* TPCircularBuffer.c in Sources */ = {isa = PBXBuildFile; fileRef = EA4F49351C5EBF4100103559 /* TPCircularBuffer.c */; };
+		EA4F495B1C5EBFA000103559 /* YBNBandEQNode.m in Sources */ = {isa = PBXBuildFile; fileRef = EA4F493A1C5EBFA000103559 /* YBNBandEQNode.m */; };
+		EA4F495C1C5EBFA000103559 /* YBFormatConverter.m in Sources */ = {isa = PBXBuildFile; fileRef = EA4F493C1C5EBFA000103559 /* YBFormatConverter.m */; };
+		EA4F495D1C5EBFA000103559 /* YBPresetEQNode.m in Sources */ = {isa = PBXBuildFile; fileRef = EA4F493E1C5EBFA000103559 /* YBPresetEQNode.m */; };
+		EA4F495E1C5EBFA000103559 /* YBAudioComponent.m in Sources */ = {isa = PBXBuildFile; fileRef = EA4F49401C5EBFA000103559 /* YBAudioComponent.m */; };
+		EA4F495F1C5EBFA000103559 /* YBAudioException.m in Sources */ = {isa = PBXBuildFile; fileRef = EA4F49421C5EBFA000103559 /* YBAudioException.m */; };
+		EA4F49601C5EBFA000103559 /* YBAudioFilePlayer.m in Sources */ = {isa = PBXBuildFile; fileRef = EA4F49441C5EBFA000103559 /* YBAudioFilePlayer.m */; };
+		EA4F49611C5EBFA000103559 /* YBAudioUnitGraph.m in Sources */ = {isa = PBXBuildFile; fileRef = EA4F49471C5EBFA000103559 /* YBAudioUnitGraph.m */; };
+		EA4F49621C5EBFA000103559 /* YBAudioUnitNode.m in Sources */ = {isa = PBXBuildFile; fileRef = EA4F49491C5EBFA000103559 /* YBAudioUnitNode.m */; };
+		EA4F49631C5EBFA000103559 /* YBAudioUtils.m in Sources */ = {isa = PBXBuildFile; fileRef = EA4F494B1C5EBFA000103559 /* YBAudioUtils.m */; };
+		EA4F49641C5EBFA000103559 /* YBDistortionFilter.m in Sources */ = {isa = PBXBuildFile; fileRef = EA4F494D1C5EBFA000103559 /* YBDistortionFilter.m */; };
+		EA4F49651C5EBFA000103559 /* YBMultiChannelMixer.m in Sources */ = {isa = PBXBuildFile; fileRef = EA4F494F1C5EBFA000103559 /* YBMultiChannelMixer.m */; };
+		EA4F49661C5EBFA000103559 /* YBScheduledSoundPlayer.m in Sources */ = {isa = PBXBuildFile; fileRef = EA4F49521C5EBFA000103559 /* YBScheduledSoundPlayer.m */; };
+		EA4F49671C5EBFA000103559 /* YBTremoloFilter.m in Sources */ = {isa = PBXBuildFile; fileRef = EA4F49541C5EBFA000103559 /* YBTremoloFilter.m */; };
+		EA4F49681C5EBFA000103559 /* YBVarispeedConverter.m in Sources */ = {isa = PBXBuildFile; fileRef = EA4F49561C5EBFA000103559 /* YBVarispeedConverter.m */; };
+		EA4F49691C5EBFA000103559 /* YBNewTimePitch.m in Sources */ = {isa = PBXBuildFile; fileRef = EA4F49581C5EBFA000103559 /* YBNewTimePitch.m */; };
+		EA4F496A1C5EBFA000103559 /* YBReverb.m in Sources */ = {isa = PBXBuildFile; fileRef = EA4F495A1C5EBFA000103559 /* YBReverb.m */; };
+		EA4F49701C5EC04C00103559 /* KZConverter.m in Sources */ = {isa = PBXBuildFile; fileRef = EA4F496C1C5EC04C00103559 /* KZConverter.m */; };
+		EA4F49711C5EC04C00103559 /* AEFloatConverter.m in Sources */ = {isa = PBXBuildFile; fileRef = EA4F496E1C5EC04C00103559 /* AEFloatConverter.m */; };
+		EA4F49841C5EC05700103559 /* KZPlayerInner.m in Sources */ = {isa = PBXBuildFile; fileRef = EA4F49721C5EC05700103559 /* KZPlayerInner.m */; };
+		EA4F49851C5EC05700103559 /* EZAudio.m in Sources */ = {isa = PBXBuildFile; fileRef = EA4F49741C5EC05700103559 /* EZAudio.m */; };
+		EA4F49871C5EC05700103559 /* EZAudioFile.m in Sources */ = {isa = PBXBuildFile; fileRef = EA4F49771C5EC05700103559 /* EZAudioFile.m */; };
+		EA4F498F1C5F2D3800103559 /* EZOutput.m in Sources */ = {isa = PBXBuildFile; fileRef = EA4F498E1C5F2D3800103559 /* EZOutput.m */; };
+		EAB0E6981C780866008945FF /* YBDelay.m in Sources */ = {isa = PBXBuildFile; fileRef = EAB0E6971C780866008945FF /* YBDelay.m */; };
+		EAB0E69E1C7813B5008945FF /* FUXCombinators.swift in Sources */ = {isa = PBXBuildFile; fileRef = EAB0E69A1C7813B5008945FF /* FUXCombinators.swift */; };
+		EAB0E69F1C7813B5008945FF /* FUXData.swift in Sources */ = {isa = PBXBuildFile; fileRef = EAB0E69B1C7813B5008945FF /* FUXData.swift */; };
+		EAB0E6A01C7813B5008945FF /* FUXEasingCombinators.swift in Sources */ = {isa = PBXBuildFile; fileRef = EAB0E69C1C7813B5008945FF /* FUXEasingCombinators.swift */; };
+		EAB0E6A11C7813B5008945FF /* FUXEngine.swift in Sources */ = {isa = PBXBuildFile; fileRef = EAB0E69D1C7813B5008945FF /* FUXEngine.swift */; };
+		EAB0E6A31C78146C008945FF /* LICENSE in Resources */ = {isa = PBXBuildFile; fileRef = EAB0E6A21C78146C008945FF /* LICENSE */; };
+		EACD2B401C75996600A6CFD6 /* HostInfoHolderView.swift in Sources */ = {isa = PBXBuildFile; fileRef = EACD2B3F1C75996600A6CFD6 /* HostInfoHolderView.swift */; };
+		EAE545041C76978F00180241 /* MeterTable.m in Sources */ = {isa = PBXBuildFile; fileRef = EAE545021C76978F00180241 /* MeterTable.m */; };
+		EAE545061C76BA9200180241 /* STMVisualizer.swift in Sources */ = {isa = PBXBuildFile; fileRef = EAE545051C76BA9200180241 /* STMVisualizer.swift */; };
+/* End PBXBuildFile section */
+
+/* Begin PBXFileReference section */
+		3534D789493137C70227BF7A /* Pods-STM.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-STM.debug.xcconfig"; path = "Pods/Target Support Files/Pods-STM/Pods-STM.debug.xcconfig"; sourceTree = "<group>"; };
+		3B4177B55191B175F8A0C4B8 /* Pods.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		6722F7E460A0B4E6C5F18396 /* Pods-STM.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-STM.release.xcconfig"; path = "Pods/Target Support Files/Pods-STM/Pods-STM.release.xcconfig"; sourceTree = "<group>"; };
+		C247DFB18D94178F4088028F /* Pods_STM.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_STM.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		EA01AF891C5CB3C500F56792 /* SignInViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SignInViewController.swift; sourceTree = "<group>"; };
+		EA01AF901C5CB8DC00F56792 /* DashboardViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DashboardViewController.swift; sourceTree = "<group>"; };
+		EA01AF921C5CBCA600F56792 /* STMUser.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = STMUser.swift; sourceTree = "<group>"; };
+		EA01AF951C5CC48700F56792 /* CreateStreamViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CreateStreamViewController.swift; sourceTree = "<group>"; };
+		EA01AF971C5CD67E00F56792 /* HostViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = HostViewController.swift; sourceTree = "<group>"; };
+		EA09CAA91C5C41510067FF6A /* STM.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = STM.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		EA09CAAC1C5C41510067FF6A /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
+		EA09CAB31C5C41510067FF6A /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
+		EA09CAB81C5C41510067FF6A /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		EA09CAC21C5C5C680067FF6A /* STM-Bridging-Header.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "STM-Bridging-Header.h"; sourceTree = "<group>"; };
+		EA09CAC31C5C5CD30067FF6A /* InitialViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = InitialViewController.swift; sourceTree = "<group>"; };
+		EA09CAC51C5C5D040067FF6A /* Window.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Window.swift; sourceTree = "<group>"; };
+		EA09CAC71C5C5D170067FF6A /* Constants.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Constants.swift; sourceTree = "<group>"; };
+		EA09CACA1C5C63A20067FF6A /* LaunchScreen.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; path = LaunchScreen.storyboard; sourceTree = "<group>"; };
+		EA09CACF1C5C84B00067FF6A /* ButtonStyles.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ButtonStyles.swift; sourceTree = "<group>"; };
+		EA09CAD11C5C85AF0067FF6A /* CreateAccountViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CreateAccountViewController.swift; sourceTree = "<group>"; };
+		EA09CAD31C5C86430067FF6A /* TextFieldStyles.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TextFieldStyles.swift; sourceTree = "<group>"; };
+		EA09CAD61C5C89A50067FF6A /* NavigationController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = NavigationController.swift; sourceTree = "<group>"; };
+		EA24C0621C683F8300FE4DD0 /* MCSwipeCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MCSwipeCell.swift; sourceTree = "<group>"; };
+		EA24C0641C68418600FE4DD0 /* UpNextSongCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = UpNextSongCell.swift; sourceTree = "<group>"; };
+		EA27B1FB1C5D2D05006F269D /* STMStream.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = STMStream.swift; sourceTree = "<group>"; };
+		EA27B1FE1C5D3312006F269D /* KZPlayer.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = KZPlayer.swift; sourceTree = "<group>"; };
+		EA27B1FF1C5D3312006F269D /* KZPlayerItem.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = KZPlayerItem.swift; sourceTree = "<group>"; };
+		EA27B2001C5D3312006F269D /* KZPlayerPlaylist.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = KZPlayerPlaylist.swift; sourceTree = "<group>"; };
+		EA27B2011C5D3312006F269D /* KZPlayerTag.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = KZPlayerTag.swift; sourceTree = "<group>"; };
+		EA27B2091C5D781E006F269D /* KZConverter.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = KZConverter.swift; sourceTree = "<group>"; };
+		EA481DE71C630EED008E3E6E /* SelectSongCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SelectSongCell.swift; sourceTree = "<group>"; };
+		EA4E49471C613F7C00CB40D7 /* HostStreamCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = HostStreamCell.swift; sourceTree = "<group>"; };
+		EA4E494A1C61416400CB40D7 /* Label.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Label.swift; sourceTree = "<group>"; };
+		EA4E494C1C617FA000CB40D7 /* GradientView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = GradientView.swift; sourceTree = "<group>"; };
+		EA4F49351C5EBF4100103559 /* TPCircularBuffer.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = TPCircularBuffer.c; sourceTree = "<group>"; };
+		EA4F49361C5EBF4100103559 /* TPCircularBuffer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TPCircularBuffer.h; sourceTree = "<group>"; };
+		EA4F49391C5EBFA000103559 /* YBNBandEQNode.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = YBNBandEQNode.h; sourceTree = "<group>"; };
+		EA4F493A1C5EBFA000103559 /* YBNBandEQNode.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = YBNBandEQNode.m; sourceTree = "<group>"; };
+		EA4F493B1C5EBFA000103559 /* YBFormatConverter.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = YBFormatConverter.h; sourceTree = "<group>"; };
+		EA4F493C1C5EBFA000103559 /* YBFormatConverter.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = YBFormatConverter.m; sourceTree = "<group>"; };
+		EA4F493D1C5EBFA000103559 /* YBPresetEQNode.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = YBPresetEQNode.h; sourceTree = "<group>"; };
+		EA4F493E1C5EBFA000103559 /* YBPresetEQNode.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = YBPresetEQNode.m; sourceTree = "<group>"; };
+		EA4F493F1C5EBFA000103559 /* YBAudioComponent.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = YBAudioComponent.h; sourceTree = "<group>"; };
+		EA4F49401C5EBFA000103559 /* YBAudioComponent.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = YBAudioComponent.m; sourceTree = "<group>"; };
+		EA4F49411C5EBFA000103559 /* YBAudioException.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = YBAudioException.h; sourceTree = "<group>"; };
+		EA4F49421C5EBFA000103559 /* YBAudioException.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = YBAudioException.m; sourceTree = "<group>"; };
+		EA4F49431C5EBFA000103559 /* YBAudioFilePlayer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = YBAudioFilePlayer.h; sourceTree = "<group>"; };
+		EA4F49441C5EBFA000103559 /* YBAudioFilePlayer.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = YBAudioFilePlayer.m; sourceTree = "<group>"; };
+		EA4F49451C5EBFA000103559 /* YBAudioUnit.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = YBAudioUnit.h; sourceTree = "<group>"; };
+		EA4F49461C5EBFA000103559 /* YBAudioUnitGraph.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = YBAudioUnitGraph.h; sourceTree = "<group>"; };
+		EA4F49471C5EBFA000103559 /* YBAudioUnitGraph.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = YBAudioUnitGraph.m; sourceTree = "<group>"; };
+		EA4F49481C5EBFA000103559 /* YBAudioUnitNode.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = YBAudioUnitNode.h; sourceTree = "<group>"; };
+		EA4F49491C5EBFA000103559 /* YBAudioUnitNode.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = YBAudioUnitNode.m; sourceTree = "<group>"; };
+		EA4F494A1C5EBFA000103559 /* YBAudioUtils.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = YBAudioUtils.h; sourceTree = "<group>"; };
+		EA4F494B1C5EBFA000103559 /* YBAudioUtils.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = YBAudioUtils.m; sourceTree = "<group>"; };
+		EA4F494C1C5EBFA000103559 /* YBDistortionFilter.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = YBDistortionFilter.h; sourceTree = "<group>"; };
+		EA4F494D1C5EBFA000103559 /* YBDistortionFilter.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = YBDistortionFilter.m; sourceTree = "<group>"; };
+		EA4F494E1C5EBFA000103559 /* YBMultiChannelMixer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = YBMultiChannelMixer.h; sourceTree = "<group>"; };
+		EA4F494F1C5EBFA000103559 /* YBMultiChannelMixer.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = YBMultiChannelMixer.m; sourceTree = "<group>"; };
+		EA4F49501C5EBFA000103559 /* YBAudioUnitFiles-Prefix.pch */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "YBAudioUnitFiles-Prefix.pch"; sourceTree = "<group>"; };
+		EA4F49511C5EBFA000103559 /* YBScheduledSoundPlayer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = YBScheduledSoundPlayer.h; sourceTree = "<group>"; };
+		EA4F49521C5EBFA000103559 /* YBScheduledSoundPlayer.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = YBScheduledSoundPlayer.m; sourceTree = "<group>"; };
+		EA4F49531C5EBFA000103559 /* YBTremoloFilter.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = YBTremoloFilter.h; sourceTree = "<group>"; };
+		EA4F49541C5EBFA000103559 /* YBTremoloFilter.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = YBTremoloFilter.m; sourceTree = "<group>"; };
+		EA4F49551C5EBFA000103559 /* YBVarispeedConverter.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = YBVarispeedConverter.h; sourceTree = "<group>"; };
+		EA4F49561C5EBFA000103559 /* YBVarispeedConverter.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = YBVarispeedConverter.m; sourceTree = "<group>"; };
+		EA4F49571C5EBFA000103559 /* YBNewTimePitch.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = YBNewTimePitch.h; sourceTree = "<group>"; };
+		EA4F49581C5EBFA000103559 /* YBNewTimePitch.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = YBNewTimePitch.m; sourceTree = "<group>"; };
+		EA4F49591C5EBFA000103559 /* YBReverb.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = YBReverb.h; sourceTree = "<group>"; };
+		EA4F495A1C5EBFA000103559 /* YBReverb.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = YBReverb.m; sourceTree = "<group>"; };
+		EA4F496C1C5EC04C00103559 /* KZConverter.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = KZConverter.m; sourceTree = "<group>"; };
+		EA4F496D1C5EC04C00103559 /* KZConverter.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = KZConverter.h; sourceTree = "<group>"; };
+		EA4F496E1C5EC04C00103559 /* AEFloatConverter.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AEFloatConverter.m; sourceTree = "<group>"; };
+		EA4F496F1C5EC04C00103559 /* AEFloatConverter.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AEFloatConverter.h; sourceTree = "<group>"; };
+		EA4F49721C5EC05700103559 /* KZPlayerInner.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = KZPlayerInner.m; path = EZAudio/KZPlayerInner.m; sourceTree = "<group>"; };
+		EA4F49731C5EC05700103559 /* KZPlayerInner.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = KZPlayerInner.h; path = EZAudio/KZPlayerInner.h; sourceTree = "<group>"; };
+		EA4F49741C5EC05700103559 /* EZAudio.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = EZAudio.m; sourceTree = "<group>"; };
+		EA4F49761C5EC05700103559 /* EZAudioFile.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = EZAudioFile.h; sourceTree = "<group>"; };
+		EA4F49771C5EC05700103559 /* EZAudioFile.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = EZAudioFile.m; sourceTree = "<group>"; };
+		EA4F49831C5EC05700103559 /* EZAudio.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = EZAudio.h; sourceTree = "<group>"; };
+		EA4F498D1C5F2D3800103559 /* EZOutput.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = EZOutput.h; sourceTree = "<group>"; };
+		EA4F498E1C5F2D3800103559 /* EZOutput.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = EZOutput.m; sourceTree = "<group>"; };
+		EAB0E6961C780821008945FF /* YBDelay.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = YBDelay.h; sourceTree = "<group>"; };
+		EAB0E6971C780866008945FF /* YBDelay.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = YBDelay.m; sourceTree = "<group>"; };
+		EAB0E69A1C7813B5008945FF /* FUXCombinators.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FUXCombinators.swift; sourceTree = "<group>"; };
+		EAB0E69B1C7813B5008945FF /* FUXData.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FUXData.swift; sourceTree = "<group>"; };
+		EAB0E69C1C7813B5008945FF /* FUXEasingCombinators.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FUXEasingCombinators.swift; sourceTree = "<group>"; };
+		EAB0E69D1C7813B5008945FF /* FUXEngine.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FUXEngine.swift; sourceTree = "<group>"; };
+		EAB0E6A21C78146C008945FF /* LICENSE */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = LICENSE; sourceTree = "<group>"; };
+		EACD2B3F1C75996600A6CFD6 /* HostInfoHolderView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = HostInfoHolderView.swift; sourceTree = "<group>"; };
+		EAE545021C76978F00180241 /* MeterTable.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MeterTable.m; sourceTree = "<group>"; };
+		EAE545031C76978F00180241 /* MeterTable.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MeterTable.h; sourceTree = "<group>"; };
+		EAE545051C76BA9200180241 /* STMVisualizer.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = STMVisualizer.swift; sourceTree = "<group>"; };
+/* End PBXFileReference section */
+
+/* Begin PBXFrameworksBuildPhase section */
+		EA09CAA61C5C41510067FF6A /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				4A9964A6337DD33DF5D797DE /* Pods_STM.framework in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXFrameworksBuildPhase section */
+
+/* Begin PBXGroup section */
+		67BB41A52364203F8AF7FD2D /* Pods */ = {
+			isa = PBXGroup;
+			children = (
+				3534D789493137C70227BF7A /* Pods-STM.debug.xcconfig */,
+				6722F7E460A0B4E6C5F18396 /* Pods-STM.release.xcconfig */,
+			);
+			name = Pods;
+			sourceTree = "<group>";
+		};
+		98574C4A951DCFEA0F886856 /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+				3B4177B55191B175F8A0C4B8 /* Pods.framework */,
+				C247DFB18D94178F4088028F /* Pods_STM.framework */,
+			);
+			name = Frameworks;
+			sourceTree = "<group>";
+		};
+		EA01AF8B1C5CB6FA00F56792 /* Tabs */ = {
+			isa = PBXGroup;
+			children = (
+				EA01AF8F1C5CB74C00F56792 /* Dashboard */,
+				EA01AF941C5CC44A00F56792 /* Create Stream */,
+			);
+			path = Tabs;
+			sourceTree = "<group>";
+		};
+		EA01AF8F1C5CB74C00F56792 /* Dashboard */ = {
+			isa = PBXGroup;
+			children = (
+				EA01AF901C5CB8DC00F56792 /* DashboardViewController.swift */,
+			);
+			path = Dashboard;
+			sourceTree = "<group>";
+		};
+		EA01AF941C5CC44A00F56792 /* Create Stream */ = {
+			isa = PBXGroup;
+			children = (
+				EA01AF951C5CC48700F56792 /* CreateStreamViewController.swift */,
+				EA01AF971C5CD67E00F56792 /* HostViewController.swift */,
+				EACD2B3F1C75996600A6CFD6 /* HostInfoHolderView.swift */,
+			);
+			path = "Create Stream";
+			sourceTree = "<group>";
+		};
+		EA09CAA01C5C41510067FF6A = {
+			isa = PBXGroup;
+			children = (
+				EA09CAAB1C5C41510067FF6A /* STM */,
+				EA09CAAA1C5C41510067FF6A /* Products */,
+				98574C4A951DCFEA0F886856 /* Frameworks */,
+				67BB41A52364203F8AF7FD2D /* Pods */,
+			);
+			sourceTree = "<group>";
+		};
+		EA09CAAA1C5C41510067FF6A /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				EA09CAA91C5C41510067FF6A /* STM.app */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		EA09CAAB1C5C41510067FF6A /* STM */ = {
+			isa = PBXGroup;
+			children = (
+				EA09CAC11C5C5C360067FF6A /* Extras */,
+				EA09CABE1C5C446F0067FF6A /* Models */,
+				EA09CABF1C5C44770067FF6A /* Views */,
+				EA09CAC01C5C447E0067FF6A /* Controllers */,
+				EA09CAAC1C5C41510067FF6A /* AppDelegate.swift */,
+				EA09CAC71C5C5D170067FF6A /* Constants.swift */,
+				EA09CACA1C5C63A20067FF6A /* LaunchScreen.storyboard */,
+				EA09CAB31C5C41510067FF6A /* Assets.xcassets */,
+				EA09CAB81C5C41510067FF6A /* Info.plist */,
+			);
+			path = STM;
+			sourceTree = "<group>";
+		};
+		EA09CABE1C5C446F0067FF6A /* Models */ = {
+			isa = PBXGroup;
+			children = (
+				EA01AF921C5CBCA600F56792 /* STMUser.swift */,
+				EA27B1FB1C5D2D05006F269D /* STMStream.swift */,
+			);
+			path = Models;
+			sourceTree = "<group>";
+		};
+		EA09CABF1C5C44770067FF6A /* Views */ = {
+			isa = PBXGroup;
+			children = (
+				EA4E49491C61413400CB40D7 /* Generic */,
+				EA4E49431C613F1E00CB40D7 /* Table Cells */,
+				EA09CAC51C5C5D040067FF6A /* Window.swift */,
+				EA09CACF1C5C84B00067FF6A /* ButtonStyles.swift */,
+				EA09CAD31C5C86430067FF6A /* TextFieldStyles.swift */,
+				EAE545051C76BA9200180241 /* STMVisualizer.swift */,
+			);
+			path = Views;
+			sourceTree = "<group>";
+		};
+		EA09CAC01C5C447E0067FF6A /* Controllers */ = {
+			isa = PBXGroup;
+			children = (
+				EA09CAD51C5C89430067FF6A /* Launch */,
+				EA01AF8B1C5CB6FA00F56792 /* Tabs */,
+				EA09CAD61C5C89A50067FF6A /* NavigationController.swift */,
+			);
+			path = Controllers;
+			sourceTree = "<group>";
+		};
+		EA09CAC11C5C5C360067FF6A /* Extras */ = {
+			isa = PBXGroup;
+			children = (
+				EA09CAC21C5C5C680067FF6A /* STM-Bridging-Header.h */,
+				EA27B1FD1C5D32F6006F269D /* Player */,
+				EA4F49341C5EBE8E00103559 /* Ports */,
+				EAB0E6991C78138F008945FF /* Tween */,
+			);
+			path = Extras;
+			sourceTree = "<group>";
+		};
+		EA09CAD51C5C89430067FF6A /* Launch */ = {
+			isa = PBXGroup;
+			children = (
+				EA09CAC31C5C5CD30067FF6A /* InitialViewController.swift */,
+				EA09CAD11C5C85AF0067FF6A /* CreateAccountViewController.swift */,
+				EA01AF891C5CB3C500F56792 /* SignInViewController.swift */,
+			);
+			path = Launch;
+			sourceTree = "<group>";
+		};
+		EA27B1FD1C5D32F6006F269D /* Player */ = {
+			isa = PBXGroup;
+			children = (
+				EA27B1FE1C5D3312006F269D /* KZPlayer.swift */,
+				EA27B1FF1C5D3312006F269D /* KZPlayerItem.swift */,
+				EA27B2001C5D3312006F269D /* KZPlayerPlaylist.swift */,
+				EA27B2011C5D3312006F269D /* KZPlayerTag.swift */,
+				EA27B2091C5D781E006F269D /* KZConverter.swift */,
+			);
+			path = Player;
+			sourceTree = "<group>";
+		};
+		EA4E49431C613F1E00CB40D7 /* Table Cells */ = {
+			isa = PBXGroup;
+			children = (
+				EA24C0621C683F8300FE4DD0 /* MCSwipeCell.swift */,
+				EA4E49471C613F7C00CB40D7 /* HostStreamCell.swift */,
+				EA481DE71C630EED008E3E6E /* SelectSongCell.swift */,
+				EA24C0641C68418600FE4DD0 /* UpNextSongCell.swift */,
+			);
+			path = "Table Cells";
+			sourceTree = "<group>";
+		};
+		EA4E49491C61413400CB40D7 /* Generic */ = {
+			isa = PBXGroup;
+			children = (
+				EA4E494A1C61416400CB40D7 /* Label.swift */,
+				EA4E494C1C617FA000CB40D7 /* GradientView.swift */,
+			);
+			path = Generic;
+			sourceTree = "<group>";
+		};
+		EA4F49341C5EBE8E00103559 /* Ports */ = {
+			isa = PBXGroup;
+			children = (
+				EA4F496D1C5EC04C00103559 /* KZConverter.h */,
+				EA4F496C1C5EC04C00103559 /* KZConverter.m */,
+				EA4F49731C5EC05700103559 /* KZPlayerInner.h */,
+				EA4F49721C5EC05700103559 /* KZPlayerInner.m */,
+				EA4F496B1C5EBFDB00103559 /* EZAudio */,
+				EA4F49381C5EBF6D00103559 /* YBAudioUnit */,
+				EA4F49351C5EBF4100103559 /* TPCircularBuffer.c */,
+				EA4F49361C5EBF4100103559 /* TPCircularBuffer.h */,
+				EA4F496E1C5EC04C00103559 /* AEFloatConverter.m */,
+				EA4F496F1C5EC04C00103559 /* AEFloatConverter.h */,
+			);
+			path = Ports;
+			sourceTree = "<group>";
+		};
+		EA4F49381C5EBF6D00103559 /* YBAudioUnit */ = {
+			isa = PBXGroup;
+			children = (
+				EA4F49391C5EBFA000103559 /* YBNBandEQNode.h */,
+				EA4F493A1C5EBFA000103559 /* YBNBandEQNode.m */,
+				EA4F493B1C5EBFA000103559 /* YBFormatConverter.h */,
+				EA4F493C1C5EBFA000103559 /* YBFormatConverter.m */,
+				EA4F493D1C5EBFA000103559 /* YBPresetEQNode.h */,
+				EA4F493E1C5EBFA000103559 /* YBPresetEQNode.m */,
+				EA4F493F1C5EBFA000103559 /* YBAudioComponent.h */,
+				EA4F49401C5EBFA000103559 /* YBAudioComponent.m */,
+				EA4F49411C5EBFA000103559 /* YBAudioException.h */,
+				EA4F49421C5EBFA000103559 /* YBAudioException.m */,
+				EA4F49431C5EBFA000103559 /* YBAudioFilePlayer.h */,
+				EA4F49441C5EBFA000103559 /* YBAudioFilePlayer.m */,
+				EA4F49451C5EBFA000103559 /* YBAudioUnit.h */,
+				EA4F49461C5EBFA000103559 /* YBAudioUnitGraph.h */,
+				EA4F49471C5EBFA000103559 /* YBAudioUnitGraph.m */,
+				EA4F49481C5EBFA000103559 /* YBAudioUnitNode.h */,
+				EA4F49491C5EBFA000103559 /* YBAudioUnitNode.m */,
+				EA4F494A1C5EBFA000103559 /* YBAudioUtils.h */,
+				EA4F494B1C5EBFA000103559 /* YBAudioUtils.m */,
+				EA4F494C1C5EBFA000103559 /* YBDistortionFilter.h */,
+				EA4F494D1C5EBFA000103559 /* YBDistortionFilter.m */,
+				EAB0E6961C780821008945FF /* YBDelay.h */,
+				EAB0E6971C780866008945FF /* YBDelay.m */,
+				EA4F494E1C5EBFA000103559 /* YBMultiChannelMixer.h */,
+				EA4F494F1C5EBFA000103559 /* YBMultiChannelMixer.m */,
+				EA4F49501C5EBFA000103559 /* YBAudioUnitFiles-Prefix.pch */,
+				EA4F49511C5EBFA000103559 /* YBScheduledSoundPlayer.h */,
+				EA4F49521C5EBFA000103559 /* YBScheduledSoundPlayer.m */,
+				EA4F49531C5EBFA000103559 /* YBTremoloFilter.h */,
+				EA4F49541C5EBFA000103559 /* YBTremoloFilter.m */,
+				EA4F49551C5EBFA000103559 /* YBVarispeedConverter.h */,
+				EA4F49561C5EBFA000103559 /* YBVarispeedConverter.m */,
+				EA4F49571C5EBFA000103559 /* YBNewTimePitch.h */,
+				EA4F49581C5EBFA000103559 /* YBNewTimePitch.m */,
+				EA4F49591C5EBFA000103559 /* YBReverb.h */,
+				EA4F495A1C5EBFA000103559 /* YBReverb.m */,
+			);
+			path = YBAudioUnit;
+			sourceTree = "<group>";
+		};
+		EA4F496B1C5EBFDB00103559 /* EZAudio */ = {
+			isa = PBXGroup;
+			children = (
+				EA4F498D1C5F2D3800103559 /* EZOutput.h */,
+				EA4F498E1C5F2D3800103559 /* EZOutput.m */,
+				EA4F49831C5EC05700103559 /* EZAudio.h */,
+				EA4F49741C5EC05700103559 /* EZAudio.m */,
+				EA4F49761C5EC05700103559 /* EZAudioFile.h */,
+				EA4F49771C5EC05700103559 /* EZAudioFile.m */,
+				EAE545021C76978F00180241 /* MeterTable.m */,
+				EAE545031C76978F00180241 /* MeterTable.h */,
+			);
+			path = EZAudio;
+			sourceTree = "<group>";
+		};
+		EAB0E6991C78138F008945FF /* Tween */ = {
+			isa = PBXGroup;
+			children = (
+				EAB0E69A1C7813B5008945FF /* FUXCombinators.swift */,
+				EAB0E69B1C7813B5008945FF /* FUXData.swift */,
+				EAB0E69C1C7813B5008945FF /* FUXEasingCombinators.swift */,
+				EAB0E69D1C7813B5008945FF /* FUXEngine.swift */,
+				EAB0E6A21C78146C008945FF /* LICENSE */,
+			);
+			path = Tween;
+			sourceTree = "<group>";
+		};
+/* End PBXGroup section */
+
+/* Begin PBXNativeTarget section */
+		EA09CAA81C5C41510067FF6A /* STM */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = EA09CABB1C5C41510067FF6A /* Build configuration list for PBXNativeTarget "STM" */;
+			buildPhases = (
+				3B0FDC848503BB3AF0F36EE8 /* Check Pods Manifest.lock */,
+				EA09CAA51C5C41510067FF6A /* Sources */,
+				EA09CAA61C5C41510067FF6A /* Frameworks */,
+				EA09CAA71C5C41510067FF6A /* Resources */,
+				EA09CAC91C5C62720067FF6A /* ShellScript */,
+				C8BB1B58104A4B92E3BFF9F4 /* Embed Pods Frameworks */,
+				995E2A85AD31DC2FF9851682 /* Copy Pods Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = STM;
+			productName = STM;
+			productReference = EA09CAA91C5C41510067FF6A /* STM.app */;
+			productType = "com.apple.product-type.application";
+		};
+/* End PBXNativeTarget section */
+
+/* Begin PBXProject section */
+		EA09CAA11C5C41510067FF6A /* Project object */ = {
+			isa = PBXProject;
+			attributes = {
+				LastSwiftMigration = 0730;
+				LastSwiftUpdateCheck = 0730;
+				LastUpgradeCheck = 0730;
+				ORGANIZATIONNAME = "Storm Edge Apps LLC";
+				TargetAttributes = {
+					EA09CAA81C5C41510067FF6A = {
+						CreatedOnToolsVersion = 7.3;
+						DevelopmentTeam = FYHEVSXTTV;
+						SystemCapabilities = {
+							com.apple.BackgroundModes = {
+								enabled = 1;
+							};
+						};
+					};
+				};
+			};
+			buildConfigurationList = EA09CAA41C5C41510067FF6A /* Build configuration list for PBXProject "STM" */;
+			compatibilityVersion = "Xcode 3.2";
+			developmentRegion = English;
+			hasScannedForEncodings = 0;
+			knownRegions = (
+				en,
+				Base,
+			);
+			mainGroup = EA09CAA01C5C41510067FF6A;
+			productRefGroup = EA09CAAA1C5C41510067FF6A /* Products */;
+			projectDirPath = "";
+			projectRoot = "";
+			targets = (
+				EA09CAA81C5C41510067FF6A /* STM */,
+			);
+		};
+/* End PBXProject section */
+
+/* Begin PBXResourcesBuildPhase section */
+		EA09CAA71C5C41510067FF6A /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				EAB0E6A31C78146C008945FF /* LICENSE in Resources */,
+				EA09CACB1C5C63A20067FF6A /* LaunchScreen.storyboard in Resources */,
+				EA09CAB41C5C41510067FF6A /* Assets.xcassets in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXResourcesBuildPhase section */
+
+/* Begin PBXShellScriptBuildPhase section */
+		3B0FDC848503BB3AF0F36EE8 /* Check Pods Manifest.lock */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+			);
+			name = "Check Pods Manifest.lock";
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "diff \"${PODS_ROOT}/../Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [[ $? != 0 ]] ; then\n    cat << EOM\nerror: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\nEOM\n    exit 1\nfi\n";
+			showEnvVarsInLog = 0;
+		};
+		995E2A85AD31DC2FF9851682 /* Copy Pods Resources */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+			);
+			name = "Copy Pods Resources";
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "\"${SRCROOT}/Pods/Target Support Files/Pods-STM/Pods-STM-resources.sh\"\n";
+			showEnvVarsInLog = 0;
+		};
+		C8BB1B58104A4B92E3BFF9F4 /* Embed Pods Frameworks */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+			);
+			name = "Embed Pods Frameworks";
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "\"${SRCROOT}/Pods/Target Support Files/Pods-STM/Pods-STM-frameworks.sh\"\n";
+			showEnvVarsInLog = 0;
+		};
+		EA09CAC91C5C62720067FF6A /* ShellScript */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+			);
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "#!/bin/bash\nbuildNumber=$(/usr/libexec/PlistBuddy -c \"Print CFBundleVersion\" \"$INFOPLIST_FILE\")\nbuildNumber=$(($buildNumber + 1))\n/usr/libexec/PlistBuddy -c \"Set :CFBundleVersion $buildNumber\" \"$INFOPLIST_FILE\"";
+		};
+/* End PBXShellScriptBuildPhase section */
+
+/* Begin PBXSourcesBuildPhase section */
+		EA09CAA51C5C41510067FF6A /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				EA4F49611C5EBFA000103559 /* YBAudioUnitGraph.m in Sources */,
+				EAE545061C76BA9200180241 /* STMVisualizer.swift in Sources */,
+				EA4F496A1C5EBFA000103559 /* YBReverb.m in Sources */,
+				EA4F49371C5EBF4100103559 /* TPCircularBuffer.c in Sources */,
+				EA4F49871C5EC05700103559 /* EZAudioFile.m in Sources */,
+				EA01AF8A1C5CB3C500F56792 /* SignInViewController.swift in Sources */,
+				EA4F495B1C5EBFA000103559 /* YBNBandEQNode.m in Sources */,
+				EAB0E69F1C7813B5008945FF /* FUXData.swift in Sources */,
+				EA09CAD41C5C86430067FF6A /* TextFieldStyles.swift in Sources */,
+				EA4F49681C5EBFA000103559 /* YBVarispeedConverter.m in Sources */,
+				EACD2B401C75996600A6CFD6 /* HostInfoHolderView.swift in Sources */,
+				EAB0E6981C780866008945FF /* YBDelay.m in Sources */,
+				EA481DE81C630EED008E3E6E /* SelectSongCell.swift in Sources */,
+				EA4F49641C5EBFA000103559 /* YBDistortionFilter.m in Sources */,
+				EA27B1FC1C5D2D05006F269D /* STMStream.swift in Sources */,
+				EA4F495E1C5EBFA000103559 /* YBAudioComponent.m in Sources */,
+				EA09CAD71C5C89A50067FF6A /* NavigationController.swift in Sources */,
+				EA01AF931C5CBCA600F56792 /* STMUser.swift in Sources */,
+				EA4F49841C5EC05700103559 /* KZPlayerInner.m in Sources */,
+				EA4F49661C5EBFA000103559 /* YBScheduledSoundPlayer.m in Sources */,
+				EA4F49701C5EC04C00103559 /* KZConverter.m in Sources */,
+				EA27B2021C5D3312006F269D /* KZPlayer.swift in Sources */,
+				EA4E494D1C617FA000CB40D7 /* GradientView.swift in Sources */,
+				EA27B2051C5D3312006F269D /* KZPlayerTag.swift in Sources */,
+				EA4F49601C5EBFA000103559 /* YBAudioFilePlayer.m in Sources */,
+				EA09CAD21C5C85AF0067FF6A /* CreateAccountViewController.swift in Sources */,
+				EA09CAAD1C5C41510067FF6A /* AppDelegate.swift in Sources */,
+				EA4F495F1C5EBFA000103559 /* YBAudioException.m in Sources */,
+				EA09CAC41C5C5CD30067FF6A /* InitialViewController.swift in Sources */,
+				EA09CAC61C5C5D040067FF6A /* Window.swift in Sources */,
+				EA24C0651C68418600FE4DD0 /* UpNextSongCell.swift in Sources */,
+				EA27B2041C5D3312006F269D /* KZPlayerPlaylist.swift in Sources */,
+				EA4F49651C5EBFA000103559 /* YBMultiChannelMixer.m in Sources */,
+				EA4E494B1C61416400CB40D7 /* Label.swift in Sources */,
+				EA4F49631C5EBFA000103559 /* YBAudioUtils.m in Sources */,
+				EA01AF961C5CC48700F56792 /* CreateStreamViewController.swift in Sources */,
+				EA01AF981C5CD67E00F56792 /* HostViewController.swift in Sources */,
+				EA01AF911C5CB8DC00F56792 /* DashboardViewController.swift in Sources */,
+				EA4F49621C5EBFA000103559 /* YBAudioUnitNode.m in Sources */,
+				EAE545041C76978F00180241 /* MeterTable.m in Sources */,
+				EA09CAD01C5C84B00067FF6A /* ButtonStyles.swift in Sources */,
+				EAB0E6A01C7813B5008945FF /* FUXEasingCombinators.swift in Sources */,
+				EA27B20A1C5D781E006F269D /* KZConverter.swift in Sources */,
+				EA4F495C1C5EBFA000103559 /* YBFormatConverter.m in Sources */,
+				EA4F49711C5EC04C00103559 /* AEFloatConverter.m in Sources */,
+				EAB0E69E1C7813B5008945FF /* FUXCombinators.swift in Sources */,
+				EA4E49481C613F7C00CB40D7 /* HostStreamCell.swift in Sources */,
+				EA4F49691C5EBFA000103559 /* YBNewTimePitch.m in Sources */,
+				EA4F495D1C5EBFA000103559 /* YBPresetEQNode.m in Sources */,
+				EA4F498F1C5F2D3800103559 /* EZOutput.m in Sources */,
+				EA4F49851C5EC05700103559 /* EZAudio.m in Sources */,
+				EAB0E6A11C7813B5008945FF /* FUXEngine.swift in Sources */,
+				EA27B2031C5D3312006F269D /* KZPlayerItem.swift in Sources */,
+				EA09CAC81C5C5D170067FF6A /* Constants.swift in Sources */,
+				EA24C0631C683F8300FE4DD0 /* MCSwipeCell.swift in Sources */,
+				EA4F49671C5EBFA000103559 /* YBTremoloFilter.m in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXSourcesBuildPhase section */
+
+/* Begin XCBuildConfiguration section */
+		EA09CAB91C5C41510067FF6A /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++0x";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = dwarf;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				ENABLE_TESTABILITY = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu99;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"DEBUG=1",
+					"$(inherited)",
+				);
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 9.3;
+				MTL_ENABLE_DEBUG_INFO = YES;
+				ONLY_ACTIVE_ARCH = YES;
+				SDKROOT = iphoneos;
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Debug;
+		};
+		EA09CABA1C5C41510067FF6A /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++0x";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				ENABLE_NS_ASSERTIONS = NO;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu99;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 9.3;
+				MTL_ENABLE_DEBUG_INFO = NO;
+				SDKROOT = iphoneos;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				VALIDATE_PRODUCT = YES;
+			};
+			name = Release;
+		};
+		EA09CABC1C5C41510067FF6A /* Debug */ = {
+			isa = XCBuildConfiguration;
+			baseConfigurationReference = 3534D789493137C70227BF7A /* Pods-STM.debug.xcconfig */;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CODE_SIGN_IDENTITY = "iPhone Developer";
+				INFOPLIST_FILE = STM/Info.plist;
+				IPHONEOS_DEPLOYMENT_TARGET = 9.0;
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
+				PRODUCT_BUNDLE_IDENTIFIER = com.stormedgeapps.streamtome;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_OBJC_BRIDGING_HEADER = "STM/Extras/STM-Bridging-Header.h";
+			};
+			name = Debug;
+		};
+		EA09CABD1C5C41510067FF6A /* Release */ = {
+			isa = XCBuildConfiguration;
+			baseConfigurationReference = 6722F7E460A0B4E6C5F18396 /* Pods-STM.release.xcconfig */;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CODE_SIGN_IDENTITY = "iPhone Developer";
+				INFOPLIST_FILE = STM/Info.plist;
+				IPHONEOS_DEPLOYMENT_TARGET = 9.0;
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
+				PRODUCT_BUNDLE_IDENTIFIER = com.stormedgeapps.streamtome;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_OBJC_BRIDGING_HEADER = "STM/Extras/STM-Bridging-Header.h";
+			};
+			name = Release;
+		};
+/* End XCBuildConfiguration section */
+
+/* Begin XCConfigurationList section */
+		EA09CAA41C5C41510067FF6A /* Build configuration list for PBXProject "STM" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				EA09CAB91C5C41510067FF6A /* Debug */,
+				EA09CABA1C5C41510067FF6A /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		EA09CABB1C5C41510067FF6A /* Build configuration list for PBXNativeTarget "STM" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				EA09CABC1C5C41510067FF6A /* Debug */,
+				EA09CABD1C5C41510067FF6A /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+/* End XCConfigurationList section */
+	};
+	rootObject = EA09CAA11C5C41510067FF6A /* Project object */;
+}
