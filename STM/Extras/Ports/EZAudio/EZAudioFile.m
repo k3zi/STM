@@ -36,8 +36,6 @@
     ExtAudioFileRef             _audioFile;
     AudioStreamBasicDescription _clientFormat;
     AudioStreamBasicDescription _fileFormat;
-    float                       **_floatBuffers;
-    AEFloatConverter            *_floatConverter;
     SInt64                      _frameIndex;
     CFURLRef                    _sourceURL;
     Float32                     _totalDuration;
@@ -141,16 +139,6 @@
                                                  &_clientFormat)
                operation:"Couldn't set client data format on input ext file"];
     
-    // Allocate the float buffers
-    _floatConverter = [[AEFloatConverter alloc] initWithSourceFormat:_clientFormat];
-    size_t sizeToAllocate = sizeof(float*) * _clientFormat.mChannelsPerFrame;
-    sizeToAllocate = MAX(8, sizeToAllocate);
-    _floatBuffers   = (float**)malloc( sizeToAllocate );
-    UInt32 outputBufferSize = 32 * 1024; // 32 KB
-    for ( int i=0; i< _clientFormat.mChannelsPerFrame; i++ ) {
-        _floatBuffers[i] = (float*)malloc(outputBufferSize);
-    }
-    
     // There's no waveform data yet
     _waveformData = NULL;
     
@@ -173,17 +161,9 @@
     *eof = frames == 0;
     _frameIndex += frames;
     if( self.audioFileDelegate ){
-        if( [self.audioFileDelegate respondsToSelector:@selector(audioFile:updatedPosition:)] ){
+        if([self.audioFileDelegate respondsToSelector:@selector(audioFile:updatedPosition:)] ){
             [self.audioFileDelegate audioFile:self
                               updatedPosition:_frameIndex];
-        }
-        if( [self.audioFileDelegate respondsToSelector:@selector(audioFile:data:frames:)] ){
-            @autoreleasepool {
-                AEFloatConverterToFloat(_floatConverter,audioBufferList,_floatBuffers,frames);
-                NSData *data = [NSData dataWithBytes:audioBufferList->mBuffers[0].mData length:audioBufferList->mBuffers[0].mDataByteSize];
-                [self.audioFileDelegate audioFile:self data:data frames:frames];
-                data = nil;
-            }
         }
     }
 }

@@ -34,10 +34,6 @@
 #define kAudioUnitSampleFractionBits 24
 #endif
 
-#pragma mark - 3rd Party Utilties
-#import "AEFloatConverter.h"
-#import "TPCircularBuffer.h"
-
 #pragma mark - Core Components
 #import "EZAudioFile.h"
 #import "KZConverter.h"

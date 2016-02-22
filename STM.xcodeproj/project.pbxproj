@@ -35,7 +35,6 @@
 		EA4E49481C613F7C00CB40D7 /* HostStreamCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = EA4E49471C613F7C00CB40D7 /* HostStreamCell.swift */; };
 		EA4E494B1C61416400CB40D7 /* Label.swift in Sources */ = {isa = PBXBuildFile; fileRef = EA4E494A1C61416400CB40D7 /* Label.swift */; };
 		EA4E494D1C617FA000CB40D7 /* GradientView.swift in Sources */ = {isa = PBXBuildFile; fileRef = EA4E494C1C617FA000CB40D7 /* GradientView.swift */; };
-		EA4F49371C5EBF4100103559 /* TPCircularBuffer.c in Sources */ = {isa = PBXBuildFile; fileRef = EA4F49351C5EBF4100103559 /* TPCircularBuffer.c */; };
 		EA4F495B1C5EBFA000103559 /* YBNBandEQNode.m in Sources */ = {isa = PBXBuildFile; fileRef = EA4F493A1C5EBFA000103559 /* YBNBandEQNode.m */; };
 		EA4F495C1C5EBFA000103559 /* YBFormatConverter.m in Sources */ = {isa = PBXBuildFile; fileRef = EA4F493C1C5EBFA000103559 /* YBFormatConverter.m */; };
 		EA4F495D1C5EBFA000103559 /* YBPresetEQNode.m in Sources */ = {isa = PBXBuildFile; fileRef = EA4F493E1C5EBFA000103559 /* YBPresetEQNode.m */; };
@@ -53,7 +52,6 @@
 		EA4F49691C5EBFA000103559 /* YBNewTimePitch.m in Sources */ = {isa = PBXBuildFile; fileRef = EA4F49581C5EBFA000103559 /* YBNewTimePitch.m */; };
 		EA4F496A1C5EBFA000103559 /* YBReverb.m in Sources */ = {isa = PBXBuildFile; fileRef = EA4F495A1C5EBFA000103559 /* YBReverb.m */; };
 		EA4F49701C5EC04C00103559 /* KZConverter.m in Sources */ = {isa = PBXBuildFile; fileRef = EA4F496C1C5EC04C00103559 /* KZConverter.m */; };
-		EA4F49711C5EC04C00103559 /* AEFloatConverter.m in Sources */ = {isa = PBXBuildFile; fileRef = EA4F496E1C5EC04C00103559 /* AEFloatConverter.m */; };
 		EA4F49841C5EC05700103559 /* KZPlayerInner.m in Sources */ = {isa = PBXBuildFile; fileRef = EA4F49721C5EC05700103559 /* KZPlayerInner.m */; };
 		EA4F49851C5EC05700103559 /* EZAudio.m in Sources */ = {isa = PBXBuildFile; fileRef = EA4F49741C5EC05700103559 /* EZAudio.m */; };
 		EA4F49871C5EC05700103559 /* EZAudioFile.m in Sources */ = {isa = PBXBuildFile; fileRef = EA4F49771C5EC05700103559 /* EZAudioFile.m */; };
@@ -107,8 +105,6 @@
 		EA4E49471C613F7C00CB40D7 /* HostStreamCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = HostStreamCell.swift; sourceTree = "<group>"; };
 		EA4E494A1C61416400CB40D7 /* Label.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Label.swift; sourceTree = "<group>"; };
 		EA4E494C1C617FA000CB40D7 /* GradientView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = GradientView.swift; sourceTree = "<group>"; };
-		EA4F49351C5EBF4100103559 /* TPCircularBuffer.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = TPCircularBuffer.c; sourceTree = "<group>"; };
-		EA4F49361C5EBF4100103559 /* TPCircularBuffer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TPCircularBuffer.h; sourceTree = "<group>"; };
 		EA4F49391C5EBFA000103559 /* YBNBandEQNode.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = YBNBandEQNode.h; sourceTree = "<group>"; };
 		EA4F493A1C5EBFA000103559 /* YBNBandEQNode.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = YBNBandEQNode.m; sourceTree = "<group>"; };
 		EA4F493B1C5EBFA000103559 /* YBFormatConverter.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = YBFormatConverter.h; sourceTree = "<group>"; };
@@ -145,8 +141,6 @@
 		EA4F495A1C5EBFA000103559 /* YBReverb.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = YBReverb.m; sourceTree = "<group>"; };
 		EA4F496C1C5EC04C00103559 /* KZConverter.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = KZConverter.m; sourceTree = "<group>"; };
 		EA4F496D1C5EC04C00103559 /* KZConverter.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = KZConverter.h; sourceTree = "<group>"; };
-		EA4F496E1C5EC04C00103559 /* AEFloatConverter.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AEFloatConverter.m; sourceTree = "<group>"; };
-		EA4F496F1C5EC04C00103559 /* AEFloatConverter.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AEFloatConverter.h; sourceTree = "<group>"; };
 		EA4F49721C5EC05700103559 /* KZPlayerInner.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = KZPlayerInner.m; path = EZAudio/KZPlayerInner.m; sourceTree = "<group>"; };
 		EA4F49731C5EC05700103559 /* KZPlayerInner.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = KZPlayerInner.h; path = EZAudio/KZPlayerInner.h; sourceTree = "<group>"; };
 		EA4F49741C5EC05700103559 /* EZAudio.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = EZAudio.m; sourceTree = "<group>"; };
@@ -356,16 +350,12 @@
 		EA4F49341C5EBE8E00103559 /* Ports */ = {
 			isa = PBXGroup;
 			children = (
+				EA4F496B1C5EBFDB00103559 /* EZAudio */,
+				EA4F49381C5EBF6D00103559 /* YBAudioUnit */,
 				EA4F496D1C5EC04C00103559 /* KZConverter.h */,
 				EA4F496C1C5EC04C00103559 /* KZConverter.m */,
 				EA4F49731C5EC05700103559 /* KZPlayerInner.h */,
 				EA4F49721C5EC05700103559 /* KZPlayerInner.m */,
-				EA4F496B1C5EBFDB00103559 /* EZAudio */,
-				EA4F49381C5EBF6D00103559 /* YBAudioUnit */,
-				EA4F49351C5EBF4100103559 /* TPCircularBuffer.c */,
-				EA4F49361C5EBF4100103559 /* TPCircularBuffer.h */,
-				EA4F496E1C5EC04C00103559 /* AEFloatConverter.m */,
-				EA4F496F1C5EC04C00103559 /* AEFloatConverter.h */,
 			);
 			path = Ports;
 			sourceTree = "<group>";
@@ -605,7 +595,6 @@
 				EA4F49611C5EBFA000103559 /* YBAudioUnitGraph.m in Sources */,
 				EAE545061C76BA9200180241 /* STMVisualizer.swift in Sources */,
 				EA4F496A1C5EBFA000103559 /* YBReverb.m in Sources */,
-				EA4F49371C5EBF4100103559 /* TPCircularBuffer.c in Sources */,
 				EA4F49871C5EC05700103559 /* EZAudioFile.m in Sources */,
 				EA01AF8A1C5CB3C500F56792 /* SignInViewController.swift in Sources */,
 				EA4F495B1C5EBFA000103559 /* YBNBandEQNode.m in Sources */,
@@ -647,7 +636,6 @@
 				EAB0E6A01C7813B5008945FF /* FUXEasingCombinators.swift in Sources */,
 				EA27B20A1C5D781E006F269D /* KZConverter.swift in Sources */,
 				EA4F495C1C5EBFA000103559 /* YBFormatConverter.m in Sources */,
-				EA4F49711C5EC04C00103559 /* AEFloatConverter.m in Sources */,
 				EAB0E69E1C7813B5008945FF /* FUXCombinators.swift in Sources */,
 				EA4E49481C613F7C00CB40D7 /* HostStreamCell.swift in Sources */,
 				EA4F49691C5EBFA000103559 /* YBNewTimePitch.m in Sources */,

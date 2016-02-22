@@ -27,7 +27,6 @@
 #import <AudioToolbox/AudioToolbox.h>
 #import <Accelerate/Accelerate.h>
 #import "YBAudioUnit.h"
-#import "TPCircularBuffer.h"
 
 @protocol KZPlayerInnerDelegate <NSObject>
 

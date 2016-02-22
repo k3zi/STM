@@ -30,7 +30,6 @@
 #import <AudioUnit/AudioUnit.h>
 #endif
 #import "YBAudioUnit.h"
-#import "TPCircularBuffer.h"
 #import <Accelerate/Accelerate.h>
 #import <UIKit/UIKit.h>
 #import <Audiobus/Audiobus.h>

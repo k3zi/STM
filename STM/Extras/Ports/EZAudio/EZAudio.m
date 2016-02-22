@@ -205,23 +205,6 @@
     return value < 0 ? -1.0f : ( value > 0 ? 1.0f : 0.0f );
 }
 
-#pragma mark - TPCircularBuffer Utility
-+ (void)circularBuffer:(TPCircularBuffer *)circularBuffer withSize:(int)size {
-    TPCircularBufferInit(circularBuffer,size);
-}
-
-+ (void)appendDataToCircularBuffer:(TPCircularBuffer*)circularBuffer
-              fromAudioBufferList:(AudioBufferList*)audioBufferList {
-    TPCircularBufferProduceBytes(circularBuffer,
-                                 audioBufferList->mBuffers[0].mData,
-                                 audioBufferList->mBuffers[0].mDataByteSize);
-}
-
-+ (void)freeCircularBuffer:(TPCircularBuffer *)circularBuffer {
-    TPCircularBufferClear(circularBuffer);
-    TPCircularBufferCleanup(circularBuffer);
-}
-
 static UInt32 CalculateLPCMFlags(UInt32 bitsPerChannel,
                                  BOOL isFloat,
                                  BOOL isNonInterleaved) {

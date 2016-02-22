@@ -47,7 +47,6 @@
 @synthesize mixerNode, fileMixerNode, descAACFormat, reverbNode, converter1, converter2, converter3, converter4;
 
 static EZOutput *_sharedOutput = nil;
-static AEFloatConverter *_floatConverter;
 static AudioConverterRef _render_converter;
 static float zero;
 static YBNewTimePitch *timePitchNode;
