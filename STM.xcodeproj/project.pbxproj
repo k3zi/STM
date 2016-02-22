@@ -65,6 +65,7 @@
 		EAB0E6A71C78EEB0008945FF /* UILabelStyles.swift in Sources */ = {isa = PBXBuildFile; fileRef = EAB0E6A61C78EEB0008945FF /* UILabelStyles.swift */; };
 		EAB0E6A91C78F8E9008945FF /* SettingJoinedView.swift in Sources */ = {isa = PBXBuildFile; fileRef = EAB0E6A81C78F8E9008945FF /* SettingJoinedView.swift */; };
 		EAB0E6AC1C7966E5008945FF /* AudioToolbox.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = EAB0E6AB1C7966E5008945FF /* AudioToolbox.framework */; };
+		EAB39D411C7B149600D8C70F /* Localizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = EAB39D401C7B149600D8C70F /* Localizable.strings */; };
 		EACD2B401C75996600A6CFD6 /* HostInfoHolderView.swift in Sources */ = {isa = PBXBuildFile; fileRef = EACD2B3F1C75996600A6CFD6 /* HostInfoHolderView.swift */; };
 		EAE545041C76978F00180241 /* MeterTable.m in Sources */ = {isa = PBXBuildFile; fileRef = EAE545021C76978F00180241 /* MeterTable.m */; };
 		EAE545061C76BA9200180241 /* STMVisualizer.swift in Sources */ = {isa = PBXBuildFile; fileRef = EAE545051C76BA9200180241 /* STMVisualizer.swift */; };
@@ -160,6 +161,7 @@
 		EAB0E6A81C78F8E9008945FF /* SettingJoinedView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SettingJoinedView.swift; sourceTree = "<group>"; };
 		EAB0E6AA1C7966E4008945FF /* STM.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.xml; path = STM.entitlements; sourceTree = "<group>"; };
 		EAB0E6AB1C7966E5008945FF /* AudioToolbox.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AudioToolbox.framework; path = System/Library/Frameworks/AudioToolbox.framework; sourceTree = SDKROOT; };
+		EAB39D401C7B149600D8C70F /* Localizable.strings */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.strings; path = Localizable.strings; sourceTree = "<group>"; };
 		EACD2B3F1C75996600A6CFD6 /* HostInfoHolderView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = HostInfoHolderView.swift; sourceTree = "<group>"; };
 		EAE545021C76978F00180241 /* MeterTable.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MeterTable.m; sourceTree = "<group>"; };
 		EAE545031C76978F00180241 /* MeterTable.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MeterTable.h; sourceTree = "<group>"; };
@@ -246,7 +248,6 @@
 		EA09CAAB1C5C41510067FF6A /* STM */ = {
 			isa = PBXGroup;
 			children = (
-				EAB0E6AA1C7966E4008945FF /* STM.entitlements */,
 				EA09CAC11C5C5C360067FF6A /* Extras */,
 				EA09CABE1C5C446F0067FF6A /* Models */,
 				EA09CABF1C5C44770067FF6A /* Views */,
@@ -256,6 +257,8 @@
 				EA09CACA1C5C63A20067FF6A /* LaunchScreen.storyboard */,
 				EA09CAB31C5C41510067FF6A /* Assets.xcassets */,
 				EA09CAB81C5C41510067FF6A /* Info.plist */,
+				EAB39D401C7B149600D8C70F /* Localizable.strings */,
+				EAB0E6AA1C7966E4008945FF /* STM.entitlements */,
 			);
 			path = STM;
 			sourceTree = "<group>";
@@ -504,6 +507,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				EAB0E6A31C78146C008945FF /* LICENSE in Resources */,
+				EAB39D411C7B149600D8C70F /* Localizable.strings in Resources */,
 				EA09CACB1C5C63A20067FF6A /* LaunchScreen.storyboard in Resources */,
 				EA09CAB41C5C41510067FF6A /* Assets.xcassets in Resources */,
 			);

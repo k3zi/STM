@@ -333,7 +333,7 @@ class HostViewController: KZViewController {
 		settingsContentView.addSubview(settingsHeaderPlayback)
 
 		musicVolumeSlider.value = 1.0
-		let musicVolumeSettingView = SettingJoinedView(text: "Music Volume", detailText: "The volume for the music playback that listeners will here when the mic is inactive", control: musicVolumeSlider)
+		let musicVolumeSettingView = SettingJoinedView(text: NSLocalizedString("Settings_HostMusicVolume", comment: "Music Volume"), detailText: NSLocalizedString("Settings_HostMusicVolumeDescription", comment: nil), control: musicVolumeSlider)
 		self.musicVolumeSettingView = musicVolumeSettingView
 		settingsContentView.addSubview(musicVolumeSettingView)
 
@@ -341,13 +341,13 @@ class HostViewController: KZViewController {
 		settingsContentView.addSubview(settingsHeaderMicrophone)
 
 		micVolumeSlider.value = 1.0
-		let micVolumeSettingView = SettingJoinedView(text: "Microphone Volume", detailText: "", control: micVolumeSlider)
+		let micVolumeSettingView = SettingJoinedView(text: NSLocalizedString("Settings_HostMicrophoneVolume", comment: "Microphone Volume"), detailText: NSLocalizedString("Settings_HostMicrophoneVolumeDescription", comment: nil), control: micVolumeSlider)
 		self.micVolumeSettingView = micVolumeSettingView
 		settingsContentView.addSubview(micVolumeSettingView)
 		micVolumeSettingView.setPrevChain(musicVolumeSettingView)
 
 		micActiveMusicVolumeSlider.value = 0.2
-		let micActiveMusicVolumeSettingView = SettingJoinedView(text: "Music Volume When Mic Active", control: micActiveMusicVolumeSlider)
+		let micActiveMusicVolumeSettingView = SettingJoinedView(text: NSLocalizedString("Settings_HostMusicVolumeWhenMicActive", comment: "Music Volume When Mic Active"), detailText: NSLocalizedString("Settings_HostMusicVolumeWhenMicActiveDescription", comment: nil), control: micActiveMusicVolumeSlider)
 		self.micActiveMusicVolumeSettingView = micActiveMusicVolumeSettingView
 		settingsContentView.addSubview(micActiveMusicVolumeSettingView)
 		micActiveMusicVolumeSettingView.setPrevChain(micVolumeSettingView)
@@ -355,7 +355,7 @@ class HostViewController: KZViewController {
 		micFadeTimeSlider.minimumValue = 0.0
 		micFadeTimeSlider.maximumValue = 10.0
 		micFadeTimeSlider.value = 2.0
-		let micFadeTimeSettingView = SettingJoinedView(text: "Microphone Fade Time", control: micFadeTimeSlider)
+		let micFadeTimeSettingView = SettingJoinedView(text: NSLocalizedString("Settings_HostMicFadeTime", comment: "Microphone Fade Time"), detailText: NSLocalizedString("Settings_HostMicFadeTimeDescription", comment: nil), control: micFadeTimeSlider)
 		self.micFadeTimeSettingView = micFadeTimeSettingView
 		settingsContentView.addSubview(micFadeTimeSettingView)
 		micFadeTimeSettingView.setPrevChain(micActiveMusicVolumeSettingView)
@@ -513,13 +513,13 @@ class HostViewController: KZViewController {
 			songInfoLabel3.text = nil
 		}
 
-        if songInfoLabel2.text?.characters.count == 0 && songInfoLabel3.text?.characters.count == 0 {
-            songInfoHolderViewTopPadding?.constant = 5
-        } else if songInfoLabel2.text?.characters.count != 0 && songInfoLabel3.text?.characters.count != 0 {
-            songInfoHolderViewTopPadding?.constant = -5
-        } else {
-            songInfoHolderViewTopPadding?.constant = 0
-        }
+		if songInfoLabel2.text?.characters.count == 0 && songInfoLabel3.text?.characters.count == 0 {
+			songInfoHolderViewTopPadding?.constant = 5
+		} else if songInfoLabel2.text?.characters.count != 0 && songInfoLabel3.text?.characters.count != 0 {
+			songInfoHolderViewTopPadding?.constant = -5
+		} else {
+			songInfoHolderViewTopPadding?.constant = 0
+		}
 	}
 
 	/**

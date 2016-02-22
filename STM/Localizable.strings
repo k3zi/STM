@@ -1,0 +1,19 @@
+/* 
+  Localizable.strings
+  STM
+
+  Created by Kesi Maduka on 2/22/16.
+  Copyright © 2016 Storm Edge Apps LLC. All rights reserved.
+*/
+
+Settings_HostMusicVolume = "Music Volume"
+Settings_HostMusicVolumeDescription = "The volume for the music playback that listeners will here when the mic is inactive"
+
+Settings_HostMicrophoneVolume = "Microphone Volume"
+Settings_HostMicrophoneVolumeDescription = "The volume for the music playback that listeners will here when the mic is inactive"
+
+Settings_HostMusicVolumeWhenMicActive = "Music Volume When Mic Active"
+Settings_HostMusicVolumeWhenMicActiveDescription = "The volume for the music playback that listeners will here when the mic is inactive"
+
+Settings_HostMicFadeTime = "Microphone Fade Time"
+Settings_HostMicFadeTimeDescription = "The volume for the music playback that listeners will here when the mic is inactive"
