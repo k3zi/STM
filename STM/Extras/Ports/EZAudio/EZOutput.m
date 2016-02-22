@@ -82,6 +82,7 @@ static OSStatus RemoteIORenderCallback(void *inRefCon, AudioUnitRenderActionFlag
             AudioUnitRender(output.converter3.audioUnit, ioActionFlags, inTimeStamp, inBusNumber, inNumberFrames, audioBufferList);
         }
 
+        //TODO: Pass in the format for the sampleRate
         [output convertToAAC:audioBufferList];
 
         //audioBufferList = Buffer With Mic Input
@@ -571,7 +572,7 @@ OSStatus encoderDataProc(AudioConverterRef inAudioConverter, UInt32* ioNumberDat
     operation1.updateBlock = ^(PRTweenPeriod *period) {
         [self setVolume:period.tweenedValue forPlayer:0];
     };
-    operation1.completeBlock = ^(bool finished) {
+    operation1.completeBlock = ^(BOOL finished) {
         if(crossfade == self.currentCrossfade)
             [self.outputDataSource finishedCrossfade];
     };

@@ -23,8 +23,8 @@ class HostViewController: KZViewController {
 	var songs = [Any]()
 	var upNextSongs = [Any]()
 	let engine = FUXEngine()
-    var audiobusController = AppDelegate.del().audiobusController
-    let receiverPort = ABReceiverPort(name: "STM Boroadcast", title: "STM Boroadcast Input")
+	var audiobusController = AppDelegate.del().audiobusController
+	let receiverPort = ABReceiverPort(name: "STM Boroadcast", title: "STM Boroadcast Input")
 
 	var settings = HostSettings()
 	var playbackReachedEnd = true
@@ -231,11 +231,11 @@ class HostViewController: KZViewController {
 		micIndicatorView.autoPinEdgesToSuperviewEdgesWithInsets(UIEdgeInsetsZero, excludingEdge: .Left)
 	}
 
-    override func viewDidLayoutSubviews() {
-        super.viewDidLayoutSubviews()
+	override func viewDidLayoutSubviews() {
+		super.viewDidLayoutSubviews()
 
-        self.switcherScrollView.contentOffset = CGPoint(x: CGFloat(self.switcherControl.selectedSegmentIndex) * self.switcherScrollView.frame.width, y: 0)
-    }
+		self.switcherScrollView.contentOffset = CGPoint(x: CGFloat(self.switcherControl.selectedSegmentIndex) * self.switcherScrollView.frame.width, y: 0)
+	}
 
 	// MARK: Setup Views
 	func setupTopView() {
@@ -507,13 +507,19 @@ class HostViewController: KZViewController {
 			songInfoLabel1.text = song.title
 			songInfoLabel2.text = song.artist
 			songInfoLabel3.text = song.album
-			songInfoHolderViewTopPadding?.constant = -5
 		} else {
 			songInfoLabel1.text = "No Song Playing"
 			songInfoLabel2.text = nil
 			songInfoLabel3.text = nil
-			songInfoHolderViewTopPadding?.constant = 5
 		}
+
+        if songInfoLabel2.text?.characters.count == 0 && songInfoLabel3.text?.characters.count == 0 {
+            songInfoHolderViewTopPadding?.constant = 5
+        } else if songInfoLabel2.text?.characters.count != 0 && songInfoLabel3.text?.characters.count != 0 {
+            songInfoHolderViewTopPadding?.constant = -5
+        } else {
+            songInfoHolderViewTopPadding?.constant = 0
+        }
 	}
 
 	/**
@@ -647,13 +653,13 @@ extension HostViewController {
 							self.setUpAudioSession()
 							self.connectGlobalStream()
 							self.loadLibrary()
-                            hud.hide(true)
+							hud.hide(true)
 						}
 					}
 					}, errorCompletion: { (error) -> Void in
-                        hud.hide(true)
-                        self.dismiss()
-                        callback(false, error)
+					hud.hide(true)
+					self.dismiss()
+					callback(false, error)
 				})
 			})
 		}
@@ -756,13 +762,13 @@ extension HostViewController: EZOutputDataSource {
 		EZOutput.sharedOutput().startPlayback()
 		EZOutput.sharedOutput().inputMonitoring = true
 
-        let senderPort = ABSenderPort(name: "STM V+M", title: "Stream To Me: Voice + Music", audioComponentDescription: EZOutput.sharedOutput().component(), audioUnit: EZOutput.sharedOutput().remoteIONode().audioUnit)
-        senderPort.derivedFromLiveAudioSource = true
-        if let a = audiobusController {
-            a.addSenderPort(senderPort)
-            a.addReceiverPort(receiverPort)
-            receiverPort.clientFormat = EZOutput.sharedOutput().outputASBD
-        }
+		let senderPort = ABSenderPort(name: "STM V+M", title: "Stream To Me: Voice + Music", audioComponentDescription: EZOutput.sharedOutput().component(), audioUnit: EZOutput.sharedOutput().remoteIONode().audioUnit)
+		senderPort.derivedFromLiveAudioSource = true
+		if let a = audiobusController {
+			a.addSenderPort(senderPort)
+			a.addReceiverPort(receiverPort)
+			receiverPort.clientFormat = EZOutput.sharedOutput().outputASBD
+		}
 	}
 
 	/**
@@ -821,7 +827,10 @@ extension HostViewController: EZOutputDataSource {
 			dispatch_async(backgroundQueue) { () -> Void in
 				if let socket = self.socket {
 					if socket.status == .Connected {
-						socket.emitWithAck("dataForStream", ["data": data.base64EncodedStringWithOptions(NSDataBase64EncodingOptions())])(timeoutAfter: 0) { data in
+						var params = [String: AnyObject]()
+						params["data"] = data.base64EncodedStringWithOptions(NSDataBase64EncodingOptions())
+						params["time"] = NSDate().timeIntervalSince1970
+						socket.emitWithAck("dataForStream", params)(timeoutAfter: 0) { data in
 							if let response = data[0] as? [String: AnyObject] {
 								if let bytes = response["bytes"] as? Float {
 									self.statsPacketsReceived += bytes
@@ -845,9 +854,9 @@ extension HostViewController: EZOutputDataSource {
 		return visualizer.frame.size.height
 	}
 
-    func port() -> ABReceiverPort {
-        return receiverPort
-    }
+	func port() -> ABReceiverPort {
+		return receiverPort
+	}
 
 	func setBarHeight(barIndex: Int32, height: CGFloat) {
 		self.visualizer.setBarHeight(Int(barIndex), height: height)
