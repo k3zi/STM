@@ -452,9 +452,9 @@
 				EA09CAA51C5C41510067FF6A /* Sources */,
 				EA09CAA61C5C41510067FF6A /* Frameworks */,
 				EA09CAA71C5C41510067FF6A /* Resources */,
-				EA09CAC91C5C62720067FF6A /* Run Script */,
 				C8BB1B58104A4B92E3BFF9F4 /* Embed Pods Frameworks */,
 				995E2A85AD31DC2FF9851682 /* Copy Pods Resources */,
+				EA09CAC91C5C62720067FF6A /* Run Script */,
 			);
 			buildRules = (
 			);
