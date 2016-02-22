@@ -23,6 +23,8 @@ class HostViewController: KZViewController {
 	var songs = [Any]()
 	var upNextSongs = [Any]()
 	let engine = FUXEngine()
+    var audiobusController = AppDelegate.del().audiobusController
+    let receiverPort = ABReceiverPort(name: "STM Boroadcast", title: "STM Boroadcast Input")
 
 	var settings = HostSettings()
 	var playbackReachedEnd = true
@@ -228,6 +230,12 @@ class HostViewController: KZViewController {
 		micIndicatorWidthConstraint = micIndicatorView.autoPinEdgeToSuperviewEdge(.Left, withInset: 0)
 		micIndicatorView.autoPinEdgesToSuperviewEdgesWithInsets(UIEdgeInsetsZero, excludingEdge: .Left)
 	}
+
+    override func viewDidLayoutSubviews() {
+        super.viewDidLayoutSubviews()
+
+        self.switcherScrollView.contentOffset = CGPoint(x: CGFloat(self.switcherControl.selectedSegmentIndex) * self.switcherScrollView.frame.width, y: 0)
+    }
 
 	// MARK: Setup Views
 	func setupTopView() {
@@ -631,7 +639,6 @@ extension HostViewController {
 
 		if type == .Global {
 			Constants.Network.POST("/createStream", parameters: ["name": name, "passcode": passcode, "description": description], completionHandler: { (response, error) -> Void in
-				hud.hide(true)
 				self.handleResponse(response, error: error, successCompletion: { (result) -> Void in
 					if let result = result as? JSON {
 						if let stream = STMStream(json: result) {
@@ -640,11 +647,13 @@ extension HostViewController {
 							self.setUpAudioSession()
 							self.connectGlobalStream()
 							self.loadLibrary()
+                            hud.hide(true)
 						}
 					}
 					}, errorCompletion: { (error) -> Void in
-					self.dismiss()
-					callback(false, error)
+                        hud.hide(true)
+                        self.dismiss()
+                        callback(false, error)
 				})
 			})
 		}
@@ -746,21 +755,20 @@ extension HostViewController: EZOutputDataSource {
 		EZOutput.sharedOutput().mixerNode.setVolume(0.0, forBus: 1)
 		EZOutput.sharedOutput().startPlayback()
 		EZOutput.sharedOutput().inputMonitoring = true
+
+        let senderPort = ABSenderPort(name: "STM V+M", title: "Stream To Me: Voice + Music", audioComponentDescription: EZOutput.sharedOutput().component(), audioUnit: EZOutput.sharedOutput().remoteIONode().audioUnit)
+        senderPort.derivedFromLiveAudioSource = true
+        if let a = audiobusController {
+            a.addSenderPort(senderPort)
+            a.addReceiverPort(receiverPort)
+            receiverPort.clientFormat = EZOutput.sharedOutput().outputASBD
+        }
 	}
 
 	/**
 	 Start the AVAudioSession and add the remote commands
 	 */
 	func setUpAudioSession() {
-		do {
-			try AVAudioSession.sharedInstance().setPreferredIOBufferDuration(0.04)
-			try AVAudioSession.sharedInstance().setPreferredSampleRate(44100)
-			try AVAudioSession.sharedInstance().setCategory(AVAudioSessionCategoryPlayAndRecord, withOptions: .DefaultToSpeaker)
-			try AVAudioSession.sharedInstance().setActive(true)
-		} catch {
-			print("Error starting audio sesssion")
-		}
-
 		MPRemoteCommandCenter.sharedCommandCenter().playCommand.addTarget(self, action: Selector("play"))
 		MPRemoteCommandCenter.sharedCommandCenter().pauseCommand.addTarget(self, action: Selector("pause"))
 		MPRemoteCommandCenter.sharedCommandCenter().nextTrackCommand.addTarget(self, action: Selector("next"))
@@ -836,6 +844,10 @@ extension HostViewController: EZOutputDataSource {
 	func heightForVisualizer() -> CGFloat {
 		return visualizer.frame.size.height
 	}
+
+    func port() -> ABReceiverPort {
+        return receiverPort
+    }
 
 	func setBarHeight(barIndex: Int32, height: CGFloat) {
 		self.visualizer.setBarHeight(Int(barIndex), height: height)

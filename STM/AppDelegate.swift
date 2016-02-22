@@ -8,12 +8,14 @@
 
 import UIKit
 import IQKeyboardManager
+import MediaPlayer
 
 @UIApplicationMain
 class AppDelegate: UIResponder, UIApplicationDelegate {
     var window: UIWindow?
     var shortcutItem: UIApplicationShortcutItem?
     var currentUser: STMUser?
+    var audiobusController: ABAudiobusController?
 
     func application(application: UIApplication, didFinishLaunchingWithOptions launchOptions: [NSObject: AnyObject]?) -> Bool {
 
@@ -36,6 +38,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
             print(exception.callStackSymbols)
         }
 
+        setUpAudioSession()
         return true
     }
 
@@ -108,6 +111,23 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 
     func handleShortcutItem(item: UIApplicationShortcutItem, completionHandler: ((Bool) -> Void)?) -> Bool {
         return true
+    }
+
+    /**
+     Start the AVAudioSession and add the remote commands
+     */
+    func setUpAudioSession() {
+        audiobusController = ABAudiobusController(apiKey: "MTQ1NzIzNjQ5MioqKlNUTSoqKnN0cmVhbXRvbWUtdjEuYXVkaW9idXM6Ly8qKipbYXVyZy5zdG1hLjEyNzAuMV0=:YeoBVYdmqfiWcC8mXNSC83mlrNK/MiZSY/tSDG88O+Jq66ODmyd+AsKpIvpYuUiIdvrIg7okBJOGMXFLXHJ10j3giwMtQTutVbPvBdRuvcpBrY1tPVDM1L4ltOXxdKIm")
+        audiobusController?.allowsConnectionsToSelf = true
+
+        do {
+            try AVAudioSession.sharedInstance().setPreferredIOBufferDuration(0.04)
+            try AVAudioSession.sharedInstance().setPreferredSampleRate(44100)
+            try AVAudioSession.sharedInstance().setCategory(AVAudioSessionCategoryPlayAndRecord, withOptions: [.DefaultToSpeaker, .MixWithOthers])
+            try AVAudioSession.sharedInstance().setActive(true)
+        } catch {
+            print("Error starting audio sesssion")
+        }
     }
 
     class func del() -> AppDelegate {

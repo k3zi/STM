@@ -66,6 +66,7 @@
 		EAB0E6A31C78146C008945FF /* LICENSE in Resources */ = {isa = PBXBuildFile; fileRef = EAB0E6A21C78146C008945FF /* LICENSE */; };
 		EAB0E6A71C78EEB0008945FF /* UILabelStyles.swift in Sources */ = {isa = PBXBuildFile; fileRef = EAB0E6A61C78EEB0008945FF /* UILabelStyles.swift */; };
 		EAB0E6A91C78F8E9008945FF /* SettingJoinedView.swift in Sources */ = {isa = PBXBuildFile; fileRef = EAB0E6A81C78F8E9008945FF /* SettingJoinedView.swift */; };
+		EAB0E6AC1C7966E5008945FF /* AudioToolbox.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = EAB0E6AB1C7966E5008945FF /* AudioToolbox.framework */; };
 		EACD2B401C75996600A6CFD6 /* HostInfoHolderView.swift in Sources */ = {isa = PBXBuildFile; fileRef = EACD2B3F1C75996600A6CFD6 /* HostInfoHolderView.swift */; };
 		EAE545041C76978F00180241 /* MeterTable.m in Sources */ = {isa = PBXBuildFile; fileRef = EAE545021C76978F00180241 /* MeterTable.m */; };
 		EAE545061C76BA9200180241 /* STMVisualizer.swift in Sources */ = {isa = PBXBuildFile; fileRef = EAE545051C76BA9200180241 /* STMVisualizer.swift */; };
@@ -163,6 +164,8 @@
 		EAB0E6A21C78146C008945FF /* LICENSE */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = LICENSE; sourceTree = "<group>"; };
 		EAB0E6A61C78EEB0008945FF /* UILabelStyles.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = UILabelStyles.swift; sourceTree = "<group>"; };
 		EAB0E6A81C78F8E9008945FF /* SettingJoinedView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SettingJoinedView.swift; sourceTree = "<group>"; };
+		EAB0E6AA1C7966E4008945FF /* STM.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.xml; path = STM.entitlements; sourceTree = "<group>"; };
+		EAB0E6AB1C7966E5008945FF /* AudioToolbox.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AudioToolbox.framework; path = System/Library/Frameworks/AudioToolbox.framework; sourceTree = SDKROOT; };
 		EACD2B3F1C75996600A6CFD6 /* HostInfoHolderView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = HostInfoHolderView.swift; sourceTree = "<group>"; };
 		EAE545021C76978F00180241 /* MeterTable.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MeterTable.m; sourceTree = "<group>"; };
 		EAE545031C76978F00180241 /* MeterTable.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MeterTable.h; sourceTree = "<group>"; };
@@ -175,6 +178,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				4A9964A6337DD33DF5D797DE /* Pods_STM.framework in Frameworks */,
+				EAB0E6AC1C7966E5008945FF /* AudioToolbox.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -193,6 +197,7 @@
 		98574C4A951DCFEA0F886856 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				EAB0E6AB1C7966E5008945FF /* AudioToolbox.framework */,
 				3B4177B55191B175F8A0C4B8 /* Pods.framework */,
 				C247DFB18D94178F4088028F /* Pods_STM.framework */,
 			);
@@ -247,6 +252,7 @@
 		EA09CAAB1C5C41510067FF6A /* STM */ = {
 			isa = PBXGroup;
 			children = (
+				EAB0E6AA1C7966E4008945FF /* STM.entitlements */,
 				EA09CAC11C5C5C360067FF6A /* Extras */,
 				EA09CABE1C5C446F0067FF6A /* Models */,
 				EA09CABF1C5C44770067FF6A /* Views */,
@@ -475,6 +481,9 @@
 						DevelopmentTeam = FYHEVSXTTV;
 						SystemCapabilities = {
 							com.apple.BackgroundModes = {
+								enabled = 1;
+							};
+							com.apple.InterAppAudio = {
 								enabled = 1;
 							};
 						};
@@ -744,12 +753,15 @@
 			baseConfigurationReference = 3534D789493137C70227BF7A /* Pods-STM.debug.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CODE_SIGN_ENTITLEMENTS = STM/STM.entitlements;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				INFOPLIST_FILE = STM/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 9.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = com.stormedgeapps.streamtome;
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				PROVISIONING_PROFILE = "";
 				SWIFT_OBJC_BRIDGING_HEADER = "STM/Extras/STM-Bridging-Header.h";
 			};
 			name = Debug;
@@ -759,12 +771,15 @@
 			baseConfigurationReference = 6722F7E460A0B4E6C5F18396 /* Pods-STM.release.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CODE_SIGN_ENTITLEMENTS = STM/STM.entitlements;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				INFOPLIST_FILE = STM/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 9.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = com.stormedgeapps.streamtome;
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				PROVISIONING_PROFILE = "";
 				SWIFT_OBJC_BRIDGING_HEADER = "STM/Extras/STM-Bridging-Header.h";
 			};
 			name = Release;

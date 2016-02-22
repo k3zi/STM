@@ -33,13 +33,12 @@
 #import "TPCircularBuffer.h"
 #import <Accelerate/Accelerate.h>
 #import <UIKit/UIKit.h>
+#import <Audiobus/Audiobus.h>
 @class EZOutput;
 
 @protocol EZOutputDataSource <NSObject>
 
 @optional
-
-
 - (void)output:(EZOutput *)output shouldFillAudioBufferList:(AudioBufferList*)audioBufferList withNumberOfFrames:(UInt32)frames;
 - (void)output:(EZOutput *)output shouldFillAudioBufferList2:(AudioBufferList *)audioBufferList withNumberOfFrames:(UInt32)frames;
 - (void)output2:(EZOutput *)output shouldFillAudioBufferList:(AudioBufferList*)audioBufferList withNumberOfFrames:(UInt32)frames;
@@ -48,6 +47,7 @@
 - (void)setBarHeight:(int)barIndex height:(CGFloat)height;
 - (CGFloat)heightForVisualizer;
 - (int)numChannels;
+- (ABReceiverPort *)port;
 - (void)finishedCrossfade;
 @end
 
@@ -70,6 +70,8 @@
 @property int currentCrossfade;
 
 + (EZOutput*)sharedOutput;
+- (YBAudioUnitNode *)remoteIONode;
+- (AudioComponentDescription)component;
 - (void)deinterleave:(float *)data left: (float*) left right: (float*) right length: (vDSP_Length)length;
 - (void)interleave:(float *)data left: (float*) left right: (float*) right length: (vDSP_Length)length;
 - (void)setPitchValue:(float)value;

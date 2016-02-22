@@ -5,6 +5,10 @@ disabled_rules:
   - file_length
   - type_body_length
   - variable_name_min_length
+  - variable_name
+  - cyclomatic_complexity
+  - valid_docs
+  - line_length
 
 function_body_length:
   - 200

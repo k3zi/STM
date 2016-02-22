@@ -17,3 +17,4 @@
 #import "KZConverter.h"
 #import "KZPlayerInner.h"
 #import "EZOutput.h"
+#import <Audiobus/Audiobus.h>

@@ -221,10 +221,9 @@ class CreateStreamViewController: KZScrollViewController {
             self.handleResponse(response, error: error, successCompletion: { (result) -> Void in
                 self.items.removeAll()
                 if let result = result as? [JSON] {
-                    if let streams = STMStream.modelsFromJSONArray(result) {
-                        streams.forEach({ self.items.append($0) })
-                        self.tableView.reloadData()
-                    }
+                    let streams = [STMStream].fromJSONArray(result)
+                    streams.forEach({ self.items.append($0) })
+                    self.tableView.reloadData()
                 }
             })
         }

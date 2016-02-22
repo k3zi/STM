@@ -62,12 +62,11 @@ enum StreamType {
     }
 }
 
-/**
+ /**
  Delays code excecution
 
- - Parameters:
- - delay: The number of seconds to delay for
- - closure: The block to be executed after the delay
+ - parameter delay:   The number of seconds to delay for
+ - parameter closure: The block to be executed after the delay
  */
 func delay(delay: Double, closure: () -> ()) {
     dispatch_after(dispatch_time(DISPATCH_TIME_NOW, Int64(delay * Double(NSEC_PER_SEC))), dispatch_get_main_queue(), closure)
