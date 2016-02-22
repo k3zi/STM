@@ -36,7 +36,7 @@
         _auAudioUnit = auAudioUnit;
         
         AudioStreamBasicDescription outFormat;
-        YBSetStreamFormatAUCanonical(&outFormat, 1, 44100, false);
+        YBSetStreamFormatAUCanonical(&outFormat, 1, [AVAudioSession sharedInstance].sampleRate, false);
         
         //AudioUnitSetProperty(_auAudioUnit, kAudioUnitProperty_StreamFormat, kAudioUnitScope_Input, 0, &outFormat, sizeof(outFormat));
         //-AudioUnitSetProperty(_auAudioUnit, kAudioUnitProperty_StreamFormat, kAudioUnitScope_Output, 1, &outFormat, sizeof(outFormat));
