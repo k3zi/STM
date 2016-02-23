@@ -15,7 +15,7 @@ struct HostSettings {
 }
 
 //MARK: Variables
-class HostViewController: KZViewController {
+class HostViewController: KZViewController, UISearchBarDelegate {
 	var streamType: StreamType?
 	var stream: STMStream?
 	var socket: SocketIOClient?
@@ -61,7 +61,7 @@ class HostViewController: KZViewController {
 	let settingsContentView = UIView()
 
 	let searchBar = UISearchBar()
-	let searchResults = [Any]()
+	var searchResults: [Any]?
 
 	let settingsHeaderStatus = UILabel.styledForSettingsHeader("STATUS")
 	let recordSwitch = UISwitch()
@@ -105,7 +105,7 @@ class HostViewController: KZViewController {
 	override func viewDidAppear(animated: Bool) {
 		super.viewDidAppear(animated)
 		if let hud = hud {
-			hud.hide(true)
+			hud.dismiss(true)
 		}
 	}
 
@@ -244,7 +244,6 @@ class HostViewController: KZViewController {
 		super.viewDidLayoutSubviews()
 
 		self.switcherScrollView.contentOffset = CGPoint(x: CGFloat(self.switcherControl.selectedSegmentIndex) * self.switcherScrollView.frame.width, y: 0)
-		updateSearchBarHeight()
 	}
 
 	// MARK: Setup Views
@@ -471,6 +470,10 @@ class HostViewController: KZViewController {
 		UIView.animateWithDuration(0.4) { () -> Void in
 			self.switcherScrollView.contentOffset = CGPoint(x: CGFloat(self.switcherControl.selectedSegmentIndex) * self.switcherScrollView.frame.width, y: 0)
 		}
+
+        if searchBar.isFirstResponder() {
+            searchBar.resignFirstResponder()
+        }
 	}
 
 	/**
@@ -555,12 +558,6 @@ class HostViewController: KZViewController {
 		center.nowPlayingInfo = dict
 	}
 
-	func updateSearchBarHeight() {
-		searchBar.frame.size.height = 44
-		searchBar.frame.size.width = songsTableView.frame.width
-		songsTableView.tableHeaderView = searchBar
-	}
-
 	// **********************************************************************
 	// **********************************************************************
 	// **********************************************************************
@@ -568,7 +565,7 @@ class HostViewController: KZViewController {
 	// MARK: TableView Data Source
 	override func tableViewCellData(tableView: UITableView, section: Int) -> [Any] {
 		if tableView == songsTableView {
-			return songs
+			return searchResults ?? songs
 		} else if tableView == queueTableView {
 			return upNextSongs
 		}
@@ -588,7 +585,7 @@ class HostViewController: KZViewController {
 
 	override func tableViewNoDataText(tableView: UITableView) -> String {
 		if tableView == songsTableView {
-			return "No Songs in Library"
+			return searchResults != nil ? "No Results" : "No Songs in Library"
 		} else if tableView == queueTableView {
 			return "No Songs in Queue"
 		}
@@ -633,6 +630,55 @@ class HostViewController: KZViewController {
 
 		return cell
 	}
+
+    override func tableView(tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {
+        if tableView == songsTableView {
+            searchBar.delegate = self
+            searchBar.frame.size.height = 44
+            searchBar.frame.size.width = tableView.frame.width
+            searchBar.keyboardDistanceFromTextField = 0
+            return searchBar
+        }
+
+        return super.tableView(tableView, viewForHeaderInSection: section)
+    }
+
+    override func tableView(tableView: UITableView, heightForHeaderInSection section: Int) -> CGFloat {
+        if tableView == songsTableView {
+            return 44
+        }
+
+        return super.tableView(tableView, heightForHeaderInSection: section)
+    }
+
+	// MARK: UISearchBar Delegate
+	func searchBar(searchBar: UISearchBar, textDidChange searchText: String) {
+		searchResults = [Any]()
+		songsTableView.reloadData()
+
+		searchResults = songs.filter({ (song) -> Bool in
+			if let song = song as? KZPlayerItem {
+				return song.aggregateText().containsString(searchText)
+			}
+
+			return false
+		})
+
+        searchBar.setShowsCancelButton(true, animated: true)
+		songsTableView.reloadData()
+	}
+
+	func searchBarCancelButtonClicked(searchBar: UISearchBar) {
+		searchResults = nil
+        searchBar.text = ""
+        searchBar.resignFirstResponder()
+        searchBar.setShowsCancelButton(false, animated: true)
+		songsTableView.reloadData()
+	}
+
+    func searchBarSearchButtonClicked(searchBar: UISearchBar) {
+        searchBar.resignFirstResponder()
+    }
 }
 
 //**********************************************************************
@@ -673,7 +719,7 @@ extension HostViewController {
 					}
 					}, errorCompletion: { (error) -> Void in
 					if let hud = self.hud {
-						hud.hide(true)
+						hud.dismiss(true)
 					}
 					self.dismiss()
 					callback(false, error)
@@ -714,7 +760,7 @@ extension HostViewController {
 				}
 				}, errorCompletion: { (error) -> Void in
 				if let hud = self.hud {
-					hud.hide(true)
+					hud.dismiss(true)
 				}
 				self.dismiss()
 				callback(false, error)
