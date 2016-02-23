@@ -35,6 +35,8 @@ class HostViewController: KZViewController {
 	var audioFile0: EZAudioFile?
 	var audioFile1: EZAudioFile?
 
+    var hud: M13ProgressHUD?
+
 	let topView = UIView()
 	let albumPoster = UIImageView()
 	let gradientView = GradientView()
@@ -99,6 +101,13 @@ class HostViewController: KZViewController {
 
 		NSTimer.scheduledTimerWithTimeInterval(1.5, target: self, selector: Selector("refresh"), userInfo: nil, repeats: true)
 	}
+
+    override func viewDidAppear(animated: Bool) {
+        super.viewDidAppear(animated)
+        if let hud = hud {
+            hud.hide(true)
+        }
+    }
 
 	// MARK: Constraints
 	override func setupConstraints() {
@@ -638,7 +647,7 @@ extension HostViewController {
 		progressView.secondaryColor = Constants.Color.disabled
 		progressView.indeterminate = true
 
-		let hud = M13ProgressHUD(progressView: progressView)
+		hud = M13ProgressHUD(progressView: progressView)
 		if let hud = hud {
 			hud.frame = (AppDelegate.del().window?.bounds)!
 			hud.progressViewSize = CGSize(width: 60, height: 60)
@@ -660,11 +669,12 @@ extension HostViewController {
 							self.setUpAudioSession()
 							self.connectGlobalStream()
 							self.loadLibrary()
-							hud.hide(true)
 						}
 					}
 					}, errorCompletion: { (error) -> Void in
-					hud.hide(true)
+                        if let hud = self.hud {
+                            hud.hide(true)
+                        }
 					self.dismiss()
 					callback(false, error)
 				})
@@ -691,7 +701,6 @@ extension HostViewController {
 		}
 
 		Constants.Network.POST("/continueStream/" + String(stream.id ?? 0), parameters: nil, completionHandler: { (response, error) -> Void in
-			hud.hide(true)
 			self.handleResponse(response, error: error, successCompletion: { (result) -> Void in
 				if let result = result as? JSON {
 					if let stream = STMStream(json: result) {
@@ -704,6 +713,9 @@ extension HostViewController {
 					}
 				}
 				}, errorCompletion: { (error) -> Void in
+                    if let hud = self.hud {
+                        hud.hide(true)
+                    }
 				self.dismiss()
 				callback(false, error)
 			})
