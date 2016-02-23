@@ -823,20 +823,27 @@ extension HostViewController: EZOutputDataSource {
 
 	func playedData(buffer: NSData!, frames: Int32) {
 		let data = NSData(data: buffer)
-		if isOnAir() {
-			dispatch_async(backgroundQueue) { () -> Void in
-				if let socket = self.socket {
-					if socket.status == .Connected {
-						var params = [String: AnyObject]()
-						params["data"] = data.base64EncodedStringWithOptions(NSDataBase64EncodingOptions())
-						params["time"] = NSDate().timeIntervalSince1970
-						socket.emitWithAck("dataForStream", params)(timeoutAfter: 0) { data in
-							if let response = data[0] as? [String: AnyObject] {
-								if let bytes = response["bytes"] as? Float {
-									self.statsPacketsReceived += bytes
-								}
-							}
-						}
+
+		guard isOnAir() else {
+			return
+		}
+
+		guard let socket = self.socket else {
+			return
+		}
+
+		guard socket.status == .Connected else {
+			return
+		}
+
+		dispatch_async(backgroundQueue) { () -> Void in
+			var params = [String: AnyObject]()
+			params["data"] = data.base64EncodedStringWithOptions(NSDataBase64EncodingOptions())
+			params["time"] = NSDate().timeIntervalSince1970
+			socket.emitWithAck("dataForStream", params)(timeoutAfter: 0) { data in
+				if let response = data[0] as? [String: AnyObject] {
+					if let bytes = response["bytes"] as? Float {
+						self.statsPacketsReceived += bytes
 					}
 				}
 			}
