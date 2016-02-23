@@ -10,10 +10,10 @@ Settings_HostMusicVolume = "Music Volume";
 Settings_HostMusicVolumeDescription = "The volume for the music playback that listeners will here when the mic is inactive";
 
 Settings_HostMicrophoneVolume = "Microphone Volume";
-Settings_HostMicrophoneVolumeDescription = "The volume for the music playback that listeners will here when the mic is inactive";
+Settings_HostMicrophoneVolumeDescription = "The microphone's volume when it is active";
 
 Settings_HostMusicVolumeWhenMicActive = "Music Volume When Mic Active";
-Settings_HostMusicVolumeWhenMicActiveDescription = "The volume for the music playback that listeners will here when the mic is inactive";
+Settings_HostMusicVolumeWhenMicActiveDescription = "The volume for the music playback that listeners will here when the mic is active";
 
 Settings_HostMicFadeTime = "Microphone Fade Time";
-Settings_HostMicFadeTimeDescription = "The volume for the music playback that listeners will here when the mic is inactive";
+Settings_HostMicFadeTimeDescription = "The duration that the music fades out for while the mic fades in";

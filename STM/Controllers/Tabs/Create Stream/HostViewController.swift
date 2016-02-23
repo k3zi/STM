@@ -235,6 +235,7 @@ class HostViewController: KZViewController {
 		super.viewDidLayoutSubviews()
 
 		self.switcherScrollView.contentOffset = CGPoint(x: CGFloat(self.switcherControl.selectedSegmentIndex) * self.switcherScrollView.frame.width, y: 0)
+		updateSearchBarHeight()
 	}
 
 	// MARK: Setup Views
@@ -543,6 +544,12 @@ class HostViewController: KZViewController {
 			dict[MPMediaItemPropertyTitle] = "No Song Playing"
 		}
 		center.nowPlayingInfo = dict
+	}
+
+	func updateSearchBarHeight() {
+		searchBar.frame.size.height = 44
+		searchBar.frame.size.width = songsTableView.frame.width
+		songsTableView.tableHeaderView = searchBar
 	}
 
 	// **********************************************************************
