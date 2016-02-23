@@ -68,7 +68,7 @@ class UpNextSongCell: MCSwipeCell {
 
     override func fillInCellData() {
         if let song = model as? KZPlayerItem {
-            songNameLabel.text = song.title
+            songNameLabel.text = song.subTitle()
             songArtist.text = song.artist.characters.count == 0 ? "Unkown Artist" : song.artist
 
             if let artwork = song.artwork() {

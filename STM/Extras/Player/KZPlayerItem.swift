@@ -61,6 +61,14 @@ class KZPlayerItem: Object {
 
         return nil
     }
+
+    func aggregateText() -> String {
+        return title+artist+album
+    }
+
+    func subTitle() -> String {
+        return [artist, album].joinWithSeparator(" - ")
+    }
 }
 
 class KZPlayerUpNextItem: KZPlayerItem {
