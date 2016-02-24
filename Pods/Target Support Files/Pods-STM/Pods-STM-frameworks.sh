@@ -88,6 +88,7 @@ if [[ "$CONFIGURATION" == "Debug" ]]; then
   install_framework "Pods-STM/CocoaSecurity.framework"
   install_framework "Pods-STM/DateTools.framework"
   install_framework "Pods-STM/Gloss.framework"
+  install_framework "Pods-STM/HPGrowingTextView.framework"
   install_framework "Pods-STM/Hashids_Swift.framework"
   install_framework "Pods-STM/IQKeyboardManagerSwift.framework"
   install_framework "Pods-STM/KILabel.framework"
@@ -106,12 +107,14 @@ if [[ "$CONFIGURATION" == "Debug" ]]; then
   install_framework "Pods-STM/SecureNSUserDefaults.framework"
   install_framework "Pods-STM/SocketIOClientSwift.framework"
   install_framework "Pods-STM/SpinKit.framework"
+  install_framework "Pods-STM/UIViewController_BHTKeyboardAnimationBlocks.framework"
 fi
 if [[ "$CONFIGURATION" == "Release" ]]; then
   install_framework "Pods-STM/AeroGearHttp.framework"
   install_framework "Pods-STM/CocoaSecurity.framework"
   install_framework "Pods-STM/DateTools.framework"
   install_framework "Pods-STM/Gloss.framework"
+  install_framework "Pods-STM/HPGrowingTextView.framework"
   install_framework "Pods-STM/Hashids_Swift.framework"
   install_framework "Pods-STM/IQKeyboardManagerSwift.framework"
   install_framework "Pods-STM/KILabel.framework"
@@ -130,4 +133,5 @@ if [[ "$CONFIGURATION" == "Release" ]]; then
   install_framework "Pods-STM/SecureNSUserDefaults.framework"
   install_framework "Pods-STM/SocketIOClientSwift.framework"
   install_framework "Pods-STM/SpinKit.framework"
+  install_framework "Pods-STM/UIViewController_BHTKeyboardAnimationBlocks.framework"
 fi

@@ -92,6 +92,7 @@ class SignInViewController: KZViewController {
                 if let result = result as? JSON {
                     if let user = STMUser(json: result) {
                         AppDelegate.del().loginUser(user)
+                        Answers.logLoginWithMethod("Password", success: true, customAttributes: nil)
                     }
                 }
             })

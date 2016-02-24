@@ -56,6 +56,7 @@
 		EA4F49851C5EC05700103559 /* EZAudio.m in Sources */ = {isa = PBXBuildFile; fileRef = EA4F49741C5EC05700103559 /* EZAudio.m */; };
 		EA4F49871C5EC05700103559 /* EZAudioFile.m in Sources */ = {isa = PBXBuildFile; fileRef = EA4F49771C5EC05700103559 /* EZAudioFile.m */; };
 		EA4F498F1C5F2D3800103559 /* EZOutput.m in Sources */ = {isa = PBXBuildFile; fileRef = EA4F498E1C5F2D3800103559 /* EZOutput.m */; };
+		EA8D3DE11C7D75C3003ACCFC /* MessageToolbarView.swift in Sources */ = {isa = PBXBuildFile; fileRef = EA8D3DE01C7D75C3003ACCFC /* MessageToolbarView.swift */; };
 		EAB0E6981C780866008945FF /* YBDelay.m in Sources */ = {isa = PBXBuildFile; fileRef = EAB0E6971C780866008945FF /* YBDelay.m */; };
 		EAB0E69E1C7813B5008945FF /* FUXCombinators.swift in Sources */ = {isa = PBXBuildFile; fileRef = EAB0E69A1C7813B5008945FF /* FUXCombinators.swift */; };
 		EAB0E69F1C7813B5008945FF /* FUXData.swift in Sources */ = {isa = PBXBuildFile; fileRef = EAB0E69B1C7813B5008945FF /* FUXData.swift */; };
@@ -150,6 +151,7 @@
 		EA4F49831C5EC05700103559 /* EZAudio.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = EZAudio.h; sourceTree = "<group>"; };
 		EA4F498D1C5F2D3800103559 /* EZOutput.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = EZOutput.h; sourceTree = "<group>"; };
 		EA4F498E1C5F2D3800103559 /* EZOutput.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = EZOutput.m; sourceTree = "<group>"; };
+		EA8D3DE01C7D75C3003ACCFC /* MessageToolbarView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MessageToolbarView.swift; sourceTree = "<group>"; };
 		EAB0E6961C780821008945FF /* YBDelay.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = YBDelay.h; sourceTree = "<group>"; };
 		EAB0E6971C780866008945FF /* YBDelay.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = YBDelay.m; sourceTree = "<group>"; };
 		EAB0E69A1C7813B5008945FF /* FUXCombinators.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FUXCombinators.swift; sourceTree = "<group>"; };
@@ -346,6 +348,7 @@
 				EA4E494A1C61416400CB40D7 /* Label.swift */,
 				EA4E494C1C617FA000CB40D7 /* GradientView.swift */,
 				EAB0E6A81C78F8E9008945FF /* SettingJoinedView.swift */,
+				EA8D3DE01C7D75C3003ACCFC /* MessageToolbarView.swift */,
 			);
 			path = Generic;
 			sourceTree = "<group>";
@@ -614,6 +617,7 @@
 				EAE545061C76BA9200180241 /* STMVisualizer.swift in Sources */,
 				EA4F496A1C5EBFA000103559 /* YBReverb.m in Sources */,
 				EA4F49871C5EC05700103559 /* EZAudioFile.m in Sources */,
+				EA8D3DE11C7D75C3003ACCFC /* MessageToolbarView.swift in Sources */,
 				EA01AF8A1C5CB3C500F56792 /* SignInViewController.swift in Sources */,
 				EA4F495B1C5EBFA000103559 /* YBNBandEQNode.m in Sources */,
 				EAB0E69F1C7813B5008945FF /* FUXData.swift in Sources */,

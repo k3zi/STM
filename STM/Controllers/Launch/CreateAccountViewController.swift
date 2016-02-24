@@ -116,6 +116,7 @@ class CreateAccountViewController: KZViewController {
         let params = ["displayName" : displayName, "username": username, "password": password, "email": email]
         Constants.Network.POST("/createAccount", parameters: params, completionHandler: { (response, error) -> Void in
             self.handleResponse(response, error: error, successCompletion: { (result) -> Void in
+                Answers.logSignUpWithMethod("Email", success: true, customAttributes: [:])
                 if let vc = self.presentingViewController {
                     vc.dismissViewControllerAnimated(true, completion: nil)
                 }

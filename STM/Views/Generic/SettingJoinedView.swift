@@ -14,6 +14,8 @@ class SettingJoinedView: UIView {
     var holdingView = UILabel()
     var control: UIView
 
+    let padding = CGFloat(12.0)
+
     init(text: String, detailText: String = "", control: UIView) {
         self.textLabel.font = UIFont.systemFontOfSize(16, weight: UIFontWeightMedium)
         self.textLabel.numberOfLines = 0
@@ -34,10 +36,10 @@ class SettingJoinedView: UIView {
         holdingView.addSubview(textLabel)
         self.addSubview(control)
 
-        holdingView.autoPinEdgeToSuperviewEdge(.Top, withInset: 18, relation: .GreaterThanOrEqual)
-        holdingView.autoPinEdgeToSuperviewEdge(.Left, withInset: 18)
+        holdingView.autoPinEdgeToSuperviewEdge(.Top, withInset: padding, relation: .GreaterThanOrEqual)
+        holdingView.autoPinEdgeToSuperviewEdge(.Left, withInset: padding)
         holdingView.autoMatchDimension(.Width, toDimension: .Width, ofView: self, withMultiplier: 0.4, relation: .LessThanOrEqual)
-        holdingView.autoPinEdgeToSuperviewEdge(.Bottom, withInset: 18, relation: .GreaterThanOrEqual)
+        holdingView.autoPinEdgeToSuperviewEdge(.Bottom, withInset: padding, relation: .GreaterThanOrEqual)
 
         textLabel.autoPinEdgesToSuperviewEdgesWithInsets(UIEdgeInsetsZero, excludingEdge: .Bottom)
 
@@ -49,16 +51,24 @@ class SettingJoinedView: UIView {
             detailLabel.autoPinEdgesToSuperviewEdgesWithInsets(UIEdgeInsetsZero, excludingEdge: .Top)
         }
 
-        control.autoPinEdgeToSuperviewEdge(.Top, withInset: 18, relation: .GreaterThanOrEqual)
-        control.autoPinEdge(.Left, toEdge: .Right, ofView: holdingView, withOffset: 50)
-        control.autoPinEdgeToSuperviewEdge(.Right, withInset: 18)
-        control.autoPinEdgeToSuperviewEdge(.Bottom, withInset: 18, relation: .GreaterThanOrEqual)
+        control.autoPinEdgeToSuperviewEdge(.Top, withInset: padding, relation: .GreaterThanOrEqual)
+        control.autoPinEdge(.Left, toEdge: .Right, ofView: holdingView, withOffset: 25)
+        control.autoPinEdgeToSuperviewEdge(.Right, withInset: padding)
+        control.autoPinEdgeToSuperviewEdge(.Bottom, withInset: padding, relation: .GreaterThanOrEqual)
 
         control.autoAlignAxis(.Horizontal, toSameAxisOfView: holdingView)
     }
 
     func setPrevChain(prevChain: UIView?) {
         if let prevChain = prevChain as? SettingJoinedView {
+            let line = UIView.lineWithBGColor(RGB(217))
+            if let su = self.superview {
+                su.addSubview(line)
+                line.autoPinEdge(.Top, toEdge: .Bottom, ofView: prevChain)
+                line.autoPinEdgeToSuperviewEdge(.Left)
+                line.autoPinEdgeToSuperviewEdge(.Right)
+                self.autoPinEdge(.Top, toEdge: .Bottom, ofView: line)
+            }
             self.holdingView.autoMatchDimension(.Width, toDimension: .Width, ofView: prevChain.holdingView)
         }
     }

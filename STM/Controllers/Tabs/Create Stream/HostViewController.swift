@@ -63,6 +63,9 @@ class HostViewController: KZViewController, UISearchBarDelegate {
 	let searchBar = UISearchBar()
 	var searchResults: [Any]?
 
+	let commentContentView = UIView()
+	let commentToolbar = MessageToolbarView()
+
 	let settingsHeaderStatus = UILabel.styledForSettingsHeader("STATUS")
 	let recordSwitch = UISwitch()
 	let recordingStatusLabel = UILabel()
@@ -89,6 +92,10 @@ class HostViewController: KZViewController, UISearchBarDelegate {
 	let micIndicatorGradientView = GradientView()
 	var micIndicatorWidthConstraint: NSLayoutConstraint?
 
+	// Keyboard Adjustment
+	var keyboardVisible = CGFloat(0)
+	var commentFieldKeyboardConstraint: NSLayoutConstraint?
+
 	override func viewDidLoad() {
 		super.viewDidLoad()
 		view.backgroundColor = RGB(0)
@@ -98,6 +105,22 @@ class HostViewController: KZViewController, UISearchBarDelegate {
 		setupContentView()
 		setupToolbar()
 		setupSettingsContentView()
+
+		self.setKeyboardWillShowAnimationBlock { (keyboardFrame) -> Void in
+			if self.keyboardVisible == 0 {
+				self.commentFieldKeyboardConstraint?.constant = -keyboardFrame.size.height + 44
+			}
+			self.view.layoutIfNeeded()
+			self.keyboardVisible = keyboardFrame.size.height
+		}
+
+		self.setKeyboardWillHideAnimationBlock { (keyboardFrame) -> Void in
+			if self.keyboardVisible != 0 {
+				self.commentFieldKeyboardConstraint?.constant = 0
+			}
+			self.view.layoutIfNeeded()
+			self.keyboardVisible = 0
+		}
 
 		NSTimer.scheduledTimerWithTimeInterval(1.5, target: self, selector: Selector("refresh"), userInfo: nil, repeats: true)
 	}
@@ -161,7 +184,7 @@ class HostViewController: KZViewController, UISearchBarDelegate {
 		switcherContentView.autoPinEdgesToSuperviewEdges()
 		switcherContentView.autoMatchDimension(.Height, toDimension: .Height, ofView: switcherScrollView)
 
-		for view in [songsTableView, queueTableView, commentsTableView, settingsScrollView] {
+		for view in [songsTableView, queueTableView, commentContentView, settingsScrollView] {
 			view.autoPinEdgeToSuperviewEdge(.Top)
 			view.autoMatchDimension(.Width, toDimension: .Width, ofView: switcherScrollView)
 			view.autoPinEdgeToSuperviewEdge(.Bottom)
@@ -169,15 +192,23 @@ class HostViewController: KZViewController, UISearchBarDelegate {
 
 		songsTableView.autoPinEdgeToSuperviewEdge(.Left)
 		queueTableView.autoPinEdge(.Left, toEdge: .Right, ofView: songsTableView)
-		commentsTableView.autoPinEdge(.Left, toEdge: .Right, ofView: queueTableView)
-		settingsScrollView.autoPinEdge(.Left, toEdge: .Right, ofView: commentsTableView)
+		commentContentView.autoPinEdge(.Left, toEdge: .Right, ofView: queueTableView)
+		settingsScrollView.autoPinEdge(.Left, toEdge: .Right, ofView: commentContentView)
 		settingsScrollView.autoPinEdgeToSuperviewEdge(.Right)
 
-		// Settings Content View
+		// Comments
+		commentsTableView.autoPinEdgesToSuperviewEdgesWithInsets(UIEdgeInsetsZero, excludingEdge: .Bottom)
+
+		commentToolbar.autoPinEdge(.Top, toEdge: .Bottom, ofView: commentsTableView)
+		commentToolbar.autoPinEdgeToSuperviewEdge(.Left)
+		commentToolbar.autoPinEdgeToSuperviewEdge(.Right)
+		commentFieldKeyboardConstraint = commentToolbar.autoPinEdgeToSuperviewEdge(.Bottom)
+
+		// Settings: Content View
 		settingsContentView.autoPinEdgesToSuperviewEdges()
 		settingsContentView.autoMatchDimension(.Width, toDimension: .Width, ofView: settingsScrollView)
 
-		// Settings
+		// Settings: Status
 		settingsHeaderStatus.autoPinEdgesToSuperviewEdgesWithInsets(UIEdgeInsetsZero, excludingEdge: .Bottom)
 
 		broadcastingStatusBG.autoPinEdge(.Top, toEdge: .Bottom, ofView: settingsHeaderStatus)
@@ -193,6 +224,7 @@ class HostViewController: KZViewController, UISearchBarDelegate {
 		recordingStatusLabel.autoPinEdgeToSuperviewEdge(.Right, withInset: 22)
 		recordingStatusLabel.autoMatchDimension(.Height, toDimension: .Height, ofView: recordSwitch)
 
+		// Settings: Playback
 		settingsHeaderPlayback.autoPinEdge(.Top, toEdge: .Bottom, ofView: broadcastingStatusBG)
 		settingsHeaderPlayback.autoPinEdgeToSuperviewEdge(.Left)
 		settingsHeaderPlayback.autoPinEdgeToSuperviewEdge(.Right)
@@ -201,6 +233,7 @@ class HostViewController: KZViewController, UISearchBarDelegate {
 		musicVolumeSettingView.autoPinEdgeToSuperviewEdge(.Left)
 		musicVolumeSettingView.autoPinEdgeToSuperviewEdge(.Right)
 
+		// Settings: Microphone
 		settingsHeaderMicrophone.autoPinEdge(.Top, toEdge: .Bottom, ofView: musicVolumeSettingView)
 		settingsHeaderMicrophone.autoPinEdgeToSuperviewEdge(.Left)
 		settingsHeaderMicrophone.autoPinEdgeToSuperviewEdge(.Right)
@@ -209,11 +242,9 @@ class HostViewController: KZViewController, UISearchBarDelegate {
 		micVolumeSettingView.autoPinEdgeToSuperviewEdge(.Left)
 		micVolumeSettingView.autoPinEdgeToSuperviewEdge(.Right)
 
-		micActiveMusicVolumeSettingView.autoPinEdge(.Top, toEdge: .Bottom, ofView: micVolumeSettingView)
 		micActiveMusicVolumeSettingView.autoPinEdgeToSuperviewEdge(.Left)
 		micActiveMusicVolumeSettingView.autoPinEdgeToSuperviewEdge(.Right)
 
-		micFadeTimeSettingView.autoPinEdge(.Top, toEdge: .Bottom, ofView: micActiveMusicVolumeSettingView)
 		micFadeTimeSettingView.autoPinEdgeToSuperviewEdge(.Left)
 		micFadeTimeSettingView.autoPinEdgeToSuperviewEdge(.Right)
 		micFadeTimeSettingView.autoPinEdgeToSuperviewEdge(.Bottom, withInset: 0, relation: .GreaterThanOrEqual)
@@ -308,7 +339,11 @@ class HostViewController: KZViewController, UISearchBarDelegate {
 		queueTableView.registerReusableCell(UpNextSongCell)
 		switcherContentView.addSubview(queueTableView)
 
-		switcherContentView.addSubview(commentsTableView)
+		switcherContentView.addSubview(commentContentView)
+		commentContentView.addSubview(commentsTableView)
+
+		commentToolbar.delegate = self
+		commentContentView.addSubview(commentToolbar)
 
 		settingsScrollView.addSubview(settingsContentView)
 		switcherContentView.addSubview(settingsScrollView)
@@ -353,7 +388,6 @@ class HostViewController: KZViewController, UISearchBarDelegate {
 		let micVolumeSettingView = SettingJoinedView(text: NSLocalizedString("Settings_HostMicrophoneVolume", comment: "Microphone Volume"), detailText: NSLocalizedString("Settings_HostMicrophoneVolumeDescription", comment: ""), control: micVolumeSlider)
 		self.micVolumeSettingView = micVolumeSettingView
 		settingsContentView.addSubview(micVolumeSettingView)
-		micVolumeSettingView.setPrevChain(musicVolumeSettingView)
 
 		micActiveMusicVolumeSlider.value = 0.2
 		let micActiveMusicVolumeSettingView = SettingJoinedView(text: NSLocalizedString("Settings_HostMusicVolumeWhenMicActive", comment: "Music Volume When Mic Active"), detailText: NSLocalizedString("Settings_HostMusicVolumeWhenMicActiveDescription", comment: ""), control: micActiveMusicVolumeSlider)
@@ -371,10 +405,6 @@ class HostViewController: KZViewController, UISearchBarDelegate {
 	}
 
 	func setupToolbar() {
-		bottomBlurBar.layer.masksToBounds = false
-		bottomBlurBar.layer.shadowOffset = CGSize(width: 0, height: 2)
-		bottomBlurBar.layer.shadowRadius = 8
-		bottomBlurBar.layer.shadowOpacity = 0.2
 		view.addSubview(bottomBlurBar)
 
 		streamInfoHolder.listeners = 0
@@ -471,9 +501,7 @@ class HostViewController: KZViewController, UISearchBarDelegate {
 			self.switcherScrollView.contentOffset = CGPoint(x: CGFloat(self.switcherControl.selectedSegmentIndex) * self.switcherScrollView.frame.width, y: 0)
 		}
 
-        if searchBar.isFirstResponder() {
-            searchBar.resignFirstResponder()
-        }
+		view.endEditing(true)
 	}
 
 	/**
@@ -533,6 +561,8 @@ class HostViewController: KZViewController, UISearchBarDelegate {
 		} else {
 			songInfoHolderViewTopPadding?.constant = 0
 		}
+
+		songInfoHolderView.layoutIfNeeded()
 	}
 
 	/**
@@ -631,30 +661,30 @@ class HostViewController: KZViewController, UISearchBarDelegate {
 		return cell
 	}
 
-    override func tableView(tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {
-        if tableView == songsTableView {
-            searchBar.delegate = self
-            searchBar.frame.size.height = 44
-            searchBar.frame.size.width = tableView.frame.width
-            searchBar.keyboardDistanceFromTextField = 0
-            return searchBar
-        }
+	override func tableView(tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {
+		if tableView == songsTableView {
+			searchBar.delegate = self
+			searchBar.frame.size.height = 44
+			searchBar.frame.size.width = tableView.frame.width
+			searchBar.keyboardDistanceFromTextField = 0
+			return searchBar
+		}
 
-        return super.tableView(tableView, viewForHeaderInSection: section)
-    }
+		return super.tableView(tableView, viewForHeaderInSection: section)
+	}
 
-    override func tableView(tableView: UITableView, heightForHeaderInSection section: Int) -> CGFloat {
-        if tableView == songsTableView {
-            return 44
-        }
+	override func tableView(tableView: UITableView, heightForHeaderInSection section: Int) -> CGFloat {
+		if tableView == songsTableView {
+			return 44
+		}
 
-        return super.tableView(tableView, heightForHeaderInSection: section)
-    }
+		return super.tableView(tableView, heightForHeaderInSection: section)
+	}
 
 	// MARK: UISearchBar Delegate
-    func searchBarTextDidBeginEditing(searchBar: UISearchBar) {
-        searchBar.setShowsCancelButton(true, animated: true)
-    }
+	func searchBarTextDidBeginEditing(searchBar: UISearchBar) {
+		searchBar.setShowsCancelButton(true, animated: true)
+	}
 
 	func searchBar(searchBar: UISearchBar, textDidChange searchText: String) {
 		searchResults = [Any]()
@@ -673,15 +703,57 @@ class HostViewController: KZViewController, UISearchBarDelegate {
 
 	func searchBarCancelButtonClicked(searchBar: UISearchBar) {
 		searchResults = nil
-        searchBar.text = ""
-        searchBar.resignFirstResponder()
-        searchBar.setShowsCancelButton(false, animated: true)
+		searchBar.text = ""
+		searchBar.resignFirstResponder()
+		searchBar.setShowsCancelButton(false, animated: true)
 		songsTableView.reloadData()
 	}
 
-    func searchBarSearchButtonClicked(searchBar: UISearchBar) {
-        searchBar.resignFirstResponder()
-    }
+	func searchBarSearchButtonClicked(searchBar: UISearchBar) {
+		searchBar.resignFirstResponder()
+	}
+
+	// MARK: Handle Data
+	dynamic override func fetchData() {
+		fetchData(false)
+	}
+}
+
+//**********************************************************************
+//**********************************************************************
+//**********************************************************************
+
+//MARK: Initialize Stream
+extension HostViewController: MessageToolbarDelegate {
+
+	/**
+	 Called on comment submit
+
+	 - parameter text: the text that was posted
+	 */
+	func handlePost(text: String) {
+		guard text.characters.count > 0 else {
+			return
+		}
+
+		guard let stream = stream else {
+			return
+		}
+
+		guard let streamID = stream.id else {
+			return
+		}
+
+		Constants.Network.POST("/stream/" + String(streamID) + "/comment", parameters: ["text": text], completionHandler: { (response, error) -> Void in
+			self.handleResponse(response, error: error, successCompletion: { (result) -> Void in
+				Answers.logCustomEventWithName("Comment", customAttributes: [:])
+				self.fetchData(true)
+			})
+		})
+	}
+
+	func fetchData(scrollToBottom: Bool) {
+	}
 }
 
 //**********************************************************************
@@ -718,6 +790,8 @@ extension HostViewController {
 							self.setUpAudioSession()
 							self.connectGlobalStream()
 							self.loadLibrary()
+
+							Answers.logCustomEventWithName("Created Stream", customAttributes: [:])
 						}
 					}
 					}, errorCompletion: { (error) -> Void in
@@ -759,6 +833,7 @@ extension HostViewController {
 						self.connectGlobalStream()
 						self.loadLibrary()
 						callback(true, nil)
+						Answers.logCustomEventWithName("Continued Stream", customAttributes: [:])
 					}
 				}
 				}, errorCompletion: { (error) -> Void in

@@ -22,8 +22,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 
 	func application(application: UIApplication, didFinishLaunchingWithOptions launchOptions: [NSObject: AnyObject]?) -> Bool {
 
-		IQKeyboardManager.sharedManager().shouldShowTextFieldPlaceholder = false
-		IQKeyboardManager.sharedManager().enable = true
+        //Setup some things...
 		NSUserDefaults.standardUserDefaults().setSecret("eQpvrIz91DyP9Ge4GY4LRz0vbbG7ot")
 		Fabric.with([Crashlytics.self, Twitter.self])
 

@@ -8,6 +8,7 @@ PODS:
   - Fabric (1.6.6)
   - Gloss (0.7.0)
   - Hashids-Swift (0.3.0)
+  - HPGrowingTextView (1.1)
   - IQKeyboardManagerSwift (4.0.0)
   - KILabel (1.0.1)
   - Kingfisher (2.0.3)
@@ -34,6 +35,7 @@ PODS:
     - Fabric
   - TwitterKit (1.15.1):
     - TwitterCore (= 1.15.1)
+  - UIViewController+BHTKeyboardAnimationBlocks (0.0.2)
 
 DEPENDENCIES:
   - AeroGearHttp
@@ -43,6 +45,7 @@ DEPENDENCIES:
   - Fabric
   - Gloss
   - Hashids-Swift
+  - HPGrowingTextView
   - IQKeyboardManagerSwift
   - KILabel
   - Kingfisher
@@ -61,6 +64,7 @@ DEPENDENCIES:
   - SpinKit
   - TwitterCore
   - TwitterKit
+  - UIViewController+BHTKeyboardAnimationBlocks
 
 SPEC CHECKSUMS:
   AeroGearHttp: 4c0fe1065817199bc4b64b17deec68e9d7c341fe
@@ -71,6 +75,7 @@ SPEC CHECKSUMS:
   Fabric: 1abc1e59f11fa39ede6f690ef7309d8563e3ec59
   Gloss: 78685202299e333d64319e4b8c9762b539707979
   Hashids-Swift: 5d7c069b0d4a3b70d4e2a840c420115dd517050d
+  HPGrowingTextView: 88a716d97fb853bcb08a4a08e4727da17efc9b19
   IQKeyboardManagerSwift: ede2a27b4e1ce053d03073b9c7fa439322f5e405
   KILabel: 4797807cdc0b4992dad8bf91175ddc973c3b569b
   Kingfisher: 44c1f1912f19371a67d701e67c96d6bb45ca1c8d
@@ -90,5 +95,6 @@ SPEC CHECKSUMS:
   SpinKit: 65906a8b534a4e14cbfd3f8b0b6c329131faef4a
   TwitterCore: 12983a7464e34afbbf18881347898a9db526ac71
   TwitterKit: b5821570887ec2d77650fa232eaec175665dc443
+  UIViewController+BHTKeyboardAnimationBlocks: 4996f7909cb141f19e9544720e5bb79de20e4db9
 
 COCOAPODS: 0.39.0
