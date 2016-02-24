@@ -49,7 +49,32 @@
 		</dict>
 	</array>
 	<key>CFBundleVersion</key>
-	<string>667</string>
+	<string>677</string>
+	<key>Fabric</key>
+	<dict>
+		<key>APIKey</key>
+		<string>737db71c91f71e0d6b1a52e31ce9bba96c59218e</string>
+		<key>Kits</key>
+		<array>
+			<dict>
+				<key>KitInfo</key>
+				<dict/>
+				<key>KitName</key>
+				<string>Crashlytics</string>
+			</dict>
+			<dict>
+				<key>KitInfo</key>
+				<dict>
+					<key>consumerKey</key>
+					<string>MlkIB8rJbF7B7F432uoYjY2a5</string>
+					<key>consumerSecret</key>
+					<string>3e8vSiMdHPhMgiJT47PJCngQQGhV3nPhug7msqK9vCdnyDpjBw</string>
+				</dict>
+				<key>KitName</key>
+				<string>Twitter</string>
+			</dict>
+		</array>
+	</dict>
 	<key>LSRequiresIPhoneOS</key>
 	<true/>
 	<key>UIBackgroundModes</key>

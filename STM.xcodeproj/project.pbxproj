@@ -448,6 +448,7 @@
 				C8BB1B58104A4B92E3BFF9F4 /* Embed Pods Frameworks */,
 				995E2A85AD31DC2FF9851682 /* Copy Pods Resources */,
 				EA09CAC91C5C62720067FF6A /* Run Script */,
+				EA8D3DDF1C7D4D56003ACCFC /* ShellScript */,
 			);
 			buildRules = (
 			);
@@ -574,6 +575,19 @@
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
 			shellScript = "#!/bin/bash\nbuildNumber=$(/usr/libexec/PlistBuddy -c \"Print CFBundleVersion\" \"$INFOPLIST_FILE\")\nbuildNumber=$(($buildNumber + 1))\n/usr/libexec/PlistBuddy -c \"Set :CFBundleVersion $buildNumber\" \"$INFOPLIST_FILE\"";
+		};
+		EA8D3DDF1C7D4D56003ACCFC /* ShellScript */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+			);
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "\"${PODS_ROOT}/Fabric/run\" 737db71c91f71e0d6b1a52e31ce9bba96c59218e af4b5fb4ee85950a016882b6716ffb499275c798db6de80fdd10ed238665ca35";
 		};
 		EAB0E6A41C78D66D008945FF /* ShellScript */ = {
 			isa = PBXShellScriptBuildPhase;
@@ -748,6 +762,7 @@
 				CODE_SIGN_ENTITLEMENTS = STM/STM.entitlements;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
 				INFOPLIST_FILE = STM/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 9.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";

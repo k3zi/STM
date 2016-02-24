@@ -652,6 +652,10 @@ class HostViewController: KZViewController, UISearchBarDelegate {
     }
 
 	// MARK: UISearchBar Delegate
+    func searchBarTextDidBeginEditing(searchBar: UISearchBar) {
+        searchBar.setShowsCancelButton(true, animated: true)
+    }
+
 	func searchBar(searchBar: UISearchBar, textDidChange searchText: String) {
 		searchResults = [Any]()
 		songsTableView.reloadData()
@@ -664,7 +668,6 @@ class HostViewController: KZViewController, UISearchBarDelegate {
 			return false
 		})
 
-        searchBar.setShowsCancelButton(true, animated: true)
 		songsTableView.reloadData()
 	}
 

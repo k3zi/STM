@@ -25,5 +25,9 @@ pod 'Socket.IO-Client-Swift'
 pod 'Reusable'
 pod 'SAConfettiView'
 pod 'RAMPaperSwitch', '~> 0.0.1'
+pod 'Fabric'
+pod 'Crashlytics'
+pod 'TwitterKit'
+pod 'TwitterCore'
 
 end

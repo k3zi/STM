@@ -2,10 +2,13 @@ PODS:
   - AeroGearHttp (0.4.1)
   - Audiobus (2.3.1)
   - CocoaSecurity (1.2.4)
+  - Crashlytics (3.7.0):
+    - Fabric (~> 1.6.3)
   - DateTools (1.7.0)
+  - Fabric (1.6.6)
   - Gloss (0.7.0)
   - Hashids-Swift (0.3.0)
-  - IQKeyboardManager (4.0.0)
+  - IQKeyboardManagerSwift (4.0.0)
   - KILabel (1.0.1)
   - Kingfisher (2.0.3)
   - KMPlaceholderTextView (1.1.1)
@@ -27,14 +30,20 @@ PODS:
     - CocoaSecurity (~> 1.2.1)
   - Socket.IO-Client-Swift (5.4.1)
   - SpinKit (1.2.0)
+  - TwitterCore (1.15.1):
+    - Fabric
+  - TwitterKit (1.15.1):
+    - TwitterCore (= 1.15.1)
 
 DEPENDENCIES:
   - AeroGearHttp
   - Audiobus
+  - Crashlytics
   - DateTools
+  - Fabric
   - Gloss
   - Hashids-Swift
-  - IQKeyboardManager
+  - IQKeyboardManagerSwift
   - KILabel
   - Kingfisher
   - KMPlaceholderTextView
@@ -50,15 +59,19 @@ DEPENDENCIES:
   - SecureNSUserDefaults
   - Socket.IO-Client-Swift
   - SpinKit
+  - TwitterCore
+  - TwitterKit
 
 SPEC CHECKSUMS:
   AeroGearHttp: 4c0fe1065817199bc4b64b17deec68e9d7c341fe
   Audiobus: d75ef3f0d625abf3007a147548423e76ca61043d
   CocoaSecurity: d288a6f87e0f363823d2cb83e753814a6944f71a
+  Crashlytics: c3a2333dea9e2733d2777f730910321fc9e25c0d
   DateTools: 53288ee8b905fdc75897a1e6b5cc0144b14cba60
+  Fabric: 1abc1e59f11fa39ede6f690ef7309d8563e3ec59
   Gloss: 78685202299e333d64319e4b8c9762b539707979
   Hashids-Swift: 5d7c069b0d4a3b70d4e2a840c420115dd517050d
-  IQKeyboardManager: b91928f7927ba55a5829b4dcf4b7a6736ac9fc22
+  IQKeyboardManagerSwift: ede2a27b4e1ce053d03073b9c7fa439322f5e405
   KILabel: 4797807cdc0b4992dad8bf91175ddc973c3b569b
   Kingfisher: 44c1f1912f19371a67d701e67c96d6bb45ca1c8d
   KMPlaceholderTextView: 686edec818f5727728eaf8c2e9e70177692d3d53
@@ -75,5 +88,7 @@ SPEC CHECKSUMS:
   SecureNSUserDefaults: 60a27d6e7fd2cad47448fef5dea22803e098433a
   Socket.IO-Client-Swift: ad65f1437dd97c4ac01e2e506386fafc3de2ece1
   SpinKit: 65906a8b534a4e14cbfd3f8b0b6c329131faef4a
+  TwitterCore: 12983a7464e34afbbf18881347898a9db526ac71
+  TwitterKit: b5821570887ec2d77650fa232eaec175665dc443
 
 COCOAPODS: 0.39.0
