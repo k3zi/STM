@@ -18,8 +18,12 @@ struct HostSettings {
 class HostViewController: KZViewController, UISearchBarDelegate {
 	var streamType: StreamType?
 	var stream: STMStream?
+
 	var socket: SocketIOClient?
+    var commentSocket: SocketIOClient?
 	let backgroundQueue = dispatch_queue_create("com.stormedgeapps.streamtome.stream", nil)
+    let commentBackgroundQueue = dispatch_queue_create("com.stormedgeapps.streamtome.comment", nil)
+
 	var songs = [Any]()
 	var upNextSongs = [Any]()
 	let engine = FUXEngine()
@@ -65,6 +69,7 @@ class HostViewController: KZViewController, UISearchBarDelegate {
 
 	let commentContentView = UIView()
 	let commentToolbar = MessageToolbarView()
+    var comments = [Any]()
 
 	let settingsHeaderStatus = UILabel.styledForSettingsHeader("STATUS")
 	let recordSwitch = UISwitch()
@@ -736,20 +741,22 @@ extension HostViewController: MessageToolbarDelegate {
 			return
 		}
 
-		guard let stream = stream else {
-			return
-		}
+        guard let socket = self.commentSocket else {
+            return
+        }
 
-		guard let streamID = stream.id else {
-			return
-		}
+        guard socket.status == .Connected else {
+            return
+        }
 
-		Constants.Network.POST("/stream/" + String(streamID) + "/comment", parameters: ["text": text], completionHandler: { (response, error) -> Void in
-			self.handleResponse(response, error: error, successCompletion: { (result) -> Void in
-				Answers.logCustomEventWithName("Comment", customAttributes: [:])
-				self.fetchData(true)
-			})
-		})
+        dispatch_async(commentBackgroundQueue) { () -> Void in
+            var params = [String: AnyObject]()
+            params["text"] = text
+            socket.emitWithAck("addComment", params)(timeoutAfter: 0) { data in
+                Answers.logCustomEventWithName("Comment", customAttributes: [:])
+                self.fetchData(true)
+            }
+        }
 	}
 
 	func fetchData(scrollToBottom: Bool) {
@@ -862,26 +869,54 @@ extension HostViewController: EZOutputDataSource {
 			return
 		}
 
-		if let userID = user.id {
-			if let streamID = stream.id {
-				if let securityHash = stream.securityHash {
-					if let baseURL = NSURL(string: Constants.baseURL) {
-						let oForcePolling = SocketIOClientOption.ForcePolling(true)
-						let oHost = SocketIOClientOption.Nsp("/host")
-						let oAuth = SocketIOClientOption.ConnectParams(["streamID": streamID, "securityHash": securityHash, "userID": userID, "stmHash": Constants.Config.streamHash])
-						let options = [oForcePolling, oHost, oAuth] as Set<SocketIOClientOption>
-						self.socket = SocketIOClient(socketURL: baseURL, options: options)
-						if let socket = self.socket {
-							socket.on("connect") { data, ack in
-								print("Stream: Socket Connected")
-							}
+		guard let userID = user.id else {
+            return
+        }
 
-							socket.connect()
-						}
-					}
-				}
-			}
-		}
+        guard let streamID = stream.id else {
+            return
+        }
+
+        guard let securityHash = stream.securityHash else {
+            return
+        }
+
+        guard let baseURL = NSURL(string: Constants.baseURL) else {
+            return
+        }
+
+        let oForcePolling = SocketIOClientOption.ForcePolling(true)
+        let oHost = SocketIOClientOption.Nsp("/host")
+        let oAuth = SocketIOClientOption.ConnectParams(["streamID": streamID, "securityHash": securityHash, "userID": userID, "stmHash": Constants.Config.streamHash])
+        let options = [oForcePolling, oHost, oAuth] as Set<SocketIOClientOption>
+
+        self.socket = SocketIOClient(socketURL: baseURL, options: options)
+        if let socket = self.socket {
+            socket.on("connect") { data, ack in
+                print("Stream: Socket Connected")
+            }
+
+            socket.connect()
+        }
+
+        let commentHost = SocketIOClientOption.Nsp("/comment")
+        let commentOptions = [oForcePolling, commentHost, oAuth] as Set<SocketIOClientOption>
+        self.commentSocket = SocketIOClient(socketURL: baseURL, options: commentOptions)
+        if let socket = self.commentSocket {
+            socket.on("connect") { data, ack in
+                print("Comment Socket Connected")
+            }
+
+            socket.on("newComment") { data, ack in
+                if let result = data[0] as? JSON {
+                    if let comment = STMComment(json: result) {
+                        self.comments.append(comment)
+                    }
+                }
+            }
+
+            socket.connect()
+        }
 	}
 
 	func loadLibrary() {

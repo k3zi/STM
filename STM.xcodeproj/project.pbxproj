@@ -68,6 +68,7 @@
 		EAB0E6AC1C7966E5008945FF /* AudioToolbox.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = EAB0E6AB1C7966E5008945FF /* AudioToolbox.framework */; };
 		EAB39D411C7B149600D8C70F /* Localizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = EAB39D401C7B149600D8C70F /* Localizable.strings */; };
 		EACD2B401C75996600A6CFD6 /* HostInfoHolderView.swift in Sources */ = {isa = PBXBuildFile; fileRef = EACD2B3F1C75996600A6CFD6 /* HostInfoHolderView.swift */; };
+		EAE063101C7E7A0900C86823 /* STMComment.swift in Sources */ = {isa = PBXBuildFile; fileRef = EAE0630F1C7E7A0900C86823 /* STMComment.swift */; };
 		EAE545041C76978F00180241 /* MeterTable.m in Sources */ = {isa = PBXBuildFile; fileRef = EAE545021C76978F00180241 /* MeterTable.m */; };
 		EAE545061C76BA9200180241 /* STMVisualizer.swift in Sources */ = {isa = PBXBuildFile; fileRef = EAE545051C76BA9200180241 /* STMVisualizer.swift */; };
 /* End PBXBuildFile section */
@@ -165,6 +166,7 @@
 		EAB0E6AB1C7966E5008945FF /* AudioToolbox.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AudioToolbox.framework; path = System/Library/Frameworks/AudioToolbox.framework; sourceTree = SDKROOT; };
 		EAB39D401C7B149600D8C70F /* Localizable.strings */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.strings; path = Localizable.strings; sourceTree = "<group>"; };
 		EACD2B3F1C75996600A6CFD6 /* HostInfoHolderView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = HostInfoHolderView.swift; sourceTree = "<group>"; };
+		EAE0630F1C7E7A0900C86823 /* STMComment.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = STMComment.swift; sourceTree = "<group>"; };
 		EAE545021C76978F00180241 /* MeterTable.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MeterTable.m; sourceTree = "<group>"; };
 		EAE545031C76978F00180241 /* MeterTable.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MeterTable.h; sourceTree = "<group>"; };
 		EAE545051C76BA9200180241 /* STMVisualizer.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = STMVisualizer.swift; sourceTree = "<group>"; };
@@ -269,6 +271,7 @@
 			isa = PBXGroup;
 			children = (
 				EA01AF921C5CBCA600F56792 /* STMUser.swift */,
+				EAE0630F1C7E7A0900C86823 /* STMComment.swift */,
 				EA27B1FB1C5D2D05006F269D /* STMStream.swift */,
 			);
 			path = Models;
@@ -650,6 +653,7 @@
 				EA4E494B1C61416400CB40D7 /* Label.swift in Sources */,
 				EA4F49631C5EBFA000103559 /* YBAudioUtils.m in Sources */,
 				EA01AF961C5CC48700F56792 /* CreateStreamViewController.swift in Sources */,
+				EAE063101C7E7A0900C86823 /* STMComment.swift in Sources */,
 				EA01AF981C5CD67E00F56792 /* HostViewController.swift in Sources */,
 				EA01AF911C5CB8DC00F56792 /* DashboardViewController.swift in Sources */,
 				EA4F49621C5EBFA000103559 /* YBAudioUnitNode.m in Sources */,
