@@ -1,13 +1,14 @@
 //
-//  DawgUserCell.swift
+//  KZTableViewCell.swift
+//  KZ
 //
-//
-//  Created by Kesi Maduka on 8/20/15.
-//
+//  Created by Kesi Maduka on 1/25/16.
+//  Copyright © 2016 Storm Edge Apps LLC. All rights reserved.
 //
 
 import UIKit
 import PureLayout
+import Reusable
 
 public class KZTableViewCell: UITableViewCell, Reusable {
     public let topSeperator = UIView()
@@ -20,15 +21,14 @@ public class KZTableViewCell: UITableViewCell, Reusable {
     override required public init(style: UITableViewCellStyle, reuseIdentifier: String?) {
         super.init(style: style, reuseIdentifier: reuseIdentifier)
         self.backgroundColor = UIColor.clearColor()
-        
-        topSeperator.backgroundColor = RGB(239)
+
         self.contentView.addSubview(topSeperator)
-        bottomSeperator.backgroundColor = RGB(239)
         self.contentView.addSubview(bottomSeperator)
         
         self.contentView.bounds.size.height = 99999
     }
     
+    //MARK: Setup Constraints
     override public func updateConstraints() {
         super.updateConstraints()
         if didSetupConstraints {
@@ -45,13 +45,7 @@ public class KZTableViewCell: UITableViewCell, Reusable {
         topSeperator.autoPinEdgeToSuperviewEdge(.Left)
         topSeperator.autoPinEdgeToSuperviewEdge(.Right)
         
-        setupConstraints()
-        
         didSetupConstraints = true
-    }
-    
-    func setupConstraints() {
-        
     }
     
     public func getHeight() -> CGFloat {
@@ -84,6 +78,12 @@ public class KZTableViewCell: UITableViewCell, Reusable {
     
     public func fillInCellData() {
         
+    }
+    
+    override public func prepareForReuse() {
+        super.prepareForReuse()
+        
+        model = nil
     }
     
     required public init?(coder aDecoder: NSCoder) {

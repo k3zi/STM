@@ -1,8 +1,8 @@
 //
-//  IntrinsicTableView.swift
-//  Dawgtown
+//  KZIntrinsicTableView.swift
+//  KZ
 //
-//  Created by Kesi Maduka on 1/7/16.
+//  Created by Kesi Maduka on 1/25/16.
 //  Copyright © 2016 Storm Edge Apps LLC. All rights reserved.
 //
 
@@ -54,4 +54,5 @@ public class KZIntrinsicTableView: UITableView {
         super.deleteSections(sections, withRowAnimation: animation)
         self.invalidateIntrinsicContentSize()
     }
+    
 }

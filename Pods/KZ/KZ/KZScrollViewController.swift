@@ -1,9 +1,9 @@
 //
-//  BareboneViewController.swift
-//  Dawgtown
+//  KZScrollViewController.swift
+//  KZ
 //
-//  Created by Kesi Maduka on 7/31/15.
-//  Copyright (c) 2015 Storm Edge Apps LLC. All rights reserved.
+//  Created by Kesi Maduka on 1/25/16.
+//  Copyright © 2016 Storm Edge Apps LLC. All rights reserved.
 //
 
 import UIKit
