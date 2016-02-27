@@ -430,7 +430,7 @@ class HostViewController: KZViewController, UISearchBarDelegate {
 		micIndicatorGradientView.layer.masksToBounds = true
 		bottomBlurBar.addSubview(micIndicatorGradientView)
 
-		micIndicatorView.backgroundColor = RGB(255, a: 200)
+		micIndicatorView.backgroundColor = RGB(255, a: 0.78)
 		micIndicatorGradientView.addSubview(micIndicatorView)
 	}
 

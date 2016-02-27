@@ -20,7 +20,7 @@ class InitialViewController: KZViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
 
-        crowdBGGradient.colors = [RGB(0, a: 160).CGColor, RGB(255, a: 0).CGColor, RGB(255, a: 0).CGColor, RGB(0, a: 160).CGColor]
+        crowdBGGradient.colors = [RGB(0, a: 0.63).CGColor, RGB(255, a: 0).CGColor, RGB(255, a: 0).CGColor, RGB(0, a: 0.63).CGColor]
         crowdBGGradient.locations = [NSNumber(float: 0.0), NSNumber(float: 0.315), NSNumber(float: 0.685), NSNumber(float: 1.0)]
         crowdBG.layer.addSublayer(crowdBGGradient)
 
