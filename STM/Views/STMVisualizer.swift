@@ -26,7 +26,7 @@ class STMVisualizer: UIView {
     override init(frame: CGRect) {
         super.init(frame: frame)
 
-        let barColor = RGB(255, a: 51)
+        let barColor = RGB(255, a: 0.2)
         for var i = 0; i < numbrerOfBars; i++ {
             let bar = UIView()
             bar.backgroundColor = barColor

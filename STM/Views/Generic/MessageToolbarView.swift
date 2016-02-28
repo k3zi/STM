@@ -25,7 +25,7 @@ class MessageToolbarView: UIView, HPGrowingTextViewDelegate {
 		super.init(frame: CGRect.zero)
 		self.translatesAutoresizingMaskIntoConstraints = false
 
-		toolBarContainer.backgroundColor = RGB(0, a: 127)
+		toolBarContainer.backgroundColor = RGB(0, a: 0.5)
 		self.addSubview(toolBarContainer)
 
 		toolBar.isScrollable = false

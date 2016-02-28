@@ -13,7 +13,7 @@ extension UITextField {
         let textField = UITextField()
         textField.font = UIFont.systemFontOfSize(15, weight: UIFontWeightMedium)
         textField.textColor = RGB(255)
-        textField.backgroundColor = RGB(0, a: 51)
+        textField.backgroundColor = RGB(0, a: 0.2)
         textField.clipsToBounds = true
         textField.layer.cornerRadius = 10
         textField.textAlignment = .Center

@@ -22,8 +22,8 @@ class UpNextSongCell: MCSwipeCell {
         poster.backgroundColor = RGB(72, g: 72, b: 72)
         self.contentView.addSubview(poster)
 
-        positionLabel.backgroundColor = RGB(204, a: 219)
-        positionLabel.textColor = RGB(26, a: 255)
+        positionLabel.backgroundColor = RGB(204, a: 0.86)
+        positionLabel.textColor = RGB(26, a: 1.0)
         positionLabel.textAlignment = .Center
         positionLabel.font = UIFont.systemFontOfSize(16)
         poster.addSubview(positionLabel)
