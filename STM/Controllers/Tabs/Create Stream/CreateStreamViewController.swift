@@ -200,17 +200,21 @@ class CreateStreamViewController: KZScrollViewController {
 
     func tableView(tableView: UITableView, commitEditingStyle editingStyle: UITableViewCellEditingStyle, forRowAtIndexPath indexPath: NSIndexPath) {
         if editingStyle == .Delete {
-            if let stream = items[indexPath.row] as? STMStream {
-                if let streamID = stream.id {
-                    Constants.Network.GET("/delete/stream/" + String(streamID), parameters: nil, completionHandler: { (response, error) -> Void in
-                        self.handleResponse(response, error: error, successCompletion: { (result) -> Void in
-                            self.items.removeAtIndex(indexPath.row)
-                            tableView.reloadSections(NSIndexSet(index: 0), withRowAnimation: .Fade)
-                            self.fetchData()
-                        })
-                    })
-                }
+            guard let stream = items[indexPath.row] as? STMStream else {
+                return
             }
+
+            guard let streamID = stream.id else {
+                return
+            }
+
+            Constants.Network.GET("/delete/stream/" + String(streamID), parameters: nil, completionHandler: { (response, error) -> Void in
+                self.handleResponse(response, error: error, successCompletion: { (result) -> Void in
+                    self.items.removeAtIndex(indexPath.row)
+                    tableView.reloadSections(NSIndexSet(index: 0), withRowAnimation: .Fade)
+                    self.fetchData()
+                })
+            })
         }
     }
 
