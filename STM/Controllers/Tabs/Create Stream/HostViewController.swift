@@ -611,7 +611,6 @@ class HostViewController: KZViewController, UISearchBarDelegate {
 			return searchResults ?? songs
 		} else if tableView == queueTableView {
 			return upNextSongs
-		}
         } else if tableView == commentsTableView {
             return comments
         }
@@ -624,7 +623,9 @@ class HostViewController: KZViewController, UISearchBarDelegate {
 			return SelectSongCell.self
 		} else if tableView == queueTableView {
 			return UpNextSongCell.self
-		}
+        } else if tableView == commentsTableView {
+            return CommentCell.self
+        }
 
 		return super.tableViewCellClass(tableView, indexPath: indexPath)
 	}
@@ -634,7 +635,6 @@ class HostViewController: KZViewController, UISearchBarDelegate {
 			return searchResults != nil ? "No Results" : "No Songs in Library"
 		} else if tableView == queueTableView {
 			return "No Songs in Queue"
-		}
         } else if tableView == commentsTableView {
             return "No Comments\n\nBe the first one to comment :)"
         }
