@@ -11,6 +11,7 @@ import HPGrowingTextView
 
 protocol MessageToolbarDelegate {
 	func handlePost(text: String)
+    func didBeginEditing()
 }
 
 class MessageToolbarView: UIView, HPGrowingTextViewDelegate {
@@ -59,6 +60,10 @@ class MessageToolbarView: UIView, HPGrowingTextViewDelegate {
 
 		toolBar.refreshHeight()
 	}
+
+    func growingTextViewDidBeginEditing(growingTextView: HPGrowingTextView!) {
+        self.delegate?.didBeginEditing()
+    }
 
 	func growingTextView(growingTextView: HPGrowingTextView!, willChangeHeight height: Float) {
 		UIView.animateWithDuration(0.4) { () -> Void in

@@ -14,6 +14,7 @@ struct STMComment: Decodable {
     let id: Int?
     let user: STMUser?
     let text: String?
+    let date: NSDate?
 
     // MARK: - Deserialization
 
@@ -21,6 +22,17 @@ struct STMComment: Decodable {
         self.id = "id" <~~ json
         self.user = "user" <~~ json
         self.text = "text" <~~ json
+        self.date = Decoder.decodeUnixTimestamp("date", json: json)
     }
+}
 
+extension Decoder {
+    static func decodeUnixTimestamp(key: String, json: JSON) -> NSDate? {
+
+        if let dateInt = json.valueForKeyPath(key) as? Int {
+            return NSDate(timeIntervalSince1970: NSTimeInterval(dateInt))
+        }
+
+        return nil
+    }
 }

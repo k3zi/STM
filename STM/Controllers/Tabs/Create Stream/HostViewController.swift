@@ -70,6 +70,7 @@ class HostViewController: KZViewController, UISearchBarDelegate {
 	let commentContentView = UIView()
 	let commentToolbar = MessageToolbarView()
     var comments = [Any]()
+    var didPostComment = false
 
 	let settingsHeaderStatus = UILabel.styledForSettingsHeader("STATUS")
 	let recordSwitch = UISwitch()
@@ -127,6 +128,7 @@ class HostViewController: KZViewController, UISearchBarDelegate {
 			self.keyboardVisible = 0
 		}
 
+        fetchOnce()
 		NSTimer.scheduledTimerWithTimeInterval(1.5, target: self, selector: Selector("refresh"), userInfo: nil, repeats: true)
 	}
 
@@ -344,6 +346,9 @@ class HostViewController: KZViewController, UISearchBarDelegate {
 		queueTableView.registerReusableCell(UpNextSongCell)
 		switcherContentView.addSubview(queueTableView)
 
+        commentsTableView.delegate = self
+        commentsTableView.dataSource = self
+        commentsTableView.registerReusableCell(CommentCell)
 		switcherContentView.addSubview(commentContentView)
 		commentContentView.addSubview(commentsTableView)
 
@@ -514,6 +519,7 @@ class HostViewController: KZViewController, UISearchBarDelegate {
 	 */
 	func refresh() {
 		streamInfoHolder.bandwidth = statsPacketsReceived
+        streamInfoHolder.comments = comments.count
 	}
 
 	func refreshRecordingLabel() {
@@ -604,6 +610,9 @@ class HostViewController: KZViewController, UISearchBarDelegate {
 		} else if tableView == queueTableView {
 			return upNextSongs
 		}
+        } else if tableView == commentsTableView {
+            return comments
+        }
 
 		return super.tableViewCellData(tableView, section: section)
 	}
@@ -624,6 +633,9 @@ class HostViewController: KZViewController, UISearchBarDelegate {
 		} else if tableView == queueTableView {
 			return "No Songs in Queue"
 		}
+        } else if tableView == commentsTableView {
+            return "No Comments\n\nBe the first one to comment :)"
+        }
 
 		return super.tableViewNoDataText(tableView)
 	}
@@ -728,7 +740,7 @@ class HostViewController: KZViewController, UISearchBarDelegate {
 //**********************************************************************
 //**********************************************************************
 
-//MARK: Initialize Stream
+//MARK: Comment Updates
 extension HostViewController: MessageToolbarDelegate {
 
 	/**
@@ -745,19 +757,70 @@ extension HostViewController: MessageToolbarDelegate {
             return
         }
 
-        guard socket.status == .Connected else {
-            return
-        }
-
         dispatch_async(commentBackgroundQueue) { () -> Void in
+            while socket.status != .Connected {
+                NSRunLoop.mainRunLoop().runMode(NSDefaultRunLoopMode, beforeDate: NSDate.distantFuture())
+            }
+
+            self.didPostComment = true
             var params = [String: AnyObject]()
             params["text"] = text
             socket.emitWithAck("addComment", params)(timeoutAfter: 0) { data in
                 Answers.logCustomEventWithName("Comment", customAttributes: [:])
-                self.fetchData(true)
             }
         }
+
+        view.endEditing(true)
 	}
+
+    func didBeginEditing() {
+        commentsTableView.scrollToBottom(true)
+    }
+
+    func didReciveComment(response: AnyObject) {
+        if let result = response as? JSON {
+            if let comment = STMComment(json: result) {
+                let isAtBottom = commentsTableView.indexPathsForVisibleRows?.contains({ $0.row == (comments.count - 1) })
+                let shouldScrollDown = (didPostComment ?? false) || (isAtBottom ?? false)
+                comments.append(comment)
+
+                dispatch_async(dispatch_get_main_queue(), { () -> Void in
+                    if self.comments.count > 1 {
+                        self.commentsTableView.beginUpdates()
+                        self.commentsTableView.insertRowsAtIndexPaths([NSIndexPath(forRow: self.comments.count - 1, inSection: 0)], withRowAnimation: .Fade)
+                        self.commentsTableView.endUpdates()
+                        if shouldScrollDown {
+                            self.commentsTableView.scrollToBottom(true)
+                        }
+                    } else {
+                        self.commentsTableView.reloadSections(NSIndexSet(index: 0), withRowAnimation: .Fade)
+                    }
+                })
+            }
+        }
+    }
+
+    func fetchOnce() {
+        guard let stream = stream else {
+            return
+        }
+
+        guard let streamID = stream.id else {
+            return
+        }
+
+        Constants.Network.GET("/stream/" + String(streamID) + "/comments", parameters: nil, completionHandler: { (response, error) -> Void in
+            self.handleResponse(response, error: error, successCompletion: { (result) -> Void in
+                self.comments.removeAll()
+                if let result = result as? [JSON] {
+                    let comments = [STMComment].fromJSONArray(result)
+                    comments.forEach({ self.comments.insert($0, atIndex: 0) })
+                    self.commentsTableView.reloadData()
+                    self.commentsTableView.scrollToBottom(false)
+                }
+            })
+        })
+    }
 
 	func fetchData(scrollToBottom: Bool) {
 	}
@@ -908,11 +971,7 @@ extension HostViewController: EZOutputDataSource {
             }
 
             socket.on("newComment") { data, ack in
-                if let result = data[0] as? JSON {
-                    if let comment = STMComment(json: result) {
-                        self.comments.append(comment)
-                    }
-                }
+                self.didReciveComment(data[0])
             }
 
             socket.connect()

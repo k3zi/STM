@@ -94,6 +94,22 @@ extension UIButton {
 	}
 }
 
+extension UITableView {
+    func scrollToBottom(animated: Bool = true) {
+        let section = self.numberOfSections
+        guard section > 0 else {
+            return
+        }
+
+        let row = self.numberOfRowsInSection(section - 1)
+        guard row > 0 else {
+            return
+        }
+
+        self.scrollToRowAtIndexPath(NSIndexPath(forRow: row - 1, inSection: section - 1), atScrollPosition: .Bottom, animated: animated)
+    }
+}
+
 extension UIView {
 
 	class func lineWithBGColor(backgroundColor: UIColor, vertical: Bool = false, lineHeight: CGFloat = 1.0) -> UIView {

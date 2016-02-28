@@ -69,6 +69,7 @@
 		EAB39D411C7B149600D8C70F /* Localizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = EAB39D401C7B149600D8C70F /* Localizable.strings */; };
 		EACD2B401C75996600A6CFD6 /* HostInfoHolderView.swift in Sources */ = {isa = PBXBuildFile; fileRef = EACD2B3F1C75996600A6CFD6 /* HostInfoHolderView.swift */; };
 		EAE063101C7E7A0900C86823 /* STMComment.swift in Sources */ = {isa = PBXBuildFile; fileRef = EAE0630F1C7E7A0900C86823 /* STMComment.swift */; };
+		EAE063121C7E94D000C86823 /* CommentCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = EAE063111C7E94D000C86823 /* CommentCell.swift */; };
 		EAE545041C76978F00180241 /* MeterTable.m in Sources */ = {isa = PBXBuildFile; fileRef = EAE545021C76978F00180241 /* MeterTable.m */; };
 		EAE545061C76BA9200180241 /* STMVisualizer.swift in Sources */ = {isa = PBXBuildFile; fileRef = EAE545051C76BA9200180241 /* STMVisualizer.swift */; };
 /* End PBXBuildFile section */
@@ -167,6 +168,7 @@
 		EAB39D401C7B149600D8C70F /* Localizable.strings */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.strings; path = Localizable.strings; sourceTree = "<group>"; };
 		EACD2B3F1C75996600A6CFD6 /* HostInfoHolderView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = HostInfoHolderView.swift; sourceTree = "<group>"; };
 		EAE0630F1C7E7A0900C86823 /* STMComment.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = STMComment.swift; sourceTree = "<group>"; };
+		EAE063111C7E94D000C86823 /* CommentCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CommentCell.swift; sourceTree = "<group>"; };
 		EAE545021C76978F00180241 /* MeterTable.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MeterTable.m; sourceTree = "<group>"; };
 		EAE545031C76978F00180241 /* MeterTable.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MeterTable.h; sourceTree = "<group>"; };
 		EAE545051C76BA9200180241 /* STMVisualizer.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = STMVisualizer.swift; sourceTree = "<group>"; };
@@ -339,6 +341,7 @@
 			children = (
 				EA24C0621C683F8300FE4DD0 /* MCSwipeCell.swift */,
 				EA4E49471C613F7C00CB40D7 /* HostStreamCell.swift */,
+				EAE063111C7E94D000C86823 /* CommentCell.swift */,
 				EA481DE71C630EED008E3E6E /* SelectSongCell.swift */,
 				EA24C0641C68418600FE4DD0 /* UpNextSongCell.swift */,
 			);
@@ -644,6 +647,7 @@
 				EA09CAD21C5C85AF0067FF6A /* CreateAccountViewController.swift in Sources */,
 				EA09CAAD1C5C41510067FF6A /* AppDelegate.swift in Sources */,
 				EA4F495F1C5EBFA000103559 /* YBAudioException.m in Sources */,
+				EAE063121C7E94D000C86823 /* CommentCell.swift in Sources */,
 				EA09CAC41C5C5CD30067FF6A /* InitialViewController.swift in Sources */,
 				EAB0E6A71C78EEB0008945FF /* UILabelStyles.swift in Sources */,
 				EA09CAC61C5C5D040067FF6A /* Window.swift in Sources */,
