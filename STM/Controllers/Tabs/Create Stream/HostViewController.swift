@@ -832,6 +832,16 @@ extension HostViewController: MessageToolbarDelegate {
 
 //MARK: Initialize Stream
 extension HostViewController {
+
+    /**
+     Creates a stream with the given attributes
+
+     - parameter type:        Wether the user is doing a global or local stream
+     - parameter name:        The name the user picked for the stream
+     - parameter passcode:    The associated passcode the user typed in
+     - parameter description: The description the user gave to the stream
+     - parameter callback:    Any error or nil if there was none
+     */
 	func start(type: StreamType, name: String, passcode: String, description: String, callback: (Bool, String?) -> Void) {
 		let progressView = M13ProgressViewRing()
 		progressView.primaryColor = Constants.Color.tint
@@ -875,6 +885,12 @@ extension HostViewController {
 		}
 	}
 
+    /**
+     Continues an existing stream
+
+     - parameter stream:   The stream to continue
+     - parameter callback: Any error or nil if there was none
+     */
 	func start(stream: STMStream, callback: (Bool, String?) -> Void) {
 		let progressView = M13ProgressViewRing()
 		progressView.primaryColor = Constants.Color.tint
@@ -923,6 +939,10 @@ extension HostViewController {
 
 //MARK: Audio Data
 extension HostViewController: EZOutputDataSource {
+
+    /**
+     Connects to the Output/Comment Socket.IO
+     */
 	func connectGlobalStream() {
 		guard let user = AppDelegate.del().currentUser else {
 			return
