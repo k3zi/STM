@@ -23,6 +23,9 @@
 		EA09CAD21C5C85AF0067FF6A /* CreateAccountViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = EA09CAD11C5C85AF0067FF6A /* CreateAccountViewController.swift */; };
 		EA09CAD41C5C86430067FF6A /* UITextFieldStyles.swift in Sources */ = {isa = PBXBuildFile; fileRef = EA09CAD31C5C86430067FF6A /* UITextFieldStyles.swift */; };
 		EA09CAD71C5C89A50067FF6A /* NavigationController.swift in Sources */ = {isa = PBXBuildFile; fileRef = EA09CAD61C5C89A50067FF6A /* NavigationController.swift */; };
+		EA209DAA1C8292A800A22BC4 /* DashboardItemCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = EA209DA91C8292A800A22BC4 /* DashboardItemCell.swift */; };
+		EA209DAD1C829B8500A22BC4 /* DashboardItemCollectionCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = EA209DAC1C829B8500A22BC4 /* DashboardItemCollectionCell.swift */; };
+		EA209DAF1C82BAB700A22BC4 /* STMDashboardItem.swift in Sources */ = {isa = PBXBuildFile; fileRef = EA209DAE1C82BAB700A22BC4 /* STMDashboardItem.swift */; };
 		EA24C0631C683F8300FE4DD0 /* MCSwipeCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = EA24C0621C683F8300FE4DD0 /* MCSwipeCell.swift */; };
 		EA24C0651C68418600FE4DD0 /* UpNextSongCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = EA24C0641C68418600FE4DD0 /* UpNextSongCell.swift */; };
 		EA27B1FC1C5D2D05006F269D /* STMStream.swift in Sources */ = {isa = PBXBuildFile; fileRef = EA27B1FB1C5D2D05006F269D /* STMStream.swift */; };
@@ -97,6 +100,9 @@
 		EA09CAD11C5C85AF0067FF6A /* CreateAccountViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CreateAccountViewController.swift; sourceTree = "<group>"; };
 		EA09CAD31C5C86430067FF6A /* UITextFieldStyles.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = UITextFieldStyles.swift; sourceTree = "<group>"; };
 		EA09CAD61C5C89A50067FF6A /* NavigationController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = NavigationController.swift; sourceTree = "<group>"; };
+		EA209DA91C8292A800A22BC4 /* DashboardItemCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DashboardItemCell.swift; sourceTree = "<group>"; };
+		EA209DAC1C829B8500A22BC4 /* DashboardItemCollectionCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DashboardItemCollectionCell.swift; sourceTree = "<group>"; };
+		EA209DAE1C82BAB700A22BC4 /* STMDashboardItem.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = STMDashboardItem.swift; sourceTree = "<group>"; };
 		EA24C0621C683F8300FE4DD0 /* MCSwipeCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MCSwipeCell.swift; sourceTree = "<group>"; };
 		EA24C0641C68418600FE4DD0 /* UpNextSongCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = UpNextSongCell.swift; sourceTree = "<group>"; };
 		EA27B1FB1C5D2D05006F269D /* STMStream.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = STMStream.swift; sourceTree = "<group>"; };
@@ -273,6 +279,7 @@
 			isa = PBXGroup;
 			children = (
 				EA01AF921C5CBCA600F56792 /* STMUser.swift */,
+				EA209DAE1C82BAB700A22BC4 /* STMDashboardItem.swift */,
 				EAE0630F1C7E7A0900C86823 /* STMComment.swift */,
 				EA27B1FB1C5D2D05006F269D /* STMStream.swift */,
 			);
@@ -284,6 +291,7 @@
 			children = (
 				EA4E49491C61413400CB40D7 /* Generic */,
 				EA4E49431C613F1E00CB40D7 /* Table Cells */,
+				EA209DAB1C829B0300A22BC4 /* Collection Cells */,
 				EA09CAC51C5C5D040067FF6A /* Window.swift */,
 				EA09CACF1C5C84B00067FF6A /* UIButtonStyles.swift */,
 				EA09CAD31C5C86430067FF6A /* UITextFieldStyles.swift */,
@@ -324,6 +332,14 @@
 			path = Launch;
 			sourceTree = "<group>";
 		};
+		EA209DAB1C829B0300A22BC4 /* Collection Cells */ = {
+			isa = PBXGroup;
+			children = (
+				EA209DAC1C829B8500A22BC4 /* DashboardItemCollectionCell.swift */,
+			);
+			path = "Collection Cells";
+			sourceTree = "<group>";
+		};
 		EA27B1FD1C5D32F6006F269D /* Player */ = {
 			isa = PBXGroup;
 			children = (
@@ -341,6 +357,7 @@
 			children = (
 				EA24C0621C683F8300FE4DD0 /* MCSwipeCell.swift */,
 				EA4E49471C613F7C00CB40D7 /* HostStreamCell.swift */,
+				EA209DA91C8292A800A22BC4 /* DashboardItemCell.swift */,
 				EAE063111C7E94D000C86823 /* CommentCell.swift */,
 				EA481DE71C630EED008E3E6E /* SelectSongCell.swift */,
 				EA24C0641C68418600FE4DD0 /* UpNextSongCell.swift */,
@@ -620,6 +637,7 @@
 			files = (
 				EAB0E6A91C78F8E9008945FF /* SettingJoinedView.swift in Sources */,
 				EA4F49611C5EBFA000103559 /* YBAudioUnitGraph.m in Sources */,
+				EA209DAF1C82BAB700A22BC4 /* STMDashboardItem.swift in Sources */,
 				EAE545061C76BA9200180241 /* STMVisualizer.swift in Sources */,
 				EA4F496A1C5EBFA000103559 /* YBReverb.m in Sources */,
 				EA4F49871C5EC05700103559 /* EZAudioFile.m in Sources */,
@@ -643,6 +661,7 @@
 				EA27B2021C5D3312006F269D /* KZPlayer.swift in Sources */,
 				EA4E494D1C617FA000CB40D7 /* GradientView.swift in Sources */,
 				EA27B2051C5D3312006F269D /* KZPlayerTag.swift in Sources */,
+				EA209DAA1C8292A800A22BC4 /* DashboardItemCell.swift in Sources */,
 				EA4F49601C5EBFA000103559 /* YBAudioFilePlayer.m in Sources */,
 				EA09CAD21C5C85AF0067FF6A /* CreateAccountViewController.swift in Sources */,
 				EA09CAAD1C5C41510067FF6A /* AppDelegate.swift in Sources */,
@@ -650,6 +669,7 @@
 				EAE063121C7E94D000C86823 /* CommentCell.swift in Sources */,
 				EA09CAC41C5C5CD30067FF6A /* InitialViewController.swift in Sources */,
 				EAB0E6A71C78EEB0008945FF /* UILabelStyles.swift in Sources */,
+				EA209DAD1C829B8500A22BC4 /* DashboardItemCollectionCell.swift in Sources */,
 				EA09CAC61C5C5D040067FF6A /* Window.swift in Sources */,
 				EA24C0651C68418600FE4DD0 /* UpNextSongCell.swift in Sources */,
 				EA27B2041C5D3312006F269D /* KZPlayerPlaylist.swift in Sources */,

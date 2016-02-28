@@ -125,6 +125,7 @@ class HostViewController: KZViewController, UISearchBarDelegate {
 			if self.keyboardVisible != 0 {
 				self.commentFieldKeyboardConstraint?.constant = 0
 			}
+
 			self.view.layoutIfNeeded()
 			self.keyboardVisible = 0
 		}

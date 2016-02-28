@@ -14,8 +14,9 @@
 @import SocketIOClientSwift;
 @import Reusable;
 @import Crashlytics;
-
 @import UIViewController_BHTKeyboardAnimationBlocks;
+
+#import <CommonCrypto/CommonCrypto.h>
 
 #import "KZConverter.h"
 #import "KZPlayerInner.h"

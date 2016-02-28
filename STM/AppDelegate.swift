@@ -55,9 +55,9 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 		let tabVC = UITabBarController()
 		let tab1 = NavigationController(rootViewController: DashboardViewController())
 		let tab2 = NavigationController(rootViewController: CreateStreamViewController())
-		let tab3 = NavigationController(rootViewController: DashboardViewController())
-		let tab4 = NavigationController(rootViewController: DashboardViewController())
-		let tab5 = NavigationController(rootViewController: DashboardViewController())
+		let tab3 = NavigationController(rootViewController: KZViewController())
+		let tab4 = NavigationController(rootViewController: KZViewController())
+		let tab5 = NavigationController(rootViewController: KZViewController())
 		tabVC.setViewControllers([tab1, tab2, tab3, tab4, tab5], animated: false)
 
 		self.window?.rootViewController = tabVC

@@ -93,6 +93,8 @@ class CreateStreamViewController: KZScrollViewController {
         tableView.backgroundColor = RGB(255)
         tableView.registerReusableCell(HostStreamCell)
         contentView.addSubview(tableView)
+
+        self.title = "Host Stream"
     }
 
     override func setupConstraints() {

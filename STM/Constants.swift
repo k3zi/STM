@@ -122,57 +122,40 @@ extension UIView {
 	}
 }
 
-//MARK: Data Transformers for ObjectMapper
-public class DateTransform: TransformType {
-	public typealias Object = NSDate
-	public typealias JSON = AnyObject
-
-	public init() { }
-
-	public func transformFromJSON(value: AnyObject?) -> NSDate? {
-		if let timeInt = value as? Int {
-			return NSDate(timeIntervalSince1970: NSTimeInterval(timeInt))
-		}
-
-		if let timeString = value as? String {
-			if let timeInt = Int(timeString) {
-				return NSDate(timeIntervalSince1970: NSTimeInterval(timeInt))
-			}
-		}
-
-		return nil
-	}
-
-	public func transformToJSON(value: NSDate?) -> AnyObject? {
-		if let date = value {
-			return Double(date.timeIntervalSince1970)
-		}
-
-		return nil
-	}
+extension Int {
+    func hexedString() -> String {
+        return String(format:"%02x", self)
+    }
 }
 
-public class IntTransform: TransformType {
-	public typealias Object = Int
-	public typealias JSON = AnyObject
+extension NSData {
+    func hexedString() -> String {
+        var string = String()
+        for i in UnsafeBufferPointer<UInt8>(start: UnsafeMutablePointer<UInt8>(bytes), count: length) {
+            string += Int(i).hexedString()
+        }
+        return string
+    }
 
-	public init() { }
+    func MD5() -> NSData {
+        let result = NSMutableData(length: Int(CC_MD5_DIGEST_LENGTH))!
+        CC_MD5(bytes, CC_LONG(length), UnsafeMutablePointer<UInt8>(result.mutableBytes))
+        return NSData(data: result)
+    }
 
-	public func transformFromJSON(value: AnyObject?) -> Int? {
-		if let timeInt = value as? Int {
-			return timeInt
-		}
+    func SHA1() -> NSData {
+        let result = NSMutableData(length: Int(CC_SHA1_DIGEST_LENGTH))!
+        CC_SHA1(bytes, CC_LONG(length), UnsafeMutablePointer<UInt8>(result.mutableBytes))
+        return NSData(data: result)
+    }
+}
 
-		if let timeString = value as? String {
-			if let timeInt = Int(timeString) {
-				return timeInt
-			}
-		}
+extension String {
+    func MD5() -> String {
+        return (self as NSString).dataUsingEncoding(NSUTF8StringEncoding)!.MD5().hexedString()
+    }
 
-		return nil
-	}
-
-	public func transformToJSON(value: Int?) -> AnyObject? {
-		return value
-	}
+    func SHA1() -> String {
+        return (self as NSString).dataUsingEncoding(NSUTF8StringEncoding)!.SHA1().hexedString()
+    }
 }
