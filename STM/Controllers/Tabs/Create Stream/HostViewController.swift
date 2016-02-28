@@ -35,6 +35,7 @@ class HostViewController: KZViewController, UISearchBarDelegate {
 	var playbackPaused = false
 
 	var statsPacketsReceived = Float(0)
+    var statsNumberOfListeners = Int(0)
 
 	var audioFile0: EZAudioFile?
 	var audioFile1: EZAudioFile?
@@ -519,6 +520,7 @@ class HostViewController: KZViewController, UISearchBarDelegate {
 	 */
 	func refresh() {
 		streamInfoHolder.bandwidth = statsPacketsReceived
+        streamInfoHolder.listeners = statsNumberOfListeners
         streamInfoHolder.comments = comments.count
 	}
 
@@ -1102,6 +1104,10 @@ extension HostViewController: EZOutputDataSource {
 					if let bytes = response["bytes"] as? Float {
 						self.statsPacketsReceived += bytes
 					}
+
+                    if let listeners = response["listeners"] as? Int {
+                        self.statsNumberOfListeners = listeners
+                    }
 				}
 			}
 		}
