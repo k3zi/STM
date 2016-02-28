@@ -567,9 +567,9 @@ class HostViewController: KZViewController, UISearchBarDelegate {
 			songInfoLabel3.text = nil
 		}
 
-		if songInfoLabel2.text?.characters.count == 0 && songInfoLabel3.text?.characters.count == 0 {
+		if (songInfoLabel2.text?.characters.count == 0 && songInfoLabel3.text?.characters.count == 0) || (songInfoLabel2.text == nil || songInfoLabel3.text == nil) {
 			songInfoHolderViewTopPadding?.constant = 5
-		} else if songInfoLabel2.text?.characters.count != 0 && songInfoLabel3.text?.characters.count != 0 {
+		} else if (songInfoLabel2.text?.characters.count != 0 && songInfoLabel3.text?.characters.count != 0) || (songInfoLabel2.text != nil && songInfoLabel3.text != nil) {
 			songInfoHolderViewTopPadding?.constant = -5
 		} else {
 			songInfoHolderViewTopPadding?.constant = 0
