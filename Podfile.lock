@@ -11,13 +11,12 @@ PODS:
   - HPGrowingTextView (1.1)
   - IQKeyboardManagerSwift (4.0.0)
   - KILabel (1.0.1)
-  - Kingfisher (2.0.3)
+  - Kingfisher (2.0.4)
   - KMPlaceholderTextView (1.1.1)
   - KZ (2.0.0):
     - PureLayout
     - Reusable
   - M13ProgressSuite (1.2.7)
-  - ObjectMapper (1.1.5)
   - PRTween (0.1.0)
   - PureLayout (3.0.1)
   - Realm (0.98.3):
@@ -52,7 +51,6 @@ DEPENDENCIES:
   - KMPlaceholderTextView
   - KZ
   - M13ProgressSuite
-  - ObjectMapper
   - PRTween
   - PureLayout
   - RealmSwift
@@ -77,11 +75,10 @@ SPEC CHECKSUMS:
   HPGrowingTextView: 88a716d97fb853bcb08a4a08e4727da17efc9b19
   IQKeyboardManagerSwift: ede2a27b4e1ce053d03073b9c7fa439322f5e405
   KILabel: 4797807cdc0b4992dad8bf91175ddc973c3b569b
-  Kingfisher: 44c1f1912f19371a67d701e67c96d6bb45ca1c8d
+  Kingfisher: 8f1ec2c067ade2c549a1a594379b69c4b1ff81ab
   KMPlaceholderTextView: 686edec818f5727728eaf8c2e9e70177692d3d53
   KZ: 6b563b34ec0f80bddb74282ed7a5d77b5b4e2aa7
   M13ProgressSuite: 03d194af6359da440641ba758aed5a18b0386a86
-  ObjectMapper: 528b1a6677a6acac7747edd508576983e76a9148
   PRTween: 6c58c7e32ebcf31e33e6a6e6bc727ebef3b668ef
   PureLayout: f35f5384c9c4e4479df041dbe33ad7577b71ddfb
   Realm: c6a7d00221a2d5177810a674aebd40c5e0b70b0f

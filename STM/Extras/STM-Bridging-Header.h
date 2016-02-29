@@ -3,7 +3,6 @@
 //
 
 @import UIKit;
-@import ObjectMapper;
 @import KZ;
 @import AeroGearHttp;
 @import PureLayout;
