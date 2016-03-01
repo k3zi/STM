@@ -10,6 +10,7 @@ import UIKit
 
 class DashboardItemCollectionCell: UICollectionViewCell, Reusable {
     var imageView = UIImageView()
+    var model: Any?
 
     override init(frame: CGRect) {
         super.init(frame: frame)
@@ -27,6 +28,7 @@ class DashboardItemCollectionCell: UICollectionViewCell, Reusable {
     }
 
     func setContent(model: Any?) {
+        self.model = model
         if let stream = model as? STMStream {
             if let streamID = stream.id {
                 let colorHash = String(streamID).MD5()

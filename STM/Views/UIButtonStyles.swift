@@ -23,4 +23,15 @@ extension UIButton {
 
         return button
     }
+
+    class func styledForStreamInfoView() -> UIButton {
+        let button = UIButton()
+        button.autoSetDimension(.Height, toSize: 50)
+        button.titleLabel?.font = UIFont.systemFontOfSize(17, weight: UIFontWeightMedium)
+        button.setTitleColor(RGB(255), forState: .Normal)
+        button.setBackgroundColor(Constants.Color.tint, forState: .Normal)
+        button.clipsToBounds = true
+
+        return button
+    }
 }

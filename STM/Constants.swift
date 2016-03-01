@@ -23,6 +23,10 @@ struct Constants {
 		static let streamHash = "WrfN'/:_f.#8fYh(=RY(LxTDRrU"
 	}
 
+    struct Animation {
+        static let visualEffectsLength =  NSTimeInterval(0.5)
+    }
+
 	struct Color {
 		static let tint = RGB(92, g: 38, b: 254)
 		static let disabled = RGB(234, g: 234, b: 234)
@@ -157,5 +161,15 @@ extension String {
 
     func SHA1() -> String {
         return (self as NSString).dataUsingEncoding(NSUTF8StringEncoding)!.SHA1().hexedString()
+    }
+}
+
+extension UIImage {
+    convenience init(view: UIView) {
+        UIGraphicsBeginImageContext(view.frame.size)
+        view.layer.renderInContext(UIGraphicsGetCurrentContext()!)
+        let image = UIGraphicsGetImageFromCurrentImageContext()
+        UIGraphicsEndImageContext()
+        self.init(CGImage: image.CGImage!)
     }
 }

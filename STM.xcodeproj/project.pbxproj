@@ -60,6 +60,8 @@
 		EA4F49871C5EC05700103559 /* EZAudioFile.m in Sources */ = {isa = PBXBuildFile; fileRef = EA4F49771C5EC05700103559 /* EZAudioFile.m */; };
 		EA4F498F1C5F2D3800103559 /* EZOutput.m in Sources */ = {isa = PBXBuildFile; fileRef = EA4F498E1C5F2D3800103559 /* EZOutput.m */; };
 		EA8D3DE11C7D75C3003ACCFC /* MessageToolbarView.swift in Sources */ = {isa = PBXBuildFile; fileRef = EA8D3DE01C7D75C3003ACCFC /* MessageToolbarView.swift */; };
+		EA9216B11C856DBB00EA499B /* TriangleView.swift in Sources */ = {isa = PBXBuildFile; fileRef = EA9216B01C856DBB00EA499B /* TriangleView.swift */; };
+		EA9216B31C857A4F00EA499B /* DashboardStreamInfo.swift in Sources */ = {isa = PBXBuildFile; fileRef = EA9216B21C857A4F00EA499B /* DashboardStreamInfo.swift */; };
 		EAB0E6981C780866008945FF /* YBDelay.m in Sources */ = {isa = PBXBuildFile; fileRef = EAB0E6971C780866008945FF /* YBDelay.m */; };
 		EAB0E69E1C7813B5008945FF /* FUXCombinators.swift in Sources */ = {isa = PBXBuildFile; fileRef = EAB0E69A1C7813B5008945FF /* FUXCombinators.swift */; };
 		EAB0E69F1C7813B5008945FF /* FUXData.swift in Sources */ = {isa = PBXBuildFile; fileRef = EAB0E69B1C7813B5008945FF /* FUXData.swift */; };
@@ -160,6 +162,8 @@
 		EA4F498D1C5F2D3800103559 /* EZOutput.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = EZOutput.h; sourceTree = "<group>"; };
 		EA4F498E1C5F2D3800103559 /* EZOutput.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = EZOutput.m; sourceTree = "<group>"; };
 		EA8D3DE01C7D75C3003ACCFC /* MessageToolbarView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MessageToolbarView.swift; sourceTree = "<group>"; };
+		EA9216B01C856DBB00EA499B /* TriangleView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TriangleView.swift; sourceTree = "<group>"; };
+		EA9216B21C857A4F00EA499B /* DashboardStreamInfo.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DashboardStreamInfo.swift; sourceTree = "<group>"; };
 		EAB0E6961C780821008945FF /* YBDelay.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = YBDelay.h; sourceTree = "<group>"; };
 		EAB0E6971C780866008945FF /* YBDelay.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = YBDelay.m; sourceTree = "<group>"; };
 		EAB0E69A1C7813B5008945FF /* FUXCombinators.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FUXCombinators.swift; sourceTree = "<group>"; };
@@ -297,6 +301,8 @@
 				EA09CAD31C5C86430067FF6A /* UITextFieldStyles.swift */,
 				EAB0E6A61C78EEB0008945FF /* UILabelStyles.swift */,
 				EAE545051C76BA9200180241 /* STMVisualizer.swift */,
+				EA9216B01C856DBB00EA499B /* TriangleView.swift */,
+				EA9216B21C857A4F00EA499B /* DashboardStreamInfo.swift */,
 			);
 			path = Views;
 			sourceTree = "<group>";
@@ -642,6 +648,7 @@
 				EA4F496A1C5EBFA000103559 /* YBReverb.m in Sources */,
 				EA4F49871C5EC05700103559 /* EZAudioFile.m in Sources */,
 				EA8D3DE11C7D75C3003ACCFC /* MessageToolbarView.swift in Sources */,
+				EA9216B11C856DBB00EA499B /* TriangleView.swift in Sources */,
 				EA01AF8A1C5CB3C500F56792 /* SignInViewController.swift in Sources */,
 				EA4F495B1C5EBFA000103559 /* YBNBandEQNode.m in Sources */,
 				EAB0E69F1C7813B5008945FF /* FUXData.swift in Sources */,
@@ -686,6 +693,7 @@
 				EAB0E6A01C7813B5008945FF /* FUXEasingCombinators.swift in Sources */,
 				EA27B20A1C5D781E006F269D /* KZConverter.swift in Sources */,
 				EA4F495C1C5EBFA000103559 /* YBFormatConverter.m in Sources */,
+				EA9216B31C857A4F00EA499B /* DashboardStreamInfo.swift in Sources */,
 				EAB0E69E1C7813B5008945FF /* FUXCombinators.swift in Sources */,
 				EA4E49481C613F7C00CB40D7 /* HostStreamCell.swift in Sources */,
 				EA4F49691C5EBFA000103559 /* YBNewTimePitch.m in Sources */,

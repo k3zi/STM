@@ -89,6 +89,61 @@ class DashboardItemCell: KZTableViewCell, UICollectionViewDelegate, UICollection
         return CGSize(width: 62, height: 62)
     }
 
+    func collectionView(collectionView: UICollectionView, didSelectItemAtIndexPath indexPath: NSIndexPath) {
+        AppDelegate.del().removeBlurEffects()
+
+        guard let window = self.window else {
+            return
+        }
+
+        guard let cell = collectionView.cellForItemAtIndexPath(indexPath) as? DashboardItemCollectionCell else {
+            return
+        }
+
+        guard let stream = cell.model as? STMStream else {
+            return
+        }
+
+        let lightBlurView = UIVisualEffectView()
+        window.addSubview(lightBlurView)
+
+        let touchGesture = UITapGestureRecognizer(target: self, action: Selector("hideEffect"))
+        lightBlurView.addGestureRecognizer(touchGesture)
+
+        let image = UIImage(view: cell)
+        let imageView = UIImageView(image: image)
+        imageView.frame = collectionView.convertRect(cell.frame, toView: window)
+        window.addSubview(imageView)
+
+        let infoHolderView = DashboardStreamInfoView(stream: stream)
+        infoHolderView.alpha = 0.0
+        window.addSubview(infoHolderView)
+
+        infoHolderView.triangleIndicator.autoAlignAxis(.Vertical, toSameAxisOfView: imageView)
+        infoHolderView.autoPinEdge(.Top, toEdge: .Bottom, ofView: imageView, withOffset: 5)
+        infoHolderView.autoPinEdgeToSuperviewEdge(.Left, withInset: 15)
+        infoHolderView.autoPinEdgeToSuperviewEdge(.Right, withInset: 15)
+
+        lightBlurView.autoPinEdgesToSuperviewEdges()
+        AppDelegate.del().currentWindowEffects = [lightBlurView, imageView, infoHolderView]
+
+        UIView.animateWithDuration(Constants.Animation.visualEffectsLength) { () -> Void in
+            infoHolderView.alpha = 1.0
+            let effect = UIBlurEffect(style: .Dark)
+            lightBlurView.effect = effect
+        }
+    }
+
+    func buildInfoView(withStream stream: STMStream) -> UIView {
+        let view = UIView()
+        view.layer.cornerRadius = 15
+        return view
+    }
+
+    func hideEffect() {
+        AppDelegate.del().removeBlurEffects()
+    }
+
     override func fillInCellData() {
         if let item = model as? STMDashboardItem {
             headerLabel.text = item.name

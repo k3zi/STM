@@ -16,6 +16,8 @@ import Crashlytics
 @UIApplicationMain
 class AppDelegate: UIResponder, UIApplicationDelegate {
 	var window: UIWindow?
+    var currentWindowEffects: [UIView]?
+
 	var shortcutItem: UIApplicationShortcutItem?
 	var currentUser: STMUser?
 	var audiobusController: ABAudiobusController?
@@ -134,6 +136,26 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 			print("Error starting audio sesssion")
 		}
 	}
+
+    //MARK: Window Effects
+
+    func removeBlurEffects() {
+        guard let effectViews = currentWindowEffects else {
+            return
+        }
+
+        UIView.animateWithDuration(Constants.Animation.visualEffectsLength, animations: { () -> Void in
+            effectViews.forEach({ (view) -> () in
+                if let view = view as? UIVisualEffectView {
+                    view.effect = nil
+                } else if !(view is UIImageView) {
+                    view.alpha = 0.0
+                }
+            })
+        }) { (finished) -> Void in
+                effectViews.forEach({ $0.removeFromSuperview() })
+        }
+    }
 
 	class func del() -> AppDelegate {
 		if let del = UIApplication.sharedApplication().delegate as? AppDelegate {
