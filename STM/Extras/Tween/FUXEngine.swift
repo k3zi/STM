@@ -61,7 +61,7 @@ public class FUXEngine: NSObject {
                 _tweens.removeAtIndex(index)
                 break
             }
-            index++
+            index += 1
         }
         if _tweens.count == 0 && _isRunning {
             stopDisplayLink()
@@ -95,7 +95,7 @@ public class FUXEngine: NSObject {
                 storedTween.totalRunningTime += Float(displayLink.duration) * Float(displayLink.frameInterval) * fabsf(storedTween.speed)
                 storedTween.currentTweenValue = storedTween.currentRelativeTime
                 parseTween(storedTween.tween, storedTween)
-                index++
+                index += 1
             } else {
                 _tweens.removeAtIndex(index)
             }
@@ -115,7 +115,7 @@ public class FUXEngine: NSObject {
                 if storedTween.currentRelativeTime == 1 && storedTween.speed > 0 {
                     runFinished = true
                     if storedTween.repeatTotal > 0 {
-                        storedTween.repeatCount++
+                        storedTween.repeatCount += 1
                     }
                 } else if storedTween.currentRelativeTime == 0 && storedTween.speed < 0 {
                     runFinished = true

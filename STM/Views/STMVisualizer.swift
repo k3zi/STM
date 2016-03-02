@@ -27,7 +27,7 @@ class STMVisualizer: UIView {
         super.init(frame: frame)
 
         let barColor = RGB(255, a: 0.2)
-        for var i = 0; i < numbrerOfBars; i++ {
+        for i in 0 ..< numbrerOfBars {
             let bar = UIView()
             bar.backgroundColor = barColor
             self.addSubview(bar)
