@@ -13,12 +13,15 @@ class DashboardStreamInfoView: UIView {
     let triangleIndicator = TriangleView()
     let infoViewHolder = UIView()
     let startBT = UIButton.styledForStreamInfoView()
+    let streamNameLabel = UILabel()
 
     var stream: STMStream?
 
     convenience init(stream: STMStream) {
         self.init(frame: CGRect.zero)
         self.stream = stream
+
+        streamNameLabel.text = stream.name
     }
 
     override init(frame: CGRect) {
@@ -31,6 +34,10 @@ class DashboardStreamInfoView: UIView {
         infoViewHolder.backgroundColor = color
         infoViewHolder.clipsToBounds = true
         addSubview(infoViewHolder)
+
+        streamNameLabel.textColor = Constants.Color.tint
+        streamNameLabel.font = UIFont.systemFontOfSize(15, weight: UIFontWeightMedium)
+        infoViewHolder.addSubview(streamNameLabel)
 
         startBT.setTitle("Tune In", forState: .Normal)
         infoViewHolder.addSubview(startBT)
@@ -51,6 +58,8 @@ class DashboardStreamInfoView: UIView {
         infoViewHolder.autoPinEdgeToSuperviewEdge(.Right)
         infoViewHolder.autoSetDimension(.Height, toSize: 248)
         infoViewHolder.autoPinEdgeToSuperviewEdge(.Bottom)
+
+        streamNameLabel.autoPinEdgesToSuperviewEdgesWithInsets(UIEdgeInsets(top: 15, left: 15, bottom: 0, right: 15), excludingEdge: .Bottom)
 
         startBT.autoPinEdgeToSuperviewEdge(.Left)
         startBT.autoPinEdgeToSuperviewEdge(.Right)
