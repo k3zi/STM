@@ -719,9 +719,7 @@ class HostViewController: KZViewController, UISearchBarDelegate {
             let sourceItem = upNextSongs[sourceIndexPath.row]
             upNextSongs.removeAtIndex(sourceIndexPath.row)
             upNextSongs.insert(sourceItem, atIndex: destinationIndexPath.row)
-            UIView.transitionWithView(tableView, duration: 0.5, options: .TransitionCrossDissolve, animations: { () -> Void in
-                tableView.reloadData()
-                }, completion: nil)
+            tableView.reloadData()
         }
     }
 
