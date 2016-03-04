@@ -77,6 +77,8 @@
 		EAE063121C7E94D000C86823 /* CommentCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = EAE063111C7E94D000C86823 /* CommentCell.swift */; };
 		EAE545041C76978F00180241 /* MeterTable.m in Sources */ = {isa = PBXBuildFile; fileRef = EAE545021C76978F00180241 /* MeterTable.m */; };
 		EAE545061C76BA9200180241 /* STMVisualizer.swift in Sources */ = {isa = PBXBuildFile; fileRef = EAE545051C76BA9200180241 /* STMVisualizer.swift */; };
+		EAFFCB121C876F5800258C16 /* PlayerViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = EAFFCB111C876F5800258C16 /* PlayerViewController.swift */; };
+		EAFFCB151C87E59300258C16 /* ObjectiveCProcessing.m in Sources */ = {isa = PBXBuildFile; fileRef = EAFFCB141C87E59300258C16 /* ObjectiveCProcessing.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -182,6 +184,9 @@
 		EAE545021C76978F00180241 /* MeterTable.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MeterTable.m; sourceTree = "<group>"; };
 		EAE545031C76978F00180241 /* MeterTable.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MeterTable.h; sourceTree = "<group>"; };
 		EAE545051C76BA9200180241 /* STMVisualizer.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = STMVisualizer.swift; sourceTree = "<group>"; };
+		EAFFCB111C876F5800258C16 /* PlayerViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PlayerViewController.swift; sourceTree = "<group>"; };
+		EAFFCB131C87E59300258C16 /* ObjectiveCProcessing.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ObjectiveCProcessing.h; sourceTree = "<group>"; };
+		EAFFCB141C87E59300258C16 /* ObjectiveCProcessing.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ObjectiveCProcessing.m; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -310,6 +315,7 @@
 		EA09CAC01C5C447E0067FF6A /* Controllers */ = {
 			isa = PBXGroup;
 			children = (
+				EAFFCB101C876F1700258C16 /* Player */,
 				EA09CAD51C5C89430067FF6A /* Launch */,
 				EA01AF8B1C5CB6FA00F56792 /* Tabs */,
 				EA09CAD61C5C89A50067FF6A /* NavigationController.swift */,
@@ -320,10 +326,12 @@
 		EA09CAC11C5C5C360067FF6A /* Extras */ = {
 			isa = PBXGroup;
 			children = (
-				EA09CAC21C5C5C680067FF6A /* STM-Bridging-Header.h */,
-				EA27B1FD1C5D32F6006F269D /* Player */,
-				EA4F49341C5EBE8E00103559 /* Ports */,
 				EAB0E6991C78138F008945FF /* Tween */,
+				EA4F49341C5EBE8E00103559 /* Ports */,
+				EA27B1FD1C5D32F6006F269D /* Player */,
+				EA09CAC21C5C5C680067FF6A /* STM-Bridging-Header.h */,
+				EAFFCB131C87E59300258C16 /* ObjectiveCProcessing.h */,
+				EAFFCB141C87E59300258C16 /* ObjectiveCProcessing.m */,
 			);
 			path = Extras;
 			sourceTree = "<group>";
@@ -463,6 +471,14 @@
 				EAB0E6A21C78146C008945FF /* LICENSE */,
 			);
 			path = Tween;
+			sourceTree = "<group>";
+		};
+		EAFFCB101C876F1700258C16 /* Player */ = {
+			isa = PBXGroup;
+			children = (
+				EAFFCB111C876F5800258C16 /* PlayerViewController.swift */,
+			);
+			path = Player;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -666,6 +682,7 @@
 				EA4F49661C5EBFA000103559 /* YBScheduledSoundPlayer.m in Sources */,
 				EA4F49701C5EC04C00103559 /* KZConverter.m in Sources */,
 				EA27B2021C5D3312006F269D /* KZPlayer.swift in Sources */,
+				EAFFCB151C87E59300258C16 /* ObjectiveCProcessing.m in Sources */,
 				EA4E494D1C617FA000CB40D7 /* GradientView.swift in Sources */,
 				EA27B2051C5D3312006F269D /* KZPlayerTag.swift in Sources */,
 				EA209DAA1C8292A800A22BC4 /* DashboardItemCell.swift in Sources */,
@@ -700,6 +717,7 @@
 				EA4F495D1C5EBFA000103559 /* YBPresetEQNode.m in Sources */,
 				EA4F498F1C5F2D3800103559 /* EZOutput.m in Sources */,
 				EA4F49851C5EC05700103559 /* EZAudio.m in Sources */,
+				EAFFCB121C876F5800258C16 /* PlayerViewController.swift in Sources */,
 				EAB0E6A11C7813B5008945FF /* FUXEngine.swift in Sources */,
 				EA27B2031C5D3312006F269D /* KZPlayerItem.swift in Sources */,
 				EA09CAC81C5C5D170067FF6A /* Constants.swift in Sources */,

@@ -116,6 +116,8 @@ class DashboardItemCell: KZTableViewCell, UICollectionViewDelegate, UICollection
         window.addSubview(imageView)
 
         let infoHolderView = DashboardStreamInfoView(stream: stream)
+        infoHolderView.startBT.tag = indexPath.row
+        infoHolderView.startBT.addTarget(self, action: Selector("startStreamClicked:"), forControlEvents: .TouchUpInside)
         infoHolderView.alpha = 0.0
         window.addSubview(infoHolderView)
 
@@ -134,10 +136,32 @@ class DashboardItemCell: KZTableViewCell, UICollectionViewDelegate, UICollection
         }
     }
 
-    func buildInfoView(withStream stream: STMStream) -> UIView {
-        let view = UIView()
-        view.layer.cornerRadius = 15
-        return view
+    func startStreamClicked(startBT: UIButton) {
+        guard let item = model as? STMDashboardItem else {
+            return
+        }
+
+        guard let items = item.items else {
+            return
+        }
+
+        guard let window = self.window else {
+            return
+        }
+
+        guard let topVC = window.rootViewController else {
+            return
+        }
+
+        hideEffect()
+
+        let stream = items[startBT.tag]
+        let vc = PlayerViewController()
+        vc.start(stream, vc: topVC) { (nothing, error) -> Void in
+            if error == nil {
+                self.window?.rootViewController?.presentViewController(vc, animated: true, completion: nil)
+            }
+        }
     }
 
     func hideEffect() {

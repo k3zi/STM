@@ -20,4 +20,6 @@
 #import "KZConverter.h"
 #import "KZPlayerInner.h"
 #import "EZOutput.h"
+#import "ObjectiveCProcessing.h"
+#import "MeterTable.h"
 #import <Audiobus/Audiobus.h>

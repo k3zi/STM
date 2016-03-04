@@ -346,6 +346,7 @@ class HostViewController: KZViewController, UISearchBarDelegate {
 		queueTableView.delegate = self
 		queueTableView.dataSource = self
 		queueTableView.registerReusableCell(UpNextSongCell)
+        queueTableView.setEditing(true, animated: false)
 		switcherContentView.addSubview(queueTableView)
 
         commentsTableView.delegate = self
@@ -701,6 +702,29 @@ class HostViewController: KZViewController, UISearchBarDelegate {
 		return super.tableView(tableView, heightForHeaderInSection: section)
 	}
 
+    func tableView(tableView: UITableView, canMoveRowAtIndexPath indexPath: NSIndexPath) -> Bool {
+        return tableView == queueTableView
+    }
+
+    func tableView(tableView: UITableView, editingStyleForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCellEditingStyle {
+        return .None
+    }
+
+    func tableView(tableView: UITableView, shouldIndentWhileEditingRowAtIndexPath indexPath: NSIndexPath) -> Bool {
+        return false
+    }
+
+    func tableView(tableView: UITableView, moveRowAtIndexPath sourceIndexPath: NSIndexPath, toIndexPath destinationIndexPath: NSIndexPath) {
+        if tableView == queueTableView {
+            let sourceItem = upNextSongs[sourceIndexPath.row]
+            upNextSongs.removeAtIndex(sourceIndexPath.row)
+            upNextSongs.insert(sourceItem, atIndex: destinationIndexPath.row)
+            UIView.transitionWithView(tableView, duration: 0.5, options: .TransitionCrossDissolve, animations: { () -> Void in
+                tableView.reloadData()
+                }, completion: nil)
+        }
+    }
+
 	// MARK: UISearchBar Delegate
 	func searchBarTextDidBeginEditing(searchBar: UISearchBar) {
 		searchBar.setShowsCancelButton(true, animated: true)
@@ -712,7 +736,7 @@ class HostViewController: KZViewController, UISearchBarDelegate {
 
 		searchResults = songs.filter({ (song) -> Bool in
 			if let song = song as? KZPlayerItem {
-				return song.aggregateText().containsString(searchText)
+				return song.aggregateText().lowercaseString.containsString(searchText.lowercaseString)
 			}
 
 			return false
@@ -1003,6 +1027,7 @@ extension HostViewController: EZOutputDataSource {
 
 	func loadLibrary() {
 		EZOutput.sharedOutput().aacEncode = true
+        AppDelegate.del().setUpAudioSession(withMic: true)
 
 		self.songs.removeAll()
 		let predicate1 = MPMediaPropertyPredicate(value: MPMediaType.AnyAudio.rawValue, forProperty: MPMediaItemPropertyMediaType)

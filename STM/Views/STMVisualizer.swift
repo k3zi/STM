@@ -52,6 +52,10 @@ class STMVisualizer: UIView {
     }
 
     func setBarHeight(index: Int, var height: CGFloat) {
+        guard index < barConstraints.count else {
+            return
+        }
+
         if isnan(height) || isinf(height) {
             height = 1.0
         }
