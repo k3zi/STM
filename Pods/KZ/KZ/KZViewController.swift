@@ -160,11 +160,11 @@ public class KZViewController: UIViewController, UITableViewDelegate, UITableVie
             cell.textLabel?.textAlignment = .Center
             cell.textLabel?.textColor = UIColor.grayColor()
             cell.selectionStyle = .None
-            tableView.userInteractionEnabled = false
+            tableView.scrollEnabled = false
             return cell
         }
         
-        tableView.userInteractionEnabled = true
+        tableView.scrollEnabled = true
         let cellClass = tableViewCellClass(tableView, indexPath: indexPath)
         
         let cell = tableView.dequeueReusableCell(indexPath: indexPath, cellType: cellClass)
