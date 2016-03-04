@@ -133,10 +133,10 @@ static OSStatus EQConverterRenderCallback(void *inRefCon, AudioUnitRenderActionF
     return ((4.5)*(x*x)) - (0.75*x) + 0.25;
 }
 
-- (void)convertToAAC:(AudioBufferList *)audioBufferList{
+- (void)convertToAAC:(AudioBufferList *)audioBufferList {
     if(currentSampleRate != [AVAudioSession sharedInstance].sampleRate) {
         currentSampleRate = [AVAudioSession sharedInstance].sampleRate;
-        descAACFormat = [EZAudio M4AFormatWithNumberOfChannels:1 sampleRate:currentSampleRate];
+        descAACFormat = [EZAudio M4AFormatWithNumberOfChannels:2 sampleRate:currentSampleRate];
         _outputASBD = [EZAudio stereoCanonicalNonInterleavedFormatWithSampleRate:currentSampleRate];
         // see the question as for setting up pcmASBD and arc ASBD
         AudioClassDescription *description = [self getAudioClassDescriptionWithType:kAudioFormatMPEG4AAC fromManufacturer:kAppleSoftwareAudioCodecManufacturer];
@@ -175,7 +175,7 @@ static OSStatus EQConverterRenderCallback(void *inRefCon, AudioUnitRenderActionF
 
             for (int i = 0; i < times; i++) {
                 AudioBufferList *pcmBufferList = AllocateABL(2, kBLOCK_SIZE, TRUE, 1);
-                AudioBufferList *aacBufferList = AllocateABL(1, kBLOCK_SIZE, TRUE, 1);
+                AudioBufferList *aacBufferList = AllocateABL(2, kBLOCK_SIZE, TRUE, 1);
                 AudioStreamPacketDescription resultDesc;
 
                 if((i*kBLOCK_SIZE + kBLOCK_SIZE) > audioBufferList->mBuffers[0].mDataByteSize) {
@@ -321,7 +321,7 @@ OSStatus encoderDataProc(AudioConverterRef inAudioConverter, UInt32* ioNumberDat
     AudioBufferList *pcmList = *(AudioBufferList**)inUserData;
     ioData->mBuffers[0].mData = pcmList->mBuffers[0].mData;
     ioData->mBuffers[0].mDataByteSize = pcmList->mBuffers[0].mDataByteSize;
-    ioData->mBuffers[0].mNumberChannels = 1;
+    ioData->mBuffers[0].mNumberChannels = 2;
     *ioNumberDataPackets = ioData->mBuffers[0].mDataByteSize / [[EZOutput sharedOutput] outputASBD].mBytesPerPacket;
 
     return noErr;
@@ -424,7 +424,7 @@ OSStatus encoderDataProc(AudioConverterRef inAudioConverter, UInt32* ioNumberDat
     zero = 0.0f;
     self.pitch = 1.0;
     currentSampleRate = [AVAudioSession sharedInstance].sampleRate;
-    descAACFormat = [EZAudio M4AFormatWithNumberOfChannels:1 sampleRate:currentSampleRate];
+    descAACFormat = [EZAudio M4AFormatWithNumberOfChannels:2 sampleRate:currentSampleRate];
     _outputASBD = [EZAudio stereoCanonicalNonInterleavedFormatWithSampleRate:currentSampleRate];
     graph = [[YBAudioUnitGraph alloc] init];
 
@@ -606,7 +606,7 @@ OSStatus encoderDataProc(AudioConverterRef inAudioConverter, UInt32* ioNumberDat
     int profile = 2;  //AAC LC
     //39=MediaCodecInfo.CodecProfileLevel.AACObjectELD;
     int freqIdx = [self packetIDForSampleRate:sampleRate];
-    int chanCfg = 1;  //MPEG-4 Audio Channel Configuration. 1 Channel front-center
+    int chanCfg = 2;  //MPEG-4 Audio Channel Configuration. 1 Channel front-center
     NSUInteger fullLength = adtsLength + packetLength;
     // fill in ADTS data
     packet[0] = (char)0xFF;	// 11111111  	= syncword
