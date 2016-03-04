@@ -997,8 +997,9 @@ extension HostViewController: EZOutputDataSource {
 
         let oForcePolling = SocketIOClientOption.ForcePolling(true)
         let oHost = SocketIOClientOption.Nsp("/host")
+        let streamQueue = SocketIOClientOption.HandleQueue(backgroundQueue)
         let oAuth = SocketIOClientOption.ConnectParams(["streamID": streamID, "securityHash": securityHash, "userID": userID, "stmHash": Constants.Config.streamHash])
-        let options = [oForcePolling, oHost, oAuth] as Set<SocketIOClientOption>
+        let options = [oForcePolling, oHost, oAuth, streamQueue] as Set<SocketIOClientOption>
 
         self.socket = SocketIOClient(socketURL: baseURL, options: options)
         if let socket = self.socket {
@@ -1010,7 +1011,8 @@ extension HostViewController: EZOutputDataSource {
         }
 
         let commentHost = SocketIOClientOption.Nsp("/comment")
-        let commentOptions = [oForcePolling, commentHost, oAuth] as Set<SocketIOClientOption>
+        let commentQueue = SocketIOClientOption.HandleQueue(commentBackgroundQueue)
+        let commentOptions = [oForcePolling, commentHost, oAuth, commentQueue] as Set<SocketIOClientOption>
         self.commentSocket = SocketIOClient(socketURL: baseURL, options: commentOptions)
         if let socket = self.commentSocket {
             socket.on("connect") { data, ack in
