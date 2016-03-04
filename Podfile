@@ -23,6 +23,7 @@ pod 'SAConfettiView'
 pod 'SecureNSUserDefaults'
 pod 'SpinKit'
 pod 'Socket.IO-Client-Swift'
+pod 'StreamingKit'
 pod 'UIViewController+BHTKeyboardAnimationBlocks'
 
 pod 'Fabric'

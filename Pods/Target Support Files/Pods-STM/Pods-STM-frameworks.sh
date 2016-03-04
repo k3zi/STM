@@ -105,6 +105,7 @@ if [[ "$CONFIGURATION" == "Debug" ]]; then
   install_framework "Pods-STM/SecureNSUserDefaults.framework"
   install_framework "Pods-STM/SocketIOClientSwift.framework"
   install_framework "Pods-STM/SpinKit.framework"
+  install_framework "Pods-STM/StreamingKit.framework"
   install_framework "Pods-STM/UIViewController_BHTKeyboardAnimationBlocks.framework"
 fi
 if [[ "$CONFIGURATION" == "Release" ]]; then
@@ -129,5 +130,6 @@ if [[ "$CONFIGURATION" == "Release" ]]; then
   install_framework "Pods-STM/SecureNSUserDefaults.framework"
   install_framework "Pods-STM/SocketIOClientSwift.framework"
   install_framework "Pods-STM/SpinKit.framework"
+  install_framework "Pods-STM/StreamingKit.framework"
   install_framework "Pods-STM/UIViewController_BHTKeyboardAnimationBlocks.framework"
 fi

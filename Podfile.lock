@@ -30,6 +30,7 @@ PODS:
     - CocoaSecurity (~> 1.2.1)
   - Socket.IO-Client-Swift (5.5.0)
   - SpinKit (1.2.0)
+  - StreamingKit (0.1.29)
   - TwitterCore (1.15.1):
     - Fabric
   - TwitterKit (1.15.1):
@@ -59,6 +60,7 @@ DEPENDENCIES:
   - SecureNSUserDefaults
   - Socket.IO-Client-Swift
   - SpinKit
+  - StreamingKit
   - TwitterCore
   - TwitterKit
   - UIViewController+BHTKeyboardAnimationBlocks
@@ -88,6 +90,7 @@ SPEC CHECKSUMS:
   SecureNSUserDefaults: 60a27d6e7fd2cad47448fef5dea22803e098433a
   Socket.IO-Client-Swift: f39dbd4e9b295907bb7fd4b9588b89c00426783d
   SpinKit: 65906a8b534a4e14cbfd3f8b0b6c329131faef4a
+  StreamingKit: c329785aaef3ac142d4ae388345bfe1ed23cfd45
   TwitterCore: 12983a7464e34afbbf18881347898a9db526ac71
   TwitterKit: b5821570887ec2d77650fa232eaec175665dc443
   UIViewController+BHTKeyboardAnimationBlocks: 4996f7909cb141f19e9544720e5bb79de20e4db9
