@@ -95,7 +95,7 @@ public extension UIViewController {
 	public func showAlert(title: String, message: String) {
 		let alert = UIAlertController(title: title, message: message, preferredStyle: UIAlertControllerStyle.Alert)
 		alert.addAction(UIAlertAction(title: "Ok", style: UIAlertActionStyle.Default, handler: nil))
-		self.presentViewController(alert, animated: true, completion: nil)
+		self.view.window?.rootViewController?.presentViewController(alert, animated: true, completion: nil)
 	}
 
     /**
@@ -135,10 +135,11 @@ public extension UIViewController {
 								}
 							}
 						} else if let error = response["error"] as? String {
-							self.showError(error)
                             if let errorCompletion = errorCompletion {
                                 errorCompletion(error)
                             }
+
+                            self.showError(error)
 						}
 					}
 				}
