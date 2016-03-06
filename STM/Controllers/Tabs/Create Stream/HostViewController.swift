@@ -703,7 +703,6 @@ class HostViewController: KZViewController, UISearchBarDelegate {
 			searchBar.delegate = self
 			searchBar.frame.size.height = 44
 			searchBar.frame.size.width = tableView.frame.width
-			searchBar.keyboardDistanceFromTextField = 0
 			return searchBar
 		}
 
