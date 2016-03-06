@@ -7,7 +7,6 @@
 //
 
 import UIKit
-import IQKeyboardManager
 import MediaPlayer
 import Fabric
 import TwitterKit

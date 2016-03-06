@@ -9,7 +9,6 @@ PODS:
   - Gloss (0.7.1)
   - Hashids-Swift (0.3.0)
   - HPGrowingTextView (1.1)
-  - IQKeyboardManagerSwift (4.0.0)
   - KILabel (1.0.1)
   - Kingfisher (2.0.4)
   - KMPlaceholderTextView (1.1.1)
@@ -46,7 +45,6 @@ DEPENDENCIES:
   - Gloss
   - Hashids-Swift
   - HPGrowingTextView
-  - IQKeyboardManagerSwift
   - KILabel
   - Kingfisher
   - KMPlaceholderTextView
@@ -75,7 +73,6 @@ SPEC CHECKSUMS:
   Gloss: e674d7aa06a7e292a591d0d39a759b826daf503e
   Hashids-Swift: 5d7c069b0d4a3b70d4e2a840c420115dd517050d
   HPGrowingTextView: 88a716d97fb853bcb08a4a08e4727da17efc9b19
-  IQKeyboardManagerSwift: ede2a27b4e1ce053d03073b9c7fa439322f5e405
   KILabel: 4797807cdc0b4992dad8bf91175ddc973c3b569b
   Kingfisher: 8f1ec2c067ade2c549a1a594379b69c4b1ff81ab
   KMPlaceholderTextView: 686edec818f5727728eaf8c2e9e70177692d3d53
