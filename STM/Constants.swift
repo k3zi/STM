@@ -19,7 +19,7 @@ struct Constants {
 
 	struct Config {
 		static let systemCredentials = NSURLCredential(user: "STM-API", password: "PXsd<rhKG0r'@U.-Z`>!9V%-Z<Z", persistence: .ForSession)
-		static let hashids = Hashids(salt: "pepper", minHashLength: 4, alphabet: "abcdefghijkmnpqrstuvwxy23456789")
+		static let hashids = Hashids(salt: "pepper", minHashLength: 4, alphabet: "abcdefghijkmnpqrstuxyACDEFGHKMNPQRSTUQY23456789")
 		static let streamHash = "WrfN'/:_f.#8fYh(=RY(LxTDRrU"
 	}
 
