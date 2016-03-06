@@ -46,7 +46,7 @@ class PlayerViewController: KZViewController, UISearchBarDelegate {
 
     let bottomBlurBar = UIToolbar()
     var bottomBlurBarConstraint: NSLayoutConstraint?
-    let streamInfoHolder = HostInfoHolderView()
+    let streamInfoHolder = PlayerInfoHolderView()
 
     // Keyboard Adjustment
     var keyboardVisible = CGFloat(0)
@@ -199,7 +199,6 @@ class PlayerViewController: KZViewController, UISearchBarDelegate {
         commentContentView.addSubview(bottomBlurBar)
 
         streamInfoHolder.listeners = 0
-        streamInfoHolder.bandwidth = 0
         streamInfoHolder.comments = 0
         bottomBlurBar.addSubview(streamInfoHolder)
     }
