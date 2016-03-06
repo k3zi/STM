@@ -79,6 +79,7 @@
 		EAE545061C76BA9200180241 /* STMVisualizer.swift in Sources */ = {isa = PBXBuildFile; fileRef = EAE545051C76BA9200180241 /* STMVisualizer.swift */; };
 		EAFFCB121C876F5800258C16 /* PlayerViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = EAFFCB111C876F5800258C16 /* PlayerViewController.swift */; };
 		EAFFCB151C87E59300258C16 /* ObjectiveCProcessing.m in Sources */ = {isa = PBXBuildFile; fileRef = EAFFCB141C87E59300258C16 /* ObjectiveCProcessing.m */; };
+		EAFFCB171C8A1B1C00258C16 /* PlayerInfoHolderView.swift in Sources */ = {isa = PBXBuildFile; fileRef = EAFFCB161C8A1B1B00258C16 /* PlayerInfoHolderView.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -187,6 +188,7 @@
 		EAFFCB111C876F5800258C16 /* PlayerViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PlayerViewController.swift; sourceTree = "<group>"; };
 		EAFFCB131C87E59300258C16 /* ObjectiveCProcessing.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ObjectiveCProcessing.h; sourceTree = "<group>"; };
 		EAFFCB141C87E59300258C16 /* ObjectiveCProcessing.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ObjectiveCProcessing.m; sourceTree = "<group>"; };
+		EAFFCB161C8A1B1B00258C16 /* PlayerInfoHolderView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PlayerInfoHolderView.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -477,6 +479,7 @@
 			isa = PBXGroup;
 			children = (
 				EAFFCB111C876F5800258C16 /* PlayerViewController.swift */,
+				EAFFCB161C8A1B1B00258C16 /* PlayerInfoHolderView.swift */,
 			);
 			path = Player;
 			sourceTree = "<group>";
@@ -708,6 +711,7 @@
 				EAE545041C76978F00180241 /* MeterTable.m in Sources */,
 				EA09CAD01C5C84B00067FF6A /* UIButtonStyles.swift in Sources */,
 				EAB0E6A01C7813B5008945FF /* FUXEasingCombinators.swift in Sources */,
+				EAFFCB171C8A1B1C00258C16 /* PlayerInfoHolderView.swift in Sources */,
 				EA27B20A1C5D781E006F269D /* KZConverter.swift in Sources */,
 				EA4F495C1C5EBFA000103559 /* YBFormatConverter.m in Sources */,
 				EA9216B31C857A4F00EA499B /* DashboardStreamInfo.swift in Sources */,

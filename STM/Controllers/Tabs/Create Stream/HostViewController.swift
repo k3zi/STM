@@ -94,6 +94,8 @@ class HostViewController: KZViewController, UISearchBarDelegate {
 	var bottomBlurBarConstraint: NSLayoutConstraint?
 	let streamInfoHolder = HostInfoHolderView()
 
+    let pauseBT = ExtendedButton()
+
 	let micToggleBT = ExtendedButton()
 	let micIndicatorView = UIView()
 	let micIndicatorGradientView = GradientView()
@@ -268,6 +270,9 @@ class HostViewController: KZViewController, UISearchBarDelegate {
 		streamInfoHolder.autoPinEdgeToSuperviewEdge(.Top, withInset: 14)
 		streamInfoHolder.autoAlignAxisToSuperviewAxis(.Vertical)
 
+        pauseBT.autoPinEdgeToSuperviewEdge(.Top, withInset: 11)
+        pauseBT.autoPinEdgeToSuperviewEdge(.Left, withInset: 11)
+
 		micToggleBT.autoPinEdgeToSuperviewEdge(.Top, withInset: 11)
 		micToggleBT.autoPinEdgeToSuperviewEdge(.Right, withInset: 11)
 
@@ -425,6 +430,11 @@ class HostViewController: KZViewController, UISearchBarDelegate {
 		streamInfoHolder.comments = 0
 		bottomBlurBar.addSubview(streamInfoHolder)
 
+        pauseBT.setImage(UIImage(named: "toolbar_pauseOff"), forState: .Normal)
+        pauseBT.setImage(UIImage(named: "toolbar_pauseOn"), forState: .Selected)
+        pauseBT.addTarget(self, action: Selector("togglePause"), forControlEvents: .TouchUpInside)
+        bottomBlurBar.addSubview(pauseBT)
+
 		micToggleBT.setImage(UIImage(named: "toolbar_micOff"), forState: .Normal)
 		micToggleBT.setImage(UIImage(named: "toolbar_micOn"), forState: .Selected)
 		micToggleBT.addTarget(self, action: Selector("toggleMic"), forControlEvents: .TouchUpInside)
@@ -472,6 +482,12 @@ class HostViewController: KZViewController, UISearchBarDelegate {
 			}
 		}
 	}
+
+    func togglePause() {
+        pauseBT.selected = !pauseBT.selected
+        playbackPaused = pauseBT.selected
+        self.refreshRecordingLabel()
+    }
 
 	/**
 	 Toggles the output of the mic to the stream
@@ -703,7 +719,7 @@ class HostViewController: KZViewController, UISearchBarDelegate {
 	}
 
     func tableView(tableView: UITableView, canMoveRowAtIndexPath indexPath: NSIndexPath) -> Bool {
-        return tableView == queueTableView
+        return tableView == queueTableView && upNextSongs.count > 1
     }
 
     func tableView(tableView: UITableView, editingStyleForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCellEditingStyle {
@@ -1071,6 +1087,10 @@ extension HostViewController: EZOutputDataSource {
 	}
 
 	func output(output: EZOutput!, shouldFillAudioBufferList audioBufferList: UnsafeMutablePointer<AudioBufferList>, withNumberOfFrames frames: UInt32) {
+        func reset() {
+            memset(audioBufferList.memory.mBuffers.mData, 0, Int(audioBufferList.memory.mBuffers.mDataByteSize))
+        }
+
 		if !playbackPaused {
 			if let audioFile0 = audioFile0 {
 				var bufferSize = UInt32()
@@ -1083,9 +1103,11 @@ extension HostViewController: EZOutputDataSource {
 					self.next()
 				}
 			} else {
-				memset(audioBufferList.memory.mBuffers.mData, 0, Int(audioBufferList.memory.mBuffers.mDataByteSize))
+				reset()
 			}
-		}
+		} else {
+            reset()
+        }
 	}
 
 	func output(output: EZOutput!, shouldFillAudioBufferList2 audioBufferList: UnsafeMutablePointer<AudioBufferList>, withNumberOfFrames frames: UInt32) {
