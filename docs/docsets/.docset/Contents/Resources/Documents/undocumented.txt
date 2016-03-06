@@ -1,0 +1,85 @@
+FUXData.swift
+	public class Box<T>
+	public init(_ value: T) { self.unbox = value }
+	public enum FUXTween
+	case Tween(Float, FUXValue)
+	case Easing(Box<FUXTween>, Float -> Float)
+	case Delay(Float, Box<FUXTween>)
+	case Speed(Float, Box<FUXTween>)
+	case Reverse(Box<FUXTween>)
+	case YoYo(Box<FUXTween>)
+	case Repeat(Int, Box<FUXTween>)
+	case OnComplete(Box<FUXTween>, () -> ())
+	public enum FUXValue
+	case Value(Float -> ())
+	case Values([ Box<FUXValue> ])
+KZPlayer.swift
+	class KZPlayer : NSObject
+FUXEasingCombinators.swift
+	public func easeInCubic(tween: FUXTween) -> FUXTween
+	public func easeOutCubic(tween: FUXTween) -> FUXTween
+	public func easeInOutCubic(tween: FUXTween) -> FUXTween
+	public func easeInCircular(tween: FUXTween) -> FUXTween
+	public func easeOutCircular(tween: FUXTween) -> FUXTween
+	public func easeInOutCircular(tween: FUXTween) -> FUXTween
+	public func easeInSine(tween: FUXTween) -> FUXTween
+	public func easeOutSine(tween: FUXTween) -> FUXTween
+	public func easeInOutSine(tween: FUXTween) -> FUXTween
+	public func easeInQuadratic(tween: FUXTween) -> FUXTween
+	public func easeOutQuadratic(tween: FUXTween) -> FUXTween
+	public func easeInOutQuadratic(tween: FUXTween) -> FUXTween
+	public func easeInQuartic(tween: FUXTween) -> FUXTween
+	public func easeOutQuartic(tween: FUXTween) -> FUXTween
+	public func easeInOutQuartic(tween: FUXTween) -> FUXTween
+	public func easeInQuintic(tween: FUXTween) -> FUXTween
+	public func easeOutQuintic(tween: FUXTween) -> FUXTween
+	public func easeInOutQuintic(tween: FUXTween) -> FUXTween
+	public func easeInExpo(tween: FUXTween) -> FUXTween
+	public func easeOutExpo(tween: FUXTween) -> FUXTween
+	public func easeInOutExpo(tween: FUXTween) -> FUXTween
+	public func easeInBack(tween: FUXTween) -> FUXTween
+	public func easeOutBack(tween: FUXTween) -> FUXTween
+	public func easeInOutBack(tween: FUXTween) -> FUXTween
+	public func easeInBounce(tween: FUXTween) -> FUXTween
+	public func easeOutBounce(tween: FUXTween) -> FUXTween
+	public func easeInOutBounce(tween: FUXTween) -> FUXTween
+	public func setEaseElasticPValue(value: Float)
+	public func setEaseElasticAValue(value: Float)
+	public func easeInElastic(tween: FUXTween) -> FUXTween
+	public func easeOutElastic(tween: FUXTween) -> FUXTween
+	public func easeInOutElastic(tween: FUXTween) -> FUXTween
+FUXCombinators.swift
+	public func >>> (left: Float, right: FUXTween) -> FUXTween
+	public func ~ (left: Float, right: FUXValue) -> FUXTween
+	public func + (left: FUXValue, right: FUXValue) -> FUXValue
+	public func >>| (left: FUXTween, right: () -> ()) -> FUXTween
+	public func tween(duration duration: Float, value: FUXValue) -> FUXTween
+	public func delayedTween(delay delay: Float, tween: FUXTween) -> FUXTween
+	public func createDelayedTween(duration duration: Float, delay: Float, value: FUXValue) -> FUXTween
+	public func yoyo(tween tween: FUXTween) -> FUXTween
+	public func speed(speed speed: Float, tween: FUXTween) -> FUXTween
+	public func repeatTween(repeatInt repeatInt: Int, tween: FUXTween) -> FUXTween
+	public func createValue(value: Float -> ()) -> FUXValue
+	public func createOnComplete(tween: FUXTween, onComplete: () -> ()) -> FUXTween
+	public func fromToPoint(from from: CGPoint, to: CGPoint, valueFunc: CGPoint -> ()) -> FUXValue
+	public func fromToValueFunc(from from: Float, to: Float, valueFunc: Float -> ()) -> FUXValue
+	public func viewFrameValue(view view: UIView, to: CGRect) -> FUXValue
+	public func constraintValue(view view: UIView, constraint: NSLayoutConstraint, constant: CGFloat) -> FUXValue
+	public func viewSizeValue(view view: UIView, to: CGSize) -> FUXValue
+	public func viewPositionValue(view view: UIView, to: CGPoint) -> FUXValue
+	public func viewScaleValue(view view: UIView, from: CGFloat, to: CGFloat) -> FUXValue
+	public func viewRotationValue(view view: UIView, from: CGFloat, to: CGFloat) -> FUXValue
+	public func backgroundColor(view view: UIView, to: UIColor) -> FUXValue
+PlayerViewController.swift
+	class PlayerViewController : KZViewController, UISearchBarDelegate
+FUXEngine.swift
+	public func + (left: FUXEngine, right: FUXTween) -> FUXTween
+	public class FUXEngine: NSObject
+	override public init ()
+	public func addTween(tween: FUXTween, name: String = "") -> FUXTween
+	public func removeTweenByName(name: String)
+	public func pause()
+	public func resume()
+Constants.swift
+	public override func intrinsicContentSize() -> CGSize
+	public func setBackgroundColor(color: UIColor, forState: UIControlState)
