@@ -1,5 +1,5 @@
 # STM [![Build Status](https://travis-ci.com/k3zi/STM.svg?token=gKfozS7CKh23NEAzKfWg&branch=master)](https://travis-ci.com/k3zi/STM)
-- [Server][0]
+Quick Links: [Server][0]  |  [Node.JS Server][1]  |  [iOS App][2] 
 
 ----
 
@@ -48,3 +48,6 @@ These are the frameworks that we will use inside the iOS app. The app utilizes C
 ----
 
 [0]: https://github.com/k3zi/STM-Server
+[1]: https://github.com/k3zi/STM-Server/new/api/server.js
+[2]: https://github.com/k3zi/STM
+
