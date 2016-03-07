@@ -48,6 +48,6 @@ These are the frameworks that we will use inside the iOS app. The app utilizes C
 ----
 
 [0]: https://github.com/k3zi/STM-Server
-[1]: https://github.com/k3zi/STM-Server/new/api/server.js
+[1]: https://github.com/k3zi/STM-Server/blob/master/new/api/server.js
 [2]: https://github.com/k3zi/STM
 
