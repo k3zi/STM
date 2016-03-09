@@ -7,7 +7,6 @@ Quick Links: [Server][0]  |  [Node.JS Server][1]  |  [iOS App][2]
 - [3rd Party Frameworks](#3rd-party-frameworks)
 - [Swift Syntax/Conventions](#swift-syntaxconventions)
 - [App Structure](#app-structure)
-- [Todo](#todo)
 
 ----
 
@@ -39,11 +38,6 @@ These are the frameworks that we will use inside the iOS app. The app utilizes C
 
 - Xcode makes strurcturing folders difficult. In Xcode to actually create a group that coresponds to a folder:
 ![Tip 1](https://www.dropbox.com/s/u9jypvkq4ytesd0/tip1.png?dl=1)
-
-----
-
-### Todo
-- Transition away from `Realm` (takes way too long to build)
 
 ----
 
