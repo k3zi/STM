@@ -444,80 +444,7 @@ extension PlayerViewController: STKAudioPlayerDelegate {
             hud.show(true)
         }
 
-        let streamID = String(stream.id ?? 0)
-
-        func proccessError(error: String? = nil, callback: (Bool, String?) -> Void) {
-            if let hud = self.hud {
-                hud.dismiss(true)
-            }
-
-            callback(false, error)
-        }
-
-        Constants.Network.POST("/playStream/" + String(stream.id ?? 0), parameters: nil, completionHandler: { (response, error) -> Void in
-            vc.handleResponse(response, error: error, successCompletion: { (result) -> Void in
-                guard let result = result as? [String: AnyObject] else {
-                    return proccessError("Invalid response", callback: callback)
-                }
-
-                guard let authKey = result["auth"] as? String else {
-                    return proccessError("Invalid session", callback: callback)
-                }
-
-                guard let user = AppDelegate.del().currentUser else {
-                    return proccessError("Invalid session", callback: callback)
-                }
-
-                guard let userID = user.id else {
-                    return proccessError("Invalid session", callback: callback)
-                }
-
-                AppDelegate.del().setUpAudioSession(withMic: false)
-
-                let streamURL = Constants.baseURL + "/streamLiveToDevice/" + streamID + "/" + String(userID) + "/" + authKey
-
-                var options = STKAudioPlayerOptions()
-                if let setting = result["secondsRequiredToStartPlaying"] as? Float32 {
-                    options.secondsRequiredToStartPlaying = setting
-                }
-
-                if let setting = result["secondsRequiredToStartPlayingAfterBufferUnderun"] as? Float32 {
-                    options.secondsRequiredToStartPlayingAfterBufferUnderun = setting
-                }
-
-                if let setting = result["bufferSizeInSeconds"] as? Float32 {
-                    options.bufferSizeInSeconds = setting
-                }
-
-                let player = STKAudioPlayer(options: options)
-                player.meteringEnabled = true
-                player.delegate = self
-                player.play(streamURL)
-                player.appendFrameFilterWithName("visualizer", block: { (channelsPerFrame, bytesPerFrame, frameCount, ioData) -> Void in
-                    if self.visualizerUpdateCount == 2 {
-                        let decibels = player.averagePowerInDecibelsForChannel(0)
-                        let level = MeterTable.sharedTable().ValueAt(decibels)
-
-                        ObjectiveCProcessing.proccessVisualizerBufferData(ioData, audioLevel: level, frames: UInt32(frameCount), bytesPerFrame: bytesPerFrame, channelsPerFrame: channelsPerFrame, size: self.visualizer.frame.size, update: { (barIndex, height) -> Void in
-                            self.visualizer.setBarHeight(Int(barIndex), height: height)
-                        })
-
-                        self.visualizerUpdateCount = 0
-                    } else {
-                        self.visualizerUpdateCount += 1
-                    }
-                })
-
-                self.player = player
-                self.stream = stream
-
-                self.connectGlobalStream()
-                callback(true, nil)
-                Answers.logCustomEventWithName("Played Stream", customAttributes: [:])
-                }, errorCompletion: { (error) -> Void in
-                    proccessError(error, callback: callback)
-            })
-        })
+        connectToStream(vc)
     }
 
     /**
@@ -559,6 +486,91 @@ extension PlayerViewController: STKAudioPlayerDelegate {
         }
     }
 
+    func connectToStream(vc: UIViewController? = nil, callback: ((Bool, String?) -> Void)? = nil) {
+        guard let stream = stream else {
+            return
+        }
+
+        func proccessError(error: String? = nil, callback: ((Bool, String?) -> Void)?) {
+            if let hud = self.hud {
+                hud.dismiss(true)
+            }
+
+            if let callback = callback {
+                callback(false, error)
+            }
+        }
+
+        Constants.Network.POST("/playStream/" + String(stream.id ?? 0), parameters: nil, completionHandler: { (response, error) -> Void in
+            (vc ?? self).handleResponse(response, error: error, successCompletion: { (result) -> Void in
+                guard let result = result as? [String: AnyObject] else {
+                    return proccessError("Invalid response", callback: callback)
+                }
+
+                guard let authKey = result["auth"] as? String else {
+                    return proccessError("Invalid session", callback: callback)
+                }
+
+                guard let user = AppDelegate.del().currentUser else {
+                    return proccessError("Invalid session", callback: callback)
+                }
+
+                guard let userID = user.id else {
+                    return proccessError("Invalid session", callback: callback)
+                }
+
+                AppDelegate.del().setUpAudioSession(withMic: false)
+
+                let streamURL = Constants.baseURL + "/streamLiveToDevice/\(stream.id)/\(userID)/" + authKey
+
+                var options = STKAudioPlayerOptions()
+                if let setting = result["secondsRequiredToStartPlaying"] as? Float32 {
+                    options.secondsRequiredToStartPlaying = setting
+                }
+
+                if let setting = result["secondsRequiredToStartPlayingAfterBufferUnderun"] as? Float32 {
+                    options.secondsRequiredToStartPlayingAfterBufferUnderun = setting
+                }
+
+                if let setting = result["bufferSizeInSeconds"] as? Float32 {
+                    options.bufferSizeInSeconds = setting
+                }
+
+                let player = STKAudioPlayer(options: options)
+                player.meteringEnabled = true
+                player.delegate = self
+                player.play(streamURL)
+                player.appendFrameFilterWithName("visualizer", block: { (channelsPerFrame, bytesPerFrame, frameCount, ioData) -> Void in
+                    if self.visualizerUpdateCount == 2 {
+                        let decibels = player.averagePowerInDecibelsForChannel(0)
+                        let level = MeterTable.sharedTable().ValueAt(decibels)
+
+                        ObjectiveCProcessing.proccessVisualizerBufferData(ioData, audioLevel: level, frames: UInt32(frameCount), bytesPerFrame: bytesPerFrame, channelsPerFrame: channelsPerFrame, size: self.visualizer.frame.size, update: { (barIndex, height) -> Void in
+                            self.visualizer.setBarHeight(Int(barIndex), height: height)
+                        })
+
+                        self.visualizerUpdateCount = 0
+                    } else {
+                        self.visualizerUpdateCount += 1
+                    }
+                })
+
+                self.player = player
+                self.stream = stream
+
+                self.connectGlobalStream()
+
+                if let callback = callback {
+                    callback(true, nil)
+                }
+                Answers.logCustomEventWithName("Played Stream", customAttributes: [:])
+
+                }, errorCompletion: { (error) -> Void in
+                    proccessError(error, callback: callback)
+            })
+        })
+    }
+
     //MARK: Audio Player Delegate
 
     func audioPlayer(audioPlayer: STKAudioPlayer, stateChanged state: STKAudioPlayerState, previousState: STKAudioPlayerState) {
@@ -597,8 +609,10 @@ extension PlayerViewController: STKAudioPlayerDelegate {
 //MARK: Audio Playback
 extension PlayerViewController {
     func play() {
+        self.connectGlobalStream()
     }
 
-    func pause() {
+    func stop() {
+        self.player?.stop()
     }
 }

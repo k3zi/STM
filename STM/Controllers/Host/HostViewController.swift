@@ -116,7 +116,8 @@ class HostViewController: KZViewController, UISearchBarDelegate {
         keynode.animationsHandler = { [weak self] show, rect in
             if let me = self {
                 if let con = me.commentFieldKeyboardConstraint {
-                    con.constant = (show ? -rect.size.height : 0)
+                    //Take into account the bottom toolbar
+                    con.constant = (show ? -(rect.size.height - 44) : 0)
                     me.view.layoutIfNeeded()
                 }
             }
@@ -400,6 +401,7 @@ class HostViewController: KZViewController, UISearchBarDelegate {
 		settingsContentView.addSubview(micVolumeSettingView)
 
 		micActiveMusicVolumeSlider.value = 0.2
+        musicVolumeSlider.addTarget(self, action: #selector(HostViewController.didChangeMusicVolumeMicActive(_:)), forControlEvents: .ValueChanged)
 		let micActiveMusicVolumeSettingView = SettingJoinedView(text: NSLocalizedString("Settings_HostMusicVolumeWhenMicActive", comment: "Music Volume When Mic Active"), detailText: NSLocalizedString("Settings_HostMusicVolumeWhenMicActiveDescription", comment: ""), control: micActiveMusicVolumeSlider)
 		self.micActiveMusicVolumeSettingView = micActiveMusicVolumeSettingView
 		settingsContentView.addSubview(micActiveMusicVolumeSettingView)
@@ -476,7 +478,11 @@ class HostViewController: KZViewController, UISearchBarDelegate {
 	}
 
     func togglePause() {
-        pauseBT.selected = !pauseBT.selected
+        setPaused(!pauseBT.selected)
+    }
+
+    func setPaused(enabled: Bool) {
+        pauseBT.selected = enabled
         playbackPaused = pauseBT.selected
         self.refreshRecordingLabel()
     }
@@ -526,7 +532,15 @@ class HostViewController: KZViewController, UISearchBarDelegate {
 	}
 
     func didChangeMusicVolume(sender: UISlider) {
-        EZOutput.sharedOutput().mixerNode.setVolume(sender.value, forBus: 0)
+        if !micToggleBT.selected {
+            EZOutput.sharedOutput().mixerNode.setVolume(sender.value, forBus: 0)
+        }
+    }
+
+    func didChangeMusicVolumeMicActive(sender: UISlider) {
+        if micToggleBT.selected {
+            EZOutput.sharedOutput().mixerNode.setVolume(sender.value, forBus: 0)
+        }
     }
 
     func didChangeMicVolume(sender: UISlider) {
@@ -903,7 +917,7 @@ extension HostViewController {
 						if let stream = STMStream(json: result) {
 							self.stream = stream
 							callback(true, nil)
-							self.setUpAudioSession()
+							self.toggleAudioSession()
 							self.connectGlobalStream()
 							self.loadLibrary()
 
@@ -951,7 +965,7 @@ extension HostViewController {
 					if let stream = STMStream(json: result) {
 						self.stream = stream
 
-						self.setUpAudioSession()
+						self.toggleAudioSession()
 						self.connectGlobalStream()
 						self.loadLibrary()
 						callback(true, nil)
@@ -1058,15 +1072,17 @@ extension HostViewController: EZOutputDataSource {
 	/**
 	 Start the AVAudioSession and add the remote commands
 	 */
-	func setUpAudioSession() {
-		MPRemoteCommandCenter.sharedCommandCenter().playCommand.addTarget(self, action: #selector(MPMediaPlayback.play))
-		MPRemoteCommandCenter.sharedCommandCenter().pauseCommand.addTarget(self, action: #selector(HostViewController.pause))
-		MPRemoteCommandCenter.sharedCommandCenter().nextTrackCommand.addTarget(self, action: #selector(HostViewController.next))
+    func toggleAudioSession(enabled: Bool = true) {
+        if enabled {
+            MPRemoteCommandCenter.sharedCommandCenter().playCommand.addTarget(self, action: #selector(HostViewController.play))
+            MPRemoteCommandCenter.sharedCommandCenter().pauseCommand.addTarget(self, action: #selector(HostViewController.stop))
+            MPRemoteCommandCenter.sharedCommandCenter().nextTrackCommand.addTarget(self, action: #selector(HostViewController.next))
+        }
 
-		MPRemoteCommandCenter.sharedCommandCenter().playCommand.enabled = true
-		MPRemoteCommandCenter.sharedCommandCenter().pauseCommand.enabled = true
-		MPRemoteCommandCenter.sharedCommandCenter().nextTrackCommand.enabled = true
-		MPRemoteCommandCenter.sharedCommandCenter().previousTrackCommand.enabled = false
+
+		MPRemoteCommandCenter.sharedCommandCenter().pauseCommand.enabled = enabled
+		MPRemoteCommandCenter.sharedCommandCenter().nextTrackCommand.enabled = enabled
+		MPRemoteCommandCenter.sharedCommandCenter().previousTrackCommand.enabled = enabled
 	}
 
 	func output(output: EZOutput!, shouldFillAudioBufferList audioBufferList: UnsafeMutablePointer<AudioBufferList>, withNumberOfFrames frames: UInt32) {
@@ -1167,9 +1183,21 @@ extension HostViewController: EZOutputDataSource {
 //MARK: Audio Playback
 extension HostViewController: EZAudioFileDelegate {
 	func play() {
+        EZOutput.sharedOutput().startPlayback()
+        setPaused(false)
+        toggleAudioSession(true)
+        MPRemoteCommandCenter.sharedCommandCenter().pauseCommand.enabled = true
 	}
 
+    func stop() {
+        EZOutput.sharedOutput().stopPlayback()
+        setPaused(true)
+        toggleAudioSession(false)
+        MPRemoteCommandCenter.sharedCommandCenter().playCommand.enabled = true
+    }
+
 	func pause() {
+        setPaused(true)
 	}
 
 	func isOnAir() -> Bool {
@@ -1195,6 +1223,8 @@ extension HostViewController: EZAudioFileDelegate {
 				self.didReachEndOfQueue()
 			})
 			playbackReachedEnd = true
+            MPRemoteCommandCenter.sharedCommandCenter().nextTrackCommand.enabled = false
+
 			audioFile0 = nil
 			audioFile1 = nil
 		}
@@ -1230,7 +1260,7 @@ extension HostViewController: EZAudioFileDelegate {
 			playSong(item)
 		} else {
 			upNextSongs.append(item)
-			queueTableView.reloadData()
+			updateUpNext()
 		}
 	}
 
@@ -1240,7 +1270,6 @@ extension HostViewController: EZAudioFileDelegate {
 	}
 
 	func popUpNext() -> KZPlayerItem? {
-
 		var x: KZPlayerItem?
 		if upNextSongs.count > 0 {
 			if let item = upNextSongs.first as? KZPlayerItem {
@@ -1256,6 +1285,8 @@ extension HostViewController: EZAudioFileDelegate {
 	func updateUpNext() {
 		dispatch_async(dispatch_get_main_queue()) { () -> Void in
 			self.queueTableView.reloadSections(NSIndexSet(index: 0), withRowAnimation: .Fade)
+
+            MPRemoteCommandCenter.sharedCommandCenter().nextTrackCommand.enabled = (self.upNextSongs.count > 0)
 		}
 	}
 

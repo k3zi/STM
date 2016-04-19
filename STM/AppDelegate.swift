@@ -20,6 +20,8 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 	var shortcutItem: UIApplicationShortcutItem?
 	var currentUser: STMUser?
 
+    var activeStreamController: UIViewController?
+
 	func application(application: UIApplication, didFinishLaunchingWithOptions launchOptions: [NSObject: AnyObject]?) -> Bool {
 
         //Setup some things...
@@ -36,10 +38,13 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 		application.registerUserNotificationSettings(UIUserNotificationSettings(forTypes: [.Alert, .Badge, .Sound], categories: nil))
 		application.registerForRemoteNotifications()
 
-		NSSetUncaughtExceptionHandler { exception in
-			print(exception)
-			print(exception.callStackSymbols)
-		}
+        NSNotificationCenter.defaultCenter().addObserver(self, selector: #selector(AppDelegate.audioWasInterupted(_:)), name: AVAudioSessionInterruptionNotification, object: nil)
+
+        func exceptionHandler(exception: NSException) {
+            print(exception)
+            print(exception.callStackSymbols)
+        }
+        NSSetUncaughtExceptionHandler(exceptionHandler)
 
 		setUpAudioSession(withMic: false)
 		return true
@@ -64,19 +69,13 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 		self.window?.makeKeyAndVisible()
 
 		tab1.tabBarItem = UITabBarItem(title: "Dashboard", image: UIImage(named: "tabDashboard"), tag: 1)
-
 		tab2.tabBarItem = UITabBarItem(title: "Host", image: UIImage(named: "tabCreateStream"), tag: 2)
-
 		tab3.tabBarItem = UITabBarItem(title: "Local", image: UIImage(named: "tabJoinStream"), tag: 3)
-
 		tab4.tabBarItem = UITabBarItem(title: "Friends", image: UIImage(named: "tabFriends"), tag: 4)
-
 		tab5.tabBarItem = UITabBarItem(title: "Profile", image: UIImage(named: "tabProfile"), tag: 5)
-
 		tabVC.selectedViewController = tab1
 
 		if let item = shortcutItem {
-			self.handleShortcutItem(item, completionHandler: nil)
 			shortcutItem = nil
 		}
 
@@ -114,9 +113,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 		}
 	}
 
-	func handleShortcutItem(item: UIApplicationShortcutItem, completionHandler: ((Bool) -> Void)?) -> Bool {
-		return true
-	}
+    //MARK: Audio
 
     /**
      Start the AVAudioSession
@@ -131,7 +128,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         }
 
 		do {
-			try AVAudioSession.sharedInstance().setPreferredIOBufferDuration(0.02)
+			try AVAudioSession.sharedInstance().setPreferredIOBufferDuration(0.03)
 			try AVAudioSession.sharedInstance().setPreferredSampleRate(44100)
 			try AVAudioSession.sharedInstance().setCategory(category, withOptions: options)
 			try AVAudioSession.sharedInstance().setActive(true)
@@ -139,6 +136,39 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 			print("Error starting audio sesssion")
 		}
 	}
+
+    func audioWasInterupted(notification: NSNotification) {
+        if let type = notification.userInfo?[AVAudioSessionInterruptionTypeKey] as? NSNumber {
+            switch type.unsignedIntegerValue {
+            case AVAudioSessionInterruptionType.Began.rawValue:
+                self.stop()
+                break
+
+            case AVAudioSessionInterruptionType.Ended.rawValue:
+                self.play() //Check AVAudioSessionInterruptionOptionShouldResume, after there is a way to resume manualy
+                break
+
+            default:
+                break
+            }
+        }
+    }
+
+    func play() {
+        if let vc = activeStreamController as? HostViewController {
+            vc.play()
+        } else if let vc = activeStreamController as? PlayerViewController {
+            vc.play()
+        }
+    }
+
+    func stop() {
+        if let vc = activeStreamController as? HostViewController {
+            vc.stop()
+        } else if let vc = activeStreamController as? PlayerViewController {
+            vc.stop()
+        }
+    }
 
     //MARK: Window Effects
 
