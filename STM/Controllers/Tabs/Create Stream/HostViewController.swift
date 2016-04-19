@@ -100,8 +100,8 @@ class HostViewController: KZViewController, UISearchBarDelegate {
 	var micIndicatorWidthConstraint: NSLayoutConstraint?
 
 	// Keyboard Adjustment
-	var keyboardVisible = CGFloat(0)
 	var commentFieldKeyboardConstraint: NSLayoutConstraint?
+    lazy var keynode: Keynode.Connector = Keynode.Connector(view: self.view)
 
 	override func viewDidLoad() {
 		super.viewDidLoad()
@@ -113,22 +113,14 @@ class HostViewController: KZViewController, UISearchBarDelegate {
 		setupToolbar()
 		setupSettingsContentView()
 
-		self.setKeyboardWillShowAnimationBlock { (keyboardFrame) -> Void in
-			if self.keyboardVisible == 0 {
-				self.commentFieldKeyboardConstraint?.constant = -keyboardFrame.size.height + 44
-			}
-			self.view.layoutIfNeeded()
-			self.keyboardVisible = keyboardFrame.size.height
-		}
-
-		self.setKeyboardWillHideAnimationBlock { (keyboardFrame) -> Void in
-			if self.keyboardVisible != 0 {
-				self.commentFieldKeyboardConstraint?.constant = 0
-			}
-
-			self.view.layoutIfNeeded()
-			self.keyboardVisible = 0
-		}
+        keynode.animationsHandler = { [weak self] show, rect in
+            if let me = self {
+                if let con = me.commentFieldKeyboardConstraint {
+                    con.constant = (show ? -rect.size.height + 44 : 0)
+                    me.view.layoutIfNeeded()
+                }
+            }
+        }
 
         fetchOnce()
 		NSTimer.scheduledTimerWithTimeInterval(1.5, target: self, selector: #selector(HostViewController.refresh), userInfo: nil, repeats: true)

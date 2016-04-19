@@ -1,6 +1,0 @@
-framework module UIViewController_BHTKeyboardAnimationBlocks {
-  umbrella header "UIViewController+BHTKeyboardAnimationBlocks-umbrella.h"
-
-  export *
-  module * { export * }
-}

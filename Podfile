@@ -21,7 +21,7 @@ target 'STM' do
     pod 'SpinKit'
     pod 'Socket.IO-Client-Swift'
     pod 'StreamingKit'
-    pod 'UIViewController+BHTKeyboardAnimationBlocks'
+    pod 'Keynode'
 
     pod 'Fabric'
     pod 'Crashlytics'

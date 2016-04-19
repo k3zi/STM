@@ -9,6 +9,7 @@
 import UIKit
 
 extension UILabel {
+
     class func styledForSettingsHeader(text: String = "{HEADER TEXT}") -> UILabel {
         let label = UILabel()
         label.backgroundColor = Constants.Color.tint
@@ -29,4 +30,5 @@ extension UILabel {
         label.autoSetDimension(.Height, toSize: 20)
         return label
     }
+
 }

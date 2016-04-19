@@ -49,7 +49,7 @@ class PlayerViewController: KZViewController, UISearchBarDelegate {
     let streamInfoHolder = PlayerInfoHolderView()
 
     // Keyboard Adjustment
-    var keyboardVisible = CGFloat(0)
+    lazy var keynode: Keynode.Connector = Keynode.Connector(view: self.view)
     var commentFieldKeyboardConstraint: NSLayoutConstraint?
 
     override func viewDidLoad() {
@@ -59,21 +59,14 @@ class PlayerViewController: KZViewController, UISearchBarDelegate {
         setupTopView()
         setupCommentView()
         setupToolbar()
-        self.setKeyboardWillShowAnimationBlock { (keyboardFrame) -> Void in
-            if self.keyboardVisible == 0 {
-                self.commentFieldKeyboardConstraint?.constant = keyboardFrame.size.height - 44
-            }
-            self.view.layoutIfNeeded()
-            self.keyboardVisible = keyboardFrame.size.height
-        }
 
-        self.setKeyboardWillHideAnimationBlock { (keyboardFrame) -> Void in
-            if self.keyboardVisible != 0 {
-                self.commentFieldKeyboardConstraint?.constant = 0
+        keynode.animationsHandler = { [weak self] show, rect in
+            if let me = self {
+                if let con = me.commentFieldKeyboardConstraint {
+                    con.constant = (show ? rect.size.height - 44 : 0)
+                    me.view.layoutIfNeeded()
+                }
             }
-
-            self.view.layoutIfNeeded()
-            self.keyboardVisible = 0
         }
 
         fetchOnce()

@@ -9,6 +9,7 @@
 import UIKit
 
 extension UITextField {
+
     class func styledForLaunchScreen() -> UITextField {
         let textField = UITextField()
         textField.font = UIFont.systemFontOfSize(15, weight: UIFontWeightMedium)
@@ -31,4 +32,5 @@ extension UITextField {
         secureTextEntry = true
         unstyleField()
     }
+
 }

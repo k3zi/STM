@@ -13,6 +13,7 @@ import CoreLocation
 //swiftlint:disable nesting
 
 struct Constants {
+
 	static let baseURL = "https://api.stm.io"
 	static let http = Http(baseURL: baseURL + "/v1")
 	static let Settings = NSUserDefaults.standardUserDefaults()
@@ -51,6 +52,7 @@ struct Constants {
 			Constants.http.request(.GET, path: url, parameters: parameters, credential: Constants.Config.systemCredentials, completionHandler: completionHandler)
 		}
 	}
+
 }
 
 enum StreamType {
@@ -79,7 +81,6 @@ func delay(delay: Double, closure: () -> ()) {
 
 extension UIButton {
 
-	// Adds titleEdgeInsets to the autolayut frame
 	public override func intrinsicContentSize() -> CGSize {
 		let intrinsicContentSize = super.intrinsicContentSize()
 		let adjustedWidth = intrinsicContentSize.width + titleEdgeInsets.left + titleEdgeInsets.right
@@ -96,9 +97,11 @@ extension UIButton {
 
 		self.setBackgroundImage(colorImage, forState: forState)
 	}
+
 }
 
 extension UITableView {
+
     func scrollToBottom(animated: Bool = true) {
         let section = self.numberOfSections
         guard section > 0 else {
@@ -112,6 +115,7 @@ extension UITableView {
 
         self.scrollToRowAtIndexPath(NSIndexPath(forRow: row - 1, inSection: section - 1), atScrollPosition: .Bottom, animated: animated)
     }
+
 }
 
 extension UIView {
@@ -124,15 +128,19 @@ extension UIView {
 		view.backgroundColor = backgroundColor
 		return view
 	}
+
 }
 
 extension Int {
+
     func hexedString() -> String {
         return String(format:"%02x", self)
     }
+
 }
 
 extension NSData {
+
     func hexedString() -> String {
         var string = String()
         for i in UnsafeBufferPointer<UInt8>(start: UnsafeMutablePointer<UInt8>(bytes), count: length) {
@@ -152,9 +160,11 @@ extension NSData {
         CC_SHA1(bytes, CC_LONG(length), UnsafeMutablePointer<UInt8>(result.mutableBytes))
         return NSData(data: result)
     }
+
 }
 
 extension String {
+
     func MD5() -> String {
         return (self as NSString).dataUsingEncoding(NSUTF8StringEncoding)!.MD5().hexedString()
     }
@@ -162,9 +172,11 @@ extension String {
     func SHA1() -> String {
         return (self as NSString).dataUsingEncoding(NSUTF8StringEncoding)!.SHA1().hexedString()
     }
+
 }
 
 extension UIImage {
+
     convenience init(view: UIView) {
         UIGraphicsBeginImageContext(view.frame.size)
         view.layer.renderInContext(UIGraphicsGetCurrentContext()!)
@@ -172,4 +184,17 @@ extension UIImage {
         UIGraphicsEndImageContext()
         self.init(CGImage: image.CGImage!)
     }
+
+}
+
+extension UIViewController {
+
+    func donePressed() {
+        cancelPressed()
+    }
+
+    func cancelPressed() {
+        view.endEditing(true)
+    }
+
 }

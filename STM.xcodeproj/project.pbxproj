@@ -58,6 +58,7 @@
 		EA4F49851C5EC05700103559 /* EZAudio.m in Sources */ = {isa = PBXBuildFile; fileRef = EA4F49741C5EC05700103559 /* EZAudio.m */; };
 		EA4F49871C5EC05700103559 /* EZAudioFile.m in Sources */ = {isa = PBXBuildFile; fileRef = EA4F49771C5EC05700103559 /* EZAudioFile.m */; };
 		EA4F498F1C5F2D3800103559 /* EZOutput.m in Sources */ = {isa = PBXBuildFile; fileRef = EA4F498E1C5F2D3800103559 /* EZOutput.m */; };
+		EA54E5C21CC5D8210033135B /* UIToolbarStyles.swift in Sources */ = {isa = PBXBuildFile; fileRef = EA54E5C11CC5D8210033135B /* UIToolbarStyles.swift */; };
 		EA8D3DE11C7D75C3003ACCFC /* MessageToolbarView.swift in Sources */ = {isa = PBXBuildFile; fileRef = EA8D3DE01C7D75C3003ACCFC /* MessageToolbarView.swift */; };
 		EA9216B11C856DBB00EA499B /* TriangleView.swift in Sources */ = {isa = PBXBuildFile; fileRef = EA9216B01C856DBB00EA499B /* TriangleView.swift */; };
 		EA9216B31C857A4F00EA499B /* DashboardStreamInfo.swift in Sources */ = {isa = PBXBuildFile; fileRef = EA9216B21C857A4F00EA499B /* DashboardStreamInfo.swift */; };
@@ -162,6 +163,7 @@
 		EA4F49831C5EC05700103559 /* EZAudio.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = EZAudio.h; sourceTree = "<group>"; };
 		EA4F498D1C5F2D3800103559 /* EZOutput.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = EZOutput.h; sourceTree = "<group>"; };
 		EA4F498E1C5F2D3800103559 /* EZOutput.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = EZOutput.m; sourceTree = "<group>"; };
+		EA54E5C11CC5D8210033135B /* UIToolbarStyles.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = UIToolbarStyles.swift; sourceTree = "<group>"; };
 		EA8D3DE01C7D75C3003ACCFC /* MessageToolbarView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MessageToolbarView.swift; sourceTree = "<group>"; };
 		EA9216B01C856DBB00EA499B /* TriangleView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TriangleView.swift; sourceTree = "<group>"; };
 		EA9216B21C857A4F00EA499B /* DashboardStreamInfo.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DashboardStreamInfo.swift; sourceTree = "<group>"; };
@@ -298,13 +300,11 @@
 		EA09CABF1C5C44770067FF6A /* Views */ = {
 			isa = PBXGroup;
 			children = (
+				EA54E5C01CC5D7D90033135B /* Styles */,
 				EA4E49491C61413400CB40D7 /* Generic */,
 				EA4E49431C613F1E00CB40D7 /* Table Cells */,
 				EA209DAB1C829B0300A22BC4 /* Collection Cells */,
 				EA09CAC51C5C5D040067FF6A /* Window.swift */,
-				EA09CACF1C5C84B00067FF6A /* UIButtonStyles.swift */,
-				EA09CAD31C5C86430067FF6A /* UITextFieldStyles.swift */,
-				EAB0E6A61C78EEB0008945FF /* UILabelStyles.swift */,
 				EAE545051C76BA9200180241 /* STMVisualizer.swift */,
 				EA9216B01C856DBB00EA499B /* TriangleView.swift */,
 				EA9216B21C857A4F00EA499B /* DashboardStreamInfo.swift */,
@@ -458,6 +458,17 @@
 				EAE545031C76978F00180241 /* MeterTable.h */,
 			);
 			path = EZAudio;
+			sourceTree = "<group>";
+		};
+		EA54E5C01CC5D7D90033135B /* Styles */ = {
+			isa = PBXGroup;
+			children = (
+				EA09CACF1C5C84B00067FF6A /* UIButtonStyles.swift */,
+				EA09CAD31C5C86430067FF6A /* UITextFieldStyles.swift */,
+				EAB0E6A61C78EEB0008945FF /* UILabelStyles.swift */,
+				EA54E5C11CC5D8210033135B /* UIToolbarStyles.swift */,
+			);
+			path = Styles;
 			sourceTree = "<group>";
 		};
 		EAB0E6991C78138F008945FF /* Tween */ = {
@@ -676,6 +687,7 @@
 				EA4F49641C5EBFA000103559 /* YBDistortionFilter.m in Sources */,
 				EA27B1FC1C5D2D05006F269D /* STMStream.swift in Sources */,
 				EA4F495E1C5EBFA000103559 /* YBAudioComponent.m in Sources */,
+				EA54E5C21CC5D8210033135B /* UIToolbarStyles.swift in Sources */,
 				EA09CAD71C5C89A50067FF6A /* NavigationController.swift in Sources */,
 				EA01AF931C5CBCA600F56792 /* STMUser.swift in Sources */,
 				EA4F49841C5EC05700103559 /* KZPlayerInner.m in Sources */,
@@ -826,7 +838,7 @@
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = com.stormedgeapps.streamtome;
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				PROVISIONING_PROFILE = "";
+				PROVISIONING_PROFILE = "2955ab7f-8f06-4804-87b7-1f30712212fc";
 				SWIFT_OBJC_BRIDGING_HEADER = "STM/Extras/STM-Bridging-Header.h";
 			};
 			name = Debug;
@@ -844,7 +856,7 @@
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = com.stormedgeapps.streamtome;
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				PROVISIONING_PROFILE = "";
+				PROVISIONING_PROFILE = "2955ab7f-8f06-4804-87b7-1f30712212fc";
 				SWIFT_OBJC_BRIDGING_HEADER = "STM/Extras/STM-Bridging-Header.h";
 			};
 			name = Release;

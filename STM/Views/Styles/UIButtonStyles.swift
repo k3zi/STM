@@ -9,6 +9,7 @@
 import UIKit
 
 extension UIButton {
+
     class func styledForLaunchScreen() -> UIButton {
         let button = UIButton()
         button.titleLabel?.font = UIFont.systemFontOfSize(17, weight: UIFontWeightMedium)
@@ -34,4 +35,5 @@ extension UIButton {
 
         return button
     }
+
 }

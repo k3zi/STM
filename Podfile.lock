@@ -8,6 +8,7 @@ PODS:
   - Gloss (0.7.2)
   - Hashids-Swift (0.3.0)
   - HPGrowingTextView (1.1)
+  - Keynode (1.5.0)
   - KILabel (1.0.1)
   - Kingfisher (2.2.2)
   - KMPlaceholderTextView (1.2.0)
@@ -33,7 +34,6 @@ PODS:
     - Fabric
   - TwitterKit (2.0.2):
     - TwitterCore (= 2.0.2)
-  - UIViewController+BHTKeyboardAnimationBlocks (0.0.2)
 
 DEPENDENCIES:
   - AeroGearHttp
@@ -43,6 +43,7 @@ DEPENDENCIES:
   - Gloss
   - Hashids-Swift
   - HPGrowingTextView
+  - Keynode
   - KILabel
   - Kingfisher
   - KMPlaceholderTextView
@@ -59,7 +60,6 @@ DEPENDENCIES:
   - StreamingKit
   - TwitterCore
   - TwitterKit
-  - UIViewController+BHTKeyboardAnimationBlocks
 
 SPEC CHECKSUMS:
   AeroGearHttp: 9eb405b694aa9ac5daff842f68648f4a9fe0fa66
@@ -70,6 +70,7 @@ SPEC CHECKSUMS:
   Gloss: 45eb51aaa6f2725341aec8d8caa65cfcc31f7f3b
   Hashids-Swift: 5d7c069b0d4a3b70d4e2a840c420115dd517050d
   HPGrowingTextView: 88a716d97fb853bcb08a4a08e4727da17efc9b19
+  Keynode: 28f90c306d60bf19b56422dd5c6d6949407ef4de
   KILabel: 4797807cdc0b4992dad8bf91175ddc973c3b569b
   Kingfisher: 7e8de5b0cf7b5dc8ec559d193029a0859df93ef1
   KMPlaceholderTextView: cae8ee889bd38d20587eee6b2623b8218f31b8f5
@@ -87,6 +88,5 @@ SPEC CHECKSUMS:
   StreamingKit: c329785aaef3ac142d4ae388345bfe1ed23cfd45
   TwitterCore: 0f44d8980a6879d5205dcb4e010d15e643e56fa0
   TwitterKit: c4e40f289a3d7cc9fab9f241edd7502385468b65
-  UIViewController+BHTKeyboardAnimationBlocks: 4996f7909cb141f19e9544720e5bb79de20e4db9
 
 COCOAPODS: 0.39.0

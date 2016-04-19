@@ -9,7 +9,10 @@
 import UIKit
 import KMPlaceholderTextView
 
-class CreateStreamViewController: KZScrollViewController {
+class CreateStreamViewController: KZViewController {
+
+    var scrollView = UIScrollView()
+    var contentView = UIView()
 
     let streamTypeSegmentControl = UISegmentedControl(items: ["Global", "Local"])
     let streamNameTextField = UITextField()
@@ -17,6 +20,14 @@ class CreateStreamViewController: KZScrollViewController {
     let passcodeTextField = UITextField()
     let streamDescriptionTextView = KMPlaceholderTextView()
     let hostBT = UIButton()
+
+    // UI Adjustments
+    lazy var keynode: Keynode.Connector = Keynode.Connector(view: self.contentView)
+    var scrollViewBottomConstraint: NSLayoutConstraint?
+    var passcodeHeightConstraint: NSLayoutConstraint?
+    var passcodePaddingConstraint: NSLayoutConstraint?
+
+    let formPadding = CGFloat(15)
 
     let publicLabel = UILabel()
     let privateLabel = UILabel()
@@ -26,8 +37,9 @@ class CreateStreamViewController: KZScrollViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
 
-        view.addSubview(scrollView)
+        scrollView.showsVerticalScrollIndicator = false
         scrollView.addSubview(contentView)
+        view.addSubview(scrollView)
         view.backgroundColor = RGB(234)
 
         streamTypeSegmentControl.selectedSegmentIndex = 0
@@ -40,6 +52,7 @@ class CreateStreamViewController: KZScrollViewController {
         streamNameTextField.textAlignment = .Center
         streamNameTextField.backgroundColor = RGB(255)
         streamNameTextField.autocorrectionType = .No
+        streamNameTextField.inputAccessoryView = UIToolbar.styleWithButtons(self)
         contentView.addSubview(streamNameTextField)
 
         passcodeTextField.layer.cornerRadius = 5
@@ -52,6 +65,7 @@ class CreateStreamViewController: KZScrollViewController {
         passcodeTextField.secureTextEntry = true
         passcodeTextField.alpha = 0.7
         passcodeTextField.enabled = false
+        passcodeTextField.inputAccessoryView = UIToolbar.styleWithButtons(self)
         contentView.addSubview(passcodeTextField)
 
         privacySwitch.addTarget(self, action: #selector(CreateStreamViewController.togglePrivacy), forControlEvents: .ValueChanged)
@@ -68,8 +82,9 @@ class CreateStreamViewController: KZScrollViewController {
         streamDescriptionTextView.clipsToBounds = true
         streamDescriptionTextView.placeholder = "Stream Description..."
         streamDescriptionTextView.backgroundColor = RGB(255)
-        streamDescriptionTextView.textContainerInset = UIEdgeInsetsMake(15, 15, 15, 15)
+        streamDescriptionTextView.textContainerInset = UIEdgeInsetsMake(formPadding, formPadding, formPadding, formPadding)
         streamDescriptionTextView.translatesAutoresizingMaskIntoConstraints = false
+        streamDescriptionTextView.inputAccessoryView = UIToolbar.styleWithButtons(self)
         contentView.addSubview(streamDescriptionTextView)
 
         hostBT.setTitle("Host", forState: .Normal)
@@ -94,42 +109,59 @@ class CreateStreamViewController: KZScrollViewController {
         tableView.registerReusableCell(HostStreamCell)
         contentView.addSubview(tableView)
 
+        keynode.animationsHandler = { [weak self] show, rect in
+            guard let me = self else {
+                return
+            }
+
+            if let con = me.scrollViewBottomConstraint {
+                con.constant = (show ? -rect.size.height + 54 : 0)
+                me.view.layoutIfNeeded()
+            }
+        }
+
         self.title = "Host Stream"
     }
 
     override func setupConstraints() {
         super.setupConstraints()
 
-        streamTypeSegmentControl.autoPinEdgeToSuperviewEdge(.Top, withInset: 15)
-        streamTypeSegmentControl.autoPinEdgeToSuperviewEdge(.Left, withInset: 15)
-        streamTypeSegmentControl.autoPinEdgeToSuperviewEdge(.Right, withInset: 15)
+        scrollView.autoPinEdgesToSuperviewEdgesWithInsets(UIEdgeInsetsZero, excludingEdge: .Bottom)
+        scrollViewBottomConstraint = scrollView.autoPinToBottomLayoutGuideOfViewController(self, withInset: 0)
+
+        contentView.autoPinEdgesToSuperviewEdgesWithInsets(UIEdgeInsetsZero)
+        contentView.autoMatchDimension(.Width, toDimension: .Width, ofView: view)
+
+        streamTypeSegmentControl.autoPinEdgeToSuperviewEdge(.Top, withInset: formPadding)
+        streamTypeSegmentControl.autoPinEdgeToSuperviewEdge(.Left, withInset: formPadding)
+        streamTypeSegmentControl.autoPinEdgeToSuperviewEdge(.Right, withInset: formPadding)
         streamTypeSegmentControl.autoSetDimension(.Height, toSize: 30)
 
-        streamNameTextField.autoPinEdge(.Top, toEdge: .Bottom, ofView: streamTypeSegmentControl, withOffset: 15)
-        streamNameTextField.autoPinEdgeToSuperviewEdge(.Left, withInset: 15)
-        streamNameTextField.autoPinEdgeToSuperviewEdge(.Right, withInset: 15)
+        streamNameTextField.autoPinEdge(.Top, toEdge: .Bottom, ofView: streamTypeSegmentControl, withOffset: formPadding)
+        streamNameTextField.autoPinEdgeToSuperviewEdge(.Left, withInset: formPadding)
+        streamNameTextField.autoPinEdgeToSuperviewEdge(.Right, withInset: formPadding)
         streamNameTextField.autoSetDimension(.Height, toSize: 50)
 
-        privacySwitch.autoPinEdge(.Top, toEdge: .Bottom, ofView: streamNameTextField, withOffset: 15)
+        privacySwitch.autoPinEdge(.Top, toEdge: .Bottom, ofView: streamNameTextField, withOffset: formPadding)
         privacySwitch.autoAlignAxisToSuperviewAxis(.Vertical)
-        privacySwitch.autoPinEdge(.Left, toEdge: .Right, ofView: publicLabel, withOffset: 15)
+        privacySwitch.autoPinEdge(.Left, toEdge: .Right, ofView: publicLabel, withOffset: formPadding)
         publicLabel.autoAlignAxis(.Horizontal, toSameAxisOfView: privacySwitch)
         privateLabel.autoAlignAxis(.Horizontal, toSameAxisOfView: privacySwitch)
-        privateLabel.autoPinEdge(.Left, toEdge: .Right, ofView: privacySwitch, withOffset: 15)
+        privateLabel.autoPinEdge(.Left, toEdge: .Right, ofView: privacySwitch, withOffset: formPadding)
 
-        passcodeTextField.autoPinEdge(.Top, toEdge: .Bottom, ofView: privacySwitch, withOffset: 15)
-        passcodeTextField.autoPinEdgeToSuperviewEdge(.Left, withInset: 15)
-        passcodeTextField.autoPinEdgeToSuperviewEdge(.Right, withInset: 15)
-        passcodeTextField.autoSetDimension(.Height, toSize: 50)
+        passcodePaddingConstraint = passcodeTextField.autoPinEdge(.Top, toEdge: .Bottom, ofView: privacySwitch, withOffset: 0)
+        passcodeTextField.autoPinEdgeToSuperviewEdge(.Left, withInset: formPadding)
+        passcodeTextField.autoPinEdgeToSuperviewEdge(.Right, withInset: formPadding)
+        passcodeHeightConstraint = passcodeTextField.autoSetDimension(.Height, toSize: 0)
 
-        streamDescriptionTextView.autoPinEdge(.Top, toEdge: .Bottom, ofView: passcodeTextField, withOffset: 15)
-        streamDescriptionTextView.autoPinEdgeToSuperviewEdge(.Left, withInset: 15)
-        streamDescriptionTextView.autoPinEdgeToSuperviewEdge(.Right, withInset: 15)
+        streamDescriptionTextView.autoPinEdge(.Top, toEdge: .Bottom, ofView: passcodeTextField, withOffset: formPadding)
+        streamDescriptionTextView.autoPinEdgeToSuperviewEdge(.Left, withInset: formPadding)
+        streamDescriptionTextView.autoPinEdgeToSuperviewEdge(.Right, withInset: formPadding)
         streamDescriptionTextView.autoSetDimension(.Height, toSize: 100)
 
-        hostBT.autoPinEdge(.Top, toEdge: .Bottom, ofView: streamDescriptionTextView, withOffset: 15)
-        hostBT.autoPinEdgeToSuperviewEdge(.Left, withInset: 15)
-        hostBT.autoPinEdgeToSuperviewEdge(.Right, withInset: 15)
+        hostBT.autoPinEdge(.Top, toEdge: .Bottom, ofView: streamDescriptionTextView, withOffset: formPadding)
+        hostBT.autoPinEdgeToSuperviewEdge(.Left, withInset: formPadding)
+        hostBT.autoPinEdgeToSuperviewEdge(.Right, withInset: formPadding)
         hostBT.autoSetDimension(.Height, toSize: 50)
 
         tableView.autoPinEdge(.Top, toEdge: .Bottom, ofView: hostBT, withOffset: 15)
@@ -139,9 +171,16 @@ class CreateStreamViewController: KZScrollViewController {
     }
 
     func togglePrivacy() {
-        passcodeTextField.enabled = privacySwitch.on
+        let enabled = privacySwitch.on
+        passcodeTextField.enabled = enabled
         passcodeTextField.text = ""
-        passcodeTextField.alpha = privacySwitch.on ? 1.0 : 0.7
+        passcodeTextField.alpha = enabled ? 1.0 : 0.7
+
+        UIView.animateWithDuration(0.2) {
+            self.passcodeHeightConstraint?.constant = enabled ? 50.0 : 0.0
+            self.passcodePaddingConstraint?.constant = enabled ? 14.0 : 0.0
+            self.view.layoutIfNeeded()
+        }
     }
 
     func host() {

@@ -93,6 +93,7 @@ if [[ "$CONFIGURATION" == "Debug" ]]; then
   install_framework "Pods-STM/KILabel.framework"
   install_framework "Pods-STM/KMPlaceholderTextView.framework"
   install_framework "Pods-STM/KZ.framework"
+  install_framework "Pods-STM/Keynode.framework"
   install_framework "Pods-STM/Kingfisher.framework"
   install_framework "Pods-STM/M13ProgressSuite.framework"
   install_framework "Pods-STM/PRTween.framework"
@@ -105,7 +106,6 @@ if [[ "$CONFIGURATION" == "Debug" ]]; then
   install_framework "Pods-STM/SocketIOClientSwift.framework"
   install_framework "Pods-STM/SpinKit.framework"
   install_framework "Pods-STM/StreamingKit.framework"
-  install_framework "Pods-STM/UIViewController_BHTKeyboardAnimationBlocks.framework"
 fi
 if [[ "$CONFIGURATION" == "Release" ]]; then
   install_framework "Pods-STM/AeroGearHttp.framework"
@@ -117,6 +117,7 @@ if [[ "$CONFIGURATION" == "Release" ]]; then
   install_framework "Pods-STM/KILabel.framework"
   install_framework "Pods-STM/KMPlaceholderTextView.framework"
   install_framework "Pods-STM/KZ.framework"
+  install_framework "Pods-STM/Keynode.framework"
   install_framework "Pods-STM/Kingfisher.framework"
   install_framework "Pods-STM/M13ProgressSuite.framework"
   install_framework "Pods-STM/PRTween.framework"
@@ -129,5 +130,4 @@ if [[ "$CONFIGURATION" == "Release" ]]; then
   install_framework "Pods-STM/SocketIOClientSwift.framework"
   install_framework "Pods-STM/SpinKit.framework"
   install_framework "Pods-STM/StreamingKit.framework"
-  install_framework "Pods-STM/UIViewController_BHTKeyboardAnimationBlocks.framework"
 fi
