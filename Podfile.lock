@@ -1,6 +1,5 @@
 PODS:
   - AeroGearHttp (0.5.1)
-  - Audiobus (2.3.1)
   - CocoaSecurity (1.2.4)
   - Crashlytics (3.7.0):
     - Fabric (~> 1.6.3)
@@ -38,7 +37,6 @@ PODS:
 
 DEPENDENCIES:
   - AeroGearHttp
-  - Audiobus
   - Crashlytics
   - DateTools
   - Fabric
@@ -65,7 +63,6 @@ DEPENDENCIES:
 
 SPEC CHECKSUMS:
   AeroGearHttp: 9eb405b694aa9ac5daff842f68648f4a9fe0fa66
-  Audiobus: d75ef3f0d625abf3007a147548423e76ca61043d
   CocoaSecurity: d288a6f87e0f363823d2cb83e753814a6944f71a
   Crashlytics: c3a2333dea9e2733d2777f730910321fc9e25c0d
   DateTools: 53288ee8b905fdc75897a1e6b5cc0144b14cba60

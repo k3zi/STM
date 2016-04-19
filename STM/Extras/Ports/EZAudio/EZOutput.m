@@ -61,25 +61,14 @@ static OSStatus RemoteIORenderCallback(void *inRefCon, AudioUnitRenderActionFlag
     audioBufferList->mBuffers[0].mDataByteSize = ioData->mBuffers[0].mDataByteSize;
     audioBufferList->mBuffers[0].mData = (STMAudioUnitSampleType *)malloc(ioData->mBuffers[0].mDataByteSize);
 
-    AudioTimeStamp timestamp = *inTimeStamp;
-
     if(output.inputMonitoring) {
-        if (ABReceiverPortIsConnected([output.outputDataSource port])) {
-            ABReceiverPortReceive([output.outputDataSource port], nil, ioData, inNumberFrames, &timestamp);
-        } else {
-            AudioUnitRender(output.converter3.audioUnit, ioActionFlags, inTimeStamp, inBusNumber, inNumberFrames, ioData);
-        }
-
+        AudioUnitRender(output.converter3.audioUnit, ioActionFlags, inTimeStamp, inBusNumber, inNumberFrames, ioData);
         memcpy(audioBufferList->mBuffers[0].mData, (char*)ioData->mBuffers[0].mData, ioData->mBuffers[0].mDataByteSize);
         [output convertToAAC:audioBufferList];
     } else {
         //1. Call Mixer Audio Unit (Which calls the EQs Converter and stores in seperate convertedEQBufferList)
         //2. Take Eqs copy and put in ioData
-        if (ABReceiverPortIsConnected([output.outputDataSource port])) {
-            ABReceiverPortReceive([output.outputDataSource port], nil, audioBufferList, inNumberFrames, &timestamp);
-        } else {
-            AudioUnitRender(output.converter3.audioUnit, ioActionFlags, inTimeStamp, inBusNumber, inNumberFrames, audioBufferList);
-        }
+        AudioUnitRender(output.converter3.audioUnit, ioActionFlags, inTimeStamp, inBusNumber, inNumberFrames, audioBufferList);
 
         //TODO: Pass in the format for the sampleRate
         [output convertToAAC:audioBufferList];

@@ -19,7 +19,6 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 
 	var shortcutItem: UIApplicationShortcutItem?
 	var currentUser: STMUser?
-	var audiobusController: ABAudiobusController?
 
 	func application(application: UIApplication, didFinishLaunchingWithOptions launchOptions: [NSObject: AnyObject]?) -> Bool {
 
@@ -125,13 +124,8 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
      - parameter withMic: Whether to allow recording
      */
     func setUpAudioSession(withMic withMic: Bool) {
-        if audiobusController == nil {
-            audiobusController = ABAudiobusController(apiKey: "MTQ1NzIzNjQ5MioqKlNUTSoqKnN0cmVhbXRvbWUtdjEuYXVkaW9idXM6Ly8qKipbYXVyZy5zdG1hLjEyNzAuMV0=:YeoBVYdmqfiWcC8mXNSC83mlrNK/MiZSY/tSDG88O+Jq66ODmyd+AsKpIvpYuUiIdvrIg7okBJOGMXFLXHJ10j3giwMtQTutVbPvBdRuvcpBrY1tPVDM1L4ltOXxdKIm")
-            audiobusController?.allowsConnectionsToSelf = true
-        }
-
         let category = withMic ? AVAudioSessionCategoryPlayAndRecord : AVAudioSessionCategoryPlayback
-        var options = AVAudioSessionCategoryOptions([.MixWithOthers])
+        var options = AVAudioSessionCategoryOptions()
         if withMic {
             options.insert(.DefaultToSpeaker)
         }

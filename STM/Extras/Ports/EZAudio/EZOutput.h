@@ -32,7 +32,6 @@
 #import "YBAudioUnit.h"
 #import <Accelerate/Accelerate.h>
 #import <UIKit/UIKit.h>
-#import <Audiobus/Audiobus.h>
 @class EZOutput;
 
 @protocol EZOutputDataSource <NSObject>
@@ -46,7 +45,6 @@
 - (void)setBarHeight:(int)barIndex height:(CGFloat)height;
 - (CGFloat)heightForVisualizer;
 - (int)numChannels;
-- (ABReceiverPort *)port;
 - (void)finishedCrossfade;
 @end
 

@@ -3,7 +3,6 @@ use_frameworks!
 
 target 'STM' do
     pod 'AeroGearHttp'
-    pod 'Audiobus'
     pod 'DateTools'
     pod 'Gloss'
     pod 'Hashids-Swift'

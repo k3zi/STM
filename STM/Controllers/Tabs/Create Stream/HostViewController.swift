@@ -27,8 +27,6 @@ class HostViewController: KZViewController, UISearchBarDelegate {
 	var songs = [Any]()
 	var upNextSongs = [Any]()
 	let engine = FUXEngine()
-	var audiobusController = AppDelegate.del().audiobusController
-	let receiverPort = ABReceiverPort(name: "STM Boroadcast", title: "STM Boroadcast Input")
 
 	var settings = HostSettings()
 	var playbackReachedEnd = true
@@ -1071,14 +1069,6 @@ extension HostViewController: EZOutputDataSource {
 		EZOutput.sharedOutput().mixerNode.setVolume(0.0, forBus: 1)
 		EZOutput.sharedOutput().startPlayback()
 		EZOutput.sharedOutput().inputMonitoring = true
-
-		let senderPort = ABSenderPort(name: "STM V+M", title: "Stream To Me: Voice + Music", audioComponentDescription: EZOutput.sharedOutput().component(), audioUnit: EZOutput.sharedOutput().remoteIONode().audioUnit)
-		senderPort.derivedFromLiveAudioSource = true
-		if let a = audiobusController {
-			a.addSenderPort(senderPort)
-			a.addReceiverPort(receiverPort)
-			receiverPort.clientFormat = EZOutput.sharedOutput().outputASBD
-		}
 	}
 
 	/**
@@ -1179,10 +1169,6 @@ extension HostViewController: EZOutputDataSource {
 
 	func heightForVisualizer() -> CGFloat {
 		return visualizer.frame.size.height
-	}
-
-	func port() -> ABReceiverPort {
-		return receiverPort
 	}
 
 	func setBarHeight(barIndex: Int32, height: CGFloat) {
