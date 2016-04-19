@@ -39,19 +39,19 @@ typedef NS_ENUM(NSUInteger, TWTRCardType){
 /**
  *  Title of the Card.
  */
-@property (nonatomic, readonly, copy, twtr_nullable) NSString *cardTitle;
+@property (nonatomic, readonly, copy, nullable) NSString *cardTitle;
 
 /**
  *  Description of the Card.
  */
-@property (nonatomic, readonly, copy, twtr_nullable) NSString *cardDescription;
+@property (nonatomic, readonly, copy, nullable) NSString *cardDescription;
 
 /**
  *  Unique image representing the content. Size of the image cannot exceed 1MB.
  *  The minimum dimensions can vary depending on the Card type. See https://dev.twitter.com/cards/types
  *  for more detailed requirements.
  */
-@property (nonatomic, readonly, twtr_nullable) UIImage *image;
+@property (nonatomic, readonly, nullable) UIImage *image;
 
 - (instancetype)init NS_UNAVAILABLE;
 
@@ -65,7 +65,7 @@ typedef NS_ENUM(NSUInteger, TWTRCardType){
  *
  *  @return A new instance of `TWTRCardConfiguration` for a Twitter App Card.
  */
-+ (TWTRCardConfiguration *)appCardConfigurationWithPromoImage:(UIImage *)promoImage iPhoneAppID:(twtr_nullable NSString *)iPhoneAppID iPadAppID:(twtr_nullable NSString *)iPadAppID googlePlayAppID:(twtr_nullable NSString *)googlePlayAppID;
++ (TWTRCardConfiguration *)appCardConfigurationWithPromoImage:(UIImage *)promoImage iPhoneAppID:(nullable NSString *)iPhoneAppID iPadAppID:(nullable NSString *)iPadAppID googlePlayAppID:(nullable NSString *)googlePlayAppID;
 
 @end
 

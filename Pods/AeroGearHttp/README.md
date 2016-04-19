@@ -1,6 +1,6 @@
 # aerogear-ios-http  [![Build Status](https://travis-ci.org/aerogear/aerogear-ios-http.png)](https://travis-ci.org/aerogear/aerogear-ios-http)
 
-> This module currently build with Xcode 7 and supports iOS7 [1], iOS8, iOS9.
+> This module currently build with Xcode 7.2 and supports iOS8, iOS9.
 
 Thin layer to take care of your http requests working with NSURLSession. 
 Taking care of: 
@@ -22,8 +22,6 @@ Taking care of:
 | Mailing lists:  | [aerogear-users](http://aerogear-users.1116366.n5.nabble.com/) ([subscribe](https://lists.jboss.org/mailman/listinfo/aerogear-users))  |
 |                 | [aerogear-dev](http://aerogear-dev.1069024.n5.nabble.com/) ([subscribe](https://lists.jboss.org/mailman/listinfo/aerogear-dev))  |
 
-**Note [1]**: Cocoapod central repo supports dynamic library from iOS8+. If you want to deploy on iOS7, use areoger-ios-http fom master source with its podspec pointing to iOS7.
-
 ## Example Usage
 
 To perform an HTTP request use the convenient methods found in the Http object. Here is an example usage:
@@ -31,11 +29,11 @@ To perform an HTTP request use the convenient methods found in the Http object. 
 ```swift
 let http = Http(baseURL: "http://server.com")
 
-http.GET("/get", completionHandler: {(response, error) in
+http.request(.GET, path: "/get", completionHandler: {(response, error) in
      // handle response
 })
 
-http.POST("/post",  parameters: ["key": "value"], 
+http.request(.POST, path: "/post",  parameters: ["key": "value"], 
                     completionHandler: {(response, error) in
      // handle response
 })
@@ -53,7 +51,7 @@ let credential = NSURLCredential(user: "john",
                                  password: "pass", 
                                  persistence: .None)
 
-http.GET("/protected/endpoint", credential: credential, 
+http.request(.GET, path: "/protected/endpoint", credential: credential, 
                                 completionHandler: {(response, error) in
    // handle response
 })
@@ -87,7 +85,7 @@ configuration.URLCredentialStorage = credentialStorage
 // assign custom configuration to Http
 var http = Http(baseURL: "http://httpbin.org", sessionConfig: configuration)
 
-http.GET("/protected/endpoint", completionHandler: {(response, error) in
+http.request(.GET, path: "/protected/endpoint", completionHandler: {(response, error) in
    // handle response
 })
 ```
@@ -111,9 +109,9 @@ pod install
 3. open AeroGearHttp.xcworkspace
 
 ## Adding the library to your project 
-To add the library in your project, you can either use [Cocoapods](http://cocoapods.org) or manual install in your project. See the respective sections below for instructions:
+To add the library in your project, you can either use [CocoaPods](http://cocoapods.org) or manual install in your project. See the respective sections below for instructions:
 
-### Using [Cocoapods](http://cocoapods.org)
+### Using [CocoaPods](http://cocoapods.org)
 Support for Swift frameworks is supported from [CocoaPods-0.36 release](http://blog.cocoapods.org/CocoaPods-0.36/) upwards. In your ```Podfile``` add:
 
 ```
