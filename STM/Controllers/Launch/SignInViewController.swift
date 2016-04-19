@@ -13,6 +13,7 @@ class SignInViewController: KZViewController {
     let crowdBGGradient = CAGradientLayer()
     let crowdBGGOverlay = CALayer()
 
+    let backBT = UIButton.styleForBackButton()
     let usernameTextField = UITextField.styledForLaunchScreen()
     let passwordTextField = UITextField.styledForLaunchScreen()
     let emailTextField = UITextField.styledForLaunchScreen()
@@ -32,6 +33,9 @@ class SignInViewController: KZViewController {
         crowdBG.contentMode = .ScaleAspectFill
         view.addSubview(crowdBG)
 
+        backBT.addTarget(self, action: #selector(SignInViewController.dismiss), forControlEvents: .TouchUpInside)
+        view.addSubview(backBT)
+
         //Fields
 
         usernameTextField.placeholder = "Username"
@@ -47,6 +51,12 @@ class SignInViewController: KZViewController {
         view.addSubview(signInBT)
     }
 
+    override func viewWillAppear(animated: Bool) {
+        super.viewWillAppear(animated)
+
+        usernameTextField.becomeFirstResponder()
+    }
+
     override func setupConstraints() {
         crowdBG.autoPinEdgesToSuperviewEdges()
 
@@ -56,7 +66,9 @@ class SignInViewController: KZViewController {
             view.autoSetDimension(.Height, toSize: 50)
         }
 
-        usernameTextField.autoPinToTopLayoutGuideOfViewController(self, withInset: 45)
+        backBT.autoPinToTopLayoutGuideOfViewController(self, withInset: 20)
+        backBT.autoPinEdgeToSuperviewEdge(.Left, withInset: 25)
+        usernameTextField.autoPinEdge(.Top, toEdge: .Bottom, ofView: backBT, withOffset: 30)
         passwordTextField.autoPinEdge(.Top, toEdge: .Bottom, ofView: usernameTextField, withOffset: 15)
         signInBT.autoPinEdge(.Top, toEdge: .Bottom, ofView: passwordTextField, withOffset: 15)
     }
@@ -97,6 +109,12 @@ class SignInViewController: KZViewController {
                 }
             })
         })
+    }
+
+    func dismiss() {
+        if let vc = self.navigationController {
+            vc.popViewControllerAnimated(true)
+        }
     }
 
 }

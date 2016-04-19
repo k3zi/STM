@@ -13,6 +13,7 @@ class CreateAccountViewController: KZViewController {
     let crowdBGGradient = CAGradientLayer()
     let crowdBGGOverlay = CALayer()
 
+    let backBT = UIButton.styleForBackButton()
     let displayNameTextField = UITextField.styledForLaunchScreen()
     let usernameTextField = UITextField.styledForLaunchScreen()
     let passwordTextField = UITextField.styledForLaunchScreen()
@@ -32,6 +33,9 @@ class CreateAccountViewController: KZViewController {
 
         crowdBG.contentMode = .ScaleAspectFill
         view.addSubview(crowdBG)
+
+        backBT.addTarget(self, action: #selector(CreateAccountViewController.dismiss), forControlEvents: .TouchUpInside)
+        view.addSubview(backBT)
 
         //Fields
 
@@ -65,12 +69,19 @@ class CreateAccountViewController: KZViewController {
             view.autoSetDimension(.Height, toSize: 50)
         }
 
-        displayNameTextField.autoPinToTopLayoutGuideOfViewController(self, withInset: 45)
-
+        backBT.autoPinToTopLayoutGuideOfViewController(self, withInset: 20)
+        backBT.autoPinEdgeToSuperviewEdge(.Left, withInset: 25)
+        displayNameTextField.autoPinEdge(.Top, toEdge: .Bottom, ofView: backBT, withOffset: 30)
         usernameTextField.autoPinEdge(.Top, toEdge: .Bottom, ofView: displayNameTextField, withOffset: 15)
         passwordTextField.autoPinEdge(.Top, toEdge: .Bottom, ofView: usernameTextField, withOffset: 15)
         emailTextField.autoPinEdge(.Top, toEdge: .Bottom, ofView: passwordTextField, withOffset: 15)
         createAccountBT.autoPinEdge(.Top, toEdge: .Bottom, ofView: emailTextField, withOffset: 15)
+    }
+
+    override func viewWillAppear(animated: Bool) {
+        super.viewWillAppear(animated)
+
+        displayNameTextField.becomeFirstResponder()
     }
 
     override func viewDidLayoutSubviews() {
@@ -78,6 +89,12 @@ class CreateAccountViewController: KZViewController {
 
         crowdBGGradient.frame = crowdBG.bounds
         crowdBGGOverlay.frame = crowdBG.bounds
+    }
+
+    func dismiss() {
+        if let vc = self.navigationController {
+            vc.popViewControllerAnimated(true)
+        }
     }
 
     func createAccount() {
@@ -117,8 +134,8 @@ class CreateAccountViewController: KZViewController {
         Constants.Network.POST("/createAccount", parameters: params, completionHandler: { (response, error) -> Void in
             self.handleResponse(response, error: error, successCompletion: { (result) -> Void in
                 Answers.logSignUpWithMethod("Email", success: true, customAttributes: [:])
-                if let vc = self.presentingViewController {
-                    vc.dismissViewControllerAnimated(true, completion: nil)
+                if let vc = self.navigationController {
+                    vc.popViewControllerAnimated(true)
                 }
             })
         })

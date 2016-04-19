@@ -29,8 +29,8 @@ extension UITextField {
     }
 
     func protectField() {
-        secureTextEntry = true
         unstyleField()
+        secureTextEntry = true
     }
 
 }

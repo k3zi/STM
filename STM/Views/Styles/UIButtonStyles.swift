@@ -10,6 +10,18 @@ import UIKit
 
 extension UIButton {
 
+    class func styleForBackButton() -> UIButton {
+        let button = ExtendedButton()
+        button.setImage(UIImage(named: "navBarBackBT"), forState: .Normal)
+        return button
+    }
+
+    class func styleForDismissButton() -> UIButton {
+        let button = ExtendedButton()
+        button.setImage(UIImage(named: "navBarDismissBT"), forState: .Normal)
+        return button
+    }
+
     class func styledForLaunchScreen() -> UIButton {
         let button = UIButton()
         button.titleLabel?.font = UIFont.systemFontOfSize(17, weight: UIFontWeightMedium)
