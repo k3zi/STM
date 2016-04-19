@@ -40,7 +40,7 @@ class CommentCell: KZTableViewCell {
         messageLabel.tintColor = Constants.Color.tint
 		self.contentView.addSubview(messageLabel)
 
-        timer = NSTimer.scheduledTimerWithTimeInterval(1.0, target: self, selector: Selector("updateTime"), userInfo: nil, repeats: true)
+        timer = NSTimer.scheduledTimerWithTimeInterval(1.0, target: self, selector: #selector(CommentCell.updateTime), userInfo: nil, repeats: true)
 	}
 
 	override func updateConstraints() {

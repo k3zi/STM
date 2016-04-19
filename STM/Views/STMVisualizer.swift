@@ -51,14 +51,12 @@ class STMVisualizer: UIView {
         }
     }
 
-    func setBarHeight(index: Int, var height: CGFloat) {
+    func setBarHeight(index: Int, height: CGFloat) {
         guard index < barConstraints.count else {
             return
         }
 
-        if isnan(height) || isinf(height) {
-            height = 1.0
-        }
+        let height = (isnan(height) || isinf(height)) ? 1.0 : height
 
         let barConstraint = barConstraints[index]
         UIView.animateWithDuration(1.0, delay: 0.0, options: .BeginFromCurrentState, animations: { () -> Void in

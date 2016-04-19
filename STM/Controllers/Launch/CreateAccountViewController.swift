@@ -52,7 +52,7 @@ class CreateAccountViewController: KZViewController {
         view.addSubview(emailTextField)
 
         createAccountBT.setTitle("Create Account", forState: .Normal)
-        createAccountBT.addTarget(self, action: Selector("createAccount"), forControlEvents: .TouchUpInside)
+        createAccountBT.addTarget(self, action: #selector(CreateAccountViewController.createAccount), forControlEvents: .TouchUpInside)
         view.addSubview(createAccountBT)
     }
 

@@ -43,7 +43,7 @@ class SignInViewController: KZViewController {
         view.addSubview(passwordTextField)
 
         signInBT.setTitle("Sign In", forState: .Normal)
-        signInBT.addTarget(self, action: Selector("signIn"), forControlEvents: .TouchUpInside)
+        signInBT.addTarget(self, action: #selector(SignInViewController.signIn), forControlEvents: .TouchUpInside)
         view.addSubview(signInBT)
     }
 

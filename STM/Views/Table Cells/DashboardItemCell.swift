@@ -107,7 +107,7 @@ class DashboardItemCell: KZTableViewCell, UICollectionViewDelegate, UICollection
         let lightBlurView = UIVisualEffectView()
         window.addSubview(lightBlurView)
 
-        let touchGesture = UITapGestureRecognizer(target: self, action: Selector("hideEffect"))
+        let touchGesture = UITapGestureRecognizer(target: self, action: #selector(DashboardItemCell.hideEffect))
         lightBlurView.addGestureRecognizer(touchGesture)
 
         let image = UIImage(view: cell)
@@ -117,7 +117,7 @@ class DashboardItemCell: KZTableViewCell, UICollectionViewDelegate, UICollection
 
         let infoHolderView = DashboardStreamInfoView(stream: stream)
         infoHolderView.startBT.tag = indexPath.row
-        infoHolderView.startBT.addTarget(self, action: Selector("startStreamClicked:"), forControlEvents: .TouchUpInside)
+        infoHolderView.startBT.addTarget(self, action: #selector(DashboardItemCell.startStreamClicked(_:)), forControlEvents: .TouchUpInside)
         infoHolderView.alpha = 0.0
         window.addSubview(infoHolderView)
 

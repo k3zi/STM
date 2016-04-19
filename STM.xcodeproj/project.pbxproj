@@ -29,7 +29,6 @@
 		EA24C0631C683F8300FE4DD0 /* MCSwipeCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = EA24C0621C683F8300FE4DD0 /* MCSwipeCell.swift */; };
 		EA24C0651C68418600FE4DD0 /* UpNextSongCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = EA24C0641C68418600FE4DD0 /* UpNextSongCell.swift */; };
 		EA27B1FC1C5D2D05006F269D /* STMStream.swift in Sources */ = {isa = PBXBuildFile; fileRef = EA27B1FB1C5D2D05006F269D /* STMStream.swift */; };
-		EA27B2021C5D3312006F269D /* KZPlayer.swift in Sources */ = {isa = PBXBuildFile; fileRef = EA27B1FE1C5D3312006F269D /* KZPlayer.swift */; };
 		EA27B2031C5D3312006F269D /* KZPlayerItem.swift in Sources */ = {isa = PBXBuildFile; fileRef = EA27B1FF1C5D3312006F269D /* KZPlayerItem.swift */; };
 		EA27B2041C5D3312006F269D /* KZPlayerPlaylist.swift in Sources */ = {isa = PBXBuildFile; fileRef = EA27B2001C5D3312006F269D /* KZPlayerPlaylist.swift */; };
 		EA27B2051C5D3312006F269D /* KZPlayerTag.swift in Sources */ = {isa = PBXBuildFile; fileRef = EA27B2011C5D3312006F269D /* KZPlayerTag.swift */; };
@@ -111,7 +110,6 @@
 		EA24C0621C683F8300FE4DD0 /* MCSwipeCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MCSwipeCell.swift; sourceTree = "<group>"; };
 		EA24C0641C68418600FE4DD0 /* UpNextSongCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = UpNextSongCell.swift; sourceTree = "<group>"; };
 		EA27B1FB1C5D2D05006F269D /* STMStream.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = STMStream.swift; sourceTree = "<group>"; };
-		EA27B1FE1C5D3312006F269D /* KZPlayer.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = KZPlayer.swift; sourceTree = "<group>"; };
 		EA27B1FF1C5D3312006F269D /* KZPlayerItem.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = KZPlayerItem.swift; sourceTree = "<group>"; };
 		EA27B2001C5D3312006F269D /* KZPlayerPlaylist.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = KZPlayerPlaylist.swift; sourceTree = "<group>"; };
 		EA27B2011C5D3312006F269D /* KZPlayerTag.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = KZPlayerTag.swift; sourceTree = "<group>"; };
@@ -359,7 +357,6 @@
 		EA27B1FD1C5D32F6006F269D /* Player */ = {
 			isa = PBXGroup;
 			children = (
-				EA27B1FE1C5D3312006F269D /* KZPlayer.swift */,
 				EA27B1FF1C5D3312006F269D /* KZPlayerItem.swift */,
 				EA27B2001C5D3312006F269D /* KZPlayerPlaylist.swift */,
 				EA27B2011C5D3312006F269D /* KZPlayerTag.swift */,
@@ -684,7 +681,6 @@
 				EA4F49841C5EC05700103559 /* KZPlayerInner.m in Sources */,
 				EA4F49661C5EBFA000103559 /* YBScheduledSoundPlayer.m in Sources */,
 				EA4F49701C5EC04C00103559 /* KZConverter.m in Sources */,
-				EA27B2021C5D3312006F269D /* KZPlayer.swift in Sources */,
 				EAFFCB151C87E59300258C16 /* ObjectiveCProcessing.m in Sources */,
 				EA4E494D1C617FA000CB40D7 /* GradientView.swift in Sources */,
 				EA27B2051C5D3312006F269D /* KZPlayerTag.swift in Sources */,

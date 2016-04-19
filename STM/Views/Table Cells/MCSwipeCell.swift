@@ -77,7 +77,7 @@ class MCSwipeCell: KZTableViewCell {
     required init(style: UITableViewCellStyle, reuseIdentifier: String?) {
         super.init(style: style, reuseIdentifier: reuseIdentifier)
 
-        _panGestureRecognizer.addTarget(self, action: Selector("handlePanGestureRecognizer:"))
+        _panGestureRecognizer.addTarget(self, action: #selector(MCSwipeCell.handlePanGestureRecognizer(_:)))
         self.addGestureRecognizer(_panGestureRecognizer)
         _panGestureRecognizer.delegate = self
     }

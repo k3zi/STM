@@ -178,7 +178,7 @@ class PlayerViewController: KZViewController, UISearchBarDelegate {
             songInfoHolderView.addSubview(label)
         }
 
-        rewindBT.addTarget(self, action: Selector("didPressRewindBT"), forControlEvents: .TouchUpInside)
+        rewindBT.addTarget(self, action: #selector(PlayerViewController.didPressRewindBT), forControlEvents: .TouchUpInside)
         rewindBT.setImage(UIImage(named: "rewindBT"), forState: .Normal)
         topView.addSubview(rewindBT)
     }

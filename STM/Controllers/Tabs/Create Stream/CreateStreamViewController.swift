@@ -54,7 +54,7 @@ class CreateStreamViewController: KZScrollViewController {
         passcodeTextField.enabled = false
         contentView.addSubview(passcodeTextField)
 
-        privacySwitch.addTarget(self, action: Selector("togglePrivacy"), forControlEvents: .ValueChanged)
+        privacySwitch.addTarget(self, action: #selector(CreateStreamViewController.togglePrivacy), forControlEvents: .ValueChanged)
         contentView.addSubview(privacySwitch)
 
         publicLabel.text = "Public Stream"
@@ -82,7 +82,7 @@ class CreateStreamViewController: KZScrollViewController {
         hostBT.layer.cornerRadius = 5
         hostBT.layer.borderColor = Constants.Color.tint.CGColor
         hostBT.layer.borderWidth = 1
-        hostBT.addTarget(self, action: Selector("host"), forControlEvents: .TouchUpInside)
+        hostBT.addTarget(self, action: #selector(CreateStreamViewController.host), forControlEvents: .TouchUpInside)
         contentView.addSubview(hostBT)
 
         tableView.delegate = self

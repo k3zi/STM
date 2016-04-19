@@ -77,7 +77,7 @@ public class FUXEngine: NSObject {
     }
 
     private func setupDisplayLink() {
-        _displayLink = CADisplayLink(target: self, selector: Selector("update:"))
+        _displayLink = CADisplayLink(target: self, selector: #selector(FUXEngine.update(_:)))
         _displayLink.addToRunLoop(NSRunLoop.mainRunLoop(), forMode: NSRunLoopCommonModes)
         _isRunning = true
     }

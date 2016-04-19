@@ -43,7 +43,7 @@ class MessageToolbarView: UIView, HPGrowingTextViewDelegate {
 		toolBarContainer.addSubview(toolBar)
 
 		sendBT.titleLabel?.font = UIFont.boldSystemFontOfSize(16)
-		sendBT.addTarget(self, action: Selector("send"), forControlEvents: .TouchUpInside)
+		sendBT.addTarget(self, action: #selector(MessageToolbarView.send), forControlEvents: .TouchUpInside)
 		sendBT.setTitle("Post", forState: .Normal)
 		sendBT.setTitleColor(RGB(255), forState: .Normal)
 		toolBarContainer.addSubview(sendBT)

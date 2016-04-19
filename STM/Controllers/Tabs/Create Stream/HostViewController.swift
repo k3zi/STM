@@ -133,7 +133,7 @@ class HostViewController: KZViewController, UISearchBarDelegate {
 		}
 
         fetchOnce()
-		NSTimer.scheduledTimerWithTimeInterval(1.5, target: self, selector: Selector("refresh"), userInfo: nil, repeats: true)
+		NSTimer.scheduledTimerWithTimeInterval(1.5, target: self, selector: #selector(HostViewController.refresh), userInfo: nil, repeats: true)
 	}
 
 	override func viewDidAppear(animated: Bool) {
@@ -330,7 +330,7 @@ class HostViewController: KZViewController, UISearchBarDelegate {
 		switcherControl.selectedSegmentIndex = 0
 		switcherControl.tintColor = Constants.Color.tint
 		switcherControl.setTitleTextAttributes([NSForegroundColorAttributeName: RGB(255)], forState: .Selected)
-		switcherControl.addTarget(self, action: Selector("didChangeSegmentIndex"), forControlEvents: .ValueChanged)
+		switcherControl.addTarget(self, action: #selector(HostViewController.didChangeSegmentIndex), forControlEvents: .ValueChanged)
 		switcherControlHolder.addSubview(switcherControl)
 
 		switcherScrollView.scrollEnabled = false
@@ -378,7 +378,7 @@ class HostViewController: KZViewController, UISearchBarDelegate {
 		recordSwitch.backgroundColor = RGB(255)
 		recordSwitch.layer.cornerRadius = 16.0
 		recordSwitch.onTintColor = RGB(232, g: 61, b: 14)
-		recordSwitch.addTarget(self, action: Selector("didToggleOnAir"), forControlEvents: .TouchUpInside)
+		recordSwitch.addTarget(self, action: #selector(HostViewController.didToggleOnAir), forControlEvents: .TouchUpInside)
 		broadcastingStatusBG.addSubview(recordSwitch)
 
 		recordingStatusLabel.text = "Not Broadcasting"
@@ -395,6 +395,7 @@ class HostViewController: KZViewController, UISearchBarDelegate {
 		settingsContentView.addSubview(settingsHeaderPlayback)
 
 		musicVolumeSlider.value = 1.0
+        musicVolumeSlider.addTarget(self, action: #selector(HostViewController.didChangeMusicVolume(_:)), forControlEvents: .ValueChanged)
 		let musicVolumeSettingView = SettingJoinedView(text: NSLocalizedString("Settings_HostMusicVolume", comment: "Music Volume"), detailText: NSLocalizedString("Settings_HostMusicVolumeDescription", comment: ""), control: musicVolumeSlider)
 		self.musicVolumeSettingView = musicVolumeSettingView
 		settingsContentView.addSubview(musicVolumeSettingView)
@@ -403,6 +404,7 @@ class HostViewController: KZViewController, UISearchBarDelegate {
 		settingsContentView.addSubview(settingsHeaderMicrophone)
 
 		micVolumeSlider.value = 1.0
+        micVolumeSlider.addTarget(self, action: #selector(HostViewController.didChangeMicVolume(_:)), forControlEvents: .ValueChanged)
 		let micVolumeSettingView = SettingJoinedView(text: NSLocalizedString("Settings_HostMicrophoneVolume", comment: "Microphone Volume"), detailText: NSLocalizedString("Settings_HostMicrophoneVolumeDescription", comment: ""), control: micVolumeSlider)
 		self.micVolumeSettingView = micVolumeSettingView
 		settingsContentView.addSubview(micVolumeSettingView)
@@ -432,12 +434,12 @@ class HostViewController: KZViewController, UISearchBarDelegate {
 
         pauseBT.setImage(UIImage(named: "toolbar_pauseOff"), forState: .Normal)
         pauseBT.setImage(UIImage(named: "toolbar_pauseOn"), forState: .Selected)
-        pauseBT.addTarget(self, action: Selector("togglePause"), forControlEvents: .TouchUpInside)
+        pauseBT.addTarget(self, action: #selector(HostViewController.togglePause), forControlEvents: .TouchUpInside)
         bottomBlurBar.addSubview(pauseBT)
 
 		micToggleBT.setImage(UIImage(named: "toolbar_micOff"), forState: .Normal)
 		micToggleBT.setImage(UIImage(named: "toolbar_micOn"), forState: .Selected)
-		micToggleBT.addTarget(self, action: Selector("toggleMic"), forControlEvents: .TouchUpInside)
+		micToggleBT.addTarget(self, action: #selector(HostViewController.toggleMic), forControlEvents: .TouchUpInside)
 		bottomBlurBar.addSubview(micToggleBT)
 
 		micIndicatorGradientView.gradientLayer.startPoint = CGPoint(x: 0.0, y: 0.5)
@@ -532,6 +534,14 @@ class HostViewController: KZViewController, UISearchBarDelegate {
 
 		view.endEditing(true)
 	}
+
+    func didChangeMusicVolume(sender: UISlider) {
+        EZOutput.sharedOutput().mixerNode.setVolume(sender.value, forBus: 0)
+    }
+
+    func didChangeMicVolume(sender: UISlider) {
+        EZOutput.sharedOutput().mixerNode.setVolume(sender.value, forBus: 1)
+    }
 
 	/**
 	 Refreshes various times & numbers
@@ -1075,9 +1085,9 @@ extension HostViewController: EZOutputDataSource {
 	 Start the AVAudioSession and add the remote commands
 	 */
 	func setUpAudioSession() {
-		MPRemoteCommandCenter.sharedCommandCenter().playCommand.addTarget(self, action: Selector("play"))
-		MPRemoteCommandCenter.sharedCommandCenter().pauseCommand.addTarget(self, action: Selector("pause"))
-		MPRemoteCommandCenter.sharedCommandCenter().nextTrackCommand.addTarget(self, action: Selector("next"))
+		MPRemoteCommandCenter.sharedCommandCenter().playCommand.addTarget(self, action: #selector(MPMediaPlayback.play))
+		MPRemoteCommandCenter.sharedCommandCenter().pauseCommand.addTarget(self, action: #selector(HostViewController.pause))
+		MPRemoteCommandCenter.sharedCommandCenter().nextTrackCommand.addTarget(self, action: #selector(HostViewController.next))
 
 		MPRemoteCommandCenter.sharedCommandCenter().playCommand.enabled = true
 		MPRemoteCommandCenter.sharedCommandCenter().pauseCommand.enabled = true

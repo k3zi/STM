@@ -36,11 +36,11 @@ class InitialViewController: KZViewController {
         //Buttons
 
         signInBT.setTitle("Sign In", forState: .Normal)
-        signInBT.addTarget(self, action: Selector("signIn"), forControlEvents: .TouchUpInside)
+        signInBT.addTarget(self, action: #selector(InitialViewController.signIn), forControlEvents: .TouchUpInside)
         view.addSubview(signInBT)
 
         createAccountBT.setTitle("Create An Account", forState: .Normal)
-        createAccountBT.addTarget(self, action: Selector("createAccount"), forControlEvents: .TouchUpInside)
+        createAccountBT.addTarget(self, action: #selector(InitialViewController.createAccount), forControlEvents: .TouchUpInside)
         view.addSubview(createAccountBT)
     }
 

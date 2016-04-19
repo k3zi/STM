@@ -44,11 +44,11 @@ struct Constants {
 
 	struct Network {
 		static func POST(url: String, parameters: [String: AnyObject]?, completionHandler: CompletionBlock) {
-			Constants.http.POST(url, parameters: parameters, credential: Constants.Config.systemCredentials, completionHandler: completionHandler)
+			Constants.http.request(.POST, path: url, parameters: parameters, credential: Constants.Config.systemCredentials, completionHandler: completionHandler)
 		}
 
 		static func GET(url: String, parameters: [String: AnyObject]?, completionHandler: CompletionBlock) {
-			Constants.http.GET(url, parameters: parameters, credential: Constants.Config.systemCredentials, completionHandler: completionHandler)
+			Constants.http.request(.GET, path: url, parameters: parameters, credential: Constants.Config.systemCredentials, completionHandler: completionHandler)
 		}
 	}
 }
