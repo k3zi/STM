@@ -196,7 +196,7 @@ static OSStatus EQConverterRenderCallback(void *inRefCon, AudioUnitRenderActionF
     if([UIApplication sharedApplication].applicationState == UIApplicationStateActive) {
         size_t length = frames;
         NSInteger sampleTally = 0;
-        NSInteger samplesPerPixel = floor((length / [EZOutput sharedOutput].outputASBD.mBytesPerFrame)/41);
+        NSInteger samplesPerPixel = floor((length / [EZOutput sharedOutput].outputASBD.mBytesPerFrame)/50);
         NSMutableData *fullSongData = [NSMutableData data];
         SInt16 maxValue = 0;
         float power = [[EZOutput sharedOutput].mixerNode averagePower];
@@ -275,8 +275,10 @@ static OSStatus EQConverterRenderCallback(void *inRefCon, AudioUnitRenderActionF
         for (int i = 0; i < sampleCount; i++) {
             float val = *samples++;
             val = fabsf(val * sampleAdjustmentFactor) * level;
-            if ((int)val == 0)
+            if ((int)val == 0) {
                 val = 1.0;
+            }
+
             dispatch_async(dispatch_get_main_queue(), ^{
                 [self.outputDataSource setBarHeight:i height:val];
             });
