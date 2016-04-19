@@ -38,7 +38,7 @@
     YBAudioUnitGraph *graph;
     YBAudioUnitNode *ioNode;
     double currentSampleRate;
-    int callCount;
+    double callCount;
 }
 @end
 
@@ -140,15 +140,15 @@ static OSStatus EQConverterRenderCallback(void *inRefCon, AudioUnitRenderActionF
         }
     }
 
-    if(callCount == 2) {
+    if ((CACurrentMediaTime() - callCount) > 0.1) {
         @autoreleasepool {
             NSData *data = [NSData dataWithBytes:audioBufferList->mBuffers[0].mData length:audioBufferList->mBuffers[0].mDataByteSize];
             [self playedDataPCM:data frames:(int)data.length];
             data = nil;
         }
-        callCount = 0;
+
+        callCount = CACurrentMediaTime();
     }
-    callCount++;
 
     if(!self.aacEncode) {
         NSData *data = [NSData dataWithBytes:audioBufferList->mBuffers[0].mData length:audioBufferList->mBuffers[0].mDataByteSize];

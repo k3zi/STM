@@ -394,11 +394,7 @@ extension PlayerViewController: MessageToolbarDelegate {
             return
         }
 
-        guard let streamID = stream.id else {
-            return
-        }
-
-        Constants.Network.GET("/stream/" + String(streamID) + "/comments", parameters: nil, completionHandler: { (response, error) -> Void in
+        Constants.Network.GET("/stream/\(stream.id)/comments", parameters: nil, completionHandler: { (response, error) -> Void in
             self.handleResponse(response, error: error, successCompletion: { (result) -> Void in
                 self.comments.removeAll()
                 if let result = result as? [JSON] {
@@ -540,16 +536,12 @@ extension PlayerViewController: STKAudioPlayerDelegate {
             return
         }
 
-        guard let streamID = stream.id else {
-            return
-        }
-
         guard let baseURL = NSURL(string: Constants.baseURL) else {
             return
         }
 
         let oForcePolling = SocketIOClientOption.ForcePolling(true)
-        let oAuth = SocketIOClientOption.ConnectParams(["streamID": streamID, "userID": userID, "stmHash": Constants.Config.streamHash])
+        let oAuth = SocketIOClientOption.ConnectParams(["streamID": stream.id, "userID": userID, "stmHash": Constants.Config.streamHash])
         let commentHost = SocketIOClientOption.Nsp("/comment")
         let commentOptions = [oForcePolling, commentHost, oAuth] as Set<SocketIOClientOption>
 

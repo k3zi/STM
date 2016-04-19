@@ -245,11 +245,7 @@ class CreateStreamViewController: KZViewController {
                 return
             }
 
-            guard let streamID = stream.id else {
-                return
-            }
-
-            Constants.Network.GET("/delete/stream/" + String(streamID), parameters: nil, completionHandler: { (response, error) -> Void in
+            Constants.Network.GET("/delete/stream/\(stream.id)", parameters: nil, completionHandler: { (response, error) -> Void in
                 self.handleResponse(response, error: error, successCompletion: { (result) -> Void in
                     self.items.removeAtIndex(indexPath.row)
                     tableView.reloadSections(NSIndexSet(index: 0), withRowAnimation: .Fade)

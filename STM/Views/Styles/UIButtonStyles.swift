@@ -31,6 +31,8 @@ extension UIButton {
         button.titleLabel?.font = UIFont.systemFontOfSize(17, weight: UIFontWeightMedium)
         button.setTitleColor(RGB(255), forState: .Normal)
         button.setBackgroundColor(Constants.Color.tint, forState: .Normal)
+        button.setBackgroundColor(Constants.Color.off, forState: .Disabled)
+        button.enabled = false
         button.clipsToBounds = true
 
         return button

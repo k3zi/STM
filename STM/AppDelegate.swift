@@ -131,7 +131,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         }
 
 		do {
-			try AVAudioSession.sharedInstance().setPreferredIOBufferDuration(0.04)
+			try AVAudioSession.sharedInstance().setPreferredIOBufferDuration(0.006)
 			try AVAudioSession.sharedInstance().setPreferredSampleRate(44100)
 			try AVAudioSession.sharedInstance().setCategory(category, withOptions: options)
 			try AVAudioSession.sharedInstance().setActive(true)

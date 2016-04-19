@@ -116,7 +116,7 @@ class HostViewController: KZViewController, UISearchBarDelegate {
         keynode.animationsHandler = { [weak self] show, rect in
             if let me = self {
                 if let con = me.commentFieldKeyboardConstraint {
-                    con.constant = (show ? -rect.size.height + 44 : 0)
+                    con.constant = (show ? -rect.size.height : 0)
                     me.view.layoutIfNeeded()
                 }
             }
@@ -845,11 +845,7 @@ extension HostViewController: MessageToolbarDelegate {
             return
         }
 
-        guard let streamID = stream.id else {
-            return
-        }
-
-        Constants.Network.GET("/stream/" + String(streamID) + "/comments", parameters: nil, completionHandler: { (response, error) -> Void in
+        Constants.Network.GET("/stream/\(stream.id)/comments", parameters: nil, completionHandler: { (response, error) -> Void in
             self.handleResponse(response, error: error, successCompletion: { (result) -> Void in
                 self.comments.removeAll()
                 if let result = result as? [JSON] {
@@ -996,10 +992,6 @@ extension HostViewController: EZOutputDataSource {
             return
         }
 
-        guard let streamID = stream.id else {
-            return
-        }
-
         guard let securityHash = stream.securityHash else {
             return
         }
@@ -1011,7 +1003,7 @@ extension HostViewController: EZOutputDataSource {
         let oForcePolling = SocketIOClientOption.ForcePolling(true)
         let oHost = SocketIOClientOption.Nsp("/host")
         let streamQueue = SocketIOClientOption.HandleQueue(backgroundQueue)
-        let oAuth = SocketIOClientOption.ConnectParams(["streamID": streamID, "securityHash": securityHash, "userID": userID, "stmHash": Constants.Config.streamHash])
+        let oAuth = SocketIOClientOption.ConnectParams(["streamID": stream.id, "securityHash": securityHash, "userID": userID, "stmHash": Constants.Config.streamHash])
         let options = [oForcePolling, oHost, oAuth, streamQueue] as Set<SocketIOClientOption>
 
         self.socket = SocketIOClient(socketURL: baseURL, options: options)

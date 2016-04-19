@@ -244,8 +244,6 @@
 			isa = PBXGroup;
 			children = (
 				EA01AF951C5CC48700F56792 /* CreateStreamViewController.swift */,
-				EA01AF971C5CD67E00F56792 /* HostViewController.swift */,
-				EACD2B3F1C75996600A6CFD6 /* HostInfoHolderView.swift */,
 			);
 			path = "Create Stream";
 			sourceTree = "<group>";
@@ -315,6 +313,7 @@
 		EA09CAC01C5C447E0067FF6A /* Controllers */ = {
 			isa = PBXGroup;
 			children = (
+				EA54E5C61CC692590033135B /* Host */,
 				EAFFCB101C876F1700258C16 /* Player */,
 				EA09CAD51C5C89430067FF6A /* Launch */,
 				EA01AF8B1C5CB6FA00F56792 /* Tabs */,
@@ -469,6 +468,15 @@
 				EA54E5C11CC5D8210033135B /* UIToolbarStyles.swift */,
 			);
 			path = Styles;
+			sourceTree = "<group>";
+		};
+		EA54E5C61CC692590033135B /* Host */ = {
+			isa = PBXGroup;
+			children = (
+				EA01AF971C5CD67E00F56792 /* HostViewController.swift */,
+				EACD2B3F1C75996600A6CFD6 /* HostInfoHolderView.swift */,
+			);
+			path = Host;
 			sourceTree = "<group>";
 		};
 		EAB0E6991C78138F008945FF /* Tween */ = {
