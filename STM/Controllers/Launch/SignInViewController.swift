@@ -97,7 +97,12 @@ class SignInViewController: KZViewController {
             return showError("No Password Entered")
         }
 
+        signInBT.showIndicator()
+        backBT.enabled = false
+
         Constants.Network.POST("/signIn", parameters: ["username": username, "password": password], completionHandler: { (response, error) -> Void in
+            self.signInBT.hideIndicator()
+            self.backBT.enabled = true
             self.handleResponse(response, error: error, successCompletion: { (result) -> Void in
                 Constants.Settings.setSecretObject(result, forKey: "user")
 

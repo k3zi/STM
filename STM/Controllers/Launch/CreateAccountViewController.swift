@@ -131,7 +131,12 @@ class CreateAccountViewController: KZViewController {
         }
 
         let params = ["displayName" : displayName, "username": username, "password": password, "email": email]
+
+        createAccountBT.showIndicator()
+        backBT.enabled = false
         Constants.Network.POST("/createAccount", parameters: params, completionHandler: { (response, error) -> Void in
+            self.createAccountBT.hideIndicator()
+            self.backBT.enabled = true
             self.handleResponse(response, error: error, successCompletion: { (result) -> Void in
                 Answers.logSignUpWithMethod("Email", success: true, customAttributes: [:])
                 if let vc = self.navigationController {

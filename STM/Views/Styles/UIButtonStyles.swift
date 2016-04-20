@@ -8,6 +8,8 @@
 
 import UIKit
 
+let indicatorViewTag = 10001
+
 extension UIButton {
 
     class func styleForBackButton() -> UIButton {
@@ -48,6 +50,42 @@ extension UIButton {
         button.clipsToBounds = true
 
         return button
+    }
+
+    func showIndicator() {
+        hideIndicator()
+        self.enabled = false
+
+        let indicatorView = UIView()
+        indicatorView.alpha = 0.0
+        indicatorView.backgroundColor = RGB(255)
+        indicatorView.tag = indicatorViewTag
+        self.addSubview(indicatorView)
+
+        let indicator = UIActivityIndicatorView(activityIndicatorStyle: .Gray)
+        indicator.color = Constants.Color.tint
+        indicatorView.addSubview(indicator)
+        indicator.startAnimating()
+
+        indicatorView.autoPinEdgesToSuperviewEdges()
+        indicator.autoAlignAxisToSuperviewAxis(.Horizontal)
+        indicator.autoAlignAxisToSuperviewAxis(.Vertical)
+        self.layoutIfNeeded()
+
+        UIView.animateWithDuration(0.4) {
+            indicatorView.alpha = 1.0
+        }
+    }
+
+    func hideIndicator() {
+        self.enabled = true
+        if let view = self.viewWithTag(indicatorViewTag) {
+            UIView.animateWithDuration(0.4, animations: {
+                view.alpha = 0.0
+                }, completion: { (finished) in
+                    view.removeFromSuperview()
+            })
+        }
     }
 
 }
