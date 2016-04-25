@@ -23,6 +23,10 @@
     SInt16 maxValue = 0;
     size_t length = frames;
 
+    if (size.width == 0) {
+        return;
+    }
+
     @autoreleasepool {
         NSInteger samplesPerPixel = floor((length / bytesPerFrame)/50);
         NSInteger sampleTally = 0;

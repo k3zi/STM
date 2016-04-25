@@ -41,18 +41,22 @@ class HostViewController: KZViewController, UISearchBarDelegate {
 	var hud: M13ProgressHUD?
 
 	let topView = UIView()
+    var topViewHeightConstraint: NSLayoutConstraint?
+    let dismissBT = UIButton.styleForDismissButton()
+    var dismissBTTopPadding: NSLayoutConstraint?
+    let miscBT = UIButton.styleForMiscButton()
 	let albumPoster = UIImageView()
 	let gradientView = GradientView()
 	let gradientColorView = UIView()
 	let visualizer = STMVisualizer()
 
 	let songInfoHolderView = UIView()
-	var songInfoHolderViewTopPadding: NSLayoutConstraint? = nil
+	var songInfoHolderViewTopPadding: NSLayoutConstraint?
 	let songInfoLabel1 = UILabel()
 	let songInfoLabel2 = UILabel()
 	let songInfoLabel3 = UILabel()
 
-	let switcherControl = UISegmentedControl(items: ["Songs", "Queue", "Comments", "Settings"])
+	let switcherControl = UISegmentedControl(items: ["Media", "Queue", "Timeline", "Settings"])
 	let switcherControlHolder = UIView()
 	let switcherScrollView = UIScrollView()
 	let switcherContentView = UIView()
@@ -103,6 +107,16 @@ class HostViewController: KZViewController, UISearchBarDelegate {
 	var commentFieldKeyboardConstraint: NSLayoutConstraint?
     lazy var keynode: Keynode.Connector = Keynode.Connector(view: self.view)
 
+    init() {
+        super.init(nibName: nil, bundle: nil)
+
+        self.modalPresentationStyle = .OverCurrentContext
+    }
+
+    required init?(coder aDecoder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
+    }
+
 	override func viewDidLoad() {
 		super.viewDidLoad()
 		view.backgroundColor = RGB(0)
@@ -140,7 +154,13 @@ class HostViewController: KZViewController, UISearchBarDelegate {
 
 		// Top View
 		topView.autoPinEdgesToSuperviewEdgesWithInsets(UIEdgeInsetsZero, excludingEdge: .Bottom)
-		topView.autoMatchDimension(.Height, toDimension: .Height, ofView: view, withMultiplier: 0.334)
+		topViewHeightConstraint = topView.autoMatchDimension(.Height, toDimension: .Height, ofView: view, withMultiplier: 0.334)
+
+        dismissBTTopPadding = dismissBT.autoPinEdgeToSuperviewEdge(.Top, withInset: 25)
+        dismissBT.autoPinEdgeToSuperviewEdge(.Left, withInset: 20)
+
+        miscBT.autoAlignAxis(.Horizontal, toSameAxisOfView: dismissBT)
+        miscBT.autoPinEdgeToSuperviewEdge(.Right, withInset: 20)
 
 		albumPoster.autoPinEdgesToSuperviewEdges()
 
@@ -150,7 +170,7 @@ class HostViewController: KZViewController, UISearchBarDelegate {
 		visualizer.autoPinEdgesToSuperviewEdgesWithInsets(UIEdgeInsets(top: 0, left: 0, bottom: 0, right: 0))
 
 		// Info Holder
-		songInfoHolderViewTopPadding = songInfoHolderView.autoAlignAxis(.Horizontal, toSameAxisOfView: topView, withOffset: 5)
+		songInfoHolderViewTopPadding = songInfoHolderView.autoAlignAxis(.Horizontal, toSameAxisOfView: topView, withOffset: 15)
 		songInfoHolderView.autoAlignAxisToSuperviewAxis(.Vertical)
 		songInfoHolderView.autoPinEdgeToSuperviewEdge(.Left, withInset: 20)
 		songInfoHolderView.autoPinEdgeToSuperviewEdge(.Right, withInset: 20)
@@ -288,6 +308,7 @@ class HostViewController: KZViewController, UISearchBarDelegate {
 		view.addSubview(topView)
 
 		albumPoster.contentMode = .ScaleAspectFill
+        albumPoster.clipsToBounds = true
 		topView.addSubview(albumPoster)
 
 		gradientView.gradientLayer.colors = [RGB(0, a: 0).CGColor, RGB(0, a: 0).CGColor, RGB(0).CGColor]
@@ -299,8 +320,14 @@ class HostViewController: KZViewController, UISearchBarDelegate {
 
 		topView.addSubview(visualizer)
 
+        dismissBT.addTarget(self, action: #selector(HostViewController.toggleDismiss), forControlEvents: .TouchUpInside)
+        topView.addSubview(dismissBT)
+
+        miscBT.addTarget(self, action: #selector(HostViewController.showMenu), forControlEvents: .TouchUpInside)
+        topView.addSubview(miscBT)
+
 		topView.addSubview(songInfoHolderView)
-			[songInfoLabel1, songInfoLabel2, songInfoLabel3].forEach { (label) -> () in
+        [songInfoLabel1, songInfoLabel2, songInfoLabel3].forEach { (label) -> () in
 			label.textAlignment = .Center
 			label.textColor = RGB(255)
 			if label != songInfoLabel1 {
@@ -348,6 +375,7 @@ class HostViewController: KZViewController, UISearchBarDelegate {
         commentsTableView.delegate = self
         commentsTableView.dataSource = self
         commentsTableView.registerReusableCell(CommentCell)
+        commentsTableView.registerReusableCell(TimelineItemCell)
 		switcherContentView.addSubview(commentContentView)
 		commentContentView.addSubview(commentsTableView)
 
@@ -401,7 +429,7 @@ class HostViewController: KZViewController, UISearchBarDelegate {
 		settingsContentView.addSubview(micVolumeSettingView)
 
 		micActiveMusicVolumeSlider.value = 0.2
-        musicVolumeSlider.addTarget(self, action: #selector(HostViewController.didChangeMusicVolumeMicActive(_:)), forControlEvents: .ValueChanged)
+        micActiveMusicVolumeSlider.addTarget(self, action: #selector(HostViewController.didChangeMusicVolumeMicActive(_:)), forControlEvents: .ValueChanged)
 		let micActiveMusicVolumeSettingView = SettingJoinedView(text: NSLocalizedString("Settings_HostMusicVolumeWhenMicActive", comment: "Music Volume When Mic Active"), detailText: NSLocalizedString("Settings_HostMusicVolumeWhenMicActiveDescription", comment: ""), control: micActiveMusicVolumeSlider)
 		self.micActiveMusicVolumeSettingView = micActiveMusicVolumeSettingView
 		settingsContentView.addSubview(micActiveMusicVolumeSettingView)
@@ -452,14 +480,152 @@ class HostViewController: KZViewController, UISearchBarDelegate {
 
 	// MARK: View Changes/Updates
 
-	/**
-	 Dismiss the host player view controller
-	 */
-	func dismiss() {
-		if let vc = presentingViewController {
-			vc.dismissViewControllerAnimated(true, completion: nil)
-		}
-	}
+    /**
+     Close the host player view controller
+     */
+    func close() {
+
+        audioFile0 = nil
+        audioFile1 = nil
+
+        delay(1.0) {
+            self.stop()
+        }
+
+        guard let holderView = view.superview else {
+            return
+        }
+
+        guard let pVC = self.presentingViewController as? UITabBarController else {
+            return
+        }
+
+        self.view.endEditing(true)
+
+        func innerClose() {
+            if let vc = presentingViewController {
+                vc.dismissViewControllerAnimated(true, completion: nil)
+            }
+        }
+
+        if self.dismissBT.selected {
+            let oldHeight = holderView.frame.origin.y + 40
+            UIView.animateWithDuration(0.4, animations: {
+                holderView.frame.origin.y += 40
+                pVC.view.frame.size.height = oldHeight
+                pVC.view.layoutSubviews()
+                }, completion: { (finished) in
+                    innerClose()
+            })
+        } else {
+            innerClose()
+        }
+    }
+
+    func showMenu() {
+        let menu = UIAlertController(title: "Host Menu", message: nil, preferredStyle: .ActionSheet)
+        menu.popoverPresentationController?.sourceView = miscBT
+
+        menu.addAction(UIAlertAction(title: "Share", style: .Default, handler: { (action) in
+            self.showShareDialog()
+        }))
+
+        menu.addAction(UIAlertAction(title: "Close Stream", style: .Destructive, handler: { (action) in
+            self.close()
+        }))
+
+        menu.addAction(UIAlertAction(title: "Cancel", style: .Cancel, handler: nil))
+
+        presentViewController(menu, animated: true, completion: nil)
+    }
+
+    func showShareDialog() {
+        guard let stream = stream else {
+            return
+        }
+
+        let streamURL = stream.url()
+        let vc = UIActivityViewController(activityItems: [streamURL], applicationActivities: nil)
+        self.presentViewController(vc, animated: true, completion: nil)
+    }
+
+    func toggleDismiss() {
+        innerToggleDismiss(nil)
+    }
+
+    /**
+     Minimizes or maximizes the host player view controller
+     */
+    func innerToggleDismiss(minimize: Bool? = nil) {
+        guard let holderView = view.superview else {
+            return
+        }
+
+        guard let pVC = self.presentingViewController as? UITabBarController else {
+            return
+        }
+
+        guard let minimize = minimize != nil ? minimize : !self.dismissBT.selected else {
+            return
+        }
+
+        pVC.view.superview?.backgroundColor = RGB(0)
+        self.view.endEditing(true)
+
+        if minimize && !self.dismissBT.selected {
+            pVC.view.frame.size.height = pVC.view.frame.size.height - 40
+            pVC.view.layoutSubviews()
+            pVC.selectedIndex = 0
+
+            UIView.animateWithDuration(0.4, animations: {
+                holderView.frame.origin.y = pVC.view.frame.size.height
+
+                self.dismissBTTopPadding?.constant = 10
+                self.dismissBT.selected = true
+            })
+        } else if !minimize && self.dismissBT.selected {
+            let oldHeight = holderView.frame.origin.y + 40
+            UIView.animateWithDuration(0.4, animations: {
+                holderView.frame.origin.y = 0
+
+                self.dismissBTTopPadding?.constant = 25
+                self.dismissBT.selected = false
+                }, completion: { (finished) in
+                    pVC.view.frame.size.height = oldHeight
+                    pVC.view.layoutSubviews()
+            })
+        }
+    }
+
+    func toggleTop(show: Bool? = nil) {
+        guard let con = topViewHeightConstraint else {
+            return
+        }
+
+        let isShown = con.constant != 109
+
+        if let show = (show != nil ? show : !isShown) {
+            guard isShown != show else {
+                return
+            }
+
+            con.autoRemove()
+
+            UIView.animateWithDuration(0.4, animations: {
+                self.innerToggleTop(show)
+            })
+        }
+    }
+
+    private func innerToggleTop(show: Bool) {
+        if show {
+            topViewHeightConstraint = topView.autoMatchDimension(.Height, toDimension: .Height, ofView: view, withMultiplier: 0.334)
+        } else {
+            topViewHeightConstraint = topView.autoSetDimension(.Height, toSize: 109)
+        }
+
+        view.layoutIfNeeded()
+    }
 
 	/**
 	 Toggles the extended layout of the toolbar
@@ -467,14 +633,16 @@ class HostViewController: KZViewController, UISearchBarDelegate {
 	 - parameter show: whether to extend(true) or collapse(false) the toolbar
 	 */
 	func toggleToolbar(show: Bool? = nil) {
-		if let con = bottomBlurBarConstraint {
-			if let show = show != nil ? show : (con.constant == 44) {
-				UIView.animateWithDuration(0.5, animations: { () -> Void in
-					con.constant = show ? 0 : 44
-					self.view.layoutIfNeeded()
-				})
-			}
-		}
+        guard let con = bottomBlurBarConstraint else {
+            return
+        }
+
+        if let show = show != nil ? show : (con.constant == 44) {
+            UIView.animateWithDuration(0.5, animations: { () -> Void in
+                con.constant = show ? 0 : 44
+                self.view.layoutIfNeeded()
+            })
+        }
 	}
 
     func togglePause() {
@@ -600,11 +768,11 @@ class HostViewController: KZViewController, UISearchBarDelegate {
 		}
 
 		if (songInfoLabel2.text?.characters.count == 0 && songInfoLabel3.text?.characters.count == 0) || (songInfoLabel2.text == nil || songInfoLabel3.text == nil) {
-			songInfoHolderViewTopPadding?.constant = 5
+			songInfoHolderViewTopPadding?.constant = 15
 		} else if (songInfoLabel2.text?.characters.count != 0 && songInfoLabel3.text?.characters.count != 0) || (songInfoLabel2.text != nil && songInfoLabel3.text != nil) {
-			songInfoHolderViewTopPadding?.constant = -5
+			songInfoHolderViewTopPadding?.constant = 5
 		} else {
-			songInfoHolderViewTopPadding?.constant = 0
+			songInfoHolderViewTopPadding?.constant = 10
 		}
 
 		songInfoHolderView.layoutIfNeeded()
@@ -656,7 +824,11 @@ class HostViewController: KZViewController, UISearchBarDelegate {
 		} else if tableView == queueTableView {
 			return UpNextSongCell.self
         } else if tableView == commentsTableView {
-            return CommentCell.self
+            if comments[indexPath?.row ?? 0] is STMTimelineItem {
+                return TimelineItemCell.self
+            } else {
+                return CommentCell.self
+            }
         }
 
 		return super.tableViewCellClass(tableView, indexPath: indexPath)
@@ -752,6 +924,18 @@ class HostViewController: KZViewController, UISearchBarDelegate {
         }
     }
 
+    override func tableView(tableView: UITableView, didSelectRowAtIndexPath indexPath: NSIndexPath) {
+        super.tableView(tableView, didSelectRowAtIndexPath: indexPath)
+    }
+
+    override func tableView(tableView: UITableView, heightForRowAtIndexPath indexPath: NSIndexPath) -> CGFloat {
+        return UITableViewAutomaticDimension
+    }
+
+    func tableView(tableView: UITableView, estimatedHeightForRowAtIndexPath indexPath: NSIndexPath) -> CGFloat {
+        return 50
+    }
+
 	// MARK: UISearchBar Delegate
 	func searchBarTextDidBeginEditing(searchBar: UISearchBar) {
 		searchBar.setShowsCancelButton(true, animated: true)
@@ -837,21 +1021,35 @@ extension HostViewController: MessageToolbarDelegate {
                 let isAtBottom = commentsTableView.indexPathsForVisibleRows?.contains({ $0.row == (comments.count - 1) })
                 let shouldScrollDown = (didPostComment ?? false) || (isAtBottom ?? false)
                 comments.append(comment)
-
-                dispatch_async(dispatch_get_main_queue(), { () -> Void in
-                    if self.comments.count > 1 {
-                        self.commentsTableView.beginUpdates()
-                        self.commentsTableView.insertRowsAtIndexPaths([NSIndexPath(forRow: self.comments.count - 1, inSection: 0)], withRowAnimation: .Fade)
-                        self.commentsTableView.endUpdates()
-                        if shouldScrollDown {
-                            self.commentsTableView.scrollToBottom(true)
-                        }
-                    } else {
-                        self.commentsTableView.reloadSections(NSIndexSet(index: 0), withRowAnimation: .Fade)
-                    }
-                })
+                didUpdateComments(shouldScrollDown)
             }
         }
+    }
+
+    func didReciveUserJoined(response: AnyObject) {
+        if let result = response as? JSON {
+            if let user = STMTimelineItem(json: result) {
+                let isAtBottom = commentsTableView.indexPathsForVisibleRows?.contains({ $0.row == (comments.count - 1) })
+                let shouldScrollDown = (didPostComment ?? false) || (isAtBottom ?? false)
+                comments.append(user)
+                didUpdateComments(shouldScrollDown)
+            }
+        }
+    }
+
+    func didUpdateComments(shouldScrollDown: Bool) {
+        dispatch_async(dispatch_get_main_queue(), { () -> Void in
+            if self.comments.count > 1 {
+                self.commentsTableView.beginUpdates()
+                self.commentsTableView.insertRowsAtIndexPaths([NSIndexPath(forRow: self.comments.count - 1, inSection: 0)], withRowAnimation: .Fade)
+                self.commentsTableView.endUpdates()
+                if shouldScrollDown {
+                    self.commentsTableView.scrollToBottom(true)
+                }
+            } else {
+                self.commentsTableView.reloadSections(NSIndexSet(index: 0), withRowAnimation: .Fade)
+            }
+        })
     }
 
     func fetchOnce() {
@@ -928,7 +1126,7 @@ extension HostViewController {
 					if let hud = self.hud {
 						hud.dismiss(true)
 					}
-					self.dismiss()
+					self.close()
 					callback(false, error)
 				})
 			})
@@ -976,7 +1174,7 @@ extension HostViewController {
 				if let hud = self.hud {
 					hud.dismiss(true)
 				}
-				self.dismiss()
+				self.close()
 				callback(false, error)
 			})
 		})
@@ -1010,7 +1208,7 @@ extension HostViewController: EZOutputDataSource {
             return
         }
 
-        guard let baseURL = NSURL(string: Constants.baseURL) else {
+        guard let baseURL = NSURL(string: Constants.Config.apiBaseURL) else {
             return
         }
 
@@ -1018,7 +1216,9 @@ extension HostViewController: EZOutputDataSource {
         let oHost = SocketIOClientOption.Nsp("/host")
         let streamQueue = SocketIOClientOption.HandleQueue(backgroundQueue)
         let oAuth = SocketIOClientOption.ConnectParams(["streamID": stream.id, "securityHash": securityHash, "userID": userID, "stmHash": Constants.Config.streamHash])
-        let options = [oForcePolling, oHost, oAuth, streamQueue] as Set<SocketIOClientOption>
+        let oLog = SocketIOClientOption.Log(false)
+        let oForceNew = SocketIOClientOption.ForceNew(true)
+        let options = [oForcePolling, oHost, oAuth, streamQueue, oForceNew] as Set<SocketIOClientOption>
 
         self.socket = SocketIOClient(socketURL: baseURL, options: options)
         if let socket = self.socket {
@@ -1030,16 +1230,19 @@ extension HostViewController: EZOutputDataSource {
         }
 
         let commentHost = SocketIOClientOption.Nsp("/comment")
-        let commentQueue = SocketIOClientOption.HandleQueue(commentBackgroundQueue)
-        let commentOptions = [oForcePolling, commentHost, oAuth, commentQueue] as Set<SocketIOClientOption>
+        let commentOptions = [oForcePolling, commentHost, oAuth, oLog, oForceNew] as Set<SocketIOClientOption>
         self.commentSocket = SocketIOClient(socketURL: baseURL, options: commentOptions)
         if let socket = self.commentSocket {
             socket.on("connect") { data, ack in
-                print("Comment Socket Connected")
+                print("Comment: Socket Connected")
             }
 
             socket.on("newComment") { data, ack in
                 self.didReciveComment(data[0])
+            }
+
+            socket.on("item") { data, ack in
+                self.didReciveUserJoined(data[0])
             }
 
             socket.connect()

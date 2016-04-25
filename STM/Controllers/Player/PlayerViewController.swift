@@ -24,6 +24,8 @@ class PlayerViewController: KZViewController, UISearchBarDelegate {
     var hud: M13ProgressHUD?
 
     let topView = UIView()
+    let dismissBT = UIButton.styleForDismissButton()
+    var dismissBTTopPadding: NSLayoutConstraint?
     let albumPoster = UIImageView()
     let gradientView = GradientView()
     let gradientColorView = UIView()
@@ -51,6 +53,16 @@ class PlayerViewController: KZViewController, UISearchBarDelegate {
     // Keyboard Adjustment
     lazy var keynode: Keynode.Connector = Keynode.Connector(view: self.view)
     var commentFieldKeyboardConstraint: NSLayoutConstraint?
+
+    init() {
+        super.init(nibName: nil, bundle: nil)
+
+        self.modalPresentationStyle = .OverCurrentContext
+    }
+
+    required init?(coder aDecoder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
+    }
 
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -86,6 +98,9 @@ class PlayerViewController: KZViewController, UISearchBarDelegate {
         // Top View
         topView.autoPinEdgesToSuperviewEdgesWithInsets(UIEdgeInsetsZero, excludingEdge: .Bottom)
         topView.autoMatchDimension(.Height, toDimension: .Height, ofView: view, withMultiplier: 0.334)
+
+        dismissBTTopPadding = dismissBT.autoPinEdgeToSuperviewEdge(.Top, withInset: 25)
+        dismissBT.autoPinEdgeToSuperviewEdge(.Left, withInset: 20)
 
         albumPoster.autoPinEdgesToSuperviewEdges()
 
@@ -157,6 +172,9 @@ class PlayerViewController: KZViewController, UISearchBarDelegate {
 
         topView.addSubview(visualizer)
 
+        dismissBT.addTarget(self, action: #selector(self.toggleDismiss), forControlEvents: .TouchUpInside)
+        topView.addSubview(dismissBT)
+
         topView.addSubview(songInfoHolderView)
         [songInfoLabel1, songInfoLabel2, songInfoLabel3].forEach { (label) -> () in
             label.textAlignment = .Center
@@ -180,6 +198,8 @@ class PlayerViewController: KZViewController, UISearchBarDelegate {
         commentsTableView.delegate = self
         commentsTableView.dataSource = self
         commentsTableView.registerReusableCell(CommentCell)
+        commentsTableView.estimatedRowHeight = 50
+        commentsTableView.rowHeight = UITableViewAutomaticDimension
         commentContentView.backgroundColor = RGB(255)
         view.addSubview(commentContentView)
         commentContentView.addSubview(commentsTableView)
@@ -201,6 +221,103 @@ class PlayerViewController: KZViewController, UISearchBarDelegate {
     // **********************************************************************
 
     // MARK: View Changes/Updates
+
+    /**
+     Close the host player view controller
+     */
+    func close() {
+
+        delay(1.0) {
+            self.stop()
+        }
+
+        guard let holderView = view.superview else {
+            return
+        }
+
+        guard let pVC = self.presentingViewController as? UITabBarController else {
+            return
+        }
+
+        self.view.endEditing(true)
+
+        func innerClose() {
+            if let vc = presentingViewController {
+                vc.dismissViewControllerAnimated(true, completion: nil)
+            }
+        }
+
+        if self.dismissBT.selected {
+            let oldHeight = holderView.frame.origin.y + 40
+            UIView.animateWithDuration(0.4, animations: {
+                holderView.frame.origin.y += 40
+                pVC.view.frame.size.height = oldHeight
+                pVC.view.layoutSubviews()
+                }, completion: { (finished) in
+                    innerClose()
+            })
+        } else {
+            innerClose()
+        }
+    }
+
+    func showShareDialog() {
+        guard let stream = stream else {
+            return
+        }
+
+        let streamURL = stream.url()
+        let vc = UIActivityViewController(activityItems: [streamURL], applicationActivities: nil)
+        self.presentViewController(vc, animated: true, completion: nil)
+    }
+
+    func toggleDismiss() {
+        innerToggleDismiss(nil)
+    }
+
+    /**
+     Minimizes or maximizes the host player view controller
+     */
+    func innerToggleDismiss(minimize: Bool? = nil) {
+        guard let holderView = view.superview else {
+            return
+        }
+
+        guard let pVC = self.presentingViewController as? UITabBarController else {
+            return
+        }
+
+        guard let minimize = minimize != nil ? minimize : !self.dismissBT.selected else {
+            return
+        }
+
+        pVC.view.superview?.backgroundColor = RGB(0)
+        self.view.endEditing(true)
+
+        if minimize && !self.dismissBT.selected {
+            pVC.view.frame.size.height = pVC.view.frame.size.height - 40
+            pVC.view.layoutSubviews()
+            pVC.selectedIndex = 0
+
+            UIView.animateWithDuration(0.4, animations: {
+                holderView.frame.origin.y = pVC.view.frame.size.height
+
+                self.dismissBTTopPadding?.constant = 10
+                self.dismissBT.selected = true
+            })
+        } else if !minimize && self.dismissBT.selected {
+            let oldHeight = holderView.frame.origin.y + 40
+            UIView.animateWithDuration(0.4, animations: {
+                holderView.frame.origin.y = 0
+
+                self.dismissBTTopPadding?.constant = 25
+                self.dismissBT.selected = false
+                }, completion: { (finished) in
+                    pVC.view.frame.size.height = oldHeight
+                    pVC.view.layoutSubviews()
+            })
+        }
+    }
 
     /**
     Dismiss the host player view controller
@@ -310,6 +427,14 @@ class PlayerViewController: KZViewController, UISearchBarDelegate {
         return super.tableViewCellClass(tableView, indexPath: indexPath)
     }
 
+    override func tableView(tableView: UITableView, heightForRowAtIndexPath indexPath: NSIndexPath) -> CGFloat {
+        return UITableViewAutomaticDimension
+    }
+
+    func tableView(tableView: UITableView, estimatedHeightForRowAtIndexPath indexPath: NSIndexPath) -> CGFloat {
+        return 50
+    }
+
     override func tableViewNoDataText(tableView: UITableView) -> String {
         if tableView == commentsTableView {
             return "No Comments\n\nBe the first one to comment :)"
@@ -371,22 +496,35 @@ extension PlayerViewController: MessageToolbarDelegate {
                 let isAtBottom = commentsTableView.indexPathsForVisibleRows?.contains({ $0.row == (comments.count - 1) })
                 let shouldScrollDown = (didPostComment ?? false) || (isAtBottom ?? false)
                 comments.append(comment)
-                streamInfoHolder.comments = comments.count
-
-                dispatch_async(dispatch_get_main_queue(), { () -> Void in
-                    if self.comments.count > 1 {
-                        self.commentsTableView.beginUpdates()
-                        self.commentsTableView.insertRowsAtIndexPaths([NSIndexPath(forRow: self.comments.count - 1, inSection: 0)], withRowAnimation: .Fade)
-                        self.commentsTableView.endUpdates()
-                        if shouldScrollDown {
-                            self.commentsTableView.scrollToBottom(true)
-                        }
-                    } else {
-                        self.commentsTableView.reloadSections(NSIndexSet(index: 0), withRowAnimation: .Fade)
-                    }
-                })
+                didUpdateComments(shouldScrollDown)
             }
         }
+    }
+
+    func didReciveUserJoined(response: AnyObject) {
+        if let result = response as? JSON {
+            if let user = STMUser(json: result) {
+                let isAtBottom = commentsTableView.indexPathsForVisibleRows?.contains({ $0.row == (comments.count - 1) })
+                let shouldScrollDown = (didPostComment ?? false) || (isAtBottom ?? false)
+                comments.append(user)
+                didUpdateComments(shouldScrollDown)
+            }
+        }
+    }
+
+    func didUpdateComments(shouldScrollDown: Bool) {
+        dispatch_async(dispatch_get_main_queue(), { () -> Void in
+            if self.comments.count > 1 {
+                self.commentsTableView.beginUpdates()
+                self.commentsTableView.insertRowsAtIndexPaths([NSIndexPath(forRow: self.comments.count - 1, inSection: 0)], withRowAnimation: .Fade)
+                self.commentsTableView.endUpdates()
+                if shouldScrollDown {
+                    self.commentsTableView.scrollToBottom(true)
+                }
+            } else {
+                self.commentsTableView.reloadSections(NSIndexSet(index: 0), withRowAnimation: .Fade)
+            }
+        })
     }
 
     func fetchOnce() {
@@ -444,46 +582,8 @@ extension PlayerViewController: STKAudioPlayerDelegate {
             hud.show(true)
         }
 
-        connectToStream(vc)
-    }
-
-    /**
-     Connects to the Output/Comment Socket.IO
-     */
-    func connectGlobalStream() {
-        guard let user = AppDelegate.del().currentUser else {
-            return
-        }
-
-        guard let stream = self.stream else {
-            return
-        }
-
-        guard let userID = user.id else {
-            return
-        }
-
-        guard let baseURL = NSURL(string: Constants.baseURL) else {
-            return
-        }
-
-        let oForcePolling = SocketIOClientOption.ForcePolling(true)
-        let oAuth = SocketIOClientOption.ConnectParams(["streamID": stream.id, "userID": userID, "stmHash": Constants.Config.streamHash])
-        let commentHost = SocketIOClientOption.Nsp("/comment")
-        let commentOptions = [oForcePolling, commentHost, oAuth] as Set<SocketIOClientOption>
-
-        self.commentSocket = SocketIOClient(socketURL: baseURL, options: commentOptions)
-        if let socket = self.commentSocket {
-            socket.on("connect") { data, ack in
-                print("Comment Socket Connected")
-            }
-
-            socket.on("newComment") { data, ack in
-                self.didReciveComment(data[0])
-            }
-
-            socket.connect()
-        }
+        self.stream = stream
+        connectToStream(vc, callback: callback)
     }
 
     func connectToStream(vc: UIViewController? = nil, callback: ((Bool, String?) -> Void)? = nil) {
@@ -521,7 +621,7 @@ extension PlayerViewController: STKAudioPlayerDelegate {
 
                 AppDelegate.del().setUpAudioSession(withMic: false)
 
-                let streamURL = Constants.baseURL + "/streamLiveToDevice/\(stream.id)/\(userID)/" + authKey
+                let streamURL = Constants.Config.apiBaseURL + "/streamLiveToDevice/\(stream.id)/\(userID)/" + authKey
 
                 var options = STKAudioPlayerOptions()
                 if let setting = result["secondsRequiredToStartPlaying"] as? Float32 {
@@ -569,6 +669,53 @@ extension PlayerViewController: STKAudioPlayerDelegate {
                     proccessError(error, callback: callback)
             })
         })
+    }
+
+    /**
+     Connects to the Output/Comment Socket.IO
+     */
+    func connectGlobalStream() {
+        if let hud = self.hud {
+            hud.dismiss(true)
+        }
+
+        guard let user = AppDelegate.del().currentUser else {
+            return
+        }
+
+        guard let stream = self.stream else {
+            return
+        }
+
+        guard let userID = user.id else {
+            return
+        }
+
+        guard let baseURL = NSURL(string: Constants.Config.apiBaseURL) else {
+            return
+        }
+
+        let oForcePolling = SocketIOClientOption.ForcePolling(true)
+        let oAuth = SocketIOClientOption.ConnectParams(["streamID": stream.id, "userID": userID, "stmHash": Constants.Config.streamHash])
+        let commentHost = SocketIOClientOption.Nsp("/comment")
+        let commentOptions = [oForcePolling, commentHost, oAuth] as Set<SocketIOClientOption>
+
+        self.commentSocket = SocketIOClient(socketURL: baseURL, options: commentOptions)
+        if let socket = self.commentSocket {
+            socket.on("connect") { data, ack in
+                print("Comment: Socket Connected")
+            }
+
+            socket.on("newComment") { data, ack in
+                self.didReciveComment(data[0])
+            }
+
+            socket.on("item") { data, ack in
+                self.didReciveUserJoined(data[0])
+            }
+
+            socket.connect()
+        }
     }
 
     //MARK: Audio Player Delegate

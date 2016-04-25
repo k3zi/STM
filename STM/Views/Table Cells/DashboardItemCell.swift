@@ -159,7 +159,7 @@ class DashboardItemCell: KZTableViewCell, UICollectionViewDelegate, UICollection
         let vc = PlayerViewController()
         vc.start(stream, vc: topVC) { (nothing, error) -> Void in
             if error == nil {
-                self.window?.rootViewController?.presentViewController(vc, animated: true, completion: nil)
+                AppDelegate.del().presentStreamController(vc)
             }
         }
     }

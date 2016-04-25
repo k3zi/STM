@@ -10,11 +10,10 @@ import UIKit
 import KILabel
 import DateTools
 
-class CommentCell: KZTableViewCell {
+class TimelineItemCell: KZTableViewCell {
 	let avatar = UIImageView()
-	let nameLabel = UILabel()
+	let messageLabel = UILabel()
 	let dateLabel = UILabel()
-	let messageLabel = KILabel()
 
     var timer: NSTimer?
 
@@ -32,13 +31,8 @@ class CommentCell: KZTableViewCell {
 		dateLabel.font = UIFont.systemFontOfSize(14)
 		self.contentView.addSubview(dateLabel)
 
-		nameLabel.font = UIFont.boldSystemFontOfSize(14)
-        nameLabel.textColor = Constants.Color.tint
-		self.contentView.addSubview(nameLabel)
-
-        messageLabel.numberOfLines = 0
-		messageLabel.font = UIFont.systemFontOfSize(14)
-        messageLabel.tintColor = Constants.Color.tint
+		messageLabel.font = UIFont.boldSystemFontOfSize(14)
+        messageLabel.textColor = Constants.Color.tint
 		self.contentView.addSubview(messageLabel)
 
         timer = NSTimer.scheduledTimerWithTimeInterval(1.0, target: self, selector: #selector(CommentCell.updateTime), userInfo: nil, repeats: true)
@@ -51,48 +45,42 @@ class CommentCell: KZTableViewCell {
 		}
 
 		avatar.autoPinEdgeToSuperviewEdge(.Top, withInset: 10)
-		avatar.autoPinEdgeToSuperviewEdge(.Bottom, withInset: 10, relation: .GreaterThanOrEqual)
+		avatar.autoPinEdgeToSuperviewEdge(.Bottom, withInset: 10)
 		avatar.autoPinEdgeToSuperviewEdge(.Left, withInset: 10)
 
-		nameLabel.autoPinEdgeToSuperviewEdge(.Top, withInset: 13)
-		nameLabel.autoPinEdge(.Left, toEdge: .Right, ofView: avatar, withOffset: 10)
-
-		dateLabel.autoPinEdge(.Left, toEdge: .Right, ofView: nameLabel, withOffset: 10, relation: .GreaterThanOrEqual)
-		dateLabel.autoPinEdgeToSuperviewEdge(.Right, withInset: 10)
-		dateLabel.autoAlignAxis(.Horizontal, toSameAxisOfView: nameLabel)
-
-		messageLabel.autoPinEdge(.Top, toEdge: .Bottom, ofView: nameLabel, withOffset: 2)
 		messageLabel.autoPinEdge(.Left, toEdge: .Right, ofView: avatar, withOffset: 10)
-		messageLabel.autoPinEdgeToSuperviewEdge(.Right, withInset: 10)
-		messageLabel.autoPinEdgeToSuperviewEdge(.Bottom, withInset: 10, relation: .GreaterThanOrEqual)
+        messageLabel.autoAlignAxis(.Horizontal, toSameAxisOfView: avatar)
+
+		dateLabel.autoPinEdge(.Left, toEdge: .Right, ofView: messageLabel, withOffset: 10, relation: .GreaterThanOrEqual)
+		dateLabel.autoPinEdgeToSuperviewEdge(.Right, withInset: 10)
+		dateLabel.autoAlignAxis(.Horizontal, toSameAxisOfView: messageLabel)
 	}
 
 	override func fillInCellData() {
-		if let comment = model as? STMComment {
-			messageLabel.text = comment.text
+        guard let item = model as? STMTimelineItem else {
+            return
+        }
 
-			if let user = comment.user {
-				nameLabel.text = user.displayName
-			}
+        if let user = item.user {
+            //nameLabel.text = user.displayName
+        }
 
-            if let date = comment.date {
-                dateLabel.text = date.shortTimeAgoSinceNow()
-            }
-		}
+        messageLabel.text = item.message
+        dateLabel.text = item.date.shortTimeAgoSinceNow()
 	}
 
     func updateTime() {
-        if let comment = model as? STMComment {
-            if let date = comment.date {
-                dateLabel.text = date.shortTimeAgoSinceNow()
-            }
+        guard let item = model as? STMTimelineItem else {
+            return
         }
+
+        dateLabel.text = item.date.shortTimeAgoSinceNow()
     }
 
 	override func prepareForReuse() {
 		super.prepareForReuse()
 
-		nameLabel.text = ""
+		messageLabel.text = ""
 		dateLabel.text = ""
 	}
 

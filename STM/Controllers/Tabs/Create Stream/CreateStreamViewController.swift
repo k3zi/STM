@@ -44,7 +44,7 @@ class CreateStreamViewController: KZViewController {
 
         streamTypeSegmentControl.selectedSegmentIndex = 0
         streamTypeSegmentControl.tintColor = Constants.Color.tint
-        contentView.addSubview(streamTypeSegmentControl)
+        //contentView.addSubview(streamTypeSegmentControl)
 
         streamNameTextField.layer.cornerRadius = 5
         streamNameTextField.clipsToBounds = true
@@ -132,12 +132,13 @@ class CreateStreamViewController: KZViewController {
         contentView.autoPinEdgesToSuperviewEdgesWithInsets(UIEdgeInsetsZero)
         contentView.autoMatchDimension(.Width, toDimension: .Width, ofView: view)
 
-        streamTypeSegmentControl.autoPinEdgeToSuperviewEdge(.Top, withInset: formPadding)
+        /*streamTypeSegmentControl.autoPinEdgeToSuperviewEdge(.Top, withInset: formPadding)
         streamTypeSegmentControl.autoPinEdgeToSuperviewEdge(.Left, withInset: formPadding)
         streamTypeSegmentControl.autoPinEdgeToSuperviewEdge(.Right, withInset: formPadding)
-        streamTypeSegmentControl.autoSetDimension(.Height, toSize: 30)
+        streamTypeSegmentControl.autoSetDimension(.Height, toSize: 30)*/
 
-        streamNameTextField.autoPinEdge(.Top, toEdge: .Bottom, ofView: streamTypeSegmentControl, withOffset: formPadding)
+        streamNameTextField.autoPinEdgeToSuperviewEdge(.Top, withInset: formPadding)
+        //streamNameTextField.autoPinEdge(.Top, toEdge: .Bottom, ofView: streamTypeSegmentControl, withOffset: formPadding)
         streamNameTextField.autoPinEdgeToSuperviewEdge(.Left, withInset: formPadding)
         streamNameTextField.autoPinEdgeToSuperviewEdge(.Right, withInset: formPadding)
         streamNameTextField.autoSetDimension(.Height, toSize: 50)
@@ -205,7 +206,7 @@ class CreateStreamViewController: KZViewController {
         let passcodeString = privacySwitch.on ? (passcodeTextField.text ?? "") : ""
         vc.start(streamType, name: name, passcode: passcodeString, description: description) { (nothing, error) -> Void in
             if error == nil {
-                self.navigationController?.tabBarController?.presentViewController(vc, animated: true, completion: nil)
+                AppDelegate.del().presentStreamController(vc)
             }
         }
     }
@@ -227,7 +228,7 @@ class CreateStreamViewController: KZViewController {
             let vc = HostViewController()
             vc.start(stream) { (nothing, error) -> Void in
                 if error == nil {
-                    self.navigationController?.tabBarController?.presentViewController(vc, animated: true, completion: nil)
+                    AppDelegate.del().presentStreamController(vc)
                 }
             }
         }

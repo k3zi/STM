@@ -14,14 +14,16 @@ import CoreLocation
 
 struct Constants {
 
-	static let baseURL = "https://api.stm.io"
-	static let http = Http(baseURL: baseURL + "/v1")
+	static let http = Http(baseURL: Config.apiBaseURL + "/v1")
 	static let Settings = NSUserDefaults.standardUserDefaults()
 
 	struct Config {
+        static let siteBaseURL = "https://stm.io"
+        static let apiBaseURL = "https://api.stm.io"
 		static let systemCredentials = NSURLCredential(user: "STM-API", password: "PXsd<rhKG0r'@U.-Z`>!9V%-Z<Z", persistence: .ForSession)
 		static let hashids = Hashids(salt: "pepper", minHashLength: 4, alphabet: "abcdefghijkmnpqrstuxyACDEFGHKMNPQRSTUQY23456789")
 		static let streamHash = "WrfN'/:_f.#8fYh(=RY(LxTDRrU"
+        static let userDefaultsSecret = "eQpvrIz91DyP9Ge4GY4LRz0vbbG7ot"
 	}
 
     struct Animation {

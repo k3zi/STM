@@ -59,6 +59,9 @@
 		EA4F49871C5EC05700103559 /* EZAudioFile.m in Sources */ = {isa = PBXBuildFile; fileRef = EA4F49771C5EC05700103559 /* EZAudioFile.m */; };
 		EA4F498F1C5F2D3800103559 /* EZOutput.m in Sources */ = {isa = PBXBuildFile; fileRef = EA4F498E1C5F2D3800103559 /* EZOutput.m */; };
 		EA54E5C21CC5D8210033135B /* UIToolbarStyles.swift in Sources */ = {isa = PBXBuildFile; fileRef = EA54E5C11CC5D8210033135B /* UIToolbarStyles.swift */; };
+		EA86DCFC1CCC156A00064040 /* STMAuthzModule.swift in Sources */ = {isa = PBXBuildFile; fileRef = EA86DCFB1CCC156900064040 /* STMAuthzModule.swift */; };
+		EA86DD001CCC281600064040 /* TimelineItemCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = EA86DCFF1CCC281600064040 /* TimelineItemCell.swift */; };
+		EA86DD021CCC291D00064040 /* STMTimelineItem.swift in Sources */ = {isa = PBXBuildFile; fileRef = EA86DD011CCC291D00064040 /* STMTimelineItem.swift */; };
 		EA8D3DE11C7D75C3003ACCFC /* MessageToolbarView.swift in Sources */ = {isa = PBXBuildFile; fileRef = EA8D3DE01C7D75C3003ACCFC /* MessageToolbarView.swift */; };
 		EA9216B11C856DBB00EA499B /* TriangleView.swift in Sources */ = {isa = PBXBuildFile; fileRef = EA9216B01C856DBB00EA499B /* TriangleView.swift */; };
 		EA9216B31C857A4F00EA499B /* DashboardStreamInfo.swift in Sources */ = {isa = PBXBuildFile; fileRef = EA9216B21C857A4F00EA499B /* DashboardStreamInfo.swift */; };
@@ -164,6 +167,9 @@
 		EA4F498D1C5F2D3800103559 /* EZOutput.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = EZOutput.h; sourceTree = "<group>"; };
 		EA4F498E1C5F2D3800103559 /* EZOutput.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = EZOutput.m; sourceTree = "<group>"; };
 		EA54E5C11CC5D8210033135B /* UIToolbarStyles.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = UIToolbarStyles.swift; sourceTree = "<group>"; };
+		EA86DCFB1CCC156900064040 /* STMAuthzModule.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = STMAuthzModule.swift; sourceTree = "<group>"; };
+		EA86DCFF1CCC281600064040 /* TimelineItemCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TimelineItemCell.swift; sourceTree = "<group>"; };
+		EA86DD011CCC291D00064040 /* STMTimelineItem.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = STMTimelineItem.swift; sourceTree = "<group>"; };
 		EA8D3DE01C7D75C3003ACCFC /* MessageToolbarView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MessageToolbarView.swift; sourceTree = "<group>"; };
 		EA9216B01C856DBB00EA499B /* TriangleView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TriangleView.swift; sourceTree = "<group>"; };
 		EA9216B21C857A4F00EA499B /* DashboardStreamInfo.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DashboardStreamInfo.swift; sourceTree = "<group>"; };
@@ -275,6 +281,7 @@
 				EA09CAC01C5C447E0067FF6A /* Controllers */,
 				EA09CAAC1C5C41510067FF6A /* AppDelegate.swift */,
 				EA09CAC71C5C5D170067FF6A /* Constants.swift */,
+				EA86DCFB1CCC156900064040 /* STMAuthzModule.swift */,
 				EA09CACA1C5C63A20067FF6A /* LaunchScreen.storyboard */,
 				EA09CAB31C5C41510067FF6A /* Assets.xcassets */,
 				EA09CAB81C5C41510067FF6A /* Info.plist */,
@@ -289,6 +296,7 @@
 			children = (
 				EA01AF921C5CBCA600F56792 /* STMUser.swift */,
 				EA209DAE1C82BAB700A22BC4 /* STMDashboardItem.swift */,
+				EA86DD011CCC291D00064040 /* STMTimelineItem.swift */,
 				EAE0630F1C7E7A0900C86823 /* STMComment.swift */,
 				EA27B1FB1C5D2D05006F269D /* STMStream.swift */,
 			);
@@ -371,6 +379,7 @@
 				EA4E49471C613F7C00CB40D7 /* HostStreamCell.swift */,
 				EA209DA91C8292A800A22BC4 /* DashboardItemCell.swift */,
 				EAE063111C7E94D000C86823 /* CommentCell.swift */,
+				EA86DCFF1CCC281600064040 /* TimelineItemCell.swift */,
 				EA481DE71C630EED008E3E6E /* SelectSongCell.swift */,
 				EA24C0641C68418600FE4DD0 /* UpNextSongCell.swift */,
 			);
@@ -697,11 +706,14 @@
 				EA4F495E1C5EBFA000103559 /* YBAudioComponent.m in Sources */,
 				EA54E5C21CC5D8210033135B /* UIToolbarStyles.swift in Sources */,
 				EA09CAD71C5C89A50067FF6A /* NavigationController.swift in Sources */,
+				EA86DCFC1CCC156A00064040 /* STMAuthzModule.swift in Sources */,
 				EA01AF931C5CBCA600F56792 /* STMUser.swift in Sources */,
 				EA4F49841C5EC05700103559 /* KZPlayerInner.m in Sources */,
+				EA86DD001CCC281600064040 /* TimelineItemCell.swift in Sources */,
 				EA4F49661C5EBFA000103559 /* YBScheduledSoundPlayer.m in Sources */,
 				EA4F49701C5EC04C00103559 /* KZConverter.m in Sources */,
 				EAFFCB151C87E59300258C16 /* ObjectiveCProcessing.m in Sources */,
+				EA86DD021CCC291D00064040 /* STMTimelineItem.swift in Sources */,
 				EA4E494D1C617FA000CB40D7 /* GradientView.swift in Sources */,
 				EA27B2051C5D3312006F269D /* KZPlayerTag.swift in Sources */,
 				EA209DAA1C8292A800A22BC4 /* DashboardItemCell.swift in Sources */,

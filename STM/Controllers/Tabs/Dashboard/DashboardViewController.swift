@@ -48,7 +48,11 @@ class DashboardViewController: KZViewController {
                 self.dashboardItems.removeAll()
                 if let result = result as? [JSON] {
                     let items = [STMDashboardItem].fromJSONArray(result)
-                    items.forEach({ self.dashboardItems.append($0) })
+                    items.forEach({
+                        if $0.items?.count > 0 {
+                            self.dashboardItems.append($0)
+                        }
+                    })
                     self.tableView.reloadData()
                 }
             })

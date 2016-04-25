@@ -25,8 +25,9 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 	func application(application: UIApplication, didFinishLaunchingWithOptions launchOptions: [NSObject: AnyObject]?) -> Bool {
 
         //Setup some things...
-		NSUserDefaults.standardUserDefaults().setSecret("eQpvrIz91DyP9Ge4GY4LRz0vbbG7ot")
+		NSUserDefaults.standardUserDefaults().setSecret(Constants.Config.userDefaultsSecret)
 		Fabric.with([Crashlytics.self, Twitter.self])
+        Constants.http.authzModule = STMAuthzModule()
 
 		let nav = NavigationController(rootViewController: InitialViewController())
 		nav.setNavigationBarHidden(true, animated: false)
@@ -63,7 +64,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 		let tab3 = NavigationController(rootViewController: KZViewController())
 		let tab4 = NavigationController(rootViewController: KZViewController())
 		let tab5 = NavigationController(rootViewController: KZViewController())
-		tabVC.setViewControllers([tab1, tab2, tab3, tab4, tab5], animated: false)
+		tabVC.setViewControllers([tab1, tab2, tab4, tab5], animated: false)
 
 		self.window?.rootViewController = tabVC
 		self.window?.makeKeyAndVisible()
@@ -112,6 +113,11 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 			})
 		}
 	}
+
+    func presentStreamController(vc: UIViewController) {
+        self.window?.rootViewController?.presentViewController(vc, animated: true, completion: nil)
+        self.activeStreamController = vc
+    }
 
     //MARK: Audio
 

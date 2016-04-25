@@ -37,7 +37,7 @@ class DashboardStreamInfoView: UIView {
 
         startBT.setTitle("Tune In", forState: .Normal)
         startBT.setTitle("Tune In (Offline)", forState: .Disabled)
-        startBT.enabled = stream.live
+        startBT.enabled = true
         infoViewHolder.addSubview(startBT)
 
         setUpConstraints()

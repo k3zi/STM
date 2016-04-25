@@ -17,7 +17,6 @@ struct STMStream: Decodable {
     let description: String?
     let passcode: String?
     let securityHash: String?
-    let live: Bool
 
     // MARK: - Deserialization
 
@@ -32,10 +31,13 @@ struct STMStream: Decodable {
         self.description = "description" <~~ json
         self.passcode = "passcode" <~~ json
         self.securityHash = "securityHash" <~~ json
-        self.live = ("live" <~~ json) ?? false
     }
 
     func alphaID() -> String {
         return Constants.Config.hashids.encode(id) ?? ""
+    }
+
+    func url() -> NSURL {
+        return NSURL(string: Constants.Config.siteBaseURL + "/s/" + alphaID()) ?? NSURL()
     }
 }

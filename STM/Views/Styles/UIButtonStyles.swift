@@ -21,6 +21,14 @@ extension UIButton {
     class func styleForDismissButton() -> UIButton {
         let button = ExtendedButton()
         button.setImage(UIImage(named: "navBarDismissBT"), forState: .Normal)
+        button.setImage(UIImage(named: "navBarMaximizeBT"), forState: .Selected)
+        return button
+    }
+
+    class func styleForMiscButton() -> UIButton {
+        let button = ExtendedButton()
+        button.setImage(UIImage(named: "navBarMiscBT"), forState: .Normal)
+        button.setImage(UIImage(named: "navBarMiscHighlightedBT"), forState: .Highlighted)
         return button
     }
 
