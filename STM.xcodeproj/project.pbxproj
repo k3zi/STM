@@ -33,6 +33,9 @@
 		EA27B2041C5D3312006F269D /* KZPlayerPlaylist.swift in Sources */ = {isa = PBXBuildFile; fileRef = EA27B2001C5D3312006F269D /* KZPlayerPlaylist.swift */; };
 		EA27B2051C5D3312006F269D /* KZPlayerTag.swift in Sources */ = {isa = PBXBuildFile; fileRef = EA27B2011C5D3312006F269D /* KZPlayerTag.swift */; };
 		EA27B20A1C5D781E006F269D /* KZConverter.swift in Sources */ = {isa = PBXBuildFile; fileRef = EA27B2091C5D781E006F269D /* KZConverter.swift */; };
+		EA3EF7D41CCEEE60009E4524 /* SearchViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = EA3EF7D31CCEEE60009E4524 /* SearchViewController.swift */; };
+		EA3EF7D61CCF014C009E4524 /* SearchUserCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = EA3EF7D51CCF014C009E4524 /* SearchUserCell.swift */; };
+		EA3EF7D81CCF028F009E4524 /* SearchStreamCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = EA3EF7D71CCF028F009E4524 /* SearchStreamCell.swift */; };
 		EA481DE81C630EED008E3E6E /* SelectSongCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = EA481DE71C630EED008E3E6E /* SelectSongCell.swift */; };
 		EA4E49481C613F7C00CB40D7 /* HostStreamCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = EA4E49471C613F7C00CB40D7 /* HostStreamCell.swift */; };
 		EA4E494B1C61416400CB40D7 /* Label.swift in Sources */ = {isa = PBXBuildFile; fileRef = EA4E494A1C61416400CB40D7 /* Label.swift */; };
@@ -59,6 +62,8 @@
 		EA4F49871C5EC05700103559 /* EZAudioFile.m in Sources */ = {isa = PBXBuildFile; fileRef = EA4F49771C5EC05700103559 /* EZAudioFile.m */; };
 		EA4F498F1C5F2D3800103559 /* EZOutput.m in Sources */ = {isa = PBXBuildFile; fileRef = EA4F498E1C5F2D3800103559 /* EZOutput.m */; };
 		EA54E5C21CC5D8210033135B /* UIToolbarStyles.swift in Sources */ = {isa = PBXBuildFile; fileRef = EA54E5C11CC5D8210033135B /* UIToolbarStyles.swift */; };
+		EA6F5B811CD1392A00C9638D /* ProfileViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = EA6F5B801CD1392A00C9638D /* ProfileViewController.swift */; };
+		EA6F5B831CD1466900C9638D /* ProfileStatView.swift in Sources */ = {isa = PBXBuildFile; fileRef = EA6F5B821CD1466900C9638D /* ProfileStatView.swift */; };
 		EA86DCFC1CCC156A00064040 /* STMAuthzModule.swift in Sources */ = {isa = PBXBuildFile; fileRef = EA86DCFB1CCC156900064040 /* STMAuthzModule.swift */; };
 		EA86DD001CCC281600064040 /* TimelineItemCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = EA86DCFF1CCC281600064040 /* TimelineItemCell.swift */; };
 		EA86DD021CCC291D00064040 /* STMTimelineItem.swift in Sources */ = {isa = PBXBuildFile; fileRef = EA86DD011CCC291D00064040 /* STMTimelineItem.swift */; };
@@ -118,6 +123,9 @@
 		EA27B2001C5D3312006F269D /* KZPlayerPlaylist.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = KZPlayerPlaylist.swift; sourceTree = "<group>"; };
 		EA27B2011C5D3312006F269D /* KZPlayerTag.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = KZPlayerTag.swift; sourceTree = "<group>"; };
 		EA27B2091C5D781E006F269D /* KZConverter.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = KZConverter.swift; sourceTree = "<group>"; };
+		EA3EF7D31CCEEE60009E4524 /* SearchViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SearchViewController.swift; sourceTree = "<group>"; };
+		EA3EF7D51CCF014C009E4524 /* SearchUserCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SearchUserCell.swift; sourceTree = "<group>"; };
+		EA3EF7D71CCF028F009E4524 /* SearchStreamCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SearchStreamCell.swift; sourceTree = "<group>"; };
 		EA481DE71C630EED008E3E6E /* SelectSongCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SelectSongCell.swift; sourceTree = "<group>"; };
 		EA4E49471C613F7C00CB40D7 /* HostStreamCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = HostStreamCell.swift; sourceTree = "<group>"; };
 		EA4E494A1C61416400CB40D7 /* Label.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Label.swift; sourceTree = "<group>"; };
@@ -167,6 +175,8 @@
 		EA4F498D1C5F2D3800103559 /* EZOutput.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = EZOutput.h; sourceTree = "<group>"; };
 		EA4F498E1C5F2D3800103559 /* EZOutput.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = EZOutput.m; sourceTree = "<group>"; };
 		EA54E5C11CC5D8210033135B /* UIToolbarStyles.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = UIToolbarStyles.swift; sourceTree = "<group>"; };
+		EA6F5B801CD1392A00C9638D /* ProfileViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ProfileViewController.swift; sourceTree = "<group>"; };
+		EA6F5B821CD1466900C9638D /* ProfileStatView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ProfileStatView.swift; sourceTree = "<group>"; };
 		EA86DCFB1CCC156900064040 /* STMAuthzModule.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = STMAuthzModule.swift; sourceTree = "<group>"; };
 		EA86DCFF1CCC281600064040 /* TimelineItemCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TimelineItemCell.swift; sourceTree = "<group>"; };
 		EA86DD011CCC291D00064040 /* STMTimelineItem.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = STMTimelineItem.swift; sourceTree = "<group>"; };
@@ -232,8 +242,10 @@
 		EA01AF8B1C5CB6FA00F56792 /* Tabs */ = {
 			isa = PBXGroup;
 			children = (
+				EA6F5B7F1CD138E900C9638D /* Profile */,
 				EA01AF8F1C5CB74C00F56792 /* Dashboard */,
 				EA01AF941C5CC44A00F56792 /* Create Stream */,
+				EA3EF7D21CCEEE1F009E4524 /* Search */,
 			);
 			path = Tabs;
 			sourceTree = "<group>";
@@ -372,6 +384,14 @@
 			path = Player;
 			sourceTree = "<group>";
 		};
+		EA3EF7D21CCEEE1F009E4524 /* Search */ = {
+			isa = PBXGroup;
+			children = (
+				EA3EF7D31CCEEE60009E4524 /* SearchViewController.swift */,
+			);
+			path = Search;
+			sourceTree = "<group>";
+		};
 		EA4E49431C613F1E00CB40D7 /* Table Cells */ = {
 			isa = PBXGroup;
 			children = (
@@ -380,6 +400,8 @@
 				EA209DA91C8292A800A22BC4 /* DashboardItemCell.swift */,
 				EAE063111C7E94D000C86823 /* CommentCell.swift */,
 				EA86DCFF1CCC281600064040 /* TimelineItemCell.swift */,
+				EA3EF7D51CCF014C009E4524 /* SearchUserCell.swift */,
+				EA3EF7D71CCF028F009E4524 /* SearchStreamCell.swift */,
 				EA481DE71C630EED008E3E6E /* SelectSongCell.swift */,
 				EA24C0641C68418600FE4DD0 /* UpNextSongCell.swift */,
 			);
@@ -393,6 +415,7 @@
 				EA4E494C1C617FA000CB40D7 /* GradientView.swift */,
 				EAB0E6A81C78F8E9008945FF /* SettingJoinedView.swift */,
 				EA8D3DE01C7D75C3003ACCFC /* MessageToolbarView.swift */,
+				EA6F5B821CD1466900C9638D /* ProfileStatView.swift */,
 			);
 			path = Generic;
 			sourceTree = "<group>";
@@ -486,6 +509,14 @@
 				EACD2B3F1C75996600A6CFD6 /* HostInfoHolderView.swift */,
 			);
 			path = Host;
+			sourceTree = "<group>";
+		};
+		EA6F5B7F1CD138E900C9638D /* Profile */ = {
+			isa = PBXGroup;
+			children = (
+				EA6F5B801CD1392A00C9638D /* ProfileViewController.swift */,
+			);
+			path = Profile;
 			sourceTree = "<group>";
 		};
 		EAB0E6991C78138F008945FF /* Tween */ = {
@@ -734,6 +765,7 @@
 				EA01AF961C5CC48700F56792 /* CreateStreamViewController.swift in Sources */,
 				EAE063101C7E7A0900C86823 /* STMComment.swift in Sources */,
 				EA01AF981C5CD67E00F56792 /* HostViewController.swift in Sources */,
+				EA6F5B831CD1466900C9638D /* ProfileStatView.swift in Sources */,
 				EA01AF911C5CB8DC00F56792 /* DashboardViewController.swift in Sources */,
 				EA4F49621C5EBFA000103559 /* YBAudioUnitNode.m in Sources */,
 				EAE545041C76978F00180241 /* MeterTable.m in Sources */,
@@ -746,13 +778,17 @@
 				EAB0E69E1C7813B5008945FF /* FUXCombinators.swift in Sources */,
 				EA4E49481C613F7C00CB40D7 /* HostStreamCell.swift in Sources */,
 				EA4F49691C5EBFA000103559 /* YBNewTimePitch.m in Sources */,
+				EA3EF7D41CCEEE60009E4524 /* SearchViewController.swift in Sources */,
 				EA4F495D1C5EBFA000103559 /* YBPresetEQNode.m in Sources */,
 				EA4F498F1C5F2D3800103559 /* EZOutput.m in Sources */,
 				EA4F49851C5EC05700103559 /* EZAudio.m in Sources */,
 				EAFFCB121C876F5800258C16 /* PlayerViewController.swift in Sources */,
+				EA3EF7D81CCF028F009E4524 /* SearchStreamCell.swift in Sources */,
 				EAB0E6A11C7813B5008945FF /* FUXEngine.swift in Sources */,
 				EA27B2031C5D3312006F269D /* KZPlayerItem.swift in Sources */,
+				EA3EF7D61CCF014C009E4524 /* SearchUserCell.swift in Sources */,
 				EA09CAC81C5C5D170067FF6A /* Constants.swift in Sources */,
+				EA6F5B811CD1392A00C9638D /* ProfileViewController.swift in Sources */,
 				EA24C0631C683F8300FE4DD0 /* MCSwipeCell.swift in Sources */,
 				EA4F49671C5EBFA000103559 /* YBTremoloFilter.m in Sources */,
 			);

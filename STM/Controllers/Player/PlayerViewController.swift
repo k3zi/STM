@@ -17,6 +17,7 @@ class PlayerViewController: KZViewController, UISearchBarDelegate {
     var streamType: StreamType?
     var stream: STMStream?
     var player: STKAudioPlayer?
+    var isPreviewing = false
 
     var commentSocket: SocketIOClient?
     let commentBackgroundQueue = dispatch_queue_create("com.stormedgeapps.streamtome.comment", nil)
@@ -26,6 +27,7 @@ class PlayerViewController: KZViewController, UISearchBarDelegate {
     let topView = UIView()
     let dismissBT = UIButton.styleForDismissButton()
     var dismissBTTopPadding: NSLayoutConstraint?
+    let closeBT = UIButton.styleForCloseButton()
     let albumPoster = UIImageView()
     let gradientView = GradientView()
     let gradientColorView = UIView()
@@ -86,9 +88,24 @@ class PlayerViewController: KZViewController, UISearchBarDelegate {
 
     override func viewDidAppear(animated: Bool) {
         super.viewDidAppear(animated)
+
+        PlayerViewController.cancelPreviousPerformRequestsWithTarget(self, selector: #selector(self.close(soft:)), object: true)
+
         if let hud = hud {
             hud.dismiss(true)
         }
+    }
+
+    override func viewDidDisappear(animated: Bool) {
+        super.viewDidDisappear(animated)
+
+        if isPreviewing {
+            self.performSelector(#selector(self.close(soft:)), withObject: true, afterDelay: 0.5)
+        }
+    }
+
+    func checkForPreview() {
+
     }
 
     // MARK: Constraints
@@ -101,6 +118,9 @@ class PlayerViewController: KZViewController, UISearchBarDelegate {
 
         dismissBTTopPadding = dismissBT.autoPinEdgeToSuperviewEdge(.Top, withInset: 25)
         dismissBT.autoPinEdgeToSuperviewEdge(.Left, withInset: 20)
+
+        closeBT.autoAlignAxis(.Horizontal, toSameAxisOfView: dismissBT)
+        closeBT.autoPinEdgeToSuperviewEdge(.Right, withInset: 20)
 
         albumPoster.autoPinEdgesToSuperviewEdges()
 
@@ -167,13 +187,16 @@ class PlayerViewController: KZViewController, UISearchBarDelegate {
         gradientView.gradientLayer.locations = [NSNumber(float: 0.0), NSNumber(float: 0.5), NSNumber(float: 1.0)]
         topView.addSubview(gradientView)
 
-        gradientColorView.backgroundColor = Constants.Color.off.colorWithAlphaComponent(0.66)
+        gradientColorView.backgroundColor = Constants.UI.Color.off.colorWithAlphaComponent(0.66)
         topView.addSubview(gradientColorView)
 
         topView.addSubview(visualizer)
 
         dismissBT.addTarget(self, action: #selector(self.toggleDismiss), forControlEvents: .TouchUpInside)
         topView.addSubview(dismissBT)
+
+        closeBT.addTarget(self, action: #selector(self.closeButtonPressed), forControlEvents: .TouchUpInside)
+        topView.addSubview(closeBT)
 
         topView.addSubview(songInfoHolderView)
         [songInfoLabel1, songInfoLabel2, songInfoLabel3].forEach { (label) -> () in
@@ -198,6 +221,7 @@ class PlayerViewController: KZViewController, UISearchBarDelegate {
         commentsTableView.delegate = self
         commentsTableView.dataSource = self
         commentsTableView.registerReusableCell(CommentCell)
+        commentsTableView.registerReusableCell(TimelineItemCell)
         commentsTableView.estimatedRowHeight = 50
         commentsTableView.rowHeight = UITableViewAutomaticDimension
         commentContentView.backgroundColor = RGB(255)
@@ -222,13 +246,24 @@ class PlayerViewController: KZViewController, UISearchBarDelegate {
 
     // MARK: View Changes/Updates
 
+    func closeButtonPressed() {
+        close(soft: false)
+    }
+
     /**
      Close the host player view controller
      */
-    func close() {
+    func close(soft soft: Bool = false) {
 
-        delay(1.0) {
-            self.stop()
+        if AppDelegate.del().activeStreamController == self {
+            AppDelegate.del().activeStreamController = nil
+        }
+
+        self.stop()
+        self.commentSocket?.disconnect()
+
+        if soft {
+            return
         }
 
         guard let holderView = view.superview else {
@@ -421,7 +456,11 @@ class PlayerViewController: KZViewController, UISearchBarDelegate {
 
     override func tableViewCellClass(tableView: UITableView, indexPath: NSIndexPath?) -> KZTableViewCell.Type {
         if tableView == commentsTableView {
-            return CommentCell.self
+            if comments[indexPath?.row ?? 0] is STMTimelineItem {
+                return TimelineItemCell.self
+            } else {
+                return CommentCell.self
+            }
         }
 
         return super.tableViewCellClass(tableView, indexPath: indexPath)
@@ -503,10 +542,10 @@ extension PlayerViewController: MessageToolbarDelegate {
 
     func didReciveUserJoined(response: AnyObject) {
         if let result = response as? JSON {
-            if let user = STMUser(json: result) {
+            if let item = STMTimelineItem(json: result) {
                 let isAtBottom = commentsTableView.indexPathsForVisibleRows?.contains({ $0.row == (comments.count - 1) })
                 let shouldScrollDown = (didPostComment ?? false) || (isAtBottom ?? false)
-                comments.append(user)
+                comments.append(item)
                 didUpdateComments(shouldScrollDown)
             }
         }
@@ -564,26 +603,48 @@ extension PlayerViewController: STKAudioPlayerDelegate {
      - parameter stream:   The stream to play
      - parameter callback: Any error or nil if there was none
      */
-    func start(stream: STMStream, vc: UIViewController, callback: (Bool, String?) -> Void) {
+    func start(stream: STMStream, vc: UIViewController, showHUD: Bool = true, callback: ((Bool, String?) -> Void)? = nil) {
         let progressView = M13ProgressViewRing()
-        progressView.primaryColor = Constants.Color.tint
-        progressView.secondaryColor = Constants.Color.disabled
+        progressView.primaryColor = Constants.UI.Color.tint
+        progressView.secondaryColor = Constants.UI.Color.disabled
         progressView.indeterminate = true
 
-        hud = M13ProgressHUD(progressView: progressView)
-        if let hud = hud {
-            hud.frame = (AppDelegate.del().window?.bounds)!
-            hud.progressViewSize = CGSize(width: 60, height: 60)
-            hud.animationPoint = CGPoint(x: UIScreen.mainScreen().bounds.size.width / 2, y: UIScreen.mainScreen().bounds.size.height / 2)
-            hud.status = "Playing Stream"
-            hud.applyBlurToBackground = true
-            hud.maskType = M13ProgressHUDMaskTypeIOS7Blur
-            AppDelegate.del().window?.addSubview(hud)
-            hud.show(true)
+        func innerStart() {
+            hud = M13ProgressHUD(progressView: progressView)
+            if let hud = hud where showHUD {
+                hud.frame = (AppDelegate.del().window?.bounds)!
+                hud.progressViewSize = CGSize(width: 60, height: 60)
+                hud.animationPoint = CGPoint(x: UIScreen.mainScreen().bounds.size.width / 2, y: UIScreen.mainScreen().bounds.size.height / 2)
+                hud.status = "Playing Stream"
+                hud.applyBlurToBackground = true
+                hud.maskType = M13ProgressHUDMaskTypeIOS7Blur
+                AppDelegate.del().window?.addSubview(hud)
+                hud.show(true)
+            }
+
+            self.stream = stream
+            connectToStream(vc, callback: callback)
         }
 
-        self.stream = stream
-        connectToStream(vc, callback: callback)
+        if let activeVC = AppDelegate.del().activeStreamController {
+            guard let activeVC = activeVC as? PlayerViewController else {
+                if let callback = callback {
+                    callback(false, "You are currently hosting a stream")
+                }
+
+                return
+            }
+
+            let alertVC = UIAlertController(title: "Confirm", message: "Continuing will stop the playback of the current stream", preferredStyle: .Alert)
+            alertVC.addAction(UIAlertAction(title: "Continue", style: .Default, handler: { (action) in
+                activeVC.close()
+                innerStart()
+            }))
+            alertVC.addAction(UIAlertAction(title: "Cancel", style: .Cancel, handler: nil))
+            AppDelegate.topViewController()?.presentViewController(alertVC, animated: true, completion: nil)
+        } else {
+            innerStart()
+        }
     }
 
     func connectToStream(vc: UIViewController? = nil, callback: ((Bool, String?) -> Void)? = nil) {
@@ -615,13 +676,9 @@ extension PlayerViewController: STKAudioPlayerDelegate {
                     return proccessError("Invalid session", callback: callback)
                 }
 
-                guard let userID = user.id else {
-                    return proccessError("Invalid session", callback: callback)
-                }
-
                 AppDelegate.del().setUpAudioSession(withMic: false)
 
-                let streamURL = Constants.Config.apiBaseURL + "/streamLiveToDevice/\(stream.id)/\(userID)/" + authKey
+                let streamURL = Constants.Config.apiBaseURL + "/streamLiveToDevice/\(stream.id)/\(user.id)/" + authKey
 
                 var options = STKAudioPlayerOptions()
                 if let setting = result["secondsRequiredToStartPlaying"] as? Float32 {
@@ -687,16 +744,12 @@ extension PlayerViewController: STKAudioPlayerDelegate {
             return
         }
 
-        guard let userID = user.id else {
-            return
-        }
-
         guard let baseURL = NSURL(string: Constants.Config.apiBaseURL) else {
             return
         }
 
         let oForcePolling = SocketIOClientOption.ForcePolling(true)
-        let oAuth = SocketIOClientOption.ConnectParams(["streamID": stream.id, "userID": userID, "stmHash": Constants.Config.streamHash])
+        let oAuth = SocketIOClientOption.ConnectParams(["streamID": stream.id, "userID": user.id, "stmHash": Constants.Config.streamHash])
         let commentHost = SocketIOClientOption.Nsp("/comment")
         let commentOptions = [oForcePolling, commentHost, oAuth] as Set<SocketIOClientOption>
 
@@ -724,9 +777,9 @@ extension PlayerViewController: STKAudioPlayerDelegate {
         let active = state == .Playing || state == .Buffering
         UIView.animateWithDuration(0.5) { () -> Void in
             if active {
-                self.gradientColorView.backgroundColor = Constants.Color.tint.colorWithAlphaComponent(0.66)
+                self.gradientColorView.backgroundColor = Constants.UI.Color.tint.colorWithAlphaComponent(0.66)
             } else {
-                self.gradientColorView.backgroundColor = Constants.Color.off.colorWithAlphaComponent(0.66)
+                self.gradientColorView.backgroundColor = Constants.UI.Color.off.colorWithAlphaComponent(0.66)
             }
         }
     }
@@ -762,4 +815,12 @@ extension PlayerViewController {
     func stop() {
         self.player?.stop()
     }
+}
+
+//**********************************************************************
+//**********************************************************************
+//**********************************************************************
+
+protocol PlayerPreviewDelegate {
+    func playerShouldContinuePlaying() -> Bool
 }

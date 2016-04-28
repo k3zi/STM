@@ -10,27 +10,22 @@ import UIKit
 import KILabel
 import DateTools
 
-class CommentCell: KZTableViewCell {
+class SearchUserCell: KZTableViewCell {
 	let avatar = UIImageView()
 	let nameLabel = UILabel()
-	let dateLabel = UILabel()
 	let messageLabel = KILabel()
-
-    var timer: NSTimer?
+    let followButton = UIButton.styledForCellButton("Follow", selectedTitle: "Unfollow")
 
 	required init(style: UITableViewCellStyle, reuseIdentifier: String?) {
 		super.init(style: style, reuseIdentifier: reuseIdentifier)
 		self.backgroundColor = RGB(255)
         self.selectionStyle = .None
+        self.accessoryType = .DisclosureIndicator
 
 		avatar.layer.cornerRadius = 45.0 / 9.0
 		avatar.backgroundColor = RGB(72, g: 72, b: 72)
 		avatar.clipsToBounds = true
 		self.contentView.addSubview(avatar)
-
-        dateLabel.textColor = RGB(180)
-		dateLabel.font = UIFont.systemFontOfSize(14)
-		self.contentView.addSubview(dateLabel)
 
 		nameLabel.font = UIFont.boldSystemFontOfSize(14)
         nameLabel.textColor = Constants.UI.Color.tint
@@ -41,8 +36,23 @@ class CommentCell: KZTableViewCell {
         messageLabel.tintColor = Constants.UI.Color.tint
 		self.contentView.addSubview(messageLabel)
 
-        timer = NSTimer.scheduledTimerWithTimeInterval(1.0, target: self, selector: #selector(CommentCell.updateTime), userInfo: nil, repeats: true)
+        followButton.addTarget(self, action: #selector(self.toggleFollow), forControlEvents: .TouchUpInside)
+        self.contentView.addSubview(followButton)
 	}
+
+    func toggleFollow() {
+        guard let user = model as? STMUser else {
+            return
+        }
+
+        let method = followButton.selected ? "unfollow" : "follow"
+        Constants.Network.GET("/\(method)/\(user.id)", parameters: nil) { (response, error) in
+            print(response)
+            dispatch_async(dispatch_get_main_queue(), {
+                self.followButton.selected = !self.followButton.selected
+            })
+        }
+    }
 
 	override func updateConstraints() {
 		super.updateConstraints()
@@ -57,43 +67,36 @@ class CommentCell: KZTableViewCell {
 		nameLabel.autoPinEdgeToSuperviewEdge(.Top, withInset: 13)
 		nameLabel.autoPinEdge(.Left, toEdge: .Right, ofView: avatar, withOffset: 10)
 
-		dateLabel.autoPinEdge(.Left, toEdge: .Right, ofView: nameLabel, withOffset: 10, relation: .GreaterThanOrEqual)
-		dateLabel.autoPinEdgeToSuperviewEdge(.Right, withInset: 10)
-		dateLabel.autoAlignAxis(.Horizontal, toSameAxisOfView: nameLabel)
-
 		messageLabel.autoPinEdge(.Top, toEdge: .Bottom, ofView: nameLabel, withOffset: 2)
 		messageLabel.autoPinEdge(.Left, toEdge: .Right, ofView: avatar, withOffset: 10)
-		messageLabel.autoPinEdgeToSuperviewEdge(.Right, withInset: 10)
+        messageLabel.autoMatchDimension(.Width, toDimension: .Width, ofView: nameLabel)
 		messageLabel.autoPinEdgeToSuperviewEdge(.Bottom, withInset: 10, relation: .GreaterThanOrEqual)
+
+        followButton.autoPinEdge(.Left, toEdge: .Right, ofView: nameLabel, withOffset: 10)
+        followButton.autoPinEdgeToSuperviewEdge(.Right, withInset: 10)
+        followButton.autoAlignAxis(.Horizontal, toSameAxisOfView: avatar)
+        followButton.autoSetDimension(.Height, toSize: 30.0)
+        NSLayoutConstraint.autoSetPriority(999) {
+            self.followButton.autoSetContentHuggingPriorityForAxis(.Horizontal)
+        }
 	}
 
 	override func fillInCellData() {
-		if let comment = model as? STMComment {
-			messageLabel.text = comment.text
-
-			if let user = comment.user {
-				nameLabel.text = user.displayName
-			}
-
-            if let date = comment.date {
-                dateLabel.text = date.shortTimeAgoSinceNow()
-            }
-		}
-	}
-
-    func updateTime() {
-        if let comment = model as? STMComment {
-            if let date = comment.date {
-                dateLabel.text = date.shortTimeAgoSinceNow()
-            }
+        guard let user = model as? STMUser else {
+            return
         }
-    }
+
+        nameLabel.text = user.displayName
+        followButton.selected = user.isFollowing
+        followButton.hidden = AppDelegate.del().currentUser?.id == user.id
+        messageLabel.text = "@" + user.username
+	}
 
 	override func prepareForReuse() {
 		super.prepareForReuse()
 
 		nameLabel.text = ""
-		dateLabel.text = ""
+		messageLabel.text = ""
 	}
 
     override func setIndexPath(indexPath: NSIndexPath, last: Bool) {
@@ -111,9 +114,4 @@ class CommentCell: KZTableViewCell {
 		fatalError("init(coder:) has not been implemented")
 	}
 
-    deinit {
-        if let timer = timer {
-            timer.invalidate()
-        }
-    }
 }

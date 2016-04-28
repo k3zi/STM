@@ -22,7 +22,7 @@ class TimelineItemCell: KZTableViewCell {
 		self.backgroundColor = RGB(255)
         self.selectionStyle = .None
 
-		avatar.layer.cornerRadius = 45.0 / 2.0
+		avatar.layer.cornerRadius = 45.0 / 9.0
 		avatar.backgroundColor = RGB(72, g: 72, b: 72)
 		avatar.clipsToBounds = true
 		self.contentView.addSubview(avatar)
@@ -32,10 +32,10 @@ class TimelineItemCell: KZTableViewCell {
 		self.contentView.addSubview(dateLabel)
 
 		messageLabel.font = UIFont.boldSystemFontOfSize(14)
-        messageLabel.textColor = Constants.Color.tint
+        messageLabel.textColor = Constants.UI.Color.tint
 		self.contentView.addSubview(messageLabel)
 
-        timer = NSTimer.scheduledTimerWithTimeInterval(1.0, target: self, selector: #selector(CommentCell.updateTime), userInfo: nil, repeats: true)
+        timer = NSTimer.scheduledTimerWithTimeInterval(1.0, target: self, selector: #selector(self.updateTime), userInfo: nil, repeats: true)
 	}
 
 	override func updateConstraints() {

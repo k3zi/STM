@@ -43,7 +43,7 @@ class CreateStreamViewController: KZViewController {
         view.backgroundColor = RGB(234)
 
         streamTypeSegmentControl.selectedSegmentIndex = 0
-        streamTypeSegmentControl.tintColor = Constants.Color.tint
+        streamTypeSegmentControl.tintColor = Constants.UI.Color.tint
         //contentView.addSubview(streamTypeSegmentControl)
 
         streamNameTextField.layer.cornerRadius = 5
@@ -89,13 +89,13 @@ class CreateStreamViewController: KZViewController {
 
         hostBT.setTitle("Host", forState: .Normal)
         hostBT.titleLabel?.font = UIFont.systemFontOfSize(15, weight: UIFontWeightMedium)
-        hostBT.setTitleColor(Constants.Color.tint, forState: .Normal)
+        hostBT.setTitleColor(Constants.UI.Color.tint, forState: .Normal)
         hostBT.setBackgroundColor(UIColor.clearColor(), forState: .Normal)
         hostBT.setTitleColor(RGB(255), forState: .Highlighted)
-        hostBT.setBackgroundColor(Constants.Color.tint, forState: .Highlighted)
+        hostBT.setBackgroundColor(Constants.UI.Color.tint, forState: .Highlighted)
         hostBT.clipsToBounds = true
         hostBT.layer.cornerRadius = 5
-        hostBT.layer.borderColor = Constants.Color.tint.CGColor
+        hostBT.layer.borderColor = Constants.UI.Color.tint.CGColor
         hostBT.layer.borderWidth = 1
         hostBT.addTarget(self, action: #selector(CreateStreamViewController.host), forControlEvents: .TouchUpInside)
         contentView.addSubview(hostBT)
@@ -219,6 +219,14 @@ class CreateStreamViewController: KZViewController {
 
     override func tableViewCellClass(tableView: UITableView, indexPath: NSIndexPath?) -> KZTableViewCell.Type {
         return HostStreamCell.self
+    }
+
+    override func tableView(tableView: UITableView, heightForRowAtIndexPath indexPath: NSIndexPath) -> CGFloat {
+        if tableViewCellData(tableView, section: indexPath.section).count == 0 {
+            return 100
+        }
+
+        return super.tableView(tableView, heightForRowAtIndexPath: indexPath)
     }
 
     override func tableView(tableView: UITableView, didSelectRowAtIndexPath indexPath: NSIndexPath) {

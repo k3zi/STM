@@ -11,16 +11,24 @@ import Gloss
 
 struct STMUser: Decodable {
 
-    let id: Int?
-    let username: String?
+    let id: Int
+    let username: String
     let displayName: String?
+    let description: String?
+    let isFollowing: Bool
 
     // MARK: - Deserialization
 
     init?(json: JSON) {
-        self.id = "id" <~~ json
-        self.username = "username" <~~ json
+        guard let id: Int = "id" <~~ json else {
+            return nil
+        }
+
+        self.id = id
+        self.username = ("username" <~~ json ?? "null")
         self.displayName = "displayName" <~~ json
+        self.description = "description" <~~ json
+        self.isFollowing = ("isFollowing" <~~ json) ?? false
     }
 
 }

@@ -10,27 +10,21 @@ import UIKit
 import KILabel
 import DateTools
 
-class CommentCell: KZTableViewCell {
+class SearchStreamCell: KZTableViewCell {
 	let avatar = UIImageView()
 	let nameLabel = UILabel()
-	let dateLabel = UILabel()
 	let messageLabel = KILabel()
-
-    var timer: NSTimer?
 
 	required init(style: UITableViewCellStyle, reuseIdentifier: String?) {
 		super.init(style: style, reuseIdentifier: reuseIdentifier)
 		self.backgroundColor = RGB(255)
         self.selectionStyle = .None
+        self.accessoryType = .DisclosureIndicator
 
-		avatar.layer.cornerRadius = 45.0 / 9.0
+		avatar.layer.cornerRadius = 45.0 / 2.0
 		avatar.backgroundColor = RGB(72, g: 72, b: 72)
 		avatar.clipsToBounds = true
 		self.contentView.addSubview(avatar)
-
-        dateLabel.textColor = RGB(180)
-		dateLabel.font = UIFont.systemFontOfSize(14)
-		self.contentView.addSubview(dateLabel)
 
 		nameLabel.font = UIFont.boldSystemFontOfSize(14)
         nameLabel.textColor = Constants.UI.Color.tint
@@ -40,8 +34,6 @@ class CommentCell: KZTableViewCell {
 		messageLabel.font = UIFont.systemFontOfSize(14)
         messageLabel.tintColor = Constants.UI.Color.tint
 		self.contentView.addSubview(messageLabel)
-
-        timer = NSTimer.scheduledTimerWithTimeInterval(1.0, target: self, selector: #selector(CommentCell.updateTime), userInfo: nil, repeats: true)
 	}
 
 	override func updateConstraints() {
@@ -56,10 +48,7 @@ class CommentCell: KZTableViewCell {
 
 		nameLabel.autoPinEdgeToSuperviewEdge(.Top, withInset: 13)
 		nameLabel.autoPinEdge(.Left, toEdge: .Right, ofView: avatar, withOffset: 10)
-
-		dateLabel.autoPinEdge(.Left, toEdge: .Right, ofView: nameLabel, withOffset: 10, relation: .GreaterThanOrEqual)
-		dateLabel.autoPinEdgeToSuperviewEdge(.Right, withInset: 10)
-		dateLabel.autoAlignAxis(.Horizontal, toSameAxisOfView: nameLabel)
+		nameLabel.autoPinEdgeToSuperviewEdge(.Right, withInset: 10)
 
 		messageLabel.autoPinEdge(.Top, toEdge: .Bottom, ofView: nameLabel, withOffset: 2)
 		messageLabel.autoPinEdge(.Left, toEdge: .Right, ofView: avatar, withOffset: 10)
@@ -68,32 +57,17 @@ class CommentCell: KZTableViewCell {
 	}
 
 	override func fillInCellData() {
-		if let comment = model as? STMComment {
-			messageLabel.text = comment.text
-
-			if let user = comment.user {
-				nameLabel.text = user.displayName
-			}
-
-            if let date = comment.date {
-                dateLabel.text = date.shortTimeAgoSinceNow()
-            }
+		if let stream = model as? STMStream {
+            nameLabel.text = stream.name
+            messageLabel.text = stream.description
 		}
 	}
-
-    func updateTime() {
-        if let comment = model as? STMComment {
-            if let date = comment.date {
-                dateLabel.text = date.shortTimeAgoSinceNow()
-            }
-        }
-    }
 
 	override func prepareForReuse() {
 		super.prepareForReuse()
 
 		nameLabel.text = ""
-		dateLabel.text = ""
+		messageLabel.text = ""
 	}
 
     override func setIndexPath(indexPath: NSIndexPath, last: Bool) {
@@ -111,9 +85,4 @@ class CommentCell: KZTableViewCell {
 		fatalError("init(coder:) has not been implemented")
 	}
 
-    deinit {
-        if let timer = timer {
-            timer.invalidate()
-        }
-    }
 }

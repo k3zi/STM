@@ -150,6 +150,7 @@ public class KZViewController: UIViewController, UITableViewDelegate, UITableVie
     public func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
         if self.tableViewCellData(tableView, section: indexPath.section).count == 0 && showsNoText {
             let cell = UITableViewCell(style: .Default, reuseIdentifier: "NoneFound")
+            cell.backgroundColor = UIColor.clearColor()
             cell.textLabel?.numberOfLines = 0
             cell.textLabel?.text = tableViewNoDataText(tableView)
             if #available(iOS 8.2, *) {

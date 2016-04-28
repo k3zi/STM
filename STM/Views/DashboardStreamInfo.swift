@@ -30,7 +30,7 @@ class DashboardStreamInfoView: UIView {
         infoViewHolder.clipsToBounds = true
         addSubview(infoViewHolder)
 
-        streamNameLabel.textColor = Constants.Color.tint
+        streamNameLabel.textColor = Constants.UI.Color.tint
         streamNameLabel.font = UIFont.systemFontOfSize(15, weight: UIFontWeightMedium)
         streamNameLabel.text = stream.name
         infoViewHolder.addSubview(streamNameLabel)

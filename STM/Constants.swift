@@ -26,23 +26,7 @@ struct Constants {
         static let userDefaultsSecret = "eQpvrIz91DyP9Ge4GY4LRz0vbbG7ot"
 	}
 
-    struct Animation {
-        static let visualEffectsLength =  NSTimeInterval(0.5)
-    }
-
-	struct Color {
-		static let tint = RGB(92, g: 38, b: 254)
-		static let disabled = RGB(234, g: 234, b: 234)
-		static let off = RGB(150, g: 150, b: 150)
-	}
-
 	struct Notification {
-	}
-
-	struct Screen {
-		static let width = UIScreen.mainScreen().bounds.width
-		static let height = UIScreen.mainScreen().bounds.height
-		static let bounds = UIScreen.mainScreen().bounds
 	}
 
 	struct Network {
@@ -54,6 +38,34 @@ struct Constants {
 			Constants.http.request(.GET, path: url, parameters: parameters, credential: Constants.Config.systemCredentials, completionHandler: completionHandler)
 		}
 	}
+
+    struct UI {
+
+        struct Animation {
+            static let visualEffectsLength =  NSTimeInterval(0.5)
+        }
+
+        struct Color {
+            static let tint = RGB(92, g: 38, b: 254)
+            static let disabled = RGB(234, g: 234, b: 234)
+            static let off = RGB(150, g: 150, b: 150)
+        }
+
+        struct Screen {
+            static let width = UIScreen.mainScreen().bounds.width
+            static let height = UIScreen.mainScreen().bounds.height
+            static let bounds = UIScreen.mainScreen().bounds
+        }
+
+        struct Tabs {
+            static let indexForDashboard = 0
+            static let indexForHostStream = 1
+            static let indexForMessages = 2
+            static let indexForSearch = 3
+            static let indexForProfile = 4
+        }
+
+    }
 
 }
 
@@ -137,6 +149,38 @@ extension Int {
 
     func hexedString() -> String {
         return String(format:"%02x", self)
+    }
+
+   func formatUsingAbbrevation() -> String {
+        let numFormatter = NSNumberFormatter()
+
+        typealias Abbrevation = (threshold: Double, divisor: Double, suffix: String)
+        let abbreviations: [Abbrevation] = [(0, 1, ""),
+                                           (1000.0, 1000.0, "K"),
+                                           (100_000.0, 1_000_000.0, "M"),
+                                           (100_000_000.0, 1_000_000_000.0, "B")]
+
+        let startValue = Double(abs(self))
+        let abbreviation: Abbrevation = {
+            var prevAbbreviation = abbreviations[0]
+            for tmpAbbreviation in abbreviations {
+                if startValue < tmpAbbreviation.threshold {
+                    break
+                }
+                prevAbbreviation = tmpAbbreviation
+            }
+            return prevAbbreviation
+        }()
+
+        let value = Double(self) / abbreviation.divisor
+        numFormatter.positiveSuffix = abbreviation.suffix
+        numFormatter.negativeSuffix = abbreviation.suffix
+        numFormatter.allowsFloats = true
+        numFormatter.minimumIntegerDigits = 1
+        numFormatter.minimumFractionDigits = 0
+        numFormatter.maximumFractionDigits = 1
+
+        return numFormatter.stringFromNumber(NSNumber (double:value)) ?? ""
     }
 
 }

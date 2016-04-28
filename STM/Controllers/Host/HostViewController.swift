@@ -315,7 +315,7 @@ class HostViewController: KZViewController, UISearchBarDelegate {
 		gradientView.gradientLayer.locations = [NSNumber(float: 0.0), NSNumber(float: 0.5), NSNumber(float: 1.0)]
 		topView.addSubview(gradientView)
 
-		gradientColorView.backgroundColor = Constants.Color.off.colorWithAlphaComponent(0.66)
+		gradientColorView.backgroundColor = Constants.UI.Color.off.colorWithAlphaComponent(0.66)
 		topView.addSubview(gradientColorView)
 
 		topView.addSubview(visualizer)
@@ -346,7 +346,7 @@ class HostViewController: KZViewController, UISearchBarDelegate {
 		view.addSubview(switcherControlHolder)
 
 		switcherControl.selectedSegmentIndex = 0
-		switcherControl.tintColor = Constants.Color.tint
+		switcherControl.tintColor = Constants.UI.Color.tint
 		switcherControl.setTitleTextAttributes([NSForegroundColorAttributeName: RGB(255)], forState: .Selected)
 		switcherControl.addTarget(self, action: #selector(HostViewController.didChangeSegmentIndex), forControlEvents: .ValueChanged)
 		switcherControlHolder.addSubview(switcherControl)
@@ -484,6 +484,10 @@ class HostViewController: KZViewController, UISearchBarDelegate {
      Close the host player view controller
      */
     func close() {
+
+        if AppDelegate.del().activeStreamController == self {
+            AppDelegate.del().activeStreamController = nil
+        }
 
         audioFile0 = nil
         audioFile1 = nil
@@ -734,12 +738,12 @@ class HostViewController: KZViewController, UISearchBarDelegate {
 
 			recordingStatusLabel.textColor = RGB(255)
 			recordingStatusLabel.backgroundColor = recordSwitch.onTintColor
-			gradientColorView.backgroundColor = Constants.Color.tint.colorWithAlphaComponent(0.66)
+			gradientColorView.backgroundColor = Constants.UI.Color.tint.colorWithAlphaComponent(0.66)
 		} else {
 			recordingStatusLabel.text = "Not Broadcasting"
 			recordingStatusLabel.textColor = recordSwitch.onTintColor
 			recordingStatusLabel.backgroundColor = RGB(255)
-			gradientColorView.backgroundColor = Constants.Color.off.colorWithAlphaComponent(0.66)
+			gradientColorView.backgroundColor = Constants.UI.Color.off.colorWithAlphaComponent(0.66)
 		}
 	}
 
@@ -1028,10 +1032,10 @@ extension HostViewController: MessageToolbarDelegate {
 
     func didReciveUserJoined(response: AnyObject) {
         if let result = response as? JSON {
-            if let user = STMTimelineItem(json: result) {
+            if let item = STMTimelineItem(json: result) {
                 let isAtBottom = commentsTableView.indexPathsForVisibleRows?.contains({ $0.row == (comments.count - 1) })
                 let shouldScrollDown = (didPostComment ?? false) || (isAtBottom ?? false)
-                comments.append(user)
+                comments.append(item)
                 didUpdateComments(shouldScrollDown)
             }
         }
@@ -1092,8 +1096,8 @@ extension HostViewController {
      */
 	func start(type: StreamType, name: String, passcode: String, description: String, callback: (Bool, String?) -> Void) {
 		let progressView = M13ProgressViewRing()
-		progressView.primaryColor = Constants.Color.tint
-		progressView.secondaryColor = Constants.Color.disabled
+		progressView.primaryColor = Constants.UI.Color.tint
+		progressView.secondaryColor = Constants.UI.Color.disabled
 		progressView.indeterminate = true
 
 		hud = M13ProgressHUD(progressView: progressView)
@@ -1141,8 +1145,8 @@ extension HostViewController {
      */
 	func start(stream: STMStream, callback: (Bool, String?) -> Void) {
 		let progressView = M13ProgressViewRing()
-		progressView.primaryColor = Constants.Color.tint
-		progressView.secondaryColor = Constants.Color.disabled
+		progressView.primaryColor = Constants.UI.Color.tint
+		progressView.secondaryColor = Constants.UI.Color.disabled
 		progressView.indeterminate = true
 
 		hud = M13ProgressHUD(progressView: progressView)
@@ -1200,10 +1204,6 @@ extension HostViewController: EZOutputDataSource {
 			return
 		}
 
-		guard let userID = user.id else {
-            return
-        }
-
         guard let securityHash = stream.securityHash else {
             return
         }
@@ -1215,7 +1215,7 @@ extension HostViewController: EZOutputDataSource {
         let oForcePolling = SocketIOClientOption.ForcePolling(true)
         let oHost = SocketIOClientOption.Nsp("/host")
         let streamQueue = SocketIOClientOption.HandleQueue(backgroundQueue)
-        let oAuth = SocketIOClientOption.ConnectParams(["streamID": stream.id, "securityHash": securityHash, "userID": userID, "stmHash": Constants.Config.streamHash])
+        let oAuth = SocketIOClientOption.ConnectParams(["streamID": stream.id, "securityHash": securityHash, "userID": user.id, "stmHash": Constants.Config.streamHash])
         let oLog = SocketIOClientOption.Log(false)
         let oForceNew = SocketIOClientOption.ForceNew(true)
         let options = [oForcePolling, oHost, oAuth, streamQueue, oForceNew] as Set<SocketIOClientOption>

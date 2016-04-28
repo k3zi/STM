@@ -43,7 +43,7 @@ class STMAuthzModule: AuthzModule {
             return nil
         }
 
-        return ["username": username, "password": password]
+        return ["STM-Username": username, "STM-Password": password]
     }
 
     func isAuthorized() -> Bool {

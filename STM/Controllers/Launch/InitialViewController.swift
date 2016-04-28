@@ -25,7 +25,7 @@ class InitialViewController: KZViewController {
         crowdBG.layer.addSublayer(crowdBGGradient)
 
         crowdBGGOverlay.opacity = 0.66
-        crowdBGGOverlay.backgroundColor = Constants.Color.tint.CGColor
+        crowdBGGOverlay.backgroundColor = Constants.UI.Color.tint.CGColor
         crowdBG.layer.addSublayer(crowdBGGOverlay)
 
         crowdBG.contentMode = .ScaleAspectFill

@@ -129,7 +129,7 @@ class DashboardItemCell: KZTableViewCell, UICollectionViewDelegate, UICollection
         lightBlurView.autoPinEdgesToSuperviewEdges()
         AppDelegate.del().currentWindowEffects = [lightBlurView, imageView, infoHolderView]
 
-        UIView.animateWithDuration(Constants.Animation.visualEffectsLength) { () -> Void in
+        UIView.animateWithDuration(Constants.UI.Animation.visualEffectsLength) { () -> Void in
             infoHolderView.alpha = 1.0
             let effect = UIBlurEffect(style: .Dark)
             lightBlurView.effect = effect

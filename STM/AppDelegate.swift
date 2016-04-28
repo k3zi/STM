@@ -32,7 +32,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 		let nav = NavigationController(rootViewController: InitialViewController())
 		nav.setNavigationBarHidden(true, animated: false)
 
-		window = Window(frame: Constants.Screen.bounds)
+		window = Window(frame: Constants.UI.Screen.bounds)
 		window?.rootViewController = nav
 		window?.makeKeyAndVisible()
 
@@ -59,20 +59,25 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 
 	func createTabSet() -> UITabBarController {
 		let tabVC = UITabBarController()
+
+        guard let user = currentUser else {
+            return tabVC
+        }
+
 		let tab1 = NavigationController(rootViewController: DashboardViewController())
 		let tab2 = NavigationController(rootViewController: CreateStreamViewController())
 		let tab3 = NavigationController(rootViewController: KZViewController())
-		let tab4 = NavigationController(rootViewController: KZViewController())
-		let tab5 = NavigationController(rootViewController: KZViewController())
-		tabVC.setViewControllers([tab1, tab2, tab4, tab5], animated: false)
+		let tab4 = NavigationController(rootViewController: SearchViewController())
+		let tab5 = NavigationController(rootViewController: ProfileViewController(user: user, isOwner: true))
+		tabVC.setViewControllers([tab1, tab2, tab3, tab4, tab5], animated: false)
 
 		self.window?.rootViewController = tabVC
 		self.window?.makeKeyAndVisible()
 
 		tab1.tabBarItem = UITabBarItem(title: "Dashboard", image: UIImage(named: "tabDashboard"), tag: 1)
 		tab2.tabBarItem = UITabBarItem(title: "Host", image: UIImage(named: "tabCreateStream"), tag: 2)
-		tab3.tabBarItem = UITabBarItem(title: "Local", image: UIImage(named: "tabJoinStream"), tag: 3)
-		tab4.tabBarItem = UITabBarItem(title: "Friends", image: UIImage(named: "tabFriends"), tag: 4)
+		tab3.tabBarItem = UITabBarItem(title: "Messages", image: UIImage(named: "tabMessages"), tag: 3)
+		tab4.tabBarItem = UITabBarItem(title: "Search", image: UIImage(named: "tabSearch"), tag: 4)
 		tab5.tabBarItem = UITabBarItem(title: "Profile", image: UIImage(named: "tabProfile"), tag: 5)
 		tabVC.selectedViewController = tab1
 
@@ -115,6 +120,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 	}
 
     func presentStreamController(vc: UIViewController) {
+        self.close()
         self.window?.rootViewController?.presentViewController(vc, animated: true, completion: nil)
         self.activeStreamController = vc
     }
@@ -176,14 +182,37 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         }
     }
 
+    func close() {
+        if let vc = activeStreamController as? HostViewController {
+            vc.close()
+        } else if let vc = activeStreamController as? PlayerViewController {
+            vc.close()
+        }
+    }
+
     //MARK: Window Effects
+
+    class func topViewController(base: UIViewController? = UIApplication.sharedApplication().keyWindow?.rootViewController) -> UIViewController? {
+        if let nav = base as? UINavigationController {
+            return topViewController(nav.visibleViewController)
+        }
+        if let tab = base as? UITabBarController {
+            if let selected = tab.selectedViewController {
+                return topViewController(selected)
+            }
+        }
+        if let presented = base?.presentedViewController {
+            return topViewController(presented)
+        }
+        return base
+    }
 
     func removeBlurEffects() {
         guard let effectViews = currentWindowEffects else {
             return
         }
 
-        UIView.animateWithDuration(Constants.Animation.visualEffectsLength, animations: { () -> Void in
+        UIView.animateWithDuration(Constants.UI.Animation.visualEffectsLength, animations: { () -> Void in
             effectViews.forEach({ (view) -> () in
                 if let view = view as? UIVisualEffectView {
                     view.effect = nil

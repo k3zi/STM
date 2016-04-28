@@ -12,7 +12,7 @@ extension UILabel {
 
     class func styledForSettingsHeader(text: String = "{HEADER TEXT}") -> UILabel {
         let label = UILabel()
-        label.backgroundColor = Constants.Color.tint
+        label.backgroundColor = Constants.UI.Color.tint
         label.text = text
         label.textAlignment = .Center
         label.font = UIFont.systemFontOfSize(13, weight: UIFontWeightLight)
@@ -23,7 +23,7 @@ extension UILabel {
 
     class func styledForDashboardHeader(text: String = "{HEADER TEXT}") -> UILabel {
         let label = UILabel()
-        label.textColor = Constants.Color.tint
+        label.textColor = Constants.UI.Color.tint
         label.text = text
         label.font = UIFont.systemFontOfSize(15, weight: UIFontWeightMedium)
         label.backgroundColor = UIColor.clearColor()

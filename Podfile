@@ -22,6 +22,7 @@ target 'STM' do
     pod 'Socket.IO-Client-Swift'
     pod 'StreamingKit'
     pod 'Keynode'
+    pod 'Former'
 
     pod 'Fabric'
     pod 'Crashlytics'
