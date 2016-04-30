@@ -11,6 +11,7 @@ import UIKit
 class DashboardViewController: KZViewController, UIViewControllerPreviewingDelegate {
     let tableView = UITableView()
     var dashboardItems = [Any]()
+    var comments = [Any]()
 
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -20,10 +21,12 @@ class DashboardViewController: KZViewController, UIViewControllerPreviewingDeleg
         }
 
         self.title = "Dashboard"
+        self.automaticallyAdjustsScrollViewInsets = false
 
         tableView.delegate = self
         tableView.dataSource = self
         tableView.registerReusableCell(DashboardItemCell)
+        tableView.registerReusableCell(UserCommentCell)
         view.addSubview(tableView)
 
         self.registerForPreviewingWithDelegate(self, sourceView: tableView)
@@ -36,12 +39,51 @@ class DashboardViewController: KZViewController, UIViewControllerPreviewingDeleg
         tableView.autoPinToBottomLayoutGuideOfViewController(self, withInset: 0)
     }
 
+    override func numberOfSectionsInTableView(tableView: UITableView) -> Int {
+        return 2
+    }
+
     override func tableViewCellData(tableView: UITableView, section: Int) -> [Any] {
-        return dashboardItems
+        if section == 0 {
+            return dashboardItems
+        } else {
+            return comments
+        }
     }
 
     override func tableViewCellClass(tableView: UITableView, indexPath: NSIndexPath?) -> KZTableViewCell.Type {
-        return DashboardItemCell.self
+        if indexPath?.section == 0 {
+            return DashboardItemCell.self
+        } else {
+            return UserCommentCell.self
+        }
+    }
+
+    override func tableView(tableView: UITableView, heightForRowAtIndexPath indexPath: NSIndexPath) -> CGFloat {
+        if tableViewCellData(tableView, section: indexPath.section).count == 0 {
+            return 100
+        }
+
+        if indexPath.section == 0 {
+            return super.tableView(tableView, heightForRowAtIndexPath: indexPath)
+        }
+
+        return UITableViewAutomaticDimension
+    }
+
+    func tableView(tableView: UITableView, estimatedHeightForRowAtIndexPath indexPath: NSIndexPath) -> CGFloat {
+        return 50.0
+    }
+
+    override func tableView(tableView: UITableView, didSelectRowAtIndexPath indexPath: NSIndexPath) {
+        super.tableView(tableView, didSelectRowAtIndexPath: indexPath)
+
+        if indexPath.section == 1 {
+            if let comment = comments[indexPath.row] as? STMComment {
+                let vc = CommentViewController(comment: comment)
+                self.navigationController?.pushViewController(vc, animated: true)
+            }
+        }
     }
 
     override func fetchData() {
@@ -55,17 +97,31 @@ class DashboardViewController: KZViewController, UIViewControllerPreviewingDeleg
                             self.dashboardItems.append($0)
                         }
                     })
+
                     self.tableView.reloadData()
                 }
             })
         }
+
+        Constants.Network.GET("/dashboard/comments", parameters: nil) { (response, error) -> Void in
+            self.handleResponse(response, error: error, successCompletion: { (result) -> Void in
+                self.comments.removeAll()
+
+                guard let results = result as? [JSON] else {
+                    return
+                }
+
+                let comments = [STMComment].fromJSONArray(results)
+                comments.forEach({ self.comments.append($0) })
+
+                self.tableView.reloadData()
+            })
+        }
     }
 
-    func previewingContext(previewingContext: UIViewControllerPreviewing, viewControllerForLocation location: CGPoint) -> UIViewController? {
-        guard AppDelegate.del().activeStreamController == nil else {
-            return nil
-        }
+    //MARK: UIViewController Previewing Delegate
 
+    func previewingContext(previewingContext: UIViewControllerPreviewing, viewControllerForLocation location: CGPoint) -> UIViewController? {
         guard let indexPath = tableView.indexPathForRowAtPoint(location), cell = tableView.cellForRowAtIndexPath(indexPath) else {
             return nil
         }
@@ -73,15 +129,25 @@ class DashboardViewController: KZViewController, UIViewControllerPreviewingDeleg
         var vc: UIViewController? = KZViewController()
         previewingContext.sourceRect = cell.frame
 
-        if let itemView = cell.hitTest(cell.convertPoint(location, fromView: tableView), withEvent: nil) {
-            if let innerCell = itemView.superview as? DashboardItemCollectionCell {
-                if let stream = innerCell.model as? STMStream {
-                    let pVC = PlayerViewController()
-                    pVC.isPreviewing = true
-                    pVC.start(stream, vc: self, showHUD: false)
-                    vc = pVC
-                    previewingContext.sourceRect = view.convertRect(itemView.frame, fromView: innerCell)
+        if indexPath.section == 0 {
+            if let itemView = cell.hitTest(cell.convertPoint(location, fromView: tableView), withEvent: nil) {
+                if let innerCell = itemView.superview as? DashboardItemCollectionCell {
+                    if let stream = innerCell.model as? STMStream {
+                        guard AppDelegate.del().activeStreamController == nil else {
+                            return nil
+                        }
+
+                        let pVC = PlayerViewController()
+                        pVC.isPreviewing = true
+                        pVC.start(stream, vc: self, showHUD: false)
+                        vc = pVC
+                        previewingContext.sourceRect = view.convertRect(itemView.frame, fromView: innerCell)
+                    }
                 }
+            }
+        } else if indexPath.section == 1 {
+            if let comment = comments[indexPath.row] as? STMComment {
+                vc = CommentViewController(comment: comment)
             }
         }
 
@@ -96,6 +162,8 @@ class DashboardViewController: KZViewController, UIViewControllerPreviewingDeleg
         if let vc = viewControllerToCommit as? PlayerViewController {
             vc.isPreviewing = false
             AppDelegate.del().presentStreamController(vc)
+        } else {
+            self.navigationController?.pushViewController(viewControllerToCommit, animated: true)
         }
     }
 

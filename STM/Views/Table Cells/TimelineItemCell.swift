@@ -62,7 +62,7 @@ class TimelineItemCell: KZTableViewCell {
         }
 
         if let user = item.user {
-            //nameLabel.text = user.displayName
+            avatar.kf_setImageWithURL(user.profilePictureURL(), placeholderImage: UIImage(named: "defaultProfilePicture"))
         }
 
         messageLabel.text = item.message

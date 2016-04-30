@@ -14,12 +14,14 @@ import CoreLocation
 
 struct Constants {
 
-	static let http = Http(baseURL: Config.apiBaseURL + "/v1")
+	static let http = Http(baseURL: Config.apiBaseURL)
 	static let Settings = NSUserDefaults.standardUserDefaults()
 
 	struct Config {
+        static let apiVersion = "1"
+
         static let siteBaseURL = "https://stm.io"
-        static let apiBaseURL = "https://api.stm.io"
+        static let apiBaseURL = "https://api.stm.io/v\(apiVersion)"
 		static let systemCredentials = NSURLCredential(user: "STM-API", password: "PXsd<rhKG0r'@U.-Z`>!9V%-Z<Z", persistence: .ForSession)
 		static let hashids = Hashids(salt: "pepper", minHashLength: 4, alphabet: "abcdefghijkmnpqrstuxyACDEFGHKMNPQRSTUQY23456789")
 		static let streamHash = "WrfN'/:_f.#8fYh(=RY(LxTDRrU"
@@ -27,6 +29,11 @@ struct Constants {
 	}
 
 	struct Notification {
+        static let UpdateUserProfile = "STMNotificationUpdateUserProfile"
+
+        func UpdateForComment(comment: STMComment) -> String {
+            return "STMNotificationUpdateForComment-\(comment.id)"
+        }
 	}
 
 	struct Network {
@@ -37,6 +44,10 @@ struct Constants {
 		static func GET(url: String, parameters: [String: AnyObject]?, completionHandler: CompletionBlock) {
 			Constants.http.request(.GET, path: url, parameters: parameters, credential: Constants.Config.systemCredentials, completionHandler: completionHandler)
 		}
+
+        static func UPLOAD(url: String, data: NSData, parameters: [String: AnyObject]?, progress: ProgressBlock? = nil, completionHandler: CompletionBlock) {
+            Constants.http.upload(url, data: data, parameters: parameters, credential: Constants.Config.systemCredentials, method: .POST, responseSerializer: JsonResponseSerializer(), progress: progress, completionHandler: completionHandler)
+        }
 	}
 
     struct UI {
@@ -243,4 +254,19 @@ extension UIViewController {
         view.endEditing(true)
     }
 
+}
+
+func resizeImage(image: UIImage, newWidth: CGFloat) -> UIImage {
+    let newWidth = round(newWidth)
+    let scale = newWidth / image.size.width
+    if scale < 1.0 {
+        let newHeight = round(image.size.height * scale)
+        UIGraphicsBeginImageContext(CGSize(width: newWidth, height: newHeight))
+        image.drawInRect(CGRect(x: 0, y: 0, width: newWidth, height: newHeight))
+        let newImage = UIGraphicsGetImageFromCurrentImageContext()
+        UIGraphicsEndImageContext()
+        return newImage
+    }
+
+    return image
 }

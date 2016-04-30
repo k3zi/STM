@@ -29,6 +29,12 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 		Fabric.with([Crashlytics.self, Twitter.self])
         Constants.http.authzModule = STMAuthzModule()
 
+        let sessionConfig = NSURLSessionConfiguration.defaultSessionConfiguration()
+        let credentialStorage = NSURLCredentialStorage.sharedCredentialStorage()
+        credentialStorage.setCredential(Constants.Config.systemCredentials, forProtectionSpace: NSURLProtectionSpace(host: "api.stm.io", port: 0, protocol: "https", realm: nil, authenticationMethod: NSURLAuthenticationMethodHTTPBasic))
+        sessionConfig.URLCredentialStorage = credentialStorage
+        ImageDownloader.defaultDownloader.sessionConfiguration = NSURLSessionConfiguration.defaultSessionConfiguration()
+
 		let nav = NavigationController(rootViewController: InitialViewController())
 		nav.setNavigationBarHidden(true, animated: false)
 
@@ -47,7 +53,10 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         }
         NSSetUncaughtExceptionHandler(exceptionHandler)
 
+        UITabBar.appearance().tintColor = Constants.UI.Color.tint
+
 		setUpAudioSession(withMic: false)
+
 		return true
 	}
 

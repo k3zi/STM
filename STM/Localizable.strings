@@ -17,3 +17,6 @@ Settings_HostMusicVolumeWhenMicActiveDescription = "The volume for the music pla
 
 Settings_HostMicFadeTime = "Microphone Fade Time";
 Settings_HostMicFadeTimeDescription = "The duration that the music fades out for while the mic fades in";
+
+Settings_StreamName = "Stream Name";
+Settings_StreamNameDescription = "The name displayed to listeners for the broadcast";

@@ -92,6 +92,10 @@ class HostViewController: KZViewController, UISearchBarDelegate {
 	var micFadeTimeSettingView = UIView()
 	let micFadeTimeSlider = UISlider()
 
+    let settingsHeaderMeta = UILabel.styledForSettingsHeader("META")
+    var metaNameSettingView = UIView()
+    let metaNameField = UITextField()
+
 	let bottomBlurBar = UIToolbar()
 	var bottomBlurBarConstraint: NSLayoutConstraint?
 	let streamInfoHolder = HostInfoHolderView()
@@ -269,7 +273,15 @@ class HostViewController: KZViewController, UISearchBarDelegate {
 
 		micFadeTimeSettingView.autoPinEdgeToSuperviewEdge(.Left)
 		micFadeTimeSettingView.autoPinEdgeToSuperviewEdge(.Right)
-		micFadeTimeSettingView.autoPinEdgeToSuperviewEdge(.Bottom, withInset: 0, relation: .GreaterThanOrEqual)
+
+        settingsHeaderMeta.autoPinEdge(.Top, toEdge: .Bottom, ofView: micFadeTimeSettingView)
+        settingsHeaderMeta.autoPinEdgeToSuperviewEdge(.Left)
+        settingsHeaderMeta.autoPinEdgeToSuperviewEdge(.Right)
+
+        metaNameSettingView.autoPinEdge(.Top, toEdge: .Bottom, ofView: settingsHeaderMeta)
+        metaNameSettingView.autoPinEdgeToSuperviewEdge(.Left)
+        metaNameSettingView.autoPinEdgeToSuperviewEdge(.Right)
+		metaNameSettingView.autoPinEdgeToSuperviewEdge(.Bottom, withInset: 0, relation: .GreaterThanOrEqual)
 
 		// Toolbar
 		bottomBlurBar.autoSetDimension(.Height, toSize: 88)
@@ -442,6 +454,11 @@ class HostViewController: KZViewController, UISearchBarDelegate {
 		self.micFadeTimeSettingView = micFadeTimeSettingView
 		settingsContentView.addSubview(micFadeTimeSettingView)
 		micFadeTimeSettingView.setPrevChain(micActiveMusicVolumeSettingView)
+
+        settingsContentView.addSubview(settingsHeaderMeta)
+        let metaNameSettingView = SettingJoinedView(text: NSLocalizedString("Settings_StreamName", comment: "Stream Name"), detailText: NSLocalizedString("Settings_StreamNameDescription", comment: ""), control: metaNameField)
+        self.metaNameSettingView = metaNameSettingView
+        settingsContentView.addSubview(metaNameSettingView)
 	}
 
 	func setupToolbar() {

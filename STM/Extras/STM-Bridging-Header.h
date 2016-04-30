@@ -14,6 +14,7 @@
 @import Reusable;
 @import Crashlytics;
 @import Keynode;
+@import Kingfisher;
 
 
 #import <CommonCrypto/CommonCrypto.h>

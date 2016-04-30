@@ -33,6 +33,9 @@
 		EA27B2041C5D3312006F269D /* KZPlayerPlaylist.swift in Sources */ = {isa = PBXBuildFile; fileRef = EA27B2001C5D3312006F269D /* KZPlayerPlaylist.swift */; };
 		EA27B2051C5D3312006F269D /* KZPlayerTag.swift in Sources */ = {isa = PBXBuildFile; fileRef = EA27B2011C5D3312006F269D /* KZPlayerTag.swift */; };
 		EA27B20A1C5D781E006F269D /* KZConverter.swift in Sources */ = {isa = PBXBuildFile; fileRef = EA27B2091C5D781E006F269D /* KZConverter.swift */; };
+		EA2898A21CD328520025F43B /* CellButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = EA2898A11CD328520025F43B /* CellButton.swift */; };
+		EA2898A51CD3E9080025F43B /* CommentViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = EA2898A41CD3E9080025F43B /* CommentViewController.swift */; };
+		EA2898A71CD3ED1B0025F43B /* ExtendedUserCommentCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = EA2898A61CD3ED1B0025F43B /* ExtendedUserCommentCell.swift */; };
 		EA3EF7D41CCEEE60009E4524 /* SearchViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = EA3EF7D31CCEEE60009E4524 /* SearchViewController.swift */; };
 		EA3EF7D61CCF014C009E4524 /* SearchUserCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = EA3EF7D51CCF014C009E4524 /* SearchUserCell.swift */; };
 		EA3EF7D81CCF028F009E4524 /* SearchStreamCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = EA3EF7D71CCF028F009E4524 /* SearchStreamCell.swift */; };
@@ -64,6 +67,10 @@
 		EA54E5C21CC5D8210033135B /* UIToolbarStyles.swift in Sources */ = {isa = PBXBuildFile; fileRef = EA54E5C11CC5D8210033135B /* UIToolbarStyles.swift */; };
 		EA6F5B811CD1392A00C9638D /* ProfileViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = EA6F5B801CD1392A00C9638D /* ProfileViewController.swift */; };
 		EA6F5B831CD1466900C9638D /* ProfileStatView.swift in Sources */ = {isa = PBXBuildFile; fileRef = EA6F5B821CD1466900C9638D /* ProfileStatView.swift */; };
+		EA6F5B871CD1A90000C9638D /* ProfileSettingsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = EA6F5B861CD1A90000C9638D /* ProfileSettingsViewController.swift */; };
+		EA6F5B891CD1A99D00C9638D /* SettingsProfilePictureCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = EA6F5B881CD1A99D00C9638D /* SettingsProfilePictureCell.swift */; };
+		EA6F5B8B1CD1B1E400C9638D /* STMSetting.swift in Sources */ = {isa = PBXBuildFile; fileRef = EA6F5B8A1CD1B1E400C9638D /* STMSetting.swift */; };
+		EA6F5B8D1CD224A400C9638D /* UserCommentCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = EA6F5B8C1CD224A400C9638D /* UserCommentCell.swift */; };
 		EA86DCFC1CCC156A00064040 /* STMAuthzModule.swift in Sources */ = {isa = PBXBuildFile; fileRef = EA86DCFB1CCC156900064040 /* STMAuthzModule.swift */; };
 		EA86DD001CCC281600064040 /* TimelineItemCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = EA86DCFF1CCC281600064040 /* TimelineItemCell.swift */; };
 		EA86DD021CCC291D00064040 /* STMTimelineItem.swift in Sources */ = {isa = PBXBuildFile; fileRef = EA86DD011CCC291D00064040 /* STMTimelineItem.swift */; };
@@ -123,6 +130,9 @@
 		EA27B2001C5D3312006F269D /* KZPlayerPlaylist.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = KZPlayerPlaylist.swift; sourceTree = "<group>"; };
 		EA27B2011C5D3312006F269D /* KZPlayerTag.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = KZPlayerTag.swift; sourceTree = "<group>"; };
 		EA27B2091C5D781E006F269D /* KZConverter.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = KZConverter.swift; sourceTree = "<group>"; };
+		EA2898A11CD328520025F43B /* CellButton.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CellButton.swift; sourceTree = "<group>"; };
+		EA2898A41CD3E9080025F43B /* CommentViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CommentViewController.swift; sourceTree = "<group>"; };
+		EA2898A61CD3ED1B0025F43B /* ExtendedUserCommentCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ExtendedUserCommentCell.swift; sourceTree = "<group>"; };
 		EA3EF7D31CCEEE60009E4524 /* SearchViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SearchViewController.swift; sourceTree = "<group>"; };
 		EA3EF7D51CCF014C009E4524 /* SearchUserCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SearchUserCell.swift; sourceTree = "<group>"; };
 		EA3EF7D71CCF028F009E4524 /* SearchStreamCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SearchStreamCell.swift; sourceTree = "<group>"; };
@@ -177,6 +187,10 @@
 		EA54E5C11CC5D8210033135B /* UIToolbarStyles.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = UIToolbarStyles.swift; sourceTree = "<group>"; };
 		EA6F5B801CD1392A00C9638D /* ProfileViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ProfileViewController.swift; sourceTree = "<group>"; };
 		EA6F5B821CD1466900C9638D /* ProfileStatView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ProfileStatView.swift; sourceTree = "<group>"; };
+		EA6F5B861CD1A90000C9638D /* ProfileSettingsViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ProfileSettingsViewController.swift; sourceTree = "<group>"; };
+		EA6F5B881CD1A99D00C9638D /* SettingsProfilePictureCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SettingsProfilePictureCell.swift; sourceTree = "<group>"; };
+		EA6F5B8A1CD1B1E400C9638D /* STMSetting.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = STMSetting.swift; sourceTree = "<group>"; };
+		EA6F5B8C1CD224A400C9638D /* UserCommentCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = UserCommentCell.swift; sourceTree = "<group>"; };
 		EA86DCFB1CCC156900064040 /* STMAuthzModule.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = STMAuthzModule.swift; sourceTree = "<group>"; };
 		EA86DCFF1CCC281600064040 /* TimelineItemCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TimelineItemCell.swift; sourceTree = "<group>"; };
 		EA86DD011CCC291D00064040 /* STMTimelineItem.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = STMTimelineItem.swift; sourceTree = "<group>"; };
@@ -311,6 +325,7 @@
 				EA86DD011CCC291D00064040 /* STMTimelineItem.swift */,
 				EAE0630F1C7E7A0900C86823 /* STMComment.swift */,
 				EA27B1FB1C5D2D05006F269D /* STMStream.swift */,
+				EA6F5B8A1CD1B1E400C9638D /* STMSetting.swift */,
 			);
 			path = Models;
 			sourceTree = "<group>";
@@ -333,6 +348,7 @@
 		EA09CAC01C5C447E0067FF6A /* Controllers */ = {
 			isa = PBXGroup;
 			children = (
+				EA2898A31CD3E8DD0025F43B /* Global */,
 				EA54E5C61CC692590033135B /* Host */,
 				EAFFCB101C876F1700258C16 /* Player */,
 				EA09CAD51C5C89430067FF6A /* Launch */,
@@ -384,6 +400,14 @@
 			path = Player;
 			sourceTree = "<group>";
 		};
+		EA2898A31CD3E8DD0025F43B /* Global */ = {
+			isa = PBXGroup;
+			children = (
+				EA2898A41CD3E9080025F43B /* CommentViewController.swift */,
+			);
+			path = Global;
+			sourceTree = "<group>";
+		};
 		EA3EF7D21CCEEE1F009E4524 /* Search */ = {
 			isa = PBXGroup;
 			children = (
@@ -399,9 +423,12 @@
 				EA4E49471C613F7C00CB40D7 /* HostStreamCell.swift */,
 				EA209DA91C8292A800A22BC4 /* DashboardItemCell.swift */,
 				EAE063111C7E94D000C86823 /* CommentCell.swift */,
+				EA6F5B8C1CD224A400C9638D /* UserCommentCell.swift */,
+				EA2898A61CD3ED1B0025F43B /* ExtendedUserCommentCell.swift */,
 				EA86DCFF1CCC281600064040 /* TimelineItemCell.swift */,
 				EA3EF7D51CCF014C009E4524 /* SearchUserCell.swift */,
 				EA3EF7D71CCF028F009E4524 /* SearchStreamCell.swift */,
+				EA6F5B881CD1A99D00C9638D /* SettingsProfilePictureCell.swift */,
 				EA481DE71C630EED008E3E6E /* SelectSongCell.swift */,
 				EA24C0641C68418600FE4DD0 /* UpNextSongCell.swift */,
 			);
@@ -416,6 +443,7 @@
 				EAB0E6A81C78F8E9008945FF /* SettingJoinedView.swift */,
 				EA8D3DE01C7D75C3003ACCFC /* MessageToolbarView.swift */,
 				EA6F5B821CD1466900C9638D /* ProfileStatView.swift */,
+				EA2898A11CD328520025F43B /* CellButton.swift */,
 			);
 			path = Generic;
 			sourceTree = "<group>";
@@ -515,6 +543,7 @@
 			isa = PBXGroup;
 			children = (
 				EA6F5B801CD1392A00C9638D /* ProfileViewController.swift */,
+				EA6F5B861CD1A90000C9638D /* ProfileSettingsViewController.swift */,
 			);
 			path = Profile;
 			sourceTree = "<group>";
@@ -724,6 +753,7 @@
 				EA4F49871C5EC05700103559 /* EZAudioFile.m in Sources */,
 				EA8D3DE11C7D75C3003ACCFC /* MessageToolbarView.swift in Sources */,
 				EA9216B11C856DBB00EA499B /* TriangleView.swift in Sources */,
+				EA2898A51CD3E9080025F43B /* CommentViewController.swift in Sources */,
 				EA01AF8A1C5CB3C500F56792 /* SignInViewController.swift in Sources */,
 				EA4F495B1C5EBFA000103559 /* YBNBandEQNode.m in Sources */,
 				EAB0E69F1C7813B5008945FF /* FUXData.swift in Sources */,
@@ -742,8 +772,10 @@
 				EA4F49841C5EC05700103559 /* KZPlayerInner.m in Sources */,
 				EA86DD001CCC281600064040 /* TimelineItemCell.swift in Sources */,
 				EA4F49661C5EBFA000103559 /* YBScheduledSoundPlayer.m in Sources */,
+				EA2898A71CD3ED1B0025F43B /* ExtendedUserCommentCell.swift in Sources */,
 				EA4F49701C5EC04C00103559 /* KZConverter.m in Sources */,
 				EAFFCB151C87E59300258C16 /* ObjectiveCProcessing.m in Sources */,
+				EA6F5B891CD1A99D00C9638D /* SettingsProfilePictureCell.swift in Sources */,
 				EA86DD021CCC291D00064040 /* STMTimelineItem.swift in Sources */,
 				EA4E494D1C617FA000CB40D7 /* GradientView.swift in Sources */,
 				EA27B2051C5D3312006F269D /* KZPlayerTag.swift in Sources */,
@@ -756,6 +788,7 @@
 				EA09CAC41C5C5CD30067FF6A /* InitialViewController.swift in Sources */,
 				EAB0E6A71C78EEB0008945FF /* UILabelStyles.swift in Sources */,
 				EA209DAD1C829B8500A22BC4 /* DashboardItemCollectionCell.swift in Sources */,
+				EA6F5B8B1CD1B1E400C9638D /* STMSetting.swift in Sources */,
 				EA09CAC61C5C5D040067FF6A /* Window.swift in Sources */,
 				EA24C0651C68418600FE4DD0 /* UpNextSongCell.swift in Sources */,
 				EA27B2041C5D3312006F269D /* KZPlayerPlaylist.swift in Sources */,
@@ -767,10 +800,13 @@
 				EA01AF981C5CD67E00F56792 /* HostViewController.swift in Sources */,
 				EA6F5B831CD1466900C9638D /* ProfileStatView.swift in Sources */,
 				EA01AF911C5CB8DC00F56792 /* DashboardViewController.swift in Sources */,
+				EA6F5B8D1CD224A400C9638D /* UserCommentCell.swift in Sources */,
 				EA4F49621C5EBFA000103559 /* YBAudioUnitNode.m in Sources */,
+				EA2898A21CD328520025F43B /* CellButton.swift in Sources */,
 				EAE545041C76978F00180241 /* MeterTable.m in Sources */,
 				EA09CAD01C5C84B00067FF6A /* UIButtonStyles.swift in Sources */,
 				EAB0E6A01C7813B5008945FF /* FUXEasingCombinators.swift in Sources */,
+				EA6F5B871CD1A90000C9638D /* ProfileSettingsViewController.swift in Sources */,
 				EAFFCB171C8A1B1C00258C16 /* PlayerInfoHolderView.swift in Sources */,
 				EA27B20A1C5D781E006F269D /* KZConverter.swift in Sources */,
 				EA4F495C1C5EBFA000103559 /* YBFormatConverter.m in Sources */,

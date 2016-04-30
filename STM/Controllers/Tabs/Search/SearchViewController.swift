@@ -175,6 +175,8 @@ class SearchViewController: KZViewController, UISearchBarDelegate, UIViewControl
         searchBar.resignFirstResponder()
     }
 
+    //MARK: UIViewController Previewing Delegate
+
     func previewingContext(previewingContext: UIViewControllerPreviewing, viewControllerForLocation location: CGPoint) -> UIViewController? {
         guard let indexPath = tableView.indexPathForRowAtPoint(location), cell = tableView.cellForRowAtIndexPath(indexPath) else {
             return nil

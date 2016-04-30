@@ -73,6 +73,8 @@ class CommentCell: KZTableViewCell {
 
 			if let user = comment.user {
 				nameLabel.text = user.displayName
+
+                avatar.kf_setImageWithURL(user.profilePictureURL(), placeholderImage: UIImage(named: "defaultProfilePicture"))
 			}
 
             if let date = comment.date {
@@ -94,6 +96,9 @@ class CommentCell: KZTableViewCell {
 
 		nameLabel.text = ""
 		dateLabel.text = ""
+
+        avatar.kf_cancelDownloadTask()
+        avatar.image = nil
 	}
 
     override func setIndexPath(indexPath: NSIndexPath, last: Bool) {

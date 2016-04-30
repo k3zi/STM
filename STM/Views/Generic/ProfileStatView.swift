@@ -20,6 +20,7 @@ class ProfileStatView: UIView {
 
     init(count: Int, name: String) {
         super.init(frame: CGRect.zero)
+        self.translatesAutoresizingMaskIntoConstraints = false
 
         countLabel.text = count.formatUsingAbbrevation()
         countLabel.textAlignment = .Center
@@ -40,7 +41,9 @@ class ProfileStatView: UIView {
         countLabel.autoAlignAxisToSuperviewAxis(.Vertical)
 
         nameLabel.autoPinEdge(.Top, toEdge: .Bottom, ofView: countLabel, withOffset: 10)
-        nameLabel.autoPinEdgesToSuperviewEdgesWithInsets(UIEdgeInsets(top: 0, left: 10, bottom: 10, right: 10), excludingEdge: .Top)
+        NSLayoutConstraint.autoSetPriority(999) {
+            self.nameLabel.autoPinEdgesToSuperviewEdgesWithInsets(UIEdgeInsets(top: 0, left: 10, bottom: 10, right: 10), excludingEdge: .Top)
+        }
         nameLabel.autoPinEdgeToSuperviewEdge(.Bottom, withInset: 10)
 
     }

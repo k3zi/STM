@@ -46,10 +46,12 @@ class SearchUserCell: KZTableViewCell {
         }
 
         let method = followButton.selected ? "unfollow" : "follow"
+        UIView.transitionWithView(self.followButton, duration: 0.2, options: .TransitionCrossDissolve, animations: {
+            self.followButton.selected = !self.followButton.selected
+        }, completion: nil)
         Constants.Network.GET("/\(method)/\(user.id)", parameters: nil) { (response, error) in
-            print(response)
             dispatch_async(dispatch_get_main_queue(), {
-                self.followButton.selected = !self.followButton.selected
+                NSNotificationCenter.defaultCenter().postNotificationName(Constants.Notification.UpdateUserProfile, object: nil)
             })
         }
     }
@@ -86,6 +88,8 @@ class SearchUserCell: KZTableViewCell {
             return
         }
 
+        avatar.kf_setImageWithURL(user.profilePictureURL(), placeholderImage: UIImage(named: "defaultProfilePicture"))
+
         nameLabel.text = user.displayName
         followButton.selected = user.isFollowing
         followButton.hidden = AppDelegate.del().currentUser?.id == user.id
@@ -97,6 +101,9 @@ class SearchUserCell: KZTableViewCell {
 
 		nameLabel.text = ""
 		messageLabel.text = ""
+
+        avatar.kf_cancelDownloadTask()
+        avatar.image = nil
 	}
 
     override func setIndexPath(indexPath: NSIndexPath, last: Bool) {

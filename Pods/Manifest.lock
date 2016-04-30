@@ -1,11 +1,11 @@
 PODS:
   - AeroGearHttp (0.5.1)
+  - ALCameraViewController (1.1.9)
   - CocoaSecurity (1.2.4)
   - Crashlytics (3.7.0):
     - Fabric (~> 1.6.3)
   - DateTools (1.7.0)
   - Fabric (1.6.7)
-  - Former (1.3.0)
   - Gloss (0.7.2)
   - Hashids-Swift (0.3.0)
   - HPGrowingTextView (1.1)
@@ -38,10 +38,10 @@ PODS:
 
 DEPENDENCIES:
   - AeroGearHttp
+  - ALCameraViewController
   - Crashlytics
   - DateTools
   - Fabric
-  - Former
   - Gloss
   - Hashids-Swift
   - HPGrowingTextView
@@ -65,11 +65,11 @@ DEPENDENCIES:
 
 SPEC CHECKSUMS:
   AeroGearHttp: 9eb405b694aa9ac5daff842f68648f4a9fe0fa66
+  ALCameraViewController: f171ffb7e84d211277a0f97823a2bda7418dc573
   CocoaSecurity: d288a6f87e0f363823d2cb83e753814a6944f71a
   Crashlytics: c3a2333dea9e2733d2777f730910321fc9e25c0d
   DateTools: 53288ee8b905fdc75897a1e6b5cc0144b14cba60
   Fabric: caf7580c725e64db144f610ac65cd60956911dc7
-  Former: 7380ef3b9bdb3bf43d9f0fe99e369987d3068705
   Gloss: 45eb51aaa6f2725341aec8d8caa65cfcc31f7f3b
   Hashids-Swift: 5d7c069b0d4a3b70d4e2a840c420115dd517050d
   HPGrowingTextView: 88a716d97fb853bcb08a4a08e4727da17efc9b19

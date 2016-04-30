@@ -104,10 +104,6 @@ class PlayerViewController: KZViewController, UISearchBarDelegate {
         }
     }
 
-    func checkForPreview() {
-
-    }
-
     // MARK: Constraints
     override func setupConstraints() {
         super.setupConstraints()
@@ -541,14 +537,22 @@ extension PlayerViewController: MessageToolbarDelegate {
     }
 
     func didReciveUserJoined(response: AnyObject) {
-        if let result = response as? JSON {
-            if let item = STMTimelineItem(json: result) {
-                let isAtBottom = commentsTableView.indexPathsForVisibleRows?.contains({ $0.row == (comments.count - 1) })
-                let shouldScrollDown = (didPostComment ?? false) || (isAtBottom ?? false)
-                comments.append(item)
-                didUpdateComments(shouldScrollDown)
-            }
+        guard let result = response as? JSON else {
+            return
         }
+
+        guard let item = STMTimelineItem(json: result) else {
+            return
+        }
+
+        guard item.user?.id != AppDelegate.del().currentUser?.id else {
+            return
+        }
+
+        let isAtBottom = commentsTableView.indexPathsForVisibleRows?.contains({ $0.row == (comments.count - 1) })
+        let shouldScrollDown = (didPostComment ?? false) || (isAtBottom ?? false)
+        comments.append(item)
+        didUpdateComments(shouldScrollDown)
     }
 
     func didUpdateComments(shouldScrollDown: Bool) {

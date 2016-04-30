@@ -8,9 +8,11 @@
 
 import UIKit
 
-class NavigationController: UINavigationController {
+class NavigationController: UINavigationController, UINavigationControllerDelegate {
     override func viewDidLoad() {
         super.viewDidLoad()
+
+        self.delegate = self
 
         //Edit NavBar
         self.navigationBar.translucent = false
@@ -34,5 +36,10 @@ class NavigationController: UINavigationController {
         let image = UIGraphicsGetImageFromCurrentImageContext()
         UIGraphicsEndImageContext()
         return image
+    }
+
+    func navigationController(navigationController: UINavigationController, willShowViewController viewController: UIViewController, animated: Bool) {
+        let item = UIBarButtonItem(title: " ", style: .Plain, target: nil, action: nil)
+        viewController.navigationItem.backBarButtonItem = item
     }
 }

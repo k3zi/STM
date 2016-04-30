@@ -31,4 +31,8 @@ struct STMUser: Decodable {
         self.isFollowing = ("isFollowing" <~~ json) ?? false
     }
 
+    func profilePictureURL() -> NSURL {
+        return NSURL(string: Constants.Config.apiBaseURL + "/user/\(id)/profilePicture") ?? NSURL()
+    }
+
 }

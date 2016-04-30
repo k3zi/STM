@@ -10,13 +10,12 @@ import Foundation
 
 class ProfileViewController: KZViewController {
 
-    var scrollView = UIScrollView()
-    var contentView = UIView()
-
     let headerView = UIView()
     let avatarImageView = UIImageView()
     let displayNameLabel = UILabel()
     let descriptionLabel = UILabel()
+    let rightSideHolder = UIView()
+    let followButton = UIButton()
 
     let commentsStatView = ProfileStatView(count: 0, name: "COMMENTS")
     let followersStatView = ProfileStatView(count: 0, name: "FOLLOWERS")
@@ -26,6 +25,8 @@ class ProfileViewController: KZViewController {
 
     let user: STMUser
     let isOwner: Bool
+
+    var comments = [Any]()
 
     init(user: STMUser, isOwner: Bool = false) {
         self.user = user
@@ -41,10 +42,10 @@ class ProfileViewController: KZViewController {
         super.viewDidLoad()
 
         self.navigationItem.title = isOwner ? "My Profile (@\(user.username))" : "@\(user.username)"
-
-        scrollView.showsVerticalScrollIndicator = false
-        scrollView.addSubview(contentView)
-        view.addSubview(scrollView)
+        self.automaticallyAdjustsScrollViewInsets = false
+        if isOwner {
+            navigationItem.rightBarButtonItem = UIBarButtonItem(title: "Edit", style: .Plain, target: self, action: #selector(self.editProfile))
+        }
 
         avatarImageView.layer.cornerRadius = 140.0 / 9.0
         avatarImageView.backgroundColor = RGB(72, g: 72, b: 72)
@@ -57,30 +58,71 @@ class ProfileViewController: KZViewController {
         descriptionLabel.text = user.description
         headerView.addSubview(descriptionLabel)
 
-        [commentsStatView, followersStatView, followingStatView].forEach({ headerView.addSubview($0) })
+        followButton.addTarget(self, action: #selector(self.toggleFollow), forControlEvents: .TouchUpInside)
+        followButton.setImage(UIImage(named: "profileFollowButton"), forState: .Normal)
+        followButton.setImage(UIImage(named: "profileUnfollowButton"), forState: .Selected)
+        followButton.enabled = !isOwner
+        followButton.selected = user.isFollowing
+        if isOwner {
+            followButton.alpha = 0.4
+        }
+        rightSideHolder.addSubview(followButton)
+        headerView.addSubview(rightSideHolder)
 
-        contentView.addSubview(headerView)
+        [commentsStatView, followersStatView, followingStatView].forEach({ headerView.addSubview($0) })
 
         tableView.delegate = self
         tableView.dataSource = self
+        tableView.showsVerticalScrollIndicator = false
         tableView.backgroundColor = RGB(250, g: 251, b: 252)
-        contentView.addSubview(tableView)
+        tableView.tableHeaderView = headerView
+        tableView.registerReusableCell(UserCommentCell)
+        view.addSubview(tableView)
+
+        NSNotificationCenter.defaultCenter().addObserver(self, selector: #selector(self.fetchData), name: Constants.Notification.UpdateUserProfile, object: nil)
+    }
+
+    override func viewDidAppear(animated: Bool) {
+        super.viewDidAppear(animated)
+
+        avatarImageView.kf_setImageWithURL(user.profilePictureURL(), placeholderImage: UIImage(named: "defaultProfilePicture"))
+    }
+
+    override func viewDidLayoutSubviews() {
+        super.viewDidLayoutSubviews()
+
+        if let headerView = tableView.tableHeaderView {
+            let height = headerView.systemLayoutSizeFittingSize(UILayoutFittingCompressedSize).height
+            var headerFrame = headerView.frame
+
+            if height != headerFrame.size.height {
+                headerFrame.size.height = height
+                headerView.frame = headerFrame
+                tableView.tableHeaderView = headerView
+            }
+        }
     }
 
     override func setupConstraints() {
         super.setupConstraints()
 
-        scrollView.autoPinEdgesToSuperviewEdgesWithInsets(UIEdgeInsetsZero, excludingEdge: .Bottom)
-        scrollView.autoPinToBottomLayoutGuideOfViewController(self, withInset: 0)
-
-        contentView.autoPinEdgesToSuperviewEdgesWithInsets(UIEdgeInsetsZero)
-        contentView.autoMatchDimension(.Width, toDimension: .Width, ofView: view)
-
-        headerView.autoPinEdgesToSuperviewEdgesWithInsets(UIEdgeInsetsZero, excludingEdge: .Bottom)
+        tableView.autoPinEdgesToSuperviewEdgesWithInsets(UIEdgeInsetsZero, excludingEdge: .Bottom)
+        tableView.autoPinToBottomLayoutGuideOfViewController(self, withInset: 0)
 
         avatarImageView.autoPinEdgeToSuperviewEdge(.Top, withInset: 20)
         avatarImageView.autoAlignAxisToSuperviewAxis(.Vertical)
-        avatarImageView.autoSetDimensionsToSize(CGSize(width: 140, height: 140))
+        NSLayoutConstraint.autoSetPriority(999) {
+            self.avatarImageView.autoSetDimensionsToSize(CGSize(width: 140, height: 140))
+        }
+
+        rightSideHolder.autoAlignAxis(.Horizontal, toSameAxisOfView: avatarImageView)
+        rightSideHolder.autoMatchDimension(.Height, toDimension: .Height, ofView: avatarImageView)
+        rightSideHolder.autoPinEdge(.Left, toEdge: .Right, ofView: avatarImageView)
+        rightSideHolder.autoPinEdgeToSuperviewEdge(.Right)
+
+        followButton.autoSetDimensionsToSize(CGSize(width: 70, height: 70))
+        followButton.autoAlignAxisToSuperviewAxis(.Horizontal)
+        followButton.autoAlignAxisToSuperviewAxis(.Vertical)
 
         displayNameLabel.autoPinEdge(.Top, toEdge: .Bottom, ofView: avatarImageView, withOffset: 15)
         displayNameLabel.autoSetDimension(.Width, toSize: 250, relation: .LessThanOrEqual)
@@ -90,7 +132,9 @@ class ProfileViewController: KZViewController {
         descriptionLabel.autoSetDimension(.Width, toSize: 250, relation: .LessThanOrEqual)
         descriptionLabel.autoAlignAxisToSuperviewAxis(.Vertical)
 
-        commentsStatView.autoPinEdge(.Top, toEdge: .Bottom, ofView: descriptionLabel, withOffset: 20)
+        NSLayoutConstraint.autoSetPriority(999) {
+            self.commentsStatView.autoPinEdge(.Top, toEdge: .Bottom, ofView: self.descriptionLabel, withOffset: 20)
+        }
         commentsStatView.autoPinEdgeToSuperviewEdge(.Left)
         commentsStatView.autoPinEdgeToSuperviewEdge(.Bottom, withInset: 20)
 
@@ -102,11 +146,16 @@ class ProfileViewController: KZViewController {
         followingStatView.autoPinEdge(.Left, toEdge: .Right, ofView: followersStatView)
         followingStatView.autoMatchDimension(.Width, toDimension: .Width, ofView: commentsStatView)
         followingStatView.autoPinEdgeToSuperviewEdge(.Right)
+    }
 
-        tableView.autoPinEdge(.Top, toEdge: .Bottom, ofView: headerView)
-        tableView.autoPinEdgeToSuperviewEdge(.Left)
-        tableView.autoPinEdgeToSuperviewEdge(.Right)
-        tableView.autoPinEdgeToSuperviewEdge(.Bottom)
+    //MARK: Table View Delegate
+
+    override func tableViewCellClass(tableView: UITableView, indexPath: NSIndexPath?) -> KZTableViewCell.Type {
+        return UserCommentCell.self
+    }
+
+    override func tableViewCellData(tableView: UITableView, section: Int) -> [Any] {
+        return comments
     }
 
     override func tableViewNoDataText(tableView: UITableView) -> String {
@@ -122,7 +171,52 @@ class ProfileViewController: KZViewController {
             return 100
         }
 
-        return super.tableView(tableView, heightForRowAtIndexPath: indexPath)
+        return UITableViewAutomaticDimension
+    }
+
+    func tableView(tableView: UITableView, estimatedHeightForRowAtIndexPath indexPath: NSIndexPath) -> CGFloat {
+        return 50.0
+    }
+
+    override func tableView(tableView: UITableView, didSelectRowAtIndexPath indexPath: NSIndexPath) {
+        super.tableView(tableView, didSelectRowAtIndexPath: indexPath)
+
+        if indexPath.section == 1 {
+            if let comment = comments[indexPath.row] as? STMComment {
+                let vc = CommentViewController(comment: comment)
+                self.navigationController?.pushViewController(vc, animated: true)
+            }
+        }
+    }
+
+    //MARK: UIViewController Previewing Delegate
+
+    func previewingContext(previewingContext: UIViewControllerPreviewing, viewControllerForLocation location: CGPoint) -> UIViewController? {
+        guard let indexPath = tableView.indexPathForRowAtPoint(location), cell = tableView.cellForRowAtIndexPath(indexPath) else {
+            return nil
+        }
+
+        var vc: UIViewController? = KZViewController()
+        previewingContext.sourceRect = cell.frame
+
+        if let comment = comments[indexPath.row] as? STMComment {
+            vc = CommentViewController(comment: comment)
+        }
+
+        if let vc = vc {
+            vc.preferredContentSize = CGSize(width: 0.0, height: 0.0)
+        }
+
+        return vc
+    }
+
+    func previewingContext(previewingContext: UIViewControllerPreviewing, commitViewController viewControllerToCommit: UIViewController) {
+        if let vc = viewControllerToCommit as? PlayerViewController {
+            vc.isPreviewing = false
+            AppDelegate.del().presentStreamController(vc)
+        } else {
+            self.navigationController?.pushViewController(viewControllerToCommit, animated: true)
+        }
     }
 
     override func fetchData() {
@@ -139,6 +233,38 @@ class ProfileViewController: KZViewController {
                 if let comments = result["comments"] as? Int {
                     self.commentsStatView.count = comments
                 }
+            })
+        }
+
+        Constants.Network.GET("/comments/user/\(user.id)", parameters: nil) { (response, error) -> Void in
+            self.handleResponse(response, error: error, successCompletion: { (result) -> Void in
+                self.comments.removeAll()
+
+                guard let results = result as? [JSON] else {
+                    return
+                }
+
+                let comments = [STMComment].fromJSONArray(results)
+                comments.forEach({ self.comments.append($0) })
+
+                self.tableView.reloadData()
+            })
+        }
+    }
+
+    func editProfile() {
+        let vc = ProfileSettingsViewController()
+        self.navigationController?.pushViewController(vc, animated: true)
+    }
+
+    func toggleFollow() {
+        let method = followButton.selected ? "unfollow" : "follow"
+        UIView.transitionWithView(self.followButton, duration: 0.2, options: .TransitionCrossDissolve, animations: {
+            self.followButton.selected = !self.followButton.selected
+        }, completion: nil)
+        Constants.Network.GET("/\(method)/\(user.id)", parameters: nil) { (response, error) in
+            dispatch_async(dispatch_get_main_queue(), {
+                NSNotificationCenter.defaultCenter().postNotificationName(Constants.Notification.UpdateUserProfile, object: nil)
             })
         }
     }
