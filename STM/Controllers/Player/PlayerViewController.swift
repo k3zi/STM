@@ -515,6 +515,7 @@ extension PlayerViewController: MessageToolbarDelegate {
             params["text"] = text
             socket.emitWithAck("addComment", params)(timeoutAfter: 0) { data in
                 Answers.logCustomEventWithName("Comment", customAttributes: [:])
+                NSNotificationCenter.defaultCenter().postNotificationName(Constants.Notification.DidPostComment, object: nil)
             }
         }
 

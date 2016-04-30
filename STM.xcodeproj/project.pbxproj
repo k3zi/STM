@@ -36,6 +36,15 @@
 		EA2898A21CD328520025F43B /* CellButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = EA2898A11CD328520025F43B /* CellButton.swift */; };
 		EA2898A51CD3E9080025F43B /* CommentViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = EA2898A41CD3E9080025F43B /* CommentViewController.swift */; };
 		EA2898A71CD3ED1B0025F43B /* ExtendedUserCommentCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = EA2898A61CD3ED1B0025F43B /* ExtendedUserCommentCell.swift */; };
+		EA2898AA1CD461410025F43B /* MessagesViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = EA2898A91CD461410025F43B /* MessagesViewController.swift */; };
+		EA2898AC1CD4A7260025F43B /* NewMessageViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = EA2898AB1CD4A7260025F43B /* NewMessageViewController.swift */; };
+		EA2898AE1CD4AD1F0025F43B /* UserSelectionCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = EA2898AD1CD4AD1F0025F43B /* UserSelectionCell.swift */; };
+		EA2898B01CD4C3ED0025F43B /* STMConversation.swift in Sources */ = {isa = PBXBuildFile; fileRef = EA2898AF1CD4C3ED0025F43B /* STMConversation.swift */; };
+		EA2898B21CD4C5D80025F43B /* STMMessage.swift in Sources */ = {isa = PBXBuildFile; fileRef = EA2898B11CD4C5D80025F43B /* STMMessage.swift */; };
+		EA2898B41CD4D1060025F43B /* ConversationViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = EA2898B31CD4D1060025F43B /* ConversationViewController.swift */; };
+		EA2898B71CD4D7430025F43B /* STMMessageOtherCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = EA2898B51CD4D7430025F43B /* STMMessageOtherCell.swift */; };
+		EA2898B81CD4D7430025F43B /* STMMessageYouCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = EA2898B61CD4D7430025F43B /* STMMessageYouCell.swift */; };
+		EA2898BA1CD4DD8F0025F43B /* ConvoCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = EA2898B91CD4DD8F0025F43B /* ConvoCell.swift */; };
 		EA3EF7D41CCEEE60009E4524 /* SearchViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = EA3EF7D31CCEEE60009E4524 /* SearchViewController.swift */; };
 		EA3EF7D61CCF014C009E4524 /* SearchUserCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = EA3EF7D51CCF014C009E4524 /* SearchUserCell.swift */; };
 		EA3EF7D81CCF028F009E4524 /* SearchStreamCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = EA3EF7D71CCF028F009E4524 /* SearchStreamCell.swift */; };
@@ -133,6 +142,15 @@
 		EA2898A11CD328520025F43B /* CellButton.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CellButton.swift; sourceTree = "<group>"; };
 		EA2898A41CD3E9080025F43B /* CommentViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CommentViewController.swift; sourceTree = "<group>"; };
 		EA2898A61CD3ED1B0025F43B /* ExtendedUserCommentCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ExtendedUserCommentCell.swift; sourceTree = "<group>"; };
+		EA2898A91CD461410025F43B /* MessagesViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MessagesViewController.swift; sourceTree = "<group>"; };
+		EA2898AB1CD4A7260025F43B /* NewMessageViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = NewMessageViewController.swift; sourceTree = "<group>"; };
+		EA2898AD1CD4AD1F0025F43B /* UserSelectionCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = UserSelectionCell.swift; sourceTree = "<group>"; };
+		EA2898AF1CD4C3ED0025F43B /* STMConversation.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = STMConversation.swift; sourceTree = "<group>"; };
+		EA2898B11CD4C5D80025F43B /* STMMessage.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = STMMessage.swift; sourceTree = "<group>"; };
+		EA2898B31CD4D1060025F43B /* ConversationViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ConversationViewController.swift; sourceTree = "<group>"; };
+		EA2898B51CD4D7430025F43B /* STMMessageOtherCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = STMMessageOtherCell.swift; sourceTree = "<group>"; };
+		EA2898B61CD4D7430025F43B /* STMMessageYouCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = STMMessageYouCell.swift; sourceTree = "<group>"; };
+		EA2898B91CD4DD8F0025F43B /* ConvoCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ConvoCell.swift; sourceTree = "<group>"; };
 		EA3EF7D31CCEEE60009E4524 /* SearchViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SearchViewController.swift; sourceTree = "<group>"; };
 		EA3EF7D51CCF014C009E4524 /* SearchUserCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SearchUserCell.swift; sourceTree = "<group>"; };
 		EA3EF7D71CCF028F009E4524 /* SearchStreamCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SearchStreamCell.swift; sourceTree = "<group>"; };
@@ -256,6 +274,7 @@
 		EA01AF8B1C5CB6FA00F56792 /* Tabs */ = {
 			isa = PBXGroup;
 			children = (
+				EA2898A81CD460AD0025F43B /* Messages */,
 				EA6F5B7F1CD138E900C9638D /* Profile */,
 				EA01AF8F1C5CB74C00F56792 /* Dashboard */,
 				EA01AF941C5CC44A00F56792 /* Create Stream */,
@@ -324,6 +343,8 @@
 				EA209DAE1C82BAB700A22BC4 /* STMDashboardItem.swift */,
 				EA86DD011CCC291D00064040 /* STMTimelineItem.swift */,
 				EAE0630F1C7E7A0900C86823 /* STMComment.swift */,
+				EA2898B11CD4C5D80025F43B /* STMMessage.swift */,
+				EA2898AF1CD4C3ED0025F43B /* STMConversation.swift */,
 				EA27B1FB1C5D2D05006F269D /* STMStream.swift */,
 				EA6F5B8A1CD1B1E400C9638D /* STMSetting.swift */,
 			);
@@ -408,6 +429,16 @@
 			path = Global;
 			sourceTree = "<group>";
 		};
+		EA2898A81CD460AD0025F43B /* Messages */ = {
+			isa = PBXGroup;
+			children = (
+				EA2898A91CD461410025F43B /* MessagesViewController.swift */,
+				EA2898B31CD4D1060025F43B /* ConversationViewController.swift */,
+				EA2898AB1CD4A7260025F43B /* NewMessageViewController.swift */,
+			);
+			path = Messages;
+			sourceTree = "<group>";
+		};
 		EA3EF7D21CCEEE1F009E4524 /* Search */ = {
 			isa = PBXGroup;
 			children = (
@@ -427,10 +458,14 @@
 				EA2898A61CD3ED1B0025F43B /* ExtendedUserCommentCell.swift */,
 				EA86DCFF1CCC281600064040 /* TimelineItemCell.swift */,
 				EA3EF7D51CCF014C009E4524 /* SearchUserCell.swift */,
+				EA2898B91CD4DD8F0025F43B /* ConvoCell.swift */,
+				EA2898AD1CD4AD1F0025F43B /* UserSelectionCell.swift */,
 				EA3EF7D71CCF028F009E4524 /* SearchStreamCell.swift */,
 				EA6F5B881CD1A99D00C9638D /* SettingsProfilePictureCell.swift */,
 				EA481DE71C630EED008E3E6E /* SelectSongCell.swift */,
 				EA24C0641C68418600FE4DD0 /* UpNextSongCell.swift */,
+				EA2898B51CD4D7430025F43B /* STMMessageOtherCell.swift */,
+				EA2898B61CD4D7430025F43B /* STMMessageYouCell.swift */,
 			);
 			path = "Table Cells";
 			sourceTree = "<group>";
@@ -746,6 +781,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				EAB0E6A91C78F8E9008945FF /* SettingJoinedView.swift in Sources */,
+				EA2898B81CD4D7430025F43B /* STMMessageYouCell.swift in Sources */,
 				EA4F49611C5EBFA000103559 /* YBAudioUnitGraph.m in Sources */,
 				EA209DAF1C82BAB700A22BC4 /* STMDashboardItem.swift in Sources */,
 				EAE545061C76BA9200180241 /* STMVisualizer.swift in Sources */,
@@ -762,6 +798,8 @@
 				EACD2B401C75996600A6CFD6 /* HostInfoHolderView.swift in Sources */,
 				EAB0E6981C780866008945FF /* YBDelay.m in Sources */,
 				EA481DE81C630EED008E3E6E /* SelectSongCell.swift in Sources */,
+				EA2898AE1CD4AD1F0025F43B /* UserSelectionCell.swift in Sources */,
+				EA2898AA1CD461410025F43B /* MessagesViewController.swift in Sources */,
 				EA4F49641C5EBFA000103559 /* YBDistortionFilter.m in Sources */,
 				EA27B1FC1C5D2D05006F269D /* STMStream.swift in Sources */,
 				EA4F495E1C5EBFA000103559 /* YBAudioComponent.m in Sources */,
@@ -775,15 +813,18 @@
 				EA2898A71CD3ED1B0025F43B /* ExtendedUserCommentCell.swift in Sources */,
 				EA4F49701C5EC04C00103559 /* KZConverter.m in Sources */,
 				EAFFCB151C87E59300258C16 /* ObjectiveCProcessing.m in Sources */,
+				EA2898B21CD4C5D80025F43B /* STMMessage.swift in Sources */,
 				EA6F5B891CD1A99D00C9638D /* SettingsProfilePictureCell.swift in Sources */,
 				EA86DD021CCC291D00064040 /* STMTimelineItem.swift in Sources */,
 				EA4E494D1C617FA000CB40D7 /* GradientView.swift in Sources */,
+				EA2898BA1CD4DD8F0025F43B /* ConvoCell.swift in Sources */,
 				EA27B2051C5D3312006F269D /* KZPlayerTag.swift in Sources */,
 				EA209DAA1C8292A800A22BC4 /* DashboardItemCell.swift in Sources */,
 				EA4F49601C5EBFA000103559 /* YBAudioFilePlayer.m in Sources */,
 				EA09CAD21C5C85AF0067FF6A /* CreateAccountViewController.swift in Sources */,
 				EA09CAAD1C5C41510067FF6A /* AppDelegate.swift in Sources */,
 				EA4F495F1C5EBFA000103559 /* YBAudioException.m in Sources */,
+				EA2898B41CD4D1060025F43B /* ConversationViewController.swift in Sources */,
 				EAE063121C7E94D000C86823 /* CommentCell.swift in Sources */,
 				EA09CAC41C5C5CD30067FF6A /* InitialViewController.swift in Sources */,
 				EAB0E6A71C78EEB0008945FF /* UILabelStyles.swift in Sources */,
@@ -794,11 +835,13 @@
 				EA27B2041C5D3312006F269D /* KZPlayerPlaylist.swift in Sources */,
 				EA4F49651C5EBFA000103559 /* YBMultiChannelMixer.m in Sources */,
 				EA4E494B1C61416400CB40D7 /* Label.swift in Sources */,
+				EA2898B01CD4C3ED0025F43B /* STMConversation.swift in Sources */,
 				EA4F49631C5EBFA000103559 /* YBAudioUtils.m in Sources */,
 				EA01AF961C5CC48700F56792 /* CreateStreamViewController.swift in Sources */,
 				EAE063101C7E7A0900C86823 /* STMComment.swift in Sources */,
 				EA01AF981C5CD67E00F56792 /* HostViewController.swift in Sources */,
 				EA6F5B831CD1466900C9638D /* ProfileStatView.swift in Sources */,
+				EA2898AC1CD4A7260025F43B /* NewMessageViewController.swift in Sources */,
 				EA01AF911C5CB8DC00F56792 /* DashboardViewController.swift in Sources */,
 				EA6F5B8D1CD224A400C9638D /* UserCommentCell.swift in Sources */,
 				EA4F49621C5EBFA000103559 /* YBAudioUnitNode.m in Sources */,
@@ -821,6 +864,7 @@
 				EAFFCB121C876F5800258C16 /* PlayerViewController.swift in Sources */,
 				EA3EF7D81CCF028F009E4524 /* SearchStreamCell.swift in Sources */,
 				EAB0E6A11C7813B5008945FF /* FUXEngine.swift in Sources */,
+				EA2898B71CD4D7430025F43B /* STMMessageOtherCell.swift in Sources */,
 				EA27B2031C5D3312006F269D /* KZPlayerItem.swift in Sources */,
 				EA3EF7D61CCF014C009E4524 /* SearchUserCell.swift in Sources */,
 				EA09CAC81C5C5D170067FF6A /* Constants.swift in Sources */,

@@ -7,11 +7,16 @@
 //
 
 import UIKit
+import DGElasticPullToRefresh
 
 class DashboardViewController: KZViewController, UIViewControllerPreviewingDelegate {
     let tableView = UITableView()
     var dashboardItems = [Any]()
     var comments = [Any]()
+
+    deinit {
+        tableView.dg_removePullToRefresh()
+    }
 
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -27,9 +32,21 @@ class DashboardViewController: KZViewController, UIViewControllerPreviewingDeleg
         tableView.dataSource = self
         tableView.registerReusableCell(DashboardItemCell)
         tableView.registerReusableCell(UserCommentCell)
-        view.addSubview(tableView)
 
         self.registerForPreviewingWithDelegate(self, sourceView: tableView)
+        view.addSubview(tableView)
+
+        let loadingView = DGElasticPullToRefreshLoadingViewCircle()
+        loadingView.tintColor = Constants.UI.Color.tint
+
+        tableView.dg_addPullToRefreshWithActionHandler({ [weak self] () -> Void in
+            if let me = self {
+                me.fetchDataWithCompletion() {
+                    me.tableView.dg_stopLoading()
+                }
+            }
+        }, loadingView: loadingView)
+        tableView.dg_setPullToRefreshFillColor(RGB(250, g: 251, b: 252))
     }
 
     override func setupConstraints() {
@@ -87,6 +104,22 @@ class DashboardViewController: KZViewController, UIViewControllerPreviewingDeleg
     }
 
     override func fetchData() {
+        fetchDataWithCompletion(nil)
+    }
+
+    func fetchDataWithCompletion(completion: (() -> Void)?) {
+        var count = 0
+
+        func runCompletion() {
+            count = count - count
+            if count == 0 {
+                if let completion = completion {
+                    completion()
+                }
+            }
+        }
+
+        count = count + 1
         Constants.Network.GET("/dashboard", parameters: nil) { (response, error) -> Void in
             self.handleResponse(response, error: error, successCompletion: { (result) -> Void in
                 self.dashboardItems.removeAll()
@@ -101,8 +134,11 @@ class DashboardViewController: KZViewController, UIViewControllerPreviewingDeleg
                     self.tableView.reloadData()
                 }
             })
+
+            runCompletion()
         }
 
+        count = count + 1
         Constants.Network.GET("/dashboard/comments", parameters: nil) { (response, error) -> Void in
             self.handleResponse(response, error: error, successCompletion: { (result) -> Void in
                 self.comments.removeAll()
@@ -116,6 +152,8 @@ class DashboardViewController: KZViewController, UIViewControllerPreviewingDeleg
 
                 self.tableView.reloadData()
             })
+
+            runCompletion()
         }
     }
 
@@ -126,7 +164,7 @@ class DashboardViewController: KZViewController, UIViewControllerPreviewingDeleg
             return nil
         }
 
-        var vc: UIViewController? = KZViewController()
+        var vc: UIViewController?
         previewingContext.sourceRect = cell.frame
 
         if indexPath.section == 0 {
@@ -146,8 +184,10 @@ class DashboardViewController: KZViewController, UIViewControllerPreviewingDeleg
                 }
             }
         } else if indexPath.section == 1 {
-            if let comment = comments[indexPath.row] as? STMComment {
-                vc = CommentViewController(comment: comment)
+            if comments.count > indexPath.row {
+                if let comment = comments[indexPath.row] as? STMComment {
+                    vc = CommentViewController(comment: comment)
+                }
             }
         }
 

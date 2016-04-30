@@ -16,7 +16,7 @@ class CellButton: UIView {
     var selected = false {
         didSet {
             actionButton.selected = selected
-            countLabel.textColor = selected ? selectedColor : UIColor.blackColor()
+            countLabel.textColor = selected ? selectedColor : RGB(172)
         }
     }
 

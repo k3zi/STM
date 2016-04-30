@@ -30,6 +30,8 @@ struct Constants {
 
 	struct Notification {
         static let UpdateUserProfile = "STMNotificationUpdateUserProfile"
+        static let DidPostComment = "STMNotificationDidPostComment"
+        static let DidPostMessage = "STMNotificationDidMessage"
 
         func UpdateForComment(comment: STMComment) -> String {
             return "STMNotificationUpdateForComment-\(comment.id)"
@@ -256,6 +258,18 @@ extension UIViewController {
 
 }
 
+extension UIScrollView {
+    func dg_stopScrollingAnimation() {}
+}
+
+extension _ArrayType where Generator.Element : Equatable {
+    mutating func removeObject(object: Self.Generator.Element) {
+        while let index = self.indexOf(object) {
+            self.removeAtIndex(index)
+        }
+    }
+}
+
 func resizeImage(image: UIImage, newWidth: CGFloat) -> UIImage {
     let newWidth = round(newWidth)
     let scale = newWidth / image.size.width
@@ -269,4 +283,22 @@ func resizeImage(image: UIImage, newWidth: CGFloat) -> UIImage {
     }
 
     return image
+}
+
+func numberOfLinesInLabel(yourString: String, labelWidth: CGFloat, labelHeight: CGFloat, font: UIFont) -> Int {
+    let paragraphStyle = NSMutableParagraphStyle()
+    paragraphStyle.minimumLineHeight = labelHeight
+    paragraphStyle.maximumLineHeight = labelHeight
+    paragraphStyle.lineBreakMode = .ByWordWrapping
+
+    let attributes: [String: AnyObject] = [NSFontAttributeName: font, NSParagraphStyleAttributeName: paragraphStyle]
+
+    let constrain = CGSize(width: labelWidth, height: CGFloat(Float.infinity))
+
+    let size = yourString.sizeWithAttributes(attributes)
+    let stringWidth = size.width
+
+    let numberOfLines = ceil(Double(stringWidth/constrain.width))
+
+    return Int(numberOfLines)
 }

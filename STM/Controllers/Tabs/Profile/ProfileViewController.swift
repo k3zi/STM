@@ -7,6 +7,7 @@
 //
 
 import Foundation
+import DGElasticPullToRefresh
 
 class ProfileViewController: KZViewController {
 
@@ -36,6 +37,11 @@ class ProfileViewController: KZViewController {
 
     required init?(coder aDecoder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
+    }
+
+    deinit {
+        tableView.dg_removePullToRefresh()
+        NSNotificationCenter.defaultCenter().removeObserver(self)
     }
 
     override func viewDidLoad() {
@@ -80,6 +86,18 @@ class ProfileViewController: KZViewController {
         view.addSubview(tableView)
 
         NSNotificationCenter.defaultCenter().addObserver(self, selector: #selector(self.fetchData), name: Constants.Notification.UpdateUserProfile, object: nil)
+
+        let loadingView = DGElasticPullToRefreshLoadingViewCircle()
+        loadingView.tintColor = Constants.UI.Color.tint
+
+        tableView.dg_addPullToRefreshWithActionHandler({ [weak self] () -> Void in
+            if let me = self {
+                me.fetchDataWithCompletion() {
+                    me.tableView.dg_stopLoading()
+                }
+            }
+            }, loadingView: loadingView)
+        tableView.dg_setPullToRefreshFillColor(RGB(255))
     }
 
     override func viewDidAppear(animated: Bool) {
@@ -181,11 +199,9 @@ class ProfileViewController: KZViewController {
     override func tableView(tableView: UITableView, didSelectRowAtIndexPath indexPath: NSIndexPath) {
         super.tableView(tableView, didSelectRowAtIndexPath: indexPath)
 
-        if indexPath.section == 1 {
-            if let comment = comments[indexPath.row] as? STMComment {
-                let vc = CommentViewController(comment: comment)
-                self.navigationController?.pushViewController(vc, animated: true)
-            }
+        if let comment = comments[indexPath.row] as? STMComment {
+            let vc = CommentViewController(comment: comment)
+            self.navigationController?.pushViewController(vc, animated: true)
         }
     }
 
@@ -196,7 +212,7 @@ class ProfileViewController: KZViewController {
             return nil
         }
 
-        var vc: UIViewController? = KZViewController()
+        var vc: UIViewController?
         previewingContext.sourceRect = cell.frame
 
         if let comment = comments[indexPath.row] as? STMComment {
@@ -220,6 +236,22 @@ class ProfileViewController: KZViewController {
     }
 
     override func fetchData() {
+        fetchDataWithCompletion(nil)
+    }
+
+    func fetchDataWithCompletion(completion: (() -> Void)?) {
+        var count = 0
+
+        func runCompletion() {
+            count = count - count
+            if count == 0 {
+                if let completion = completion {
+                    completion()
+                }
+            }
+        }
+
+        count = count + 1
         Constants.Network.GET("/stats/user/\(user.id)", parameters: nil) { (response, error) -> Void in
             self.handleResponse(response, error: error, successCompletion: { (result) -> Void in
                 if let followers = result["followers"] as? Int {
@@ -234,8 +266,11 @@ class ProfileViewController: KZViewController {
                     self.commentsStatView.count = comments
                 }
             })
+
+            runCompletion()
         }
 
+        count = count + 1
         Constants.Network.GET("/comments/user/\(user.id)", parameters: nil) { (response, error) -> Void in
             self.handleResponse(response, error: error, successCompletion: { (result) -> Void in
                 self.comments.removeAll()
@@ -249,6 +284,8 @@ class ProfileViewController: KZViewController {
 
                 self.tableView.reloadData()
             })
+
+            runCompletion()
         }
     }
 

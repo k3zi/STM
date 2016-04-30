@@ -75,7 +75,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 
 		let tab1 = NavigationController(rootViewController: DashboardViewController())
 		let tab2 = NavigationController(rootViewController: CreateStreamViewController())
-		let tab3 = NavigationController(rootViewController: KZViewController())
+		let tab3 = NavigationController(rootViewController: MessagesViewController())
 		let tab4 = NavigationController(rootViewController: SearchViewController())
 		let tab5 = NavigationController(rootViewController: ProfileViewController(user: user, isOwner: true))
 		tabVC.setViewControllers([tab1, tab2, tab3, tab4, tab5], animated: false)

@@ -182,7 +182,7 @@ class SearchViewController: KZViewController, UISearchBarDelegate, UIViewControl
             return nil
         }
 
-        var vc: UIViewController? = KZViewController()
+        var vc: UIViewController?
 
         if let stream = searchResults[indexPath.row] as? STMStream {
             guard AppDelegate.del().activeStreamController == nil else {

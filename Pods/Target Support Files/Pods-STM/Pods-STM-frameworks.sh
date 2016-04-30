@@ -86,7 +86,9 @@ strip_invalid_archs() {
 if [[ "$CONFIGURATION" == "Debug" ]]; then
   install_framework "Pods-STM/ALCameraViewController.framework"
   install_framework "Pods-STM/AeroGearHttp.framework"
+  install_framework "Pods-STM/CLTokenInputView.framework"
   install_framework "Pods-STM/CocoaSecurity.framework"
+  install_framework "Pods-STM/DGElasticPullToRefresh.framework"
   install_framework "Pods-STM/DateTools.framework"
   install_framework "Pods-STM/Gloss.framework"
   install_framework "Pods-STM/HPGrowingTextView.framework"
@@ -111,7 +113,9 @@ fi
 if [[ "$CONFIGURATION" == "Release" ]]; then
   install_framework "Pods-STM/ALCameraViewController.framework"
   install_framework "Pods-STM/AeroGearHttp.framework"
+  install_framework "Pods-STM/CLTokenInputView.framework"
   install_framework "Pods-STM/CocoaSecurity.framework"
+  install_framework "Pods-STM/DGElasticPullToRefresh.framework"
   install_framework "Pods-STM/DateTools.framework"
   install_framework "Pods-STM/Gloss.framework"
   install_framework "Pods-STM/HPGrowingTextView.framework"

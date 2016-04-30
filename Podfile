@@ -23,6 +23,8 @@ target 'STM' do
     pod 'StreamingKit'
     pod 'Keynode'
     pod 'ALCameraViewController'
+    pod 'DGElasticPullToRefresh'
+    pod 'CLTokenInputView'
 
     pod 'Fabric'
     pod 'Crashlytics'

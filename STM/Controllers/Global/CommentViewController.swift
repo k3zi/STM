@@ -7,15 +7,16 @@
 //
 
 import Foundation
+import DGElasticPullToRefresh
 
-class CommentViewController: KZViewController, UIViewControllerPreviewingDelegate {
+class CommentViewController: KZViewController, UIViewControllerPreviewingDelegate, MessageToolbarDelegate {
 
     let tableView = UITableView()
     var replys = [Any]()
     let comment: STMComment
 
     lazy var keynode: Keynode.Connector = Keynode.Connector(view: self.view)
-    var tableViewBottomConstraint: NSLayoutConstraint?
+    var toolbarBottomConstraint: NSLayoutConstraint?
     let commentToolbar = MessageToolbarView()
 
     init(comment: STMComment) {
@@ -25,6 +26,10 @@ class CommentViewController: KZViewController, UIViewControllerPreviewingDelegat
 
     required init?(coder aDecoder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
+    }
+
+    deinit {
+        tableView.dg_removePullToRefresh()
     }
 
     override func viewDidLoad() {
@@ -38,6 +43,9 @@ class CommentViewController: KZViewController, UIViewControllerPreviewingDelegat
         tableView.registerReusableCell(UserCommentCell)
         view.addSubview(tableView)
 
+        commentToolbar.delegate = self
+        view.addSubview(commentToolbar)
+
         registerForPreviewingWithDelegate(self, sourceView: tableView)
 
         keynode.animationsHandler = { [weak self] show, rect in
@@ -45,20 +53,64 @@ class CommentViewController: KZViewController, UIViewControllerPreviewingDelegat
                 return
             }
 
-            if let con = me.tableViewBottomConstraint {
+            if let con = me.toolbarBottomConstraint {
                 con.constant = (show ? -rect.size.height + 54 : 0)
                 me.view.layoutIfNeeded()
             }
         }
+
+        let loadingView = DGElasticPullToRefreshLoadingViewCircle()
+        loadingView.tintColor = Constants.UI.Color.tint
+
+        tableView.dg_addPullToRefreshWithActionHandler({ [weak self] () -> Void in
+            if let me = self {
+                me.fetchDataWithCompletion() {
+                    me.tableView.dg_stopLoading()
+                }
+            }
+            }, loadingView: loadingView)
+        tableView.dg_setPullToRefreshFillColor(RGB(250, g: 251, b: 252))
+    }
+
+    /**
+     Called on comment submit
+
+     - parameter text: the text that was posted
+     */
+    func handlePost(text: String) {
+        guard text.characters.count > 0 else {
+            return
+        }
+
+        guard let streamID = comment.stream?.id else {
+            return
+        }
+
+        self.commentToolbar.sendBT.enabled = false
+        Constants.Network.POST("/comment/\(comment.id)/reply", parameters: ["text": text, "streamID": streamID], completionHandler: { (response, error) -> Void in
+            self.commentToolbar.sendBT.enabled = true
+            self.handleResponse(response, error: error, successCompletion: { (result) -> Void in
+                self.fetchData()
+                Answers.logCustomEventWithName("Comment", customAttributes: [:])
+                NSNotificationCenter.defaultCenter().postNotificationName(Constants.Notification.DidPostComment, object: nil)
+            })
+        })
+
+        view.endEditing(true)
+    }
+
+    func didBeginEditing() {
     }
 
     override func setupConstraints() {
         super.setupConstraints()
 
         tableView.autoPinEdgesToSuperviewEdgesWithInsets(UIEdgeInsetsZero, excludingEdge: .Bottom)
-        tableView.autoPinEdgeToSuperviewEdge(.Left)
-        tableView.autoPinEdgeToSuperviewEdge(.Right)
-        tableViewBottomConstraint = tableView.autoPinToBottomLayoutGuideOfViewController(self, withInset: 0)
+
+        commentToolbar.autoPinEdge(.Top, toEdge: .Bottom, ofView: tableView)
+        commentToolbar.autoPinEdgeToSuperviewEdge(.Left)
+        commentToolbar.autoPinEdgeToSuperviewEdge(.Right)
+        toolbarBottomConstraint = commentToolbar.autoPinToBottomLayoutGuideOfViewController(self, withInset: 0)
     }
 
     override func numberOfSectionsInTableView(tableView: UITableView) -> Int {
@@ -71,6 +123,10 @@ class CommentViewController: KZViewController, UIViewControllerPreviewingDelegat
         }
 
         return replys
+    }
+
+    override func tableViewNoDataText(tableView: UITableView) -> String {
+        return "No Replys"
     }
 
     override func tableViewCellClass(tableView: UITableView, indexPath: NSIndexPath?) -> KZTableViewCell.Type {
@@ -109,6 +165,22 @@ class CommentViewController: KZViewController, UIViewControllerPreviewingDelegat
     }
 
     override func fetchData() {
+        fetchDataWithCompletion(nil)
+    }
+
+    func fetchDataWithCompletion(completion: (() -> Void)?) {
+        var count = 0
+
+        func runCompletion() {
+            count = count - count
+            if count == 0 {
+                if let completion = completion {
+                    completion()
+                }
+            }
+        }
+
+        count = count + 1
         Constants.Network.GET("/comment/\(comment.id)/replys", parameters: nil) { (response, error) -> Void in
             self.handleResponse(response, error: error, successCompletion: { (result) -> Void in
                 self.replys.removeAll()
@@ -122,6 +194,8 @@ class CommentViewController: KZViewController, UIViewControllerPreviewingDelegat
 
                 self.tableView.reloadData()
             })
+
+            runCompletion()
         }
     }
 
@@ -132,7 +206,7 @@ class CommentViewController: KZViewController, UIViewControllerPreviewingDelegat
             return nil
         }
 
-        var vc: UIViewController? = KZViewController()
+        var vc: UIViewController?
         previewingContext.sourceRect = cell.frame
 
         if indexPath.section == 0 {
