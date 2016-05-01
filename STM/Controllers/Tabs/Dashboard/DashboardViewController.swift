@@ -60,6 +60,10 @@ class DashboardViewController: KZViewController, UIViewControllerPreviewingDeleg
         return 2
     }
 
+    override func tableViewNoDataText(tableView: UITableView) -> String {
+        return "\n\nHmmm... Seems Empty\nSearch for streams/users in the search tab below to get started!"
+    }
+
     override func tableViewCellData(tableView: UITableView, section: Int) -> [Any] {
         if section == 0 {
             return dashboardItems

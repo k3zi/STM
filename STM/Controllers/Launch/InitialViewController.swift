@@ -48,7 +48,7 @@ class InitialViewController: KZViewController {
         super.viewDidAppear(animated)
 
         if let user = Constants.Settings.secretObjectForKey("user") as? [String: AnyObject] {
-            Constants.Network.POST("//user/authenticate", parameters: user, completionHandler: { (response, error) -> Void in
+            Constants.Network.POST("/user/authenticate", parameters: user, completionHandler: { (response, error) -> Void in
                 self.handleResponse(response, error: error, successCompletion: { (result) -> Void in
                     Constants.Settings.setSecretObject(result, forKey: "user")
 

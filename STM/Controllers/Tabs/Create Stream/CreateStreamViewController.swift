@@ -21,6 +21,11 @@ class CreateStreamViewController: KZViewController {
     let streamDescriptionTextView = KMPlaceholderTextView()
     let hostBT = UIButton()
 
+    let categoryRadioBT = UIButton()
+    let categoryPodcastBT = UIButton()
+    let categoryLiveBT = UIButton()
+    var selectedCategory = STMStreamType.Radio
+
     // UI Adjustments
     lazy var keynode: Keynode.Connector = Keynode.Connector(view: self.contentView)
     var scrollViewBottomConstraint: NSLayoutConstraint?
@@ -66,16 +71,33 @@ class CreateStreamViewController: KZViewController {
         passcodeTextField.alpha = 0.7
         passcodeTextField.enabled = false
         passcodeTextField.inputAccessoryView = UIToolbar.styleWithButtons(self)
-        contentView.addSubview(passcodeTextField)
+        //contentView.addSubview(passcodeTextField)
+
+        categoryRadioBT.setImage(UIImage(named: "category_radioBT"), forState: .Normal)
+        categoryRadioBT.tag = 0
+        categoryRadioBT.addTarget(self, action: #selector(selectedType), forControlEvents: .TouchUpInside)
+        contentView.addSubview(categoryRadioBT)
+
+        categoryPodcastBT.setImage(UIImage(named: "category_podcastBT"), forState: .Normal)
+        categoryPodcastBT.tag = 1
+        categoryPodcastBT.alpha = 0.5
+        categoryPodcastBT.addTarget(self, action: #selector(selectedType), forControlEvents: .TouchUpInside)
+        contentView.addSubview(categoryPodcastBT)
+
+        categoryLiveBT.setImage(UIImage(named: "category_liveBT"), forState: .Normal)
+        categoryLiveBT.tag = 2
+        categoryLiveBT.alpha = 0.5
+        categoryLiveBT.addTarget(self, action: #selector(selectedType), forControlEvents: .TouchUpInside)
+        contentView.addSubview(categoryLiveBT)
 
         privacySwitch.addTarget(self, action: #selector(CreateStreamViewController.togglePrivacy), forControlEvents: .ValueChanged)
-        contentView.addSubview(privacySwitch)
+        //contentView.addSubview(privacySwitch)
 
         publicLabel.text = "Public Stream"
-        contentView.addSubview(publicLabel)
+        //contentView.addSubview(publicLabel)
 
         privateLabel.text = "Private Stream"
-        contentView.addSubview(privateLabel)
+        //contentView.addSubview(privateLabel)
 
         streamDescriptionTextView.font = UIFont.systemFontOfSize(15)
         streamDescriptionTextView.layer.cornerRadius = 5
@@ -143,19 +165,33 @@ class CreateStreamViewController: KZViewController {
         streamNameTextField.autoPinEdgeToSuperviewEdge(.Right, withInset: formPadding)
         streamNameTextField.autoSetDimension(.Height, toSize: 50)
 
-        privacySwitch.autoPinEdge(.Top, toEdge: .Bottom, ofView: streamNameTextField, withOffset: formPadding)
+        categoryRadioBT.autoPinEdge(.Top, toEdge: .Bottom, ofView: streamNameTextField, withOffset: formPadding)
+        categoryRadioBT.autoPinEdgeToSuperviewEdge(.Left, withInset: formPadding)
+
+        categoryPodcastBT.autoAlignAxis(.Horizontal, toSameAxisOfView: categoryRadioBT)
+        categoryPodcastBT.autoMatchDimension(.Width, toDimension: .Width, ofView: categoryRadioBT)
+        categoryPodcastBT.autoMatchDimension(.Height, toDimension: .Height, ofView: categoryRadioBT)
+        categoryPodcastBT.autoPinEdge(.Left, toEdge: .Right, ofView: categoryRadioBT, withOffset: formPadding)
+
+        categoryLiveBT.autoAlignAxis(.Horizontal, toSameAxisOfView: categoryPodcastBT)
+        categoryLiveBT.autoMatchDimension(.Width, toDimension: .Width, ofView: categoryPodcastBT)
+        categoryLiveBT.autoMatchDimension(.Height, toDimension: .Height, ofView: categoryPodcastBT)
+        categoryLiveBT.autoPinEdge(.Left, toEdge: .Right, ofView: categoryPodcastBT, withOffset: formPadding)
+        categoryLiveBT.autoPinEdgeToSuperviewEdge(.Right, withInset: formPadding)
+
+        /*privacySwitch.autoPinEdge(.Top, toEdge: .Bottom, ofView: streamNameTextField, withOffset: formPadding)
         privacySwitch.autoAlignAxisToSuperviewAxis(.Vertical)
         privacySwitch.autoPinEdge(.Left, toEdge: .Right, ofView: publicLabel, withOffset: formPadding)
         publicLabel.autoAlignAxis(.Horizontal, toSameAxisOfView: privacySwitch)
         privateLabel.autoAlignAxis(.Horizontal, toSameAxisOfView: privacySwitch)
-        privateLabel.autoPinEdge(.Left, toEdge: .Right, ofView: privacySwitch, withOffset: formPadding)
+        privateLabel.autoPinEdge(.Left, toEdge: .Right, ofView: privacySwitch, withOffset: formPadding)*/
 
-        passcodePaddingConstraint = passcodeTextField.autoPinEdge(.Top, toEdge: .Bottom, ofView: privacySwitch, withOffset: 0)
+        /*passcodePaddingConstraint = passcodeTextField.autoPinEdge(.Top, toEdge: .Bottom, ofView: privacySwitch, withOffset: 0)
         passcodeTextField.autoPinEdgeToSuperviewEdge(.Left, withInset: formPadding)
         passcodeTextField.autoPinEdgeToSuperviewEdge(.Right, withInset: formPadding)
-        passcodeHeightConstraint = passcodeTextField.autoSetDimension(.Height, toSize: 0)
+        passcodeHeightConstraint = passcodeTextField.autoSetDimension(.Height, toSize: 0)*/
 
-        streamDescriptionTextView.autoPinEdge(.Top, toEdge: .Bottom, ofView: passcodeTextField, withOffset: formPadding)
+        streamDescriptionTextView.autoPinEdge(.Top, toEdge: .Bottom, ofView: categoryRadioBT, withOffset: formPadding)
         streamDescriptionTextView.autoPinEdgeToSuperviewEdge(.Left, withInset: formPadding)
         streamDescriptionTextView.autoPinEdgeToSuperviewEdge(.Right, withInset: formPadding)
         streamDescriptionTextView.autoSetDimension(.Height, toSize: 100)
@@ -169,6 +205,16 @@ class CreateStreamViewController: KZViewController {
         tableView.autoPinEdgeToSuperviewEdge(.Left)
         tableView.autoPinEdgeToSuperviewEdge(.Right)
         tableView.autoPinEdgeToSuperviewEdge(.Bottom)
+    }
+
+    func selectedType(button: UIButton) {
+        for x in [categoryLiveBT, categoryPodcastBT, categoryRadioBT] {
+            x.alpha = (button == x) ? 1.0 : 0.5
+        }
+
+        if let type = STMStreamType(rawValue: button.tag) {
+            selectedCategory = type
+        }
     }
 
     func togglePrivacy() {
@@ -202,16 +248,23 @@ class CreateStreamViewController: KZViewController {
         }
 
         let vc = HostViewController()
-        let streamType = streamTypeSegmentControl.selectedSegmentIndex == 0 ? StreamType.Global : StreamType.Local
+        //let streamType = streamTypeSegmentControl.selectedSegmentIndex == 0 ? StreamType.Global : StreamType.Local
         let passcodeString = privacySwitch.on ? (passcodeTextField.text ?? "") : ""
-        vc.start(streamType, name: name, passcode: passcodeString, description: description) { (nothing, error) -> Void in
+        vc.start(selectedCategory, name: name, passcode: passcodeString, description: description) { (nothing, error) -> Void in
             if error == nil {
+                self.streamNameTextField.text = nil
+                self.selectedType(self.categoryRadioBT)
+                self.streamDescriptionTextView.text = nil
                 AppDelegate.del().presentStreamController(vc)
             }
         }
     }
 
     //MARK: Table View Delegate
+
+    override func tableViewNoDataText(tableView: UITableView) -> String {
+        return "You haven't created a stream yet"
+    }
 
     override func tableViewCellData(tableView: UITableView, section: Int) -> [Any] {
         return items

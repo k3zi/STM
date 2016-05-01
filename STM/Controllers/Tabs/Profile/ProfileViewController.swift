@@ -27,7 +27,7 @@ class ProfileViewController: KZViewController, UIViewControllerPreviewingDelegat
 
     let tableView = KZIntrinsicTableView()
 
-    let user: STMUser
+    var user: STMUser
     let isOwner: Bool
 
     var comments = [Any]()
@@ -67,6 +67,9 @@ class ProfileViewController: KZViewController, UIViewControllerPreviewingDelegat
         headerView.addSubview(displayNameLabel)
 
         descriptionLabel.text = user.description
+        descriptionLabel.numberOfLines = 0
+        descriptionLabel.font = UIFont.systemFontOfSize(13)
+        descriptionLabel.textAlignment = .Center
         headerView.addSubview(descriptionLabel)
 
         followButton.addTarget(self, action: #selector(self.toggleFollow), forControlEvents: .TouchUpInside)
@@ -123,8 +126,16 @@ class ProfileViewController: KZViewController, UIViewControllerPreviewingDelegat
     override func viewDidAppear(animated: Bool) {
         super.viewDidAppear(animated)
 
+        if isOwner {
+            if let cUser = AppDelegate.del().currentUser {
+                user = cUser
+            }
+        }
+
         segmentControl.cornerRadius = segmentControl.frame.size.height/2.0
         avatarImageView.kf_setImageWithURL(user.profilePictureURL(), placeholderImage: UIImage(named: "defaultProfilePicture"))
+        displayNameLabel.text = user.displayName
+        descriptionLabel.text = user.description
     }
 
     override func viewDidLayoutSubviews() {
@@ -140,6 +151,8 @@ class ProfileViewController: KZViewController, UIViewControllerPreviewingDelegat
                 tableView.tableHeaderView = headerView
             }
         }
+
+        descriptionLabel.preferredMaxLayoutWidth = descriptionLabel.frame.size.width
     }
 
     override func setupConstraints() {

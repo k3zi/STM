@@ -130,20 +130,38 @@ class CreateAccountViewController: KZViewController {
             return showError("No Email Entered")
         }
 
+        guard isValidEmail(email) else {
+            return showError("Invalid Email Entered")
+        }
+
         let params = ["displayName" : displayName, "username": username, "password": password, "email": email]
 
         createAccountBT.showIndicator()
         backBT.enabled = false
-        Constants.Network.POST("//user/create", parameters: params, completionHandler: { (response, error) -> Void in
+        Constants.Network.POST("/user/create", parameters: params, completionHandler: { (response, error) -> Void in
             self.createAccountBT.hideIndicator()
             self.backBT.enabled = true
             self.handleResponse(response, error: error, successCompletion: { (result) -> Void in
                 Answers.logSignUpWithMethod("Email", success: true, customAttributes: [:])
-                if let vc = self.navigationController {
-                    vc.popViewControllerAnimated(true)
+
+                Constants.Settings.setSecretObject(result, forKey: "user")
+
+                if let result = result as? JSON {
+                    if let user = STMUser(json: result) {
+                        AppDelegate.del().loginUser(user)
+                        Answers.logLoginWithMethod("Password", success: true, customAttributes: nil)
+                    }
                 }
             })
         })
+    }
+
+    func isValidEmail(testStr: String) -> Bool {
+        print("validate emilId: \(testStr)")
+        let emailRegEx = "^(?:(?:(?:(?: )*(?:(?:(?:\\t| )*\\r\\n)?(?:\\t| )+))+(?: )*)|(?: )+)?(?:(?:(?:[-A-Za-z0-9!#$%&’*+/=?^_'{|}~]+(?:\\.[-A-Za-z0-9!#$%&’*+/=?^_'{|}~]+)*)|(?:\"(?:(?:(?:(?: )*(?:(?:[!#-Z^-~]|\\[|\\])|(?:\\\\(?:\\t|[ -~]))))+(?: )*)|(?: )+)\"))(?:@)(?:(?:(?:[A-Za-z0-9](?:[-A-Za-z0-9]{0,61}[A-Za-z0-9])?)(?:\\.[A-Za-z0-9](?:[-A-Za-z0-9]{0,61}[A-Za-z0-9])?)*)|(?:\\[(?:(?:(?:(?:(?:[0-9]|(?:[1-9][0-9])|(?:1[0-9][0-9])|(?:2[0-4][0-9])|(?:25[0-5]))\\.){3}(?:[0-9]|(?:[1-9][0-9])|(?:1[0-9][0-9])|(?:2[0-4][0-9])|(?:25[0-5]))))|(?:(?:(?: )*[!-Z^-~])*(?: )*)|(?:[Vv][0-9A-Fa-f]+\\.[-A-Za-z0-9._~!$&'()*+,;=:]+))\\])))(?:(?:(?:(?: )*(?:(?:(?:\\t| )*\\r\\n)?(?:\\t| )+))+(?: )*)|(?: )+)?$"
+        let emailTest = NSPredicate(format:"SELF MATCHES %@", emailRegEx)
+        let result = emailTest.evaluateWithObject(testStr)
+        return result
     }
 
 }

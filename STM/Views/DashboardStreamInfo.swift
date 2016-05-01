@@ -54,7 +54,7 @@ class DashboardStreamInfoView: UIView {
         infoViewHolder.autoPinEdgeToSuperviewEdge(.Top, withInset: 31)
         infoViewHolder.autoPinEdgeToSuperviewEdge(.Left)
         infoViewHolder.autoPinEdgeToSuperviewEdge(.Right)
-        infoViewHolder.autoSetDimension(.Height, toSize: 248)
+        infoViewHolder.autoSetDimension(.Height, toSize: 100)
         infoViewHolder.autoPinEdgeToSuperviewEdge(.Bottom)
 
         streamNameLabel.autoPinEdgesToSuperviewEdgesWithInsets(UIEdgeInsets(top: 15, left: 15, bottom: 0, right: 15), excludingEdge: .Bottom)

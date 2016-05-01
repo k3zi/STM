@@ -48,6 +48,8 @@
 		EA2898BE1CD535CD0025F43B /* TextField.swift in Sources */ = {isa = PBXBuildFile; fileRef = EA2898BD1CD535CC0025F43B /* TextField.swift */; };
 		EA2898C01CD5AF150025F43B /* StreamStatusView.swift in Sources */ = {isa = PBXBuildFile; fileRef = EA2898BF1CD5AF150025F43B /* StreamStatusView.swift */; };
 		EA2898C21CD5CB390025F43B /* STMStreamMeta.swift in Sources */ = {isa = PBXBuildFile; fileRef = EA2898C11CD5CB390025F43B /* STMStreamMeta.swift */; };
+		EA2898C41CD5F13A0025F43B /* SettingsUserCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = EA2898C31CD5F1390025F43B /* SettingsUserCell.swift */; };
+		EA2898C61CD5FF190025F43B /* SettingsNameCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = EA2898C51CD5FF190025F43B /* SettingsNameCell.swift */; };
 		EA3EF7D41CCEEE60009E4524 /* SearchViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = EA3EF7D31CCEEE60009E4524 /* SearchViewController.swift */; };
 		EA3EF7D61CCF014C009E4524 /* SearchUserCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = EA3EF7D51CCF014C009E4524 /* SearchUserCell.swift */; };
 		EA3EF7D81CCF028F009E4524 /* SearchStreamCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = EA3EF7D71CCF028F009E4524 /* SearchStreamCell.swift */; };
@@ -157,6 +159,8 @@
 		EA2898BD1CD535CC0025F43B /* TextField.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TextField.swift; sourceTree = "<group>"; };
 		EA2898BF1CD5AF150025F43B /* StreamStatusView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = StreamStatusView.swift; sourceTree = "<group>"; };
 		EA2898C11CD5CB390025F43B /* STMStreamMeta.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = STMStreamMeta.swift; sourceTree = "<group>"; };
+		EA2898C31CD5F1390025F43B /* SettingsUserCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SettingsUserCell.swift; sourceTree = "<group>"; };
+		EA2898C51CD5FF190025F43B /* SettingsNameCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SettingsNameCell.swift; sourceTree = "<group>"; };
 		EA3EF7D31CCEEE60009E4524 /* SearchViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SearchViewController.swift; sourceTree = "<group>"; };
 		EA3EF7D51CCF014C009E4524 /* SearchUserCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SearchUserCell.swift; sourceTree = "<group>"; };
 		EA3EF7D71CCF028F009E4524 /* SearchStreamCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SearchStreamCell.swift; sourceTree = "<group>"; };
@@ -468,6 +472,8 @@
 				EA2898AD1CD4AD1F0025F43B /* UserSelectionCell.swift */,
 				EA3EF7D71CCF028F009E4524 /* SearchStreamCell.swift */,
 				EA6F5B881CD1A99D00C9638D /* SettingsProfilePictureCell.swift */,
+				EA2898C51CD5FF190025F43B /* SettingsNameCell.swift */,
+				EA2898C31CD5F1390025F43B /* SettingsUserCell.swift */,
 				EA481DE71C630EED008E3E6E /* SelectSongCell.swift */,
 				EA24C0641C68418600FE4DD0 /* UpNextSongCell.swift */,
 				EA2898B91CD4DD8F0025F43B /* ConvoCell.swift */,
@@ -792,6 +798,7 @@
 				EAB0E6A91C78F8E9008945FF /* SettingJoinedView.swift in Sources */,
 				EA2898B81CD4D7430025F43B /* STMMessageYouCell.swift in Sources */,
 				EA4F49611C5EBFA000103559 /* YBAudioUnitGraph.m in Sources */,
+				EA2898C61CD5FF190025F43B /* SettingsNameCell.swift in Sources */,
 				EA209DAF1C82BAB700A22BC4 /* STMDashboardItem.swift in Sources */,
 				EAE545061C76BA9200180241 /* STMVisualizer.swift in Sources */,
 				EA4F496A1C5EBFA000103559 /* YBReverb.m in Sources */,
@@ -822,6 +829,7 @@
 				EA86DD001CCC281600064040 /* TimelineItemCell.swift in Sources */,
 				EA4F49661C5EBFA000103559 /* YBScheduledSoundPlayer.m in Sources */,
 				EA2898A71CD3ED1B0025F43B /* ExtendedUserCommentCell.swift in Sources */,
+				EA2898C41CD5F13A0025F43B /* SettingsUserCell.swift in Sources */,
 				EA4F49701C5EC04C00103559 /* KZConverter.m in Sources */,
 				EAFFCB151C87E59300258C16 /* ObjectiveCProcessing.m in Sources */,
 				EA2898B21CD4C5D80025F43B /* STMMessage.swift in Sources */,

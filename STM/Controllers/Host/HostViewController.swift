@@ -516,6 +516,7 @@ class HostViewController: KZViewController, UISearchBarDelegate, UIViewControlle
         metaDescriptionField.layer.cornerRadius = 5.0
         metaDescriptionField.clipsToBounds = true
         metaDescriptionField.delegate = self
+        metaDescriptionField.inputAccessoryView = UIToolbar.styleWithButtons(self)
         metaDescriptionField.text = stream?.description
         metaDescriptionField.font = UIFont.systemFontOfSize(14)
         metaDescriptionField.autoSetDimension(.Height, toSize: 150)
@@ -1146,7 +1147,7 @@ class HostViewController: KZViewController, UISearchBarDelegate, UIViewControlle
             return
         }
 
-        if text == metaDescriptionField {
+        if textView == metaDescriptionField {
             updateStream("description", value: text)
         }
     }
@@ -1385,7 +1386,7 @@ extension HostViewController {
      - parameter description: The description the user gave to the stream
      - parameter callback:    Any error or nil if there was none
      */
-	func start(type: StreamType, name: String, passcode: String, description: String, callback: (Bool, String?) -> Void) {
+	func start(type: STMStreamType, name: String, passcode: String, description: String, callback: (Bool, String?) -> Void) {
 		let progressView = M13ProgressViewRing()
 		progressView.primaryColor = Constants.UI.Color.tint
 		progressView.secondaryColor = Constants.UI.Color.disabled
@@ -1403,28 +1404,26 @@ extension HostViewController {
 			hud.show(true)
 		}
 
-		if type == .Global {
-			Constants.Network.POST("/stream/create", parameters: ["name": name, "passcode": passcode, "description": description], completionHandler: { (response, error) -> Void in
-				self.handleResponse(response, error: error, successCompletion: { (result) -> Void in
-					if let result = result as? JSON {
-						if let stream = STMStream(json: result) {
-							self.stream = stream
-							callback(true, nil)
-							self.toggleAudioSession()
-							self.connectGlobalStream()
+        Constants.Network.POST("/stream/create", parameters: ["name": name, "type": type.rawValue, "description": description], completionHandler: { (response, error) -> Void in
+            self.handleResponse(response, error: error, successCompletion: { (result) -> Void in
+                if let result = result as? JSON {
+                    if let stream = STMStream(json: result) {
+                        self.stream = stream
+                        callback(true, nil)
+                        self.toggleAudioSession()
+                        self.connectGlobalStream()
 
-							Answers.logCustomEventWithName("Created Stream", customAttributes: [:])
-						}
-					}
-					}, errorCompletion: { (error) -> Void in
-					if let hud = self.hud {
-						hud.dismiss(true)
-					}
-					self.close()
-					callback(false, error)
-				})
-			})
-		}
+                        Answers.logCustomEventWithName("Created Stream", customAttributes: [:])
+                    }
+                }
+                }, errorCompletion: { (error) -> Void in
+                if let hud = self.hud {
+                    hud.dismiss(true)
+                }
+                self.close()
+                callback(false, error)
+            })
+        })
 	}
 
     /**

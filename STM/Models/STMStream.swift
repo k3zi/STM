@@ -52,3 +52,9 @@ enum STMStreamStatus: Int {
     case Online = 1
     case RecentlyOnline = 2
 }
+
+enum STMStreamType: Int {
+    case Radio = 0
+    case Podcast = 1
+    case Live = 2
+}

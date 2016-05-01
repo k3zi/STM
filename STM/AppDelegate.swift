@@ -57,6 +57,8 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 
 		setUpAudioSession(withMic: false)
 
+        UIApplication.sharedApplication().applicationIconBadgeNumber = 0
+
 		return true
 	}
 
@@ -65,6 +67,10 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 		let deviceTokenString = (deviceToken.description as NSString).stringByTrimmingCharactersInSet(characterSet).stringByReplacingOccurrencesOfString(" ", withString: "") as String
 		Constants.Settings.setSecretObject(deviceTokenString, forKey: "deviceTokenString")
 	}
+
+    func applicationDidBecomeActive(application: UIApplication) {
+        UIApplication.sharedApplication().applicationIconBadgeNumber = 0
+    }
 
 	func createTabSet() -> UITabBarController {
 		let tabVC = UITabBarController()
