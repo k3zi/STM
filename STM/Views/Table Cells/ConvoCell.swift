@@ -48,11 +48,12 @@ class ConvoCell: KZTableViewCell {
 
 		nameLabel.autoPinEdgeToSuperviewEdge(.Top, withInset: 13)
 		nameLabel.autoPinEdge(.Left, toEdge: .Right, ofView: avatar, withOffset: 10)
+        nameLabel.autoPinEdgeToSuperviewEdge(.Right, withInset: 10)
 
 		messageLabel.autoPinEdge(.Top, toEdge: .Bottom, ofView: nameLabel, withOffset: 2)
 		messageLabel.autoPinEdge(.Left, toEdge: .Right, ofView: avatar, withOffset: 10)
-        messageLabel.autoMatchDimension(.Width, toDimension: .Width, ofView: nameLabel)
 		messageLabel.autoPinEdgeToSuperviewEdge(.Bottom, withInset: 10)
+        messageLabel.autoPinEdgeToSuperviewEdge(.Right, withInset: 10)
 	}
 
 	override func fillInCellData() {

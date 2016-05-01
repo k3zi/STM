@@ -40,7 +40,7 @@ class SearchViewController: KZViewController, UISearchBarDelegate, UIViewControl
             }
 
             if let con = me.tableViewBottomConstraint {
-                con.constant = (show ? -rect.size.height + 54 : 0)
+                con.constant = (show ? -rect.size.height + 54 + (AppDelegate.del().playerIsMinimized() ? 44 : 0) : 0)
                 me.view.layoutIfNeeded()
             }
         }
@@ -98,7 +98,6 @@ class SearchViewController: KZViewController, UISearchBarDelegate, UIViewControl
 
         if let stream = searchResults[indexPath.row] as? STMStream {
             let vc = PlayerViewController()
-            vc.isPreviewing = true
             vc.start(stream, vc: self, showHUD: true, callback: { (success, error) in
                 if error == nil {
                     AppDelegate.del().presentStreamController(vc)

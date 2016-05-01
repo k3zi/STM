@@ -61,6 +61,8 @@ class HostInfoHolderView: UIView {
 
         self.autoSetDimension(.Height, toSize: 16)
 
+        listenerCount.hidden = true
+        listenerCountImageView.hidden = true
         [commentCount, commentCountImageView, listenerCount, listenerCountImageView, bandwidthCount, bandwidthCountImageView].forEach({ self.addSubview($0) })
 
         [commentCount, listenerCount, bandwidthCount].forEach({ $0.textColor = RGB(92, g: 38, b: 254) })
@@ -72,14 +74,14 @@ class HostInfoHolderView: UIView {
         commentCount.autoAlignAxis(.Horizontal, toSameAxisOfView: commentCountImageView)
         commentCount.autoPinEdge(.Left, toEdge: .Right, ofView: commentCountImageView, withOffset: 4)
 
-        listenerCountImageView.autoPinEdge(.Left, toEdge: .Right, ofView: commentCount, withOffset: 12)
+        /*listenerCountImageView.autoPinEdge(.Left, toEdge: .Right, ofView: commentCount, withOffset: 12)
         listenerCountImageView.autoAlignAxis(.Horizontal, toSameAxisOfView: commentCount)
 
         listenerCount.autoAlignAxis(.Horizontal, toSameAxisOfView: listenerCountImageView)
-        listenerCount.autoPinEdge(.Left, toEdge: .Right, ofView: listenerCountImageView, withOffset: 4)
+        listenerCount.autoPinEdge(.Left, toEdge: .Right, ofView: listenerCountImageView, withOffset: 4)*/
 
-        bandwidthCountImageView.autoPinEdge(.Left, toEdge: .Right, ofView: listenerCount, withOffset: 12)
-        bandwidthCountImageView.autoAlignAxis(.Horizontal, toSameAxisOfView: listenerCount)
+        bandwidthCountImageView.autoPinEdge(.Left, toEdge: .Right, ofView: commentCount, withOffset: 12)
+        bandwidthCountImageView.autoAlignAxis(.Horizontal, toSameAxisOfView: commentCount)
 
         bandwidthCount.autoAlignAxis(.Horizontal, toSameAxisOfView: bandwidthCountImageView)
         bandwidthCount.autoPinEdge(.Left, toEdge: .Right, ofView: bandwidthCountImageView, withOffset: 4)

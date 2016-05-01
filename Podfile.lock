@@ -1,7 +1,6 @@
 PODS:
   - AeroGearHttp (0.5.1)
   - ALCameraViewController (1.1.9)
-  - CLTokenInputView (2.3.0)
   - CocoaSecurity (1.2.4)
   - Crashlytics (3.7.0):
     - Fabric (~> 1.6.3)
@@ -19,6 +18,7 @@ PODS:
     - PureLayout
     - Reusable
   - M13ProgressSuite (1.2.7)
+  - NYSegmentedControl (1.0.7)
   - PRTween (0.1.0)
   - PureLayout (3.0.1)
   - Realm (0.98.8):
@@ -41,7 +41,6 @@ PODS:
 DEPENDENCIES:
   - AeroGearHttp
   - ALCameraViewController
-  - CLTokenInputView
   - Crashlytics
   - DateTools
   - DGElasticPullToRefresh
@@ -55,6 +54,7 @@ DEPENDENCIES:
   - KMPlaceholderTextView
   - KZ
   - M13ProgressSuite
+  - NYSegmentedControl
   - PRTween
   - PureLayout
   - RealmSwift
@@ -70,7 +70,6 @@ DEPENDENCIES:
 SPEC CHECKSUMS:
   AeroGearHttp: 9eb405b694aa9ac5daff842f68648f4a9fe0fa66
   ALCameraViewController: f171ffb7e84d211277a0f97823a2bda7418dc573
-  CLTokenInputView: 9dc1ffb7c9d2d81787e69a63c75bd97b0b2d1e76
   CocoaSecurity: d288a6f87e0f363823d2cb83e753814a6944f71a
   Crashlytics: c3a2333dea9e2733d2777f730910321fc9e25c0d
   DateTools: 53288ee8b905fdc75897a1e6b5cc0144b14cba60
@@ -85,6 +84,7 @@ SPEC CHECKSUMS:
   KMPlaceholderTextView: cae8ee889bd38d20587eee6b2623b8218f31b8f5
   KZ: 6b563b34ec0f80bddb74282ed7a5d77b5b4e2aa7
   M13ProgressSuite: 03d194af6359da440641ba758aed5a18b0386a86
+  NYSegmentedControl: 55b4f9eb652767cae9799623ec3e49e50029ef47
   PRTween: 6c58c7e32ebcf31e33e6a6e6bc727ebef3b668ef
   PureLayout: f35f5384c9c4e4479df041dbe33ad7577b71ddfb
   Realm: 0e293bb62999730599efc3048896bbd4f2e43bcd

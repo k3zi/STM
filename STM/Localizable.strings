@@ -20,3 +20,12 @@ Settings_HostMicFadeTimeDescription = "The duration that the music fades out for
 
 Settings_StreamName = "Stream Name";
 Settings_StreamNameDescription = "The name displayed to listeners for the broadcast";
+
+Settings_StreamDescription = "Stream Description";
+Settings_StreamDescriptionDescription = "Use this space to add details & extra info about you stream";
+
+Settings_StreamPhoto = "Stream Photo";
+Settings_StreamPhotoDescription = "Add a picture to make your stream stand out (Click on the right to change your stream's picture)";
+
+Settings_HostMonitoring = "Mic Monitoring";
+Settings_HostMonitoringDescription = "Toggle to hear microphone input";

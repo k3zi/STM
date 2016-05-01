@@ -22,6 +22,7 @@ class ConversationViewController: KZViewController, MessageToolbarDelegate {
     init(convo: STMConversation) {
         self.convo = convo
         super.init(nibName: nil, bundle: nil)
+        self.hidesBottomBarWhenPushed = true
     }
 
     required init?(coder aDecoder: NSCoder) {
@@ -57,7 +58,7 @@ class ConversationViewController: KZViewController, MessageToolbarDelegate {
             }
 
             if let con = me.toolbarBottomConstraint {
-                con.constant = (show ? -rect.size.height + 49 : 0)
+                con.constant = Constants.UI.Screen.keyboardAdjustment(show, rect: rect)
                 me.view.layoutIfNeeded()
             }
         }

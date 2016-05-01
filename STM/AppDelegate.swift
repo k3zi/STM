@@ -122,7 +122,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 		}
 
 		if let token = Constants.Settings.secretObjectForKey("deviceTokenString") {
-			Constants.Network.POST("/updateAPNS", parameters: ["token": token], completionHandler: { (response, error) -> Void in
+			Constants.Network.POST("/user/updateAPNS", parameters: ["token": token], completionHandler: { (response, error) -> Void in
 				print("Network: Updated Token")
 			})
 		}
@@ -132,6 +132,22 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         self.close()
         self.window?.rootViewController?.presentViewController(vc, animated: true, completion: nil)
         self.activeStreamController = vc
+    }
+
+    func playerIsMinimized() -> Bool {
+        guard let vc = activeStreamController else {
+            return false
+        }
+
+        if let player = vc as? PlayerViewController {
+            return player.dismissBT.selected
+        }
+
+        if let host = vc as? HostViewController {
+            return host.dismissBT.selected
+        }
+
+        return false
     }
 
     //MARK: Audio

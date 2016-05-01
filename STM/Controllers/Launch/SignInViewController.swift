@@ -100,7 +100,7 @@ class SignInViewController: KZViewController {
         signInBT.showIndicator()
         backBT.enabled = false
 
-        Constants.Network.POST("/signIn", parameters: ["username": username, "password": password], completionHandler: { (response, error) -> Void in
+        Constants.Network.POST("/user/signIn'", parameters: ["username": username, "password": password], completionHandler: { (response, error) -> Void in
             self.signInBT.hideIndicator()
             self.backBT.enabled = true
             self.handleResponse(response, error: error, successCompletion: { (result) -> Void in

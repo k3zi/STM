@@ -8,8 +8,9 @@
 
 import Foundation
 import DGElasticPullToRefresh
+import NYSegmentedControl
 
-class ProfileViewController: KZViewController {
+class ProfileViewController: KZViewController, UIViewControllerPreviewingDelegate {
 
     let headerView = UIView()
     let avatarImageView = UIImageView()
@@ -22,12 +23,16 @@ class ProfileViewController: KZViewController {
     let followersStatView = ProfileStatView(count: 0, name: "FOLLOWERS")
     let followingStatView = ProfileStatView(count: 0, name: "FOLLOWING")
 
+    let segmentControl = NYSegmentedControl(items: ["Comments", "Streams", "Likes"])
+
     let tableView = KZIntrinsicTableView()
 
     let user: STMUser
     let isOwner: Bool
 
     var comments = [Any]()
+    var streams = [Any]()
+    var likes = [Any]()
 
     init(user: STMUser, isOwner: Bool = false) {
         self.user = user
@@ -75,7 +80,19 @@ class ProfileViewController: KZViewController {
         rightSideHolder.addSubview(followButton)
         headerView.addSubview(rightSideHolder)
 
-        [commentsStatView, followersStatView, followingStatView].forEach({ headerView.addSubview($0) })
+        segmentControl.titleTextColor = Constants.UI.Color.tint
+        segmentControl.selectedTitleTextColor = RGB(255)
+        segmentControl.selectedTitleFont = UIFont.systemFontOfSize(15)
+        segmentControl.segmentIndicatorBackgroundColor =  Constants.UI.Color.tint
+        segmentControl.backgroundColor = RGB(218, g: 219, b: 220)
+        segmentControl.borderWidth = 0.0
+        segmentControl.segmentIndicatorBorderWidth = 0.0
+        segmentControl.segmentIndicatorInset = 2.0
+        segmentControl.segmentIndicatorBorderColor = self.view.backgroundColor
+        segmentControl.usesSpringAnimations = true
+        segmentControl.addTarget(self, action: #selector(self.segmentDidChange), forControlEvents: .ValueChanged)
+
+        [commentsStatView, followersStatView, followingStatView, segmentControl].forEach({ headerView.addSubview($0) })
 
         tableView.delegate = self
         tableView.dataSource = self
@@ -83,7 +100,10 @@ class ProfileViewController: KZViewController {
         tableView.backgroundColor = RGB(250, g: 251, b: 252)
         tableView.tableHeaderView = headerView
         tableView.registerReusableCell(UserCommentCell)
+        tableView.registerReusableCell(SearchStreamCell)
         view.addSubview(tableView)
+
+        registerForPreviewingWithDelegate(self, sourceView: tableView)
 
         NSNotificationCenter.defaultCenter().addObserver(self, selector: #selector(self.fetchData), name: Constants.Notification.UpdateUserProfile, object: nil)
 
@@ -103,6 +123,7 @@ class ProfileViewController: KZViewController {
     override func viewDidAppear(animated: Bool) {
         super.viewDidAppear(animated)
 
+        segmentControl.cornerRadius = segmentControl.frame.size.height/2.0
         avatarImageView.kf_setImageWithURL(user.profilePictureURL(), placeholderImage: UIImage(named: "defaultProfilePicture"))
     }
 
@@ -151,36 +172,70 @@ class ProfileViewController: KZViewController {
         descriptionLabel.autoAlignAxisToSuperviewAxis(.Vertical)
 
         NSLayoutConstraint.autoSetPriority(999) {
-            self.commentsStatView.autoPinEdge(.Top, toEdge: .Bottom, ofView: self.descriptionLabel, withOffset: 20)
+            self.commentsStatView.autoPinEdge(.Top, toEdge: .Bottom, ofView: self.descriptionLabel, withOffset: 15)
         }
         commentsStatView.autoPinEdgeToSuperviewEdge(.Left)
-        commentsStatView.autoPinEdgeToSuperviewEdge(.Bottom, withInset: 20)
 
-        followersStatView.autoPinEdge(.Top, toEdge: .Bottom, ofView: descriptionLabel, withOffset: 20)
+        followersStatView.autoPinEdge(.Top, toEdge: .Bottom, ofView: descriptionLabel, withOffset: 15)
         followersStatView.autoPinEdge(.Left, toEdge: .Right, ofView: commentsStatView)
         followersStatView.autoMatchDimension(.Width, toDimension: .Width, ofView: commentsStatView)
 
-        followingStatView.autoPinEdge(.Top, toEdge: .Bottom, ofView: descriptionLabel, withOffset: 20)
+        followingStatView.autoPinEdge(.Top, toEdge: .Bottom, ofView: descriptionLabel, withOffset: 15)
         followingStatView.autoPinEdge(.Left, toEdge: .Right, ofView: followersStatView)
         followingStatView.autoMatchDimension(.Width, toDimension: .Width, ofView: commentsStatView)
         followingStatView.autoPinEdgeToSuperviewEdge(.Right)
+
+        segmentControl.autoPinEdge(.Top, toEdge: .Bottom, ofView: commentsStatView, withOffset: 20)
+        segmentControl.autoPinEdgeToSuperviewEdge(.Bottom, withInset: 10)
+        segmentControl.autoPinEdgeToSuperviewEdge(.Left, withInset: 10)
+
+        NSLayoutConstraint.autoSetPriority(999) {
+            self.segmentControl.autoPinEdgeToSuperviewEdge(.Right, withInset: 10)
+        }
+    }
+
+    func segmentDidChange() {
+        self.tableView.reloadData()
     }
 
     //MARK: Table View Delegate
 
     override func tableViewCellClass(tableView: UITableView, indexPath: NSIndexPath?) -> KZTableViewCell.Type {
-        return UserCommentCell.self
+        switch segmentControl.selectedSegmentIndex {
+        case 0:
+            return UserCommentCell.self
+        case 1:
+            return SearchStreamCell.self
+        case 2:
+            return UserCommentCell.self
+        default:
+            return UserCommentCell.self
+        }
     }
 
     override func tableViewCellData(tableView: UITableView, section: Int) -> [Any] {
-        return comments
+        switch segmentControl.selectedSegmentIndex {
+        case 0:
+            return comments
+        case 1:
+            return streams
+        case 2:
+            return likes
+        default:
+             return []
+        }
     }
 
     override func tableViewNoDataText(tableView: UITableView) -> String {
-        if isOwner {
-            return "You haven't posted anything :("
-        } else {
-            return "This user hasn't posted anything"
+        switch segmentControl.selectedSegmentIndex {
+        case 0:
+            return isOwner ? "You haven't posted anything :(" : "This user hasn't posted anything"
+        case 1:
+            return isOwner ? "You haven't created a stream :(" : "This user has no streams"
+        case 2:
+            return isOwner ? "You haven't liked anything :(" : "This user hasn't liked anything"
+        default:
+            return "No Results Found"
         }
     }
 
@@ -199,9 +254,22 @@ class ProfileViewController: KZViewController {
     override func tableView(tableView: UITableView, didSelectRowAtIndexPath indexPath: NSIndexPath) {
         super.tableView(tableView, didSelectRowAtIndexPath: indexPath)
 
-        if let comment = comments[indexPath.row] as? STMComment {
+        guard self.tableViewCellData(tableView, section: indexPath.section).count > 0 else {
+            return
+        }
+
+        let model = self.tableViewCellData(tableView, section: indexPath.section)[indexPath.row]
+
+        if let comment = model as? STMComment {
             let vc = CommentViewController(comment: comment)
             self.navigationController?.pushViewController(vc, animated: true)
+        } else if let stream = model as? STMStream {
+            let vc = PlayerViewController()
+            vc.start(stream, vc: self, showHUD: true, callback: { (success, error) in
+                if error == nil {
+                    AppDelegate.del().presentStreamController(vc)
+                }
+            })
         }
     }
 
@@ -212,11 +280,26 @@ class ProfileViewController: KZViewController {
             return nil
         }
 
+        guard self.tableViewCellData(tableView, section: indexPath.section).count > 0 else {
+            return nil
+        }
+
         var vc: UIViewController?
         previewingContext.sourceRect = cell.frame
 
-        if let comment = comments[indexPath.row] as? STMComment {
+        let model = self.tableViewCellData(tableView, section: indexPath.section)[indexPath.row]
+
+        if let comment = model as? STMComment {
             vc = CommentViewController(comment: comment)
+        } else if let stream = model as? STMStream {
+            guard AppDelegate.del().activeStreamController == nil else {
+                return nil
+            }
+
+            let pVC = PlayerViewController()
+            pVC.isPreviewing = true
+            pVC.start(stream, vc: self, showHUD: false)
+            vc = pVC
         }
 
         if let vc = vc {
@@ -271,7 +354,7 @@ class ProfileViewController: KZViewController {
         }
 
         count = count + 1
-        Constants.Network.GET("/comments/user/\(user.id)", parameters: nil) { (response, error) -> Void in
+        Constants.Network.GET("/user/\(user.id)/comments", parameters: nil) { (response, error) -> Void in
             self.handleResponse(response, error: error, successCompletion: { (result) -> Void in
                 self.comments.removeAll()
 
@@ -282,7 +365,43 @@ class ProfileViewController: KZViewController {
                 let comments = [STMComment].fromJSONArray(results)
                 comments.forEach({ self.comments.append($0) })
 
-                self.tableView.reloadData()
+                if self.segmentControl.selectedSegmentIndex == 0 {
+                    self.tableView.reloadData()
+                }
+            })
+
+            runCompletion()
+        }
+
+        count = count + 1
+        Constants.Network.GET("/user/\(user.id)/streams", parameters: nil) { (response, error) -> Void in
+            self.handleResponse(response, error: error, successCompletion: { (result) -> Void in
+                self.streams.removeAll()
+                if let result = result as? [JSON] {
+                    let streams = [STMStream].fromJSONArray(result)
+                    streams.forEach({ self.streams.append($0) })
+
+                    if self.segmentControl.selectedSegmentIndex == 1 {
+                        self.tableView.reloadData()
+                    }
+                }
+            })
+
+            runCompletion()
+        }
+
+        count = count + 1
+        Constants.Network.GET("/user/\(user.id)/likes", parameters: nil) { (response, error) -> Void in
+            self.handleResponse(response, error: error, successCompletion: { (result) -> Void in
+                self.likes.removeAll()
+                if let result = result as? [JSON] {
+                    let likes = [STMComment].fromJSONArray(result)
+                    likes.forEach({ self.likes.append($0) })
+
+                    if self.segmentControl.selectedSegmentIndex == 2 {
+                        self.tableView.reloadData()
+                    }
+                }
             })
 
             runCompletion()

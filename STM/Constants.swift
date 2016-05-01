@@ -68,6 +68,10 @@ struct Constants {
             static let width = UIScreen.mainScreen().bounds.width
             static let height = UIScreen.mainScreen().bounds.height
             static let bounds = UIScreen.mainScreen().bounds
+
+            static func keyboardAdjustment(show: Bool, rect: CGRect) -> CGFloat {
+                return (show ? (-rect.size.height + (AppDelegate.del().playerIsMinimized() ? 40 : 0)) : 0)
+            }
         }
 
         struct Tabs {
@@ -254,6 +258,12 @@ extension UIViewController {
 
     func cancelPressed() {
         view.endEditing(true)
+    }
+
+    func showAlert(title: String, message: String) {
+        let alert = UIAlertController(title: title, message: message, preferredStyle: UIAlertControllerStyle.Alert)
+        alert.addAction(UIAlertAction(title: "Ok", style: UIAlertActionStyle.Default, handler: nil))
+        self.presentViewController(alert, animated: true, completion: nil)
     }
 
 }

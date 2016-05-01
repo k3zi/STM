@@ -134,7 +134,7 @@ class CreateAccountViewController: KZViewController {
 
         createAccountBT.showIndicator()
         backBT.enabled = false
-        Constants.Network.POST("/createAccount", parameters: params, completionHandler: { (response, error) -> Void in
+        Constants.Network.POST("//user/create", parameters: params, completionHandler: { (response, error) -> Void in
             self.createAccountBT.hideIndicator()
             self.backBT.enabled = true
             self.handleResponse(response, error: error, successCompletion: { (result) -> Void in

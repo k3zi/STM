@@ -19,6 +19,10 @@ class UserCommentCell: KZTableViewCell {
     let likeButton = CellButton(imageName: "commentCell_heartBT", selectedImageName: "commentCell_heartSelectedBT", count: 0)
     let repostButton = CellButton(imageName: "commentCell_repostBT", selectedImageName: "commentCell_repostSelectedBT", count: 0)
 
+    let streamView = UIView()
+    let statusView = StreamStatusView()
+    let streamNameLabel = Label()
+
     var timer: NSTimer?
 
 	required init(style: UITableViewCellStyle, reuseIdentifier: String?) {
@@ -52,8 +56,42 @@ class UserCommentCell: KZTableViewCell {
         repostButton.actionButton.addTarget(self, action: #selector(self.toggleRepost), forControlEvents: .TouchUpInside)
         self.contentView.addSubview(repostButton)
 
+        streamNameLabel.font = UIFont.systemFontOfSize(12.0)
+        streamNameLabel.textColor = RGB(172)
+        streamView.addSubview(streamNameLabel)
+
+        streamView.addSubview(statusView)
+
+        streamView.backgroundColor = RGB(235, g: 236, b: 237)
+        streamView.layer.cornerRadius = 4.0
+        streamView.clipsToBounds = true
+        let tap = UITapGestureRecognizer(target: self, action: #selector(self.goToStream))
+        streamView.addGestureRecognizer(tap)
+        self.contentView.addSubview(streamView)
+
         timer = NSTimer.scheduledTimerWithTimeInterval(1.0, target: self, selector: #selector(CommentCell.updateTime), userInfo: nil, repeats: true)
 	}
+
+    func goToStream() {
+        guard let comment = model as? STMComment, stream = comment.stream else {
+            return
+        }
+
+        guard let window = self.window, topVC = window.rootViewController else {
+            return
+        }
+
+        let vc = PlayerViewController()
+        let activeVC = AppDelegate.del().activeStreamController
+
+        vc.start(stream, vc: topVC) { (nothing, error) -> Void in
+            if let error = error {
+                (activeVC ?? topVC).showError(error)
+            } else {
+                AppDelegate.del().presentStreamController(vc)
+            }
+        }
+    }
 
     func toggleLike() {
         guard let comment = model as? STMComment else {
@@ -124,6 +162,16 @@ class UserCommentCell: KZTableViewCell {
 
         repostButton.autoAlignAxis(.Horizontal, toSameAxisOfView: likeButton)
         repostButton.autoPinEdge(.Left, toEdge: .Right, ofView: likeButton, withOffset: 10)
+
+        streamView.autoPinEdgeToSuperviewEdge(.Right, withInset: 10)
+        streamView.autoAlignAxis(.Horizontal, toSameAxisOfView: repostButton)
+        streamView.autoPinEdge(.Left, toEdge: .Right, ofView: repostButton, withOffset: 10, relation: .GreaterThanOrEqual)
+
+        streamNameLabel.autoPinEdgesToSuperviewEdgesWithInsets(UIEdgeInsets(top: 5, left: 5, bottom: 5, right: 0), excludingEdge: .Right)
+
+        statusView.autoAlignAxis(.Horizontal, toSameAxisOfView: streamNameLabel)
+        statusView.autoPinEdge(.Left, toEdge: .Right, ofView: streamNameLabel, withOffset: 10)
+        statusView.autoPinEdgeToSuperviewEdge(.Right, withInset: 5)
 	}
 
 	override func fillInCellData() {
@@ -150,6 +198,11 @@ class UserCommentCell: KZTableViewCell {
         if let date = comment.date {
             dateLabel.text = date.shortTimeAgoSinceNow()
         }
+
+        if let stream = comment.stream {
+            streamNameLabel.text = stream.name
+            statusView.stream = stream
+        }
 	}
 
     func updateTime() {
@@ -165,9 +218,12 @@ class UserCommentCell: KZTableViewCell {
 
 		nameLabel.text = ""
 		dateLabel.text = ""
+        streamNameLabel.text = ""
 
         avatar.kf_cancelDownloadTask()
         avatar.image = nil
+
+        statusView.stream = nil
 	}
 
     override func setIndexPath(indexPath: NSIndexPath, last: Bool) {

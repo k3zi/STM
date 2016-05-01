@@ -76,6 +76,7 @@ class DashboardItemCell: KZTableViewCell, UICollectionViewDelegate, UICollection
 
     func collectionView(collectionView: UICollectionView, cellForItemAtIndexPath indexPath: NSIndexPath) -> UICollectionViewCell {
         let cell = collectionView.dequeueReusableCell(indexPath: indexPath, cellType: DashboardItemCollectionCell.self)
+        cell.transform = CGAffineTransformMake(1, 0, 0, -1, 0, 0)
 
         if let item = model as? STMDashboardItem {
             if let items = item.items {
@@ -157,8 +158,12 @@ class DashboardItemCell: KZTableViewCell, UICollectionViewDelegate, UICollection
 
         let stream = items[startBT.tag]
         let vc = PlayerViewController()
+        let activeVC = AppDelegate.del().activeStreamController
+
         vc.start(stream, vc: topVC) { (nothing, error) -> Void in
-            if error == nil {
+            if let error = error {
+                (activeVC ?? topVC).showError(error)
+            } else {
                 AppDelegate.del().presentStreamController(vc)
             }
         }

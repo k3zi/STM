@@ -22,6 +22,15 @@ class NewMessageViewController: KZViewController, UISearchBarDelegate {
     lazy var keynode: Keynode.Connector = Keynode.Connector(view: self.view)
     var tableViewBottomConstraint: NSLayoutConstraint?
 
+    init() {
+        super.init(nibName: nil, bundle: nil)
+        self.hidesBottomBarWhenPushed = true
+    }
+
+    required init?(coder aDecoder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
+    }
+
     override func viewDidLoad() {
         super.viewDidLoad()
 
@@ -44,7 +53,7 @@ class NewMessageViewController: KZViewController, UISearchBarDelegate {
             }
 
             if let con = me.tableViewBottomConstraint {
-                con.constant = (show ? -rect.size.height + 54 : 0)
+                con.constant = Constants.UI.Screen.keyboardAdjustment(show, rect: rect)
                 me.view.layoutIfNeeded()
                 me.tableView.reloadData()
             }

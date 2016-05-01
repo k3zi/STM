@@ -24,5 +24,5 @@ struct STMSetting: Decodable {
         self.id = id
         self.name = "name" <~~ json
     }
-    
+
 }

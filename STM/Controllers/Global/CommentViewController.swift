@@ -22,6 +22,7 @@ class CommentViewController: KZViewController, UIViewControllerPreviewingDelegat
     init(comment: STMComment) {
         self.comment = comment
         super.init(nibName: nil, bundle: nil)
+        self.hidesBottomBarWhenPushed = true
     }
 
     required init?(coder aDecoder: NSCoder) {
@@ -54,7 +55,7 @@ class CommentViewController: KZViewController, UIViewControllerPreviewingDelegat
             }
 
             if let con = me.toolbarBottomConstraint {
-                con.constant = (show ? -rect.size.height + 54 : 0)
+                con.constant = Constants.UI.Screen.keyboardAdjustment(show, rect: rect)
                 me.view.layoutIfNeeded()
             }
         }
@@ -69,7 +70,8 @@ class CommentViewController: KZViewController, UIViewControllerPreviewingDelegat
                 }
             }
             }, loadingView: loadingView)
-        tableView.dg_setPullToRefreshFillColor(RGB(250, g: 251, b: 252))
+        tableView.dg_setPullToRefreshFillColor(RGB(255))
+        tableView.dg_setPullToRefreshBackgroundColor(RGB(250, g: 251, b: 252))
     }
 
     /**
@@ -162,6 +164,16 @@ class CommentViewController: KZViewController, UIViewControllerPreviewingDelegat
                 self.navigationController?.pushViewController(vc, animated: true)
             }
         }
+    }
+
+    override func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
+        let cell = super.tableView(tableView, cellForRowAtIndexPath: indexPath)
+
+        if let cell = cell as? UserCommentCell {
+            cell.streamView.hidden = true
+        }
+
+        return cell
     }
 
     override func fetchData() {

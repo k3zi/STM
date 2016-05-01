@@ -11,9 +11,10 @@ import M13ProgressSuite
 import AVFoundation
 import MediaPlayer
 import StreamingKit
+import MessageUI
 
 //MARK: Variables
-class PlayerViewController: KZViewController, UISearchBarDelegate {
+class PlayerViewController: KZViewController, UISearchBarDelegate, UIViewControllerPreviewingDelegate, MFMailComposeViewControllerDelegate {
     var streamType: StreamType?
     var stream: STMStream?
     var player: STKAudioPlayer?
@@ -27,7 +28,7 @@ class PlayerViewController: KZViewController, UISearchBarDelegate {
     let topView = UIView()
     let dismissBT = UIButton.styleForDismissButton()
     var dismissBTTopPadding: NSLayoutConstraint?
-    let closeBT = UIButton.styleForCloseButton()
+    let miscBT = UIButton.styleForMiscButton()
     let albumPoster = UIImageView()
     let gradientView = GradientView()
     let gradientColorView = UIView()
@@ -115,8 +116,8 @@ class PlayerViewController: KZViewController, UISearchBarDelegate {
         dismissBTTopPadding = dismissBT.autoPinEdgeToSuperviewEdge(.Top, withInset: 25)
         dismissBT.autoPinEdgeToSuperviewEdge(.Left, withInset: 20)
 
-        closeBT.autoAlignAxis(.Horizontal, toSameAxisOfView: dismissBT)
-        closeBT.autoPinEdgeToSuperviewEdge(.Right, withInset: 20)
+        miscBT.autoAlignAxis(.Horizontal, toSameAxisOfView: dismissBT)
+        miscBT.autoPinEdgeToSuperviewEdge(.Right, withInset: 20)
 
         albumPoster.autoPinEdgesToSuperviewEdges()
 
@@ -177,6 +178,7 @@ class PlayerViewController: KZViewController, UISearchBarDelegate {
         view.addSubview(topView)
 
         albumPoster.contentMode = .ScaleAspectFill
+        albumPoster.clipsToBounds = true
         topView.addSubview(albumPoster)
 
         gradientView.gradientLayer.colors = [RGB(0, a: 0).CGColor, RGB(0, a: 0).CGColor, RGB(0).CGColor]
@@ -191,8 +193,8 @@ class PlayerViewController: KZViewController, UISearchBarDelegate {
         dismissBT.addTarget(self, action: #selector(self.toggleDismiss), forControlEvents: .TouchUpInside)
         topView.addSubview(dismissBT)
 
-        closeBT.addTarget(self, action: #selector(self.closeButtonPressed), forControlEvents: .TouchUpInside)
-        topView.addSubview(closeBT)
+        miscBT.addTarget(self, action: #selector(HostViewController.showMenu), forControlEvents: .TouchUpInside)
+        topView.addSubview(miscBT)
 
         topView.addSubview(songInfoHolderView)
         [songInfoLabel1, songInfoLabel2, songInfoLabel3].forEach { (label) -> () in
@@ -208,6 +210,7 @@ class PlayerViewController: KZViewController, UISearchBarDelegate {
             songInfoHolderView.addSubview(label)
         }
 
+        rewindBT.hidden = true
         rewindBT.addTarget(self, action: #selector(PlayerViewController.didPressRewindBT), forControlEvents: .TouchUpInside)
         rewindBT.setImage(UIImage(named: "rewindBT"), forState: .Normal)
         topView.addSubview(rewindBT)
@@ -223,6 +226,8 @@ class PlayerViewController: KZViewController, UISearchBarDelegate {
         commentContentView.backgroundColor = RGB(255)
         view.addSubview(commentContentView)
         commentContentView.addSubview(commentsTableView)
+
+        registerForPreviewingWithDelegate(self, sourceView: commentsTableView)
 
         commentToolbar.delegate = self
         commentContentView.addSubview(commentToolbar)
@@ -292,6 +297,48 @@ class PlayerViewController: KZViewController, UISearchBarDelegate {
         }
     }
 
+    func dismissPopup() {
+        self.dismissViewControllerAnimated(true, completion: nil)
+    }
+
+    func showMenu() {
+        let menu = UIAlertController(title: "Player Menu", message: nil, preferredStyle: .ActionSheet)
+        menu.popoverPresentationController?.sourceView = miscBT
+
+        menu.addAction(UIAlertAction(title: "Report", style: .Default, handler: { (action) in
+            guard let stream = self.stream else {
+                return
+            }
+
+            var streamName = ""
+            if let name = stream.name {
+                streamName = name
+            }
+
+            let mailComposerVC = MFMailComposeViewController()
+            mailComposerVC.mailComposeDelegate = self
+            mailComposerVC.setToRecipients(["support@stm.io"])
+            mailComposerVC.setSubject("Report Content: \(streamName) (\(stream.alphaID()))")
+
+            if MFMailComposeViewController.canSendMail() {
+                Answers.logCustomEventWithName("Stream Reported", customAttributes: nil)
+                self.presentViewController(mailComposerVC, animated: true, completion: nil)
+            }
+        }))
+
+        /*menu.addAction(UIAlertAction(title: "Share", style: .Default, handler: { (action) in
+            self.showShareDialog()
+        }))*/
+
+        menu.addAction(UIAlertAction(title: "Close Stream", style: .Destructive, handler: { (action) in
+            self.close()
+        }))
+
+        menu.addAction(UIAlertAction(title: "Cancel", style: .Cancel, handler: nil))
+
+        presentViewController(menu, animated: true, completion: nil)
+    }
+
     func showShareDialog() {
         guard let stream = stream else {
             return
@@ -300,6 +347,10 @@ class PlayerViewController: KZViewController, UISearchBarDelegate {
         let streamURL = stream.url()
         let vc = UIActivityViewController(activityItems: [streamURL], applicationActivities: nil)
         self.presentViewController(vc, animated: true, completion: nil)
+    }
+
+    func mailComposeController(controller: MFMailComposeViewController, didFinishWithResult result: MFMailComposeResult, error: NSError?) {
+        self.dismissViewControllerAnimated(true, completion: nil)
     }
 
     func toggleDismiss() {
@@ -384,19 +435,23 @@ class PlayerViewController: KZViewController, UISearchBarDelegate {
 
      - parameter song: The song that has started playing
      */
-    func updateCurrentSong(song: KZPlayerItem?) {
-        updateNowPlayingInfo(song)
+    func updateCurrentSong(meta: STMStreamMeta?) {
+        updateNowPlayingInfo(meta)
 
-        if let song = song {
-            if let artwork = song.artwork() {
+        if let meta = meta {
+            if let artwork = meta.image {
                 UIView.transitionWithView(albumPoster, duration: 0.5, options: .TransitionCrossDissolve, animations: { () -> Void in
-                    self.albumPoster.image = artwork.imageWithSize(CGSize(width: self.albumPoster.frame.width, height: self.albumPoster.frame.width))
-                    }, completion: nil)
+                    self.albumPoster.image = artwork
+                }, completion: nil)
+            } else {
+                UIView.transitionWithView(albumPoster, duration: 0.5, options: .TransitionCrossDissolve, animations: { () -> Void in
+                    self.albumPoster.image = nil
+                }, completion: nil)
             }
 
-            songInfoLabel1.text = song.title
-            songInfoLabel2.text = song.artist
-            songInfoLabel3.text = song.album
+            songInfoLabel1.text = meta.title
+            songInfoLabel2.text = meta.artist
+            songInfoLabel3.text = meta.album
         } else {
             songInfoLabel1.text = "No Song Playing"
             songInfoLabel2.text = nil
@@ -404,11 +459,11 @@ class PlayerViewController: KZViewController, UISearchBarDelegate {
         }
 
         if (songInfoLabel2.text?.characters.count == 0 && songInfoLabel3.text?.characters.count == 0) || (songInfoLabel2.text == nil || songInfoLabel3.text == nil) {
-            songInfoHolderViewTopPadding?.constant = 5
+            songInfoHolderViewTopPadding?.constant = 15
         } else if (songInfoLabel2.text?.characters.count != 0 && songInfoLabel3.text?.characters.count != 0) || (songInfoLabel2.text != nil && songInfoLabel3.text != nil) {
-            songInfoHolderViewTopPadding?.constant = -5
+            songInfoHolderViewTopPadding?.constant = 5
         } else {
-            songInfoHolderViewTopPadding?.constant = 0
+            songInfoHolderViewTopPadding?.constant = 10
         }
 
         songInfoHolderView.layoutIfNeeded()
@@ -419,7 +474,7 @@ class PlayerViewController: KZViewController, UISearchBarDelegate {
 
      - parameter item: The song that has started playing
      */
-    func updateNowPlayingInfo(item: KZPlayerItem?) {
+    func updateNowPlayingInfo(item: STMStreamMeta?) {
         let center = MPNowPlayingInfoCenter.defaultCenter()
 
         var dict = [String : AnyObject]()
@@ -429,8 +484,11 @@ class PlayerViewController: KZViewController, UISearchBarDelegate {
             dict[MPMediaItemPropertyTitle] = item.title ?? ""
             dict[MPMediaItemPropertyArtist] = item.artist ?? ""
             dict[MPMediaItemPropertyAlbumTitle] = item.album ?? ""
-            dict[MPMediaItemPropertyArtwork] = item.artwork() ?? MPMediaItemArtwork(image: UIImage())
-            dict[MPMediaItemPropertyPlaybackDuration] = item.endTime - item.startTime
+            if let image = item.image {
+                dict[MPMediaItemPropertyArtwork] = MPMediaItemArtwork(image: image)
+            } else {
+                dict[MPMediaItemPropertyArtwork] = MPMediaItemArtwork(image: UIImage())
+            }
         } else {
             dict[MPMediaItemPropertyTitle] = "No Song Playing"
         }
@@ -462,6 +520,19 @@ class PlayerViewController: KZViewController, UISearchBarDelegate {
         return super.tableViewCellClass(tableView, indexPath: indexPath)
     }
 
+    override func tableView(tableView: UITableView, didSelectRowAtIndexPath indexPath: NSIndexPath) {
+        super.tableView(tableView, didSelectRowAtIndexPath: indexPath)
+
+        if comments.count > 0 {
+            if let comment = comments[indexPath.row] as? STMComment {
+                let vc = CommentViewController(comment: comment)
+                let nav = NavigationController(rootViewController: vc)
+                vc.navigationItem.leftBarButtonItem = UIBarButtonItem(image: UIImage(named: "navBarDismissBT"), style: .Plain, target: self, action: #selector(self.dismissPopup))
+                self.presentViewController(nav, animated: true, completion: nil)
+            }
+        }
+    }
+
     override func tableView(tableView: UITableView, heightForRowAtIndexPath indexPath: NSIndexPath) -> CGFloat {
         return UITableViewAutomaticDimension
     }
@@ -476,6 +547,35 @@ class PlayerViewController: KZViewController, UISearchBarDelegate {
         }
 
         return super.tableViewNoDataText(tableView)
+    }
+
+    //MARK: UIViewController Previewing Delegate
+
+    func previewingContext(previewingContext: UIViewControllerPreviewing, viewControllerForLocation location: CGPoint) -> UIViewController? {
+        guard let indexPath = commentsTableView.indexPathForRowAtPoint(location), cell = commentsTableView.cellForRowAtIndexPath(indexPath) else {
+            return nil
+        }
+
+        var vc: UIViewController?
+        previewingContext.sourceRect = cell.frame
+
+        if comments.count > 0 {
+            if let comment = comments[indexPath.row] as? STMComment {
+                vc = CommentViewController(comment: comment)
+            }
+        }
+
+        if let vc = vc {
+            vc.preferredContentSize = CGSize(width: 0.0, height: 0.0)
+        }
+
+        return vc
+    }
+
+    func previewingContext(previewingContext: UIViewControllerPreviewing, commitViewController viewControllerToCommit: UIViewController) {
+        let vc = NavigationController(rootViewController: viewControllerToCommit)
+        viewControllerToCommit.navigationItem.leftBarButtonItem = UIBarButtonItem(image: UIImage(named: "navBarDismissBT"), style: .Plain, target: self, action: #selector(self.dismissPopup))
+        self.presentViewController(vc, animated: true, completion: nil)
     }
 
     // MARK: Handle Data
@@ -529,9 +629,11 @@ extension PlayerViewController: MessageToolbarDelegate {
     func didReciveComment(response: AnyObject) {
         if let result = response as? JSON {
             if let comment = STMComment(json: result) {
+                comment.stream = self.stream
                 let isAtBottom = commentsTableView.indexPathsForVisibleRows?.contains({ $0.row == (comments.count - 1) })
                 let shouldScrollDown = (didPostComment ?? false) || (isAtBottom ?? false)
                 comments.append(comment)
+                self.streamInfoHolder.comments = comments.count
                 didUpdateComments(shouldScrollDown)
             }
         }
@@ -571,6 +673,22 @@ extension PlayerViewController: MessageToolbarDelegate {
         })
     }
 
+    func fetchMeta() {
+        guard let stream = stream else {
+            return
+        }
+
+        Constants.Network.GET("/stream/\(stream.id)/meta", parameters: nil, completionHandler: { [weak self] (response, error) -> Void in
+            self?.handleResponse(response, error: error, successCompletion: { (result) -> Void in
+                if let result = result as? JSON, meta = STMStreamMeta(json: result) {
+                    self?.updateCurrentSong(meta)
+                } else {
+                    self?.updateCurrentSong(nil)
+                }
+            })
+        })
+    }
+
     func fetchOnce() {
         guard let stream = stream else {
             return
@@ -581,13 +699,18 @@ extension PlayerViewController: MessageToolbarDelegate {
                 self.comments.removeAll()
                 if let result = result as? [JSON] {
                     let comments = [STMComment].fromJSONArray(result)
-                    comments.forEach({ self.comments.insert($0, atIndex: 0) })
+                    comments.forEach({
+                        $0.stream = self.stream
+                        self.comments.insert($0, atIndex: 0)
+                    })
                     self.streamInfoHolder.comments = comments.count
                     self.commentsTableView.reloadData()
                     self.commentsTableView.scrollToBottom(false)
                 }
             })
         })
+
+        fetchMeta()
     }
 
     func fetchData(scrollToBottom: Bool) {
@@ -634,7 +757,7 @@ extension PlayerViewController: STKAudioPlayerDelegate {
         if let activeVC = AppDelegate.del().activeStreamController {
             guard let activeVC = activeVC as? PlayerViewController else {
                 if let callback = callback {
-                    callback(false, "You are currently hosting a stream")
+                    callback(false, "You must close out of the stream you are currently hosting before you can listen to a different one")
                 }
 
                 return
@@ -643,7 +766,10 @@ extension PlayerViewController: STKAudioPlayerDelegate {
             let alertVC = UIAlertController(title: "Confirm", message: "Continuing will stop the playback of the current stream", preferredStyle: .Alert)
             alertVC.addAction(UIAlertAction(title: "Continue", style: .Default, handler: { (action) in
                 activeVC.close()
-                innerStart()
+
+                delay(0.5, closure: {
+                    innerStart()
+                })
             }))
             alertVC.addAction(UIAlertAction(title: "Cancel", style: .Cancel, handler: nil))
             AppDelegate.topViewController()?.presentViewController(alertVC, animated: true, completion: nil)
@@ -770,6 +896,10 @@ extension PlayerViewController: STKAudioPlayerDelegate {
 
             socket.on("item") { data, ack in
                 self.didReciveUserJoined(data[0])
+            }
+
+            socket.on("didUpdateMetadata") { data, ack in
+                self.fetchMeta()
             }
 
             socket.connect()

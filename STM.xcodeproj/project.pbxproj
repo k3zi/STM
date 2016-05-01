@@ -45,6 +45,9 @@
 		EA2898B71CD4D7430025F43B /* STMMessageOtherCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = EA2898B51CD4D7430025F43B /* STMMessageOtherCell.swift */; };
 		EA2898B81CD4D7430025F43B /* STMMessageYouCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = EA2898B61CD4D7430025F43B /* STMMessageYouCell.swift */; };
 		EA2898BA1CD4DD8F0025F43B /* ConvoCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = EA2898B91CD4DD8F0025F43B /* ConvoCell.swift */; };
+		EA2898BE1CD535CD0025F43B /* TextField.swift in Sources */ = {isa = PBXBuildFile; fileRef = EA2898BD1CD535CC0025F43B /* TextField.swift */; };
+		EA2898C01CD5AF150025F43B /* StreamStatusView.swift in Sources */ = {isa = PBXBuildFile; fileRef = EA2898BF1CD5AF150025F43B /* StreamStatusView.swift */; };
+		EA2898C21CD5CB390025F43B /* STMStreamMeta.swift in Sources */ = {isa = PBXBuildFile; fileRef = EA2898C11CD5CB390025F43B /* STMStreamMeta.swift */; };
 		EA3EF7D41CCEEE60009E4524 /* SearchViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = EA3EF7D31CCEEE60009E4524 /* SearchViewController.swift */; };
 		EA3EF7D61CCF014C009E4524 /* SearchUserCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = EA3EF7D51CCF014C009E4524 /* SearchUserCell.swift */; };
 		EA3EF7D81CCF028F009E4524 /* SearchStreamCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = EA3EF7D71CCF028F009E4524 /* SearchStreamCell.swift */; };
@@ -151,6 +154,9 @@
 		EA2898B51CD4D7430025F43B /* STMMessageOtherCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = STMMessageOtherCell.swift; sourceTree = "<group>"; };
 		EA2898B61CD4D7430025F43B /* STMMessageYouCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = STMMessageYouCell.swift; sourceTree = "<group>"; };
 		EA2898B91CD4DD8F0025F43B /* ConvoCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ConvoCell.swift; sourceTree = "<group>"; };
+		EA2898BD1CD535CC0025F43B /* TextField.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TextField.swift; sourceTree = "<group>"; };
+		EA2898BF1CD5AF150025F43B /* StreamStatusView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = StreamStatusView.swift; sourceTree = "<group>"; };
+		EA2898C11CD5CB390025F43B /* STMStreamMeta.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = STMStreamMeta.swift; sourceTree = "<group>"; };
 		EA3EF7D31CCEEE60009E4524 /* SearchViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SearchViewController.swift; sourceTree = "<group>"; };
 		EA3EF7D51CCF014C009E4524 /* SearchUserCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SearchUserCell.swift; sourceTree = "<group>"; };
 		EA3EF7D71CCF028F009E4524 /* SearchStreamCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SearchStreamCell.swift; sourceTree = "<group>"; };
@@ -346,6 +352,7 @@
 				EA2898B11CD4C5D80025F43B /* STMMessage.swift */,
 				EA2898AF1CD4C3ED0025F43B /* STMConversation.swift */,
 				EA27B1FB1C5D2D05006F269D /* STMStream.swift */,
+				EA2898C11CD5CB390025F43B /* STMStreamMeta.swift */,
 				EA6F5B8A1CD1B1E400C9638D /* STMSetting.swift */,
 			);
 			path = Models;
@@ -458,12 +465,12 @@
 				EA2898A61CD3ED1B0025F43B /* ExtendedUserCommentCell.swift */,
 				EA86DCFF1CCC281600064040 /* TimelineItemCell.swift */,
 				EA3EF7D51CCF014C009E4524 /* SearchUserCell.swift */,
-				EA2898B91CD4DD8F0025F43B /* ConvoCell.swift */,
 				EA2898AD1CD4AD1F0025F43B /* UserSelectionCell.swift */,
 				EA3EF7D71CCF028F009E4524 /* SearchStreamCell.swift */,
 				EA6F5B881CD1A99D00C9638D /* SettingsProfilePictureCell.swift */,
 				EA481DE71C630EED008E3E6E /* SelectSongCell.swift */,
 				EA24C0641C68418600FE4DD0 /* UpNextSongCell.swift */,
+				EA2898B91CD4DD8F0025F43B /* ConvoCell.swift */,
 				EA2898B51CD4D7430025F43B /* STMMessageOtherCell.swift */,
 				EA2898B61CD4D7430025F43B /* STMMessageYouCell.swift */,
 			);
@@ -479,6 +486,8 @@
 				EA8D3DE01C7D75C3003ACCFC /* MessageToolbarView.swift */,
 				EA6F5B821CD1466900C9638D /* ProfileStatView.swift */,
 				EA2898A11CD328520025F43B /* CellButton.swift */,
+				EA2898BD1CD535CC0025F43B /* TextField.swift */,
+				EA2898BF1CD5AF150025F43B /* StreamStatusView.swift */,
 			);
 			path = Generic;
 			sourceTree = "<group>";
@@ -788,6 +797,7 @@
 				EA4F496A1C5EBFA000103559 /* YBReverb.m in Sources */,
 				EA4F49871C5EC05700103559 /* EZAudioFile.m in Sources */,
 				EA8D3DE11C7D75C3003ACCFC /* MessageToolbarView.swift in Sources */,
+				EA2898C01CD5AF150025F43B /* StreamStatusView.swift in Sources */,
 				EA9216B11C856DBB00EA499B /* TriangleView.swift in Sources */,
 				EA2898A51CD3E9080025F43B /* CommentViewController.swift in Sources */,
 				EA01AF8A1C5CB3C500F56792 /* SignInViewController.swift in Sources */,
@@ -806,6 +816,7 @@
 				EA54E5C21CC5D8210033135B /* UIToolbarStyles.swift in Sources */,
 				EA09CAD71C5C89A50067FF6A /* NavigationController.swift in Sources */,
 				EA86DCFC1CCC156A00064040 /* STMAuthzModule.swift in Sources */,
+				EA2898C21CD5CB390025F43B /* STMStreamMeta.swift in Sources */,
 				EA01AF931C5CBCA600F56792 /* STMUser.swift in Sources */,
 				EA4F49841C5EC05700103559 /* KZPlayerInner.m in Sources */,
 				EA86DD001CCC281600064040 /* TimelineItemCell.swift in Sources */,
@@ -851,6 +862,7 @@
 				EAB0E6A01C7813B5008945FF /* FUXEasingCombinators.swift in Sources */,
 				EA6F5B871CD1A90000C9638D /* ProfileSettingsViewController.swift in Sources */,
 				EAFFCB171C8A1B1C00258C16 /* PlayerInfoHolderView.swift in Sources */,
+				EA2898BE1CD535CD0025F43B /* TextField.swift in Sources */,
 				EA27B20A1C5D781E006F269D /* KZConverter.swift in Sources */,
 				EA4F495C1C5EBFA000103559 /* YBFormatConverter.m in Sources */,
 				EA9216B31C857A4F00EA499B /* DashboardStreamInfo.swift in Sources */,

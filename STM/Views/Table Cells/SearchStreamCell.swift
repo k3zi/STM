@@ -11,6 +11,7 @@ import KILabel
 import DateTools
 
 class SearchStreamCell: KZTableViewCell {
+    let statusView = StreamStatusView()
 	let avatar = UIImageView()
 	let nameLabel = UILabel()
 	let messageLabel = KILabel()
@@ -20,6 +21,8 @@ class SearchStreamCell: KZTableViewCell {
 		self.backgroundColor = RGB(255)
         self.selectionStyle = .None
         self.accessoryType = .DisclosureIndicator
+
+        self.contentView.addSubview(statusView)
 
 		avatar.layer.cornerRadius = 45.0 / 2.0
 		avatar.backgroundColor = RGB(72, g: 72, b: 72)
@@ -42,9 +45,12 @@ class SearchStreamCell: KZTableViewCell {
 			self.avatar.autoSetDimensionsToSize(CGSize(width: 45.0, height: 45.0))
 		}
 
+        statusView.autoAlignAxis(.Horizontal, toSameAxisOfView: avatar)
+        statusView.autoPinEdgeToSuperviewEdge(.Left, withInset: 10)
+
 		avatar.autoPinEdgeToSuperviewEdge(.Top, withInset: 10)
 		avatar.autoPinEdgeToSuperviewEdge(.Bottom, withInset: 10, relation: .GreaterThanOrEqual)
-		avatar.autoPinEdgeToSuperviewEdge(.Left, withInset: 10)
+		avatar.autoPinEdge(.Left, toEdge: .Right, ofView: statusView, withOffset: 10)
 
 		nameLabel.autoPinEdgeToSuperviewEdge(.Top, withInset: 13)
 		nameLabel.autoPinEdge(.Left, toEdge: .Right, ofView: avatar, withOffset: 10)
@@ -58,8 +64,11 @@ class SearchStreamCell: KZTableViewCell {
 
 	override func fillInCellData() {
 		if let stream = model as? STMStream {
+            statusView.stream = stream
             nameLabel.text = stream.name
             messageLabel.text = stream.description
+
+            avatar.kf_setImageWithURL(stream.pictureURL(), placeholderImage: UIImage(named: "defaultStreamImage"), optionsInfo: nil, progressBlock: nil, completionHandler: nil)
 		}
 	}
 

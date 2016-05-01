@@ -40,4 +40,15 @@ struct STMStream: Decodable {
     func url() -> NSURL {
         return NSURL(string: Constants.Config.siteBaseURL + "/s/" + alphaID()) ?? NSURL()
     }
+
+    func pictureURL() -> NSURL {
+        return NSURL(string: Constants.Config.apiBaseURL + "/stream/\(id)/picture") ?? NSURL()
+    }
+
+}
+
+enum STMStreamStatus: Int {
+    case Offline = 0
+    case Online = 1
+    case RecentlyOnline = 2
 }

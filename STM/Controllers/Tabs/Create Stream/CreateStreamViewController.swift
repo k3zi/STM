@@ -115,7 +115,7 @@ class CreateStreamViewController: KZViewController {
             }
 
             if let con = me.scrollViewBottomConstraint {
-                con.constant = (show ? -rect.size.height + 54 : 0)
+                con.constant = (show ? -rect.size.height + 54 + (AppDelegate.del().playerIsMinimized() ? 44 : 0) : 0)
                 me.view.layoutIfNeeded()
             }
         }
@@ -254,7 +254,7 @@ class CreateStreamViewController: KZViewController {
                 return
             }
 
-            Constants.Network.GET("/delete/stream/\(stream.id)", parameters: nil, completionHandler: { (response, error) -> Void in
+            Constants.Network.GET("/stream/\(stream.id)/delete", parameters: nil, completionHandler: { (response, error) -> Void in
                 self.handleResponse(response, error: error, successCompletion: { (result) -> Void in
                     self.items.removeAtIndex(indexPath.row)
                     tableView.reloadSections(NSIndexSet(index: 0), withRowAnimation: .Fade)
@@ -267,7 +267,11 @@ class CreateStreamViewController: KZViewController {
     //MARK: Data Functions
 
     override func fetchData() {
-        Constants.Network.GET("/streams/user/0", parameters: nil) { (response, error) -> Void in
+        guard let user = AppDelegate.del().currentUser else {
+            return
+        }
+
+        Constants.Network.GET("/user/\(user.id)/streams", parameters: nil) { (response, error) -> Void in
             self.handleResponse(response, error: error, successCompletion: { (result) -> Void in
                 self.items.removeAll()
                 if let result = result as? [JSON] {

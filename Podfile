@@ -24,7 +24,7 @@ target 'STM' do
     pod 'Keynode'
     pod 'ALCameraViewController'
     pod 'DGElasticPullToRefresh'
-    pod 'CLTokenInputView'
+    pod 'NYSegmentedControl'
 
     pod 'Fabric'
     pod 'Crashlytics'

@@ -24,11 +24,13 @@ class ProfileStatView: UIView {
 
         countLabel.text = count.formatUsingAbbrevation()
         countLabel.textAlignment = .Center
+        countLabel.textColor = RGB(128)
         countLabel.font = UIFont.systemFontOfSize(27, weight: UIFontWeightLight)
         addSubview(countLabel)
 
         nameLabel.text = name
         nameLabel.textAlignment = .Center
+        nameLabel.textColor = RGB(205)
         nameLabel.font = UIFont.systemFontOfSize(13, weight: UIFontWeightMedium)
         addSubview(nameLabel)
 
@@ -42,9 +44,8 @@ class ProfileStatView: UIView {
 
         nameLabel.autoPinEdge(.Top, toEdge: .Bottom, ofView: countLabel, withOffset: 10)
         NSLayoutConstraint.autoSetPriority(999) {
-            self.nameLabel.autoPinEdgesToSuperviewEdgesWithInsets(UIEdgeInsets(top: 0, left: 10, bottom: 10, right: 10), excludingEdge: .Top)
+            self.nameLabel.autoPinEdgesToSuperviewEdgesWithInsets(UIEdgeInsets(top: 0, left: 10, bottom: 0, right: 10), excludingEdge: .Top)
         }
-        nameLabel.autoPinEdgeToSuperviewEdge(.Bottom, withInset: 10)
 
     }
 

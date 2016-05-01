@@ -57,6 +57,8 @@ class HostStreamCell: KZTableViewCell {
         if let stream = model as? STMStream {
             nameLabel.text = stream.name
             tagLabel.text = stream.alphaID()
+
+            avatar.kf_setImageWithURL(stream.pictureURL(), placeholderImage: UIImage(named: "defaultStreamImage"), optionsInfo: nil, progressBlock: nil, completionHandler: nil)
         }
     }
 

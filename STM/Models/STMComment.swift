@@ -13,7 +13,7 @@ class STMComment: Decodable {
 
     let id: Int
     let user: STMUser?
-    let stream: STMStream?
+    var stream: STMStream?
     let text: String?
     let date: NSDate?
 
