@@ -7,7 +7,6 @@
 //
 
 import Foundation
-import CLTokenInputView
 import M13ProgressSuite
 
 class NewMessageViewController: KZViewController, UISearchBarDelegate {

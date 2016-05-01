@@ -18,7 +18,7 @@ class HostStreamCell: KZTableViewCell {
         self.backgroundColor = RGB(255)
 
         avatar.layer.cornerRadius = 35.0/2.0
-        avatar.backgroundColor = RGB(72, g: 72, b: 72)
+        avatar.backgroundColor = RGB(197, g: 198, b: 199)
         avatar.clipsToBounds = true
         self.contentView.addSubview(avatar)
 

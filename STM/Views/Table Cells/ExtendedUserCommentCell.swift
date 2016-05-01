@@ -35,8 +35,10 @@ class ExtendedUserCommentCell: KZTableViewCell {
         self.bottomSeperator.backgroundColor = line1.backgroundColor
 
 		avatar.layer.cornerRadius = 45.0 / 9.0
-		avatar.backgroundColor = RGB(72, g: 72, b: 72)
+		avatar.backgroundColor = Constants.UI.Color.imageViewDefault
 		avatar.clipsToBounds = true
+        avatar.userInteractionEnabled = true
+        avatar.addGestureRecognizer(UITapGestureRecognizer(target: self, action: #selector(goToUser)))
 		self.contentView.addSubview(avatar)
 
         dateLabel.textColor = RGB(180)
@@ -114,6 +116,7 @@ class ExtendedUserCommentCell: KZTableViewCell {
             dispatch_async(dispatch_get_main_queue(), {
                 comment.likes = self.likeButton.count
                 comment.didLike = self.likeButton.selected
+                NSNotificationCenter.defaultCenter().postNotificationName(Constants.Notification.DidLikeComment, object: nil)
             })
         }
     }
@@ -128,15 +131,40 @@ class ExtendedUserCommentCell: KZTableViewCell {
         }
 
         let method = likeButton.selected ? "unrepost" : "repost"
+        UIView.transitionWithView(self.repostButton, duration: 0.2, options: .TransitionCrossDissolve, animations: {
+            self.repostButton.selected = !self.repostButton.selected
+            self.repostButton.count = self.repostButton.count + (self.repostButton.selected ? 1 : -1)
+        }, completion: nil)
+
         Constants.Network.GET("/comment/\(method)/\(comment.id)", parameters: nil) { (response, error) in
             dispatch_async(dispatch_get_main_queue(), {
                 UIView.transitionWithView(self.repostButton, duration: 0.2, options: .TransitionCrossDissolve, animations: {
-                    self.repostButton.selected = !self.repostButton.selected
-                    self.repostButton.count = self.repostButton.count + (self.repostButton.selected ? 1 : -1)
                     comment.reposts = self.repostButton.count
                     comment.didRepost = self.repostButton.selected
+                    NSNotificationCenter.defaultCenter().postNotificationName(Constants.Notification.DidRepostComment, object: nil)
                 }, completion: nil)
             })
+        }
+    }
+
+    func goToUser() {
+        guard let comment = model as? STMComment else {
+            return
+        }
+
+        guard let user = comment.user else {
+            return
+        }
+
+        let vc = ProfileViewController(user: user, isOwner: AppDelegate.del().currentUser?.id == user.id)
+        if let topVC = AppDelegate.del().topViewController() {
+            if let navVC = topVC.navigationController {
+                navVC.pushViewController(vc, animated: true)
+            } else {
+                let nav = NavigationController(rootViewController: vc)
+                vc.navigationItem.leftBarButtonItem = UIBarButtonItem(image: UIImage(named: "navBarDismissBT"), style: .Plain, target: topVC, action: #selector(topVC.dismissPopup))
+                topVC.presentViewController(nav, animated: true, completion: nil)
+            }
         }
     }
 

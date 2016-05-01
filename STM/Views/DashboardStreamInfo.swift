@@ -14,6 +14,7 @@ class DashboardStreamInfoView: UIView {
     let infoViewHolder = UIView()
     let startBT = UIButton.styledForStreamInfoView()
     let streamNameLabel = UILabel()
+    let streamDescriptionLabel = UILabel()
 
     var stream: STMStream
 
@@ -31,9 +32,14 @@ class DashboardStreamInfoView: UIView {
         addSubview(infoViewHolder)
 
         streamNameLabel.textColor = Constants.UI.Color.tint
-        streamNameLabel.font = UIFont.systemFontOfSize(15, weight: UIFontWeightMedium)
+        streamNameLabel.font = UIFont.systemFontOfSize(17, weight: UIFontWeightMedium)
         streamNameLabel.text = stream.name
         infoViewHolder.addSubview(streamNameLabel)
+
+        streamDescriptionLabel.textColor = RGB(91)
+        streamDescriptionLabel.font = UIFont.systemFontOfSize(14)
+        streamDescriptionLabel.text = stream.description
+        infoViewHolder.addSubview(streamDescriptionLabel)
 
         startBT.setTitle("Tune In", forState: .Normal)
         startBT.setTitle("Tune In (Offline)", forState: .Disabled)
@@ -54,11 +60,15 @@ class DashboardStreamInfoView: UIView {
         infoViewHolder.autoPinEdgeToSuperviewEdge(.Top, withInset: 31)
         infoViewHolder.autoPinEdgeToSuperviewEdge(.Left)
         infoViewHolder.autoPinEdgeToSuperviewEdge(.Right)
-        infoViewHolder.autoSetDimension(.Height, toSize: 100)
         infoViewHolder.autoPinEdgeToSuperviewEdge(.Bottom)
 
         streamNameLabel.autoPinEdgesToSuperviewEdgesWithInsets(UIEdgeInsets(top: 15, left: 15, bottom: 0, right: 15), excludingEdge: .Bottom)
 
+        streamDescriptionLabel.autoPinEdge(.Top, toEdge: .Bottom, ofView: streamNameLabel, withOffset: 15)
+        streamDescriptionLabel.autoPinEdgeToSuperviewEdge(.Left, withInset: 15)
+        streamDescriptionLabel.autoPinEdgeToSuperviewEdge(.Right, withInset: 15)
+
+        startBT.autoPinEdge(.Top, toEdge: .Bottom, ofView: streamDescriptionLabel, withOffset: 15)
         startBT.autoPinEdgeToSuperviewEdge(.Left)
         startBT.autoPinEdgeToSuperviewEdge(.Right)
         startBT.autoPinEdgeToSuperviewEdge(.Bottom)

@@ -23,7 +23,7 @@ class TimelineItemCell: KZTableViewCell {
         self.selectionStyle = .None
 
 		avatar.layer.cornerRadius = 45.0 / 9.0
-		avatar.backgroundColor = RGB(72, g: 72, b: 72)
+		avatar.backgroundColor = Constants.UI.Color.imageViewDefault
 		avatar.clipsToBounds = true
 		self.contentView.addSubview(avatar)
 

@@ -24,6 +24,7 @@ class SettingsUserCell: KZTableViewCell, UITextFieldDelegate, UITextViewDelegate
         nameField.delegate = self
         nameField.inputAccessoryView = cellToolbar()
         nameField.autocorrectionType = .No
+        nameField.textAlignment = .Center
         nameField.font = UIFont.systemFontOfSize(16)
         self.contentView.addSubview(nameField)
 

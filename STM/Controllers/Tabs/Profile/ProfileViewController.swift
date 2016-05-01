@@ -9,6 +9,7 @@
 import Foundation
 import DGElasticPullToRefresh
 import NYSegmentedControl
+import M13ProgressSuite
 
 class ProfileViewController: KZViewController, UIViewControllerPreviewingDelegate {
 
@@ -17,7 +18,9 @@ class ProfileViewController: KZViewController, UIViewControllerPreviewingDelegat
     let displayNameLabel = UILabel()
     let descriptionLabel = UILabel()
     let rightSideHolder = UIView()
+    let leftSideHolder = UIView()
     let followButton = UIButton()
+    let messageButton = UIButton()
 
     let commentsStatView = ProfileStatView(count: 0, name: "COMMENTS")
     let followersStatView = ProfileStatView(count: 0, name: "FOLLOWERS")
@@ -59,10 +62,11 @@ class ProfileViewController: KZViewController, UIViewControllerPreviewingDelegat
         }
 
         avatarImageView.layer.cornerRadius = 140.0 / 9.0
-        avatarImageView.backgroundColor = RGB(72, g: 72, b: 72)
+        avatarImageView.backgroundColor = Constants.UI.Color.imageViewDefault
         avatarImageView.clipsToBounds = true
         headerView.addSubview(avatarImageView)
 
+        displayNameLabel.font = UIFont.systemFontOfSize(19, weight: UIFontWeightBold)
         displayNameLabel.text = user.displayName
         headerView.addSubview(displayNameLabel)
 
@@ -82,6 +86,15 @@ class ProfileViewController: KZViewController, UIViewControllerPreviewingDelegat
         }
         rightSideHolder.addSubview(followButton)
         headerView.addSubview(rightSideHolder)
+
+        messageButton.addTarget(self, action: #selector(self.messageUser), forControlEvents: .TouchUpInside)
+        messageButton.setImage(UIImage(named: "profileMessageButton"), forState: .Normal)
+        messageButton.enabled = !isOwner
+        if isOwner {
+            messageButton.alpha = 0.4
+        }
+        leftSideHolder.addSubview(messageButton)
+        headerView.addSubview(leftSideHolder)
 
         segmentControl.titleTextColor = Constants.UI.Color.tint
         segmentControl.selectedTitleTextColor = RGB(255)
@@ -109,6 +122,9 @@ class ProfileViewController: KZViewController, UIViewControllerPreviewingDelegat
         registerForPreviewingWithDelegate(self, sourceView: tableView)
 
         NSNotificationCenter.defaultCenter().addObserver(self, selector: #selector(self.fetchData), name: Constants.Notification.UpdateUserProfile, object: nil)
+        NSNotificationCenter.defaultCenter().addObserver(self, selector: #selector(self.fetchData), name: Constants.Notification.DidLikeComment, object: nil)
+        NSNotificationCenter.defaultCenter().addObserver(self, selector: #selector(self.fetchData), name: Constants.Notification.DidRepostComment, object: nil)
+        NSNotificationCenter.defaultCenter().addObserver(self, selector: #selector(self.fetchData), name: Constants.Notification.DidPostComment, object: nil)
 
         let loadingView = DGElasticPullToRefreshLoadingViewCircle()
         loadingView.tintColor = Constants.UI.Color.tint
@@ -136,6 +152,17 @@ class ProfileViewController: KZViewController, UIViewControllerPreviewingDelegat
         avatarImageView.kf_setImageWithURL(user.profilePictureURL(), placeholderImage: UIImage(named: "defaultProfilePicture"))
         displayNameLabel.text = user.displayName
         descriptionLabel.text = user.description
+
+        if let headerView = tableView.tableHeaderView {
+            let height = headerView.systemLayoutSizeFittingSize(UILayoutFittingCompressedSize).height
+            var headerFrame = headerView.frame
+
+            if height != headerFrame.size.height {
+                headerFrame.size.height = height
+                headerView.frame = headerFrame
+                tableView.tableHeaderView = headerView
+            }
+        }
     }
 
     override func viewDidLayoutSubviews() {
@@ -152,7 +179,7 @@ class ProfileViewController: KZViewController, UIViewControllerPreviewingDelegat
             }
         }
 
-        descriptionLabel.preferredMaxLayoutWidth = descriptionLabel.frame.size.width
+        descriptionLabel.preferredMaxLayoutWidth = 250
     }
 
     override func setupConstraints() {
@@ -166,6 +193,15 @@ class ProfileViewController: KZViewController, UIViewControllerPreviewingDelegat
         NSLayoutConstraint.autoSetPriority(999) {
             self.avatarImageView.autoSetDimensionsToSize(CGSize(width: 140, height: 140))
         }
+
+        leftSideHolder.autoAlignAxis(.Horizontal, toSameAxisOfView: avatarImageView)
+        leftSideHolder.autoMatchDimension(.Height, toDimension: .Height, ofView: avatarImageView)
+        leftSideHolder.autoPinEdge(.Right, toEdge: .Left, ofView: avatarImageView)
+        leftSideHolder.autoPinEdgeToSuperviewEdge(.Left)
+
+        messageButton.autoSetDimensionsToSize(CGSize(width: 70, height: 70))
+        messageButton.autoAlignAxisToSuperviewAxis(.Horizontal)
+        messageButton.autoAlignAxisToSuperviewAxis(.Vertical)
 
         rightSideHolder.autoAlignAxis(.Horizontal, toSameAxisOfView: avatarImageView)
         rightSideHolder.autoMatchDimension(.Height, toDimension: .Height, ofView: avatarImageView)
@@ -348,7 +384,7 @@ class ProfileViewController: KZViewController, UIViewControllerPreviewingDelegat
         }
 
         count = count + 1
-        Constants.Network.GET("/stats/user/\(user.id)", parameters: nil) { (response, error) -> Void in
+        Constants.Network.GET("/user/\(user.id)/info", parameters: nil) { (response, error) -> Void in
             self.handleResponse(response, error: error, successCompletion: { (result) -> Void in
                 if let followers = result["followers"] as? Int {
                     self.followersStatView.count = followers
@@ -360,6 +396,10 @@ class ProfileViewController: KZViewController, UIViewControllerPreviewingDelegat
 
                 if let comments = result["comments"] as? Int {
                     self.commentsStatView.count = comments
+                }
+
+                if let isFollowing = result["isFollowing"] as? Bool {
+                    self.followButton.selected = isFollowing
                 }
             })
 
@@ -436,6 +476,81 @@ class ProfileViewController: KZViewController, UIViewControllerPreviewingDelegat
                 NSNotificationCenter.defaultCenter().postNotificationName(Constants.Notification.UpdateUserProfile, object: nil)
             })
         }
+    }
+
+    func messageUser() {
+        guard let tabVC = self.navigationController?.tabBarController else {
+            return
+        }
+
+        guard let navVC = tabVC.viewControllers?[2] as? NavigationController else {
+            return
+        }
+
+        guard let vc = navVC.viewControllers[0] as? MessagesViewController else {
+            return
+        }
+
+        var singleConvo: STMConversation?
+
+        for convo in vc.convos {
+            if let convo = convo as? STMConversation {
+                if let users = convo.users {
+                    if users.count == 2 && users.contains({ $0.id == user.id }) {
+                        singleConvo = convo
+                    }
+                }
+            }
+        }
+
+        if let singleConvo = singleConvo {
+            let vc = ConversationViewController(convo: singleConvo)
+            self.navigationController?.pushViewController(vc, animated: true)
+        } else {
+            createConvo()
+        }
+    }
+
+    func createConvo() {
+        guard let currentUser = AppDelegate.del().currentUser else {
+            return
+        }
+
+        let progressView = M13ProgressViewRing()
+        progressView.primaryColor = RGB(255)
+        progressView.secondaryColor = Constants.UI.Color.disabled
+        progressView.indeterminate = true
+
+        let hud = M13ProgressHUD(progressView: progressView)
+        if let window = AppDelegate.del().window {
+            hud.frame = window.bounds
+            window.addSubview(hud)
+        }
+        hud.progressViewSize = CGSize(width: 60, height: 60)
+        hud.animationPoint = CGPoint(x: hud.frame.size.width / 2, y: hud.frame.size.height / 2)
+        hud.applyBlurToBackground = true
+        hud.maskType = M13ProgressHUDMaskTypeIOS7Blur
+        hud.show(true)
+
+        let nav = self.navigationController
+        Constants.Network.POST("/messages/create", parameters: ["users": [user.id, currentUser.id]], completionHandler: { (response, error) -> Void in
+            self.handleResponse(response, error: error, successCompletion: { (result) in
+                guard let result = result as? JSON else {
+                    return
+                }
+
+                guard let convo = STMConversation(json: result) else {
+                    return
+                }
+
+                let vc = ConversationViewController(convo: convo)
+                nav?.pushViewController(vc, animated: false)
+
+                hud.hide(true)
+                }, errorCompletion: { (errorString) in
+                    hud.hide(true)
+            })
+        })
     }
 
 }

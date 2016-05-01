@@ -633,10 +633,6 @@ class HostViewController: KZViewController, UISearchBarDelegate, UIViewControlle
         }
     }
 
-    func dismissPopup() {
-        self.dismissViewControllerAnimated(true, completion: nil)
-    }
-
     func showMenu() {
         let menu = UIAlertController(title: "Host Menu", message: nil, preferredStyle: .ActionSheet)
         menu.popoverPresentationController?.sourceView = miscBT

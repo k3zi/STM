@@ -25,7 +25,7 @@ class SearchStreamCell: KZTableViewCell {
         self.contentView.addSubview(statusView)
 
 		avatar.layer.cornerRadius = 45.0 / 2.0
-		avatar.backgroundColor = RGB(72, g: 72, b: 72)
+		avatar.backgroundColor = Constants.UI.Color.imageViewDefault
 		avatar.clipsToBounds = true
 		self.contentView.addSubview(avatar)
 

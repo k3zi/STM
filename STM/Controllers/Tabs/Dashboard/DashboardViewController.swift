@@ -16,6 +16,7 @@ class DashboardViewController: KZViewController, UIViewControllerPreviewingDeleg
 
     deinit {
         tableView.dg_removePullToRefresh()
+        NSNotificationCenter.defaultCenter().removeObserver(self)
     }
 
     override func viewDidLoad() {
@@ -47,6 +48,10 @@ class DashboardViewController: KZViewController, UIViewControllerPreviewingDeleg
             }
         }, loadingView: loadingView)
         tableView.dg_setPullToRefreshFillColor(RGB(250, g: 251, b: 252))
+
+        NSNotificationCenter.defaultCenter().addObserver(self, selector: #selector(self.fetchData), name: Constants.Notification.DidLikeComment, object: nil)
+        NSNotificationCenter.defaultCenter().addObserver(self, selector: #selector(self.fetchData), name: Constants.Notification.DidRepostComment, object: nil)
+        NSNotificationCenter.defaultCenter().addObserver(self, selector: #selector(self.fetchData), name: Constants.Notification.DidPostComment, object: nil)
     }
 
     override func setupConstraints() {

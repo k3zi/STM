@@ -19,7 +19,7 @@ class UpNextSongCell: MCSwipeCell {
         self.backgroundColor = RGB(255)
         self.selectionStyle = .None
 
-        poster.backgroundColor = RGB(72, g: 72, b: 72)
+        poster.backgroundColor = Constants.UI.Color.imageViewDefault
         self.contentView.addSubview(poster)
 
         positionLabel.backgroundColor = RGB(204, a: 0.86)

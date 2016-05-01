@@ -32,6 +32,9 @@ struct Constants {
         static let UpdateUserProfile = "STMNotificationUpdateUserProfile"
         static let DidPostComment = "STMNotificationDidPostComment"
         static let DidPostMessage = "STMNotificationDidMessage"
+        static let DidCreateStream = "STMNotificationDidCreateStream"
+        static let DidLikeComment = "STMNotificationDidLikeComment"
+        static let DidRepostComment = "STMNotificationDidRepostComment"
 
         func UpdateForComment(comment: STMComment) -> String {
             return "STMNotificationUpdateForComment-\(comment.id)"
@@ -62,6 +65,7 @@ struct Constants {
             static let tint = RGB(92, g: 38, b: 254)
             static let disabled = RGB(234, g: 234, b: 234)
             static let off = RGB(150, g: 150, b: 150)
+            static let imageViewDefault = RGB(197, g: 198, b: 199)
         }
 
         struct Screen {
@@ -264,6 +268,10 @@ extension UIViewController {
         let alert = UIAlertController(title: title, message: message, preferredStyle: UIAlertControllerStyle.Alert)
         alert.addAction(UIAlertAction(title: "Ok", style: UIAlertActionStyle.Default, handler: nil))
         self.presentViewController(alert, animated: true, completion: nil)
+    }
+
+    func dismissPopup() {
+        self.dismissViewControllerAnimated(true, completion: nil)
     }
 
 }

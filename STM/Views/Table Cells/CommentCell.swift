@@ -24,8 +24,10 @@ class CommentCell: KZTableViewCell {
         self.selectionStyle = .None
 
 		avatar.layer.cornerRadius = 45.0 / 9.0
-		avatar.backgroundColor = RGB(72, g: 72, b: 72)
+		avatar.backgroundColor = Constants.UI.Color.imageViewDefault
 		avatar.clipsToBounds = true
+        avatar.userInteractionEnabled = true
+        avatar.addGestureRecognizer(UITapGestureRecognizer(target: self, action: #selector(goToUser)))
 		self.contentView.addSubview(avatar)
 
         dateLabel.textColor = RGB(180)
@@ -43,6 +45,27 @@ class CommentCell: KZTableViewCell {
 
         timer = NSTimer.scheduledTimerWithTimeInterval(1.0, target: self, selector: #selector(CommentCell.updateTime), userInfo: nil, repeats: true)
 	}
+
+    func goToUser() {
+        guard let comment = model as? STMComment else {
+            return
+        }
+
+        guard let user = comment.user else {
+            return
+        }
+
+        let vc = ProfileViewController(user: user, isOwner: AppDelegate.del().currentUser?.id == user.id)
+        if let topVC = AppDelegate.del().topViewController() {
+            if let navVC = topVC.navigationController {
+                navVC.pushViewController(vc, animated: true)
+            } else {
+                let nav = NavigationController(rootViewController: vc)
+                vc.navigationItem.leftBarButtonItem = UIBarButtonItem(image: UIImage(named: "navBarDismissBT"), style: .Plain, target: topVC, action: #selector(topVC.dismissPopup))
+                topVC.presentViewController(nav, animated: true, completion: nil)
+            }
+        }
+    }
 
 	override func updateConstraints() {
 		super.updateConstraints()

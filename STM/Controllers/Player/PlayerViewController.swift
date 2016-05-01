@@ -297,10 +297,6 @@ class PlayerViewController: KZViewController, UISearchBarDelegate, UIViewControl
         }
     }
 
-    func dismissPopup() {
-        self.dismissViewControllerAnimated(true, completion: nil)
-    }
-
     func showMenu() {
         let menu = UIAlertController(title: "Player Menu", message: nil, preferredStyle: .ActionSheet)
         menu.popoverPresentationController?.sourceView = miscBT
@@ -772,7 +768,7 @@ extension PlayerViewController: STKAudioPlayerDelegate {
                 })
             }))
             alertVC.addAction(UIAlertAction(title: "Cancel", style: .Cancel, handler: nil))
-            AppDelegate.topViewController()?.presentViewController(alertVC, animated: true, completion: nil)
+            AppDelegate.del().topViewController()?.presentViewController(alertVC, animated: true, completion: nil)
         } else {
             innerStart()
         }
