@@ -21,11 +21,6 @@ PODS:
   - NYSegmentedControl (1.0.7)
   - PRTween (0.1.0)
   - PureLayout (3.0.1)
-  - Realm (0.98.8):
-    - Realm/Headers (= 0.98.8)
-  - Realm/Headers (0.98.8)
-  - RealmSwift (0.98.8):
-    - Realm (= 0.98.8)
   - Reusable (2.2.1)
   - SAConfettiView (0.1.8)
   - SecureNSUserDefaults (1.0.1):
@@ -57,7 +52,6 @@ DEPENDENCIES:
   - NYSegmentedControl
   - PRTween
   - PureLayout
-  - RealmSwift
   - Reusable
   - SAConfettiView
   - SecureNSUserDefaults
@@ -87,8 +81,6 @@ SPEC CHECKSUMS:
   NYSegmentedControl: 55b4f9eb652767cae9799623ec3e49e50029ef47
   PRTween: 6c58c7e32ebcf31e33e6a6e6bc727ebef3b668ef
   PureLayout: f35f5384c9c4e4479df041dbe33ad7577b71ddfb
-  Realm: 0e293bb62999730599efc3048896bbd4f2e43bcd
-  RealmSwift: 064262d38113f23ff3508fb20a0a922e696bec01
   Reusable: 4a86b0fa0eefbe3126675617a7e921b673d530c1
   SAConfettiView: c87031a2280659261b730fce3669fb10e73636ee
   SecureNSUserDefaults: 8a07fc6a6fde31c7f8fa6ead73d3c9c3706a6364

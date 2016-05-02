@@ -30,9 +30,6 @@
 		EA24C0651C68418600FE4DD0 /* UpNextSongCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = EA24C0641C68418600FE4DD0 /* UpNextSongCell.swift */; };
 		EA27B1FC1C5D2D05006F269D /* STMStream.swift in Sources */ = {isa = PBXBuildFile; fileRef = EA27B1FB1C5D2D05006F269D /* STMStream.swift */; };
 		EA27B2031C5D3312006F269D /* KZPlayerItem.swift in Sources */ = {isa = PBXBuildFile; fileRef = EA27B1FF1C5D3312006F269D /* KZPlayerItem.swift */; };
-		EA27B2041C5D3312006F269D /* KZPlayerPlaylist.swift in Sources */ = {isa = PBXBuildFile; fileRef = EA27B2001C5D3312006F269D /* KZPlayerPlaylist.swift */; };
-		EA27B2051C5D3312006F269D /* KZPlayerTag.swift in Sources */ = {isa = PBXBuildFile; fileRef = EA27B2011C5D3312006F269D /* KZPlayerTag.swift */; };
-		EA27B20A1C5D781E006F269D /* KZConverter.swift in Sources */ = {isa = PBXBuildFile; fileRef = EA27B2091C5D781E006F269D /* KZConverter.swift */; };
 		EA2898A21CD328520025F43B /* CellButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = EA2898A11CD328520025F43B /* CellButton.swift */; };
 		EA2898A51CD3E9080025F43B /* CommentViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = EA2898A41CD3E9080025F43B /* CommentViewController.swift */; };
 		EA2898A71CD3ED1B0025F43B /* ExtendedUserCommentCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = EA2898A61CD3ED1B0025F43B /* ExtendedUserCommentCell.swift */; };
@@ -141,9 +138,6 @@
 		EA24C0641C68418600FE4DD0 /* UpNextSongCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = UpNextSongCell.swift; sourceTree = "<group>"; };
 		EA27B1FB1C5D2D05006F269D /* STMStream.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = STMStream.swift; sourceTree = "<group>"; };
 		EA27B1FF1C5D3312006F269D /* KZPlayerItem.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = KZPlayerItem.swift; sourceTree = "<group>"; };
-		EA27B2001C5D3312006F269D /* KZPlayerPlaylist.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = KZPlayerPlaylist.swift; sourceTree = "<group>"; };
-		EA27B2011C5D3312006F269D /* KZPlayerTag.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = KZPlayerTag.swift; sourceTree = "<group>"; };
-		EA27B2091C5D781E006F269D /* KZConverter.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = KZConverter.swift; sourceTree = "<group>"; };
 		EA2898A11CD328520025F43B /* CellButton.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CellButton.swift; sourceTree = "<group>"; };
 		EA2898A41CD3E9080025F43B /* CommentViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CommentViewController.swift; sourceTree = "<group>"; };
 		EA2898A61CD3ED1B0025F43B /* ExtendedUserCommentCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ExtendedUserCommentCell.swift; sourceTree = "<group>"; };
@@ -425,9 +419,6 @@
 			isa = PBXGroup;
 			children = (
 				EA27B1FF1C5D3312006F269D /* KZPlayerItem.swift */,
-				EA27B2001C5D3312006F269D /* KZPlayerPlaylist.swift */,
-				EA27B2011C5D3312006F269D /* KZPlayerTag.swift */,
-				EA27B2091C5D781E006F269D /* KZConverter.swift */,
 			);
 			path = Player;
 			sourceTree = "<group>";
@@ -837,7 +828,6 @@
 				EA86DD021CCC291D00064040 /* STMTimelineItem.swift in Sources */,
 				EA4E494D1C617FA000CB40D7 /* GradientView.swift in Sources */,
 				EA2898BA1CD4DD8F0025F43B /* ConvoCell.swift in Sources */,
-				EA27B2051C5D3312006F269D /* KZPlayerTag.swift in Sources */,
 				EA209DAA1C8292A800A22BC4 /* DashboardItemCell.swift in Sources */,
 				EA4F49601C5EBFA000103559 /* YBAudioFilePlayer.m in Sources */,
 				EA09CAD21C5C85AF0067FF6A /* CreateAccountViewController.swift in Sources */,
@@ -851,7 +841,6 @@
 				EA6F5B8B1CD1B1E400C9638D /* STMSetting.swift in Sources */,
 				EA09CAC61C5C5D040067FF6A /* Window.swift in Sources */,
 				EA24C0651C68418600FE4DD0 /* UpNextSongCell.swift in Sources */,
-				EA27B2041C5D3312006F269D /* KZPlayerPlaylist.swift in Sources */,
 				EA4F49651C5EBFA000103559 /* YBMultiChannelMixer.m in Sources */,
 				EA4E494B1C61416400CB40D7 /* Label.swift in Sources */,
 				EA2898B01CD4C3ED0025F43B /* STMConversation.swift in Sources */,
@@ -871,7 +860,6 @@
 				EA6F5B871CD1A90000C9638D /* ProfileSettingsViewController.swift in Sources */,
 				EAFFCB171C8A1B1C00258C16 /* PlayerInfoHolderView.swift in Sources */,
 				EA2898BE1CD535CD0025F43B /* TextField.swift in Sources */,
-				EA27B20A1C5D781E006F269D /* KZConverter.swift in Sources */,
 				EA4F495C1C5EBFA000103559 /* YBFormatConverter.m in Sources */,
 				EA9216B31C857A4F00EA499B /* DashboardStreamInfo.swift in Sources */,
 				EAB0E69E1C7813B5008945FF /* FUXCombinators.swift in Sources */,
@@ -993,7 +981,7 @@
 				IPHONEOS_DEPLOYMENT_TARGET = 9.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = com.stormedgeapps.streamtome;
-				PRODUCT_NAME = "$(TARGET_NAME)";
+				PRODUCT_NAME = STM;
 				PROVISIONING_PROFILE = "";
 				SWIFT_OBJC_BRIDGING_HEADER = "STM/Extras/STM-Bridging-Header.h";
 			};
@@ -1011,7 +999,7 @@
 				IPHONEOS_DEPLOYMENT_TARGET = 9.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = com.stormedgeapps.streamtome;
-				PRODUCT_NAME = "$(TARGET_NAME)";
+				PRODUCT_NAME = STM;
 				PROVISIONING_PROFILE = "";
 				SWIFT_OBJC_BRIDGING_HEADER = "STM/Extras/STM-Bridging-Header.h";
 			};

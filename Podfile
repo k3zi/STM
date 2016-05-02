@@ -14,7 +14,6 @@ target 'STM' do
     pod 'M13ProgressSuite'
     pod 'PRTween'
     pod 'PureLayout'
-    pod 'RealmSwift'
     pod 'Reusable'
     pod 'SAConfettiView'
     pod 'SecureNSUserDefaults'
