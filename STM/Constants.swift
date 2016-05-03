@@ -164,6 +164,10 @@ extension UIView {
 		return view
 	}
 
+    func estimatedHeight(maxWidth: CGFloat) -> CGFloat {
+        return self.sizeThatFits(CGSize(width: maxWidth, height: CGFloat.max)).height
+    }
+
 }
 
 extension Int {

@@ -112,7 +112,7 @@ class CommentViewController: KZViewController, UIViewControllerPreviewingDelegat
         commentToolbar.autoPinEdge(.Top, toEdge: .Bottom, ofView: tableView)
         commentToolbar.autoPinEdgeToSuperviewEdge(.Left)
         commentToolbar.autoPinEdgeToSuperviewEdge(.Right)
-        toolbarBottomConstraint = commentToolbar.autoPinToBottomLayoutGuideOfViewController(self, withInset: 0)
+        toolbarBottomConstraint = commentToolbar.autoPinEdgeToSuperviewEdge(.Bottom)
     }
 
     override func numberOfSectionsInTableView(tableView: UITableView) -> Int {
@@ -137,22 +137,6 @@ class CommentViewController: KZViewController, UIViewControllerPreviewingDelegat
         }
 
         return UserCommentCell.self
-    }
-
-    override func tableView(tableView: UITableView, heightForRowAtIndexPath indexPath: NSIndexPath) -> CGFloat {
-        if tableViewCellData(tableView, section: indexPath.section).count == 0 {
-            return 100
-        }
-
-        if indexPath.section == 0 {
-            return super.tableView(tableView, heightForRowAtIndexPath: indexPath)
-        }
-
-        return UITableViewAutomaticDimension
-    }
-
-    func tableView(tableView: UITableView, estimatedHeightForRowAtIndexPath indexPath: NSIndexPath) -> CGFloat {
-        return 50.0
     }
 
     override func tableView(tableView: UITableView, didSelectRowAtIndexPath indexPath: NSIndexPath) {

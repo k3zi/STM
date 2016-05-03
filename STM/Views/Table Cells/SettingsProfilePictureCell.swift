@@ -50,13 +50,15 @@ class SettingsProfilePictureCell: KZTableViewCell {
         topSeperator.alpha = 1.0
     }
 
-    override func fillInCellData() {
+    override func fillInCellData(shallow: Bool) {
         if let setting = model as? STMSetting {
             nameLabel.text = setting.name
         }
 
-        if let user = AppDelegate.del().currentUser {
-            avatar.kf_setImageWithURL(user.profilePictureURL(), placeholderImage: UIImage(named: "defaultProfilePicture"), optionsInfo: [KingfisherOptionsInfoItem.ForceRefresh], progressBlock: nil, completionHandler: nil)
+        if !shallow {
+            if let user = AppDelegate.del().currentUser {
+                avatar.kf_setImageWithURL(user.profilePictureURL(), placeholderImage: UIImage(named: "defaultProfilePicture"), optionsInfo: [KingfisherOptionsInfoItem.ForceRefresh], progressBlock: nil, completionHandler: nil)
+            }
         }
     }
 

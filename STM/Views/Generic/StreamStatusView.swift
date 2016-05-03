@@ -10,22 +10,28 @@ import Foundation
 
 class StreamStatusView: UIView {
 
+    var shallow = false
+
     var stream: STMStream? {
         didSet {
-            self.status = .Offline
-            timer?.fire()
+            if !shallow {
+                self.status = .Offline
+                timer?.fire()
+            }
         }
     }
 
     var status = STMStreamStatus.Offline {
         didSet {
-            switch status {
-            case .Offline:
-                self.backgroundColor = RGB(200)
-            case .Online:
-                self.backgroundColor = RGB(74, g: 237, b: 93)
-            case .RecentlyOnline:
-                self.backgroundColor = RGB(237, g: 181, b: 74)
+            if !shallow {
+                switch status {
+                case .Offline:
+                    self.backgroundColor = RGB(200)
+                case .Online:
+                    self.backgroundColor = RGB(74, g: 237, b: 93)
+                case .RecentlyOnline:
+                    self.backgroundColor = RGB(237, g: 181, b: 74)
+                }
             }
         }
     }
@@ -49,6 +55,10 @@ class StreamStatusView: UIView {
 
     func updateStatus() {
         guard let stream = stream else {
+            return
+        }
+
+        guard !shallow else {
             return
         }
 

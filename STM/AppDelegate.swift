@@ -57,8 +57,6 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 
 		setUpAudioSession(withMic: false)
 
-        UIApplication.sharedApplication().applicationIconBadgeNumber = 0
-
 		return true
 	}
 
@@ -68,8 +66,119 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 		Constants.Settings.setSecretObject(deviceTokenString, forKey: "deviceTokenString")
 	}
 
+    func application(application: UIApplication, didReceiveRemoteNotification userInfo: [NSObject : AnyObject]) {
+        print(userInfo)
+        updateBadgeCount()
+    }
+
+    func application(application: UIApplication, didReceiveRemoteNotification userInfo: [NSObject : AnyObject], fetchCompletionHandler completionHandler: (UIBackgroundFetchResult) -> Void) {
+        print(userInfo)
+        updateBadgeCount {
+            completionHandler(.NoData)
+        }
+    }
+
+    func application(application: UIApplication, handleActionWithIdentifier identifier: String?, forRemoteNotification userInfo: [NSObject : AnyObject], completionHandler: () -> Void) {
+        print(userInfo)
+    }
+
+    func application(application: UIApplication, handleActionWithIdentifier identifier: String?, forRemoteNotification userInfo: [NSObject : AnyObject], withResponseInfo responseInfo: [NSObject : AnyObject], completionHandler: () -> Void) {
+        print(userInfo)
+    }
+
     func applicationDidBecomeActive(application: UIApplication) {
-        UIApplication.sharedApplication().applicationIconBadgeNumber = 0
+        updateBadgeCount()
+    }
+
+    func applicationWillResignActive(application: UIApplication) {
+        updateBadgeCount()
+    }
+
+    func applicationWillTerminate(application: UIApplication) {
+        updateBadgeCount()
+    }
+
+    func applicationDidEnterBackground(application: UIApplication) {
+        updateBadgeCount()
+    }
+
+    func updateBadgeCount(completionHandler: (() -> Void)? = nil) {
+        guard let tabs = self.window?.rootViewController as? UITabBarController else {
+            return
+        }
+
+        guard tabs.viewControllers?.count > 2 else {
+            return
+        }
+
+        guard let nav = tabs.viewControllers?[2] as? NavigationController else {
+            return
+        }
+
+        guard let vc = nav.viewControllers[0] as? MessagesViewController else {
+            return
+        }
+
+        vc.fetchDataWithCompletion({
+            let badgeCount = self.badgeCount()
+            UIApplication.sharedApplication().applicationIconBadgeNumber = badgeCount
+            Constants.Network.POST("/user/update/badge", parameters: ["value": badgeCount]) { (response, error) in
+                guard let response = response, success = response["success"] as? Bool else {
+                    completionHandler?()
+                    return
+                }
+
+                if success {
+                    guard let result = response["result"], userResult = result as? JSON else {
+                        return
+                    }
+
+                    if let user = STMUser(json: userResult) {
+                        AppDelegate.del().currentUser = user
+                    }
+                }
+
+                completionHandler?()
+            }
+        })
+
+    }
+
+    func updateServerBadgeCount(badgeCount: Int, completionHandler: (() -> Void)? = nil) {
+        UIApplication.sharedApplication().applicationIconBadgeNumber = badgeCount
+        Constants.Network.POST("/user/update/badge", parameters: ["value": badgeCount]) { (response, error) in
+            guard let response = response, success = response["success"] as? Bool else {
+                completionHandler?()
+                return
+            }
+
+            if success {
+                guard let result = response["result"], userResult = result as? JSON else {
+                    return
+                }
+
+                if let user = STMUser(json: userResult) {
+                    AppDelegate.del().currentUser = user
+                }
+            }
+
+            completionHandler?()
+        }
+    }
+
+    func badgeCount() -> Int {
+        var count = 0
+        if let tabs = self.window?.rootViewController as? UITabBarController {
+            if tabs.viewControllers?.count > 2 {
+                if let vc = tabs.viewControllers?[2] as? NavigationController {
+                    if let badgeString = vc.tabBarItem.badgeValue {
+                        count = count + (Int(badgeString) ?? 0)
+                    }
+                }
+            }
+        }
+
+        return count
     }
 
 	func createTabSet() -> UITabBarController {

@@ -13,16 +13,21 @@ class CellButton: UIView {
     let actionButton = ExtendedButton()
     let countLabel = UILabel()
     var selectedColor: UIColor?
+    var shallow = false
     var selected = false {
         didSet {
-            actionButton.selected = selected
-            countLabel.textColor = selected ? selectedColor : RGB(172)
+            if !shallow {
+                actionButton.selected = selected
+                countLabel.textColor = selected ? selectedColor : RGB(172)
+            }
         }
     }
 
     var count = 0 {
         didSet {
-            self.countLabel.text = count.formatUsingAbbrevation()
+            if !shallow {
+                self.countLabel.text = count.formatUsingAbbrevation()
+            }
         }
     }
 
@@ -52,6 +57,13 @@ class CellButton: UIView {
         countLabel.autoPinEdge(.Left, toEdge: .Right, ofView: actionButton, withOffset: 10)
         countLabel.autoPinEdgeToSuperviewEdge(.Right, withInset: 10)
         countLabel.autoAlignAxis(.Horizontal, toSameAxisOfView: actionButton)
+    }
+
+    override func estimatedHeight(maxWidth: CGFloat) -> CGFloat {
+        var height = CGFloat(2)
+        height = height + actionButton.estimatedHeight(maxWidth)
+        height = height + 2
+        return height
     }
 
 }

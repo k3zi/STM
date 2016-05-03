@@ -42,6 +42,10 @@ class DashboardItemCell: KZTableViewCell, UICollectionViewDelegate, UICollection
         }
     }
 
+    override func usesEstimatedHeight() -> Bool {
+        return false
+    }
+
     override func getHeight() -> CGFloat {
         return 123
     }
@@ -173,7 +177,7 @@ class DashboardItemCell: KZTableViewCell, UICollectionViewDelegate, UICollection
         AppDelegate.del().removeBlurEffects()
     }
 
-    override func fillInCellData() {
+    override func fillInCellData(shallow: Bool) {
         if let item = model as? STMDashboardItem {
             headerLabel.text = item.name
             self.collectionView?.reloadData()

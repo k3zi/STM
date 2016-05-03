@@ -214,7 +214,21 @@ class ExtendedUserCommentCell: KZTableViewCell {
         statusView.autoPinEdgeToSuperviewEdge(.Right, withInset: 5)
 	}
 
-	override func fillInCellData() {
+    override func estimatedHeight() -> CGFloat {
+        let rightSideWidth = Constants.UI.Screen.width - 12 - 45 - 10 - 10
+        var height = CGFloat(13) //top padding
+        height = height + nameLabel.estimatedHeight(rightSideWidth)
+        height = height + 2 //padding
+        height = height + messageLabel.estimatedHeight(rightSideWidth)
+        height = height + 10 //padding
+        height = height + line1.estimatedHeight(Constants.UI.Screen.width)
+        height = height + 10 //padding
+        height = height + likeButton.estimatedHeight(rightSideWidth)
+        height = height + 8 //bottom padding
+        return ceil(height)
+    }
+
+	override func fillInCellData(shallow: Bool) {
         guard let comment = model as? STMComment else {
             return
         }
@@ -232,7 +246,9 @@ class ExtendedUserCommentCell: KZTableViewCell {
             repostButton.actionButton.enabled = (AppDelegate.del().currentUser?.id != user.id)
             nameLabel.text = user.displayName
 
-            avatar.kf_setImageWithURL(user.profilePictureURL(), placeholderImage: UIImage(named: "defaultProfilePicture"))
+            if !shallow {
+                avatar.kf_setImageWithURL(user.profilePictureURL(), placeholderImage: UIImage(named: "defaultProfilePicture"))
+            }
         }
 
         if let date = comment.date {

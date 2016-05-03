@@ -9,7 +9,7 @@
 import Foundation
 import Gloss
 
-class STMComment: Decodable {
+class STMComment: Decodable, Equatable {
 
     let id: Int
     let user: STMUser?
@@ -40,6 +40,15 @@ class STMComment: Decodable {
         self.reposts = ("reposts" <~~ json) ?? 0
         self.didRepost = ("didRepost" <~~ json) ?? false
     }
+
+    func isEqualTo(other: STMComment) -> Bool {
+        return id == other.id && didRepost == other.didRepost && didLike == other.didLike && likes == other.likes && reposts == other.reposts
+    }
+
+}
+
+func == (rhs: STMComment, lhs: STMComment) -> Bool {
+    return rhs.isEqualTo(lhs)
 }
 
 extension Decoder {

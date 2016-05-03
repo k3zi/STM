@@ -28,6 +28,10 @@ class SelectSongCell: MCSwipeCell {
         self.contentView.addSubview(songArtist)
     }
 
+    override func estimatedHeight() -> CGFloat {
+        return 65
+    }
+
     override internal func getHeight() -> CGFloat {
         return 65
     }
@@ -51,8 +55,11 @@ class SelectSongCell: MCSwipeCell {
         songArtist.autoPinEdgeToSuperviewEdge(.Bottom, withInset: 10)
     }
 
-    override func fillInCellData() {
-        if let song = model as? KZPlayerItem {
+    override func fillInCellData(shallow: Bool) {
+        if !shallow {
+            guard let song = model as? KZPlayerItem else {
+                return
+            }
             songNameLabel.text = song.title
             songArtist.text = song.subTitle()
 

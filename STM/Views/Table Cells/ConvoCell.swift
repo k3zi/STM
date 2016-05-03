@@ -56,7 +56,17 @@ class ConvoCell: KZTableViewCell {
         messageLabel.autoPinEdgeToSuperviewEdge(.Right, withInset: 10)
 	}
 
-	override func fillInCellData() {
+    override func estimatedHeight() -> CGFloat {
+        let rightSideWidth = Constants.UI.Screen.width - 10 - 45 - 10 - 10
+        var height = CGFloat(13) //top padding
+        height = height + nameLabel.estimatedHeight(rightSideWidth)
+        height = height + 2 //padding
+        height = height + messageLabel.estimatedHeight(rightSideWidth)
+        height = height + 10 //bottom padding
+        return ceil(height)
+    }
+
+	override func fillInCellData(shallow: Bool) {
         guard let convo = model as? STMConversation else {
             return
         }
@@ -77,7 +87,7 @@ class ConvoCell: KZTableViewCell {
             avatar.backgroundColor = color
         } else if let users = convo.users {
             for user in users {
-                if user.id != AppDelegate.del().currentUser?.id {
+                if user.id != AppDelegate.del().currentUser?.id && !shallow {
                     avatar.kf_setImageWithURL(user.profilePictureURL(), placeholderImage: UIImage(named: "defaultProfilePicture"))
                 }
             }
@@ -86,6 +96,8 @@ class ConvoCell: KZTableViewCell {
         if let message = convo.lastMessage {
             messageLabel.text = message.text
         }
+
+        backgroundColor = convo.unreadCount == 0 ? RGB(241, g: 242, b: 243) : RGB(255)
 	}
 
 	override func prepareForReuse() {

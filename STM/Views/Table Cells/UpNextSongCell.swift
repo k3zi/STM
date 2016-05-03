@@ -66,7 +66,7 @@ class UpNextSongCell: MCSwipeCell {
         positionLabel.text = String(indexPath.row + 1)
     }
 
-    override func fillInCellData() {
+    override func fillInCellData(shallow: Bool) {
         if let song = model as? KZPlayerItem {
             songNameLabel.text = song.title
             songArtist.text = song.subTitle()

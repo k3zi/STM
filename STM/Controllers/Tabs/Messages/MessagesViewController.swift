@@ -23,6 +23,8 @@ class MessagesViewController: KZViewController, UIViewControllerPreviewingDelega
         super.viewDidLoad()
 
         self.title = "Messages"
+        self.automaticallyAdjustsScrollViewInsets = false
+
         navigationItem.rightBarButtonItem = UIBarButtonItem(image: UIImage(named: "navBarMessageBT"), style: .Plain, target: self, action: #selector(self.createNewMessage))
 
         tableView.delegate = self
@@ -45,6 +47,7 @@ class MessagesViewController: KZViewController, UIViewControllerPreviewingDelega
         tableView.dg_setPullToRefreshFillColor(RGB(250, g: 251, b: 252))
 
         NSNotificationCenter.defaultCenter().addObserver(self, selector: #selector(self.fetchData), name: Constants.Notification.DidPostMessage, object: nil)
+        fetchData()
     }
 
     func createNewMessage() {
@@ -93,12 +96,16 @@ class MessagesViewController: KZViewController, UIViewControllerPreviewingDelega
                 }
 
                 let convos = [STMConversation].fromJSONArray(results)
-                convos.forEach({ self.convos.append($0) })
+                var unreadCount = 0
+                convos.forEach({
+                    unreadCount = unreadCount + $0.unreadCount
+                    self.convos.append($0)
+                })
 
+                self.navigationController?.tabBarItem.badgeValue = unreadCount > 0 ? String(unreadCount) : nil
                 self.tableView.reloadData()
+                runCompletion()
             })
-
-            runCompletion()
         }
     }
 
@@ -114,6 +121,13 @@ class MessagesViewController: KZViewController, UIViewControllerPreviewingDelega
         }
 
         if let convo = convos[indexPath.row] as? STMConversation {
+            if let badgeString = self.navigationController?.tabBarItem.badgeValue {
+                var badgeInt = Int(badgeString) ?? 0
+                badgeInt = badgeInt - convo.unreadCount
+                self.navigationController?.tabBarItem.badgeValue = badgeInt > 0 ? String(badgeInt) : nil
+                AppDelegate.del().updateServerBadgeCount(badgeInt)
+            }
+
             let vc = ConversationViewController(convo: convo)
             self.navigationController?.pushViewController(vc, animated: true)
         }

@@ -14,6 +14,7 @@ public class KZViewController: UIViewController, UITableViewDelegate, UITableVie
     public var fetchAUtomatically = true
     public var fetchOnLoad = true
     public var didPresentVC = false
+    public var reloadInbackground = false
     
     var offscreenCells = [String: KZTableViewCell]()
     public var showsNoText = true
@@ -25,7 +26,7 @@ public class KZViewController: UIViewController, UITableViewDelegate, UITableVie
         
         // Do any additional setup after loading the view.
         self.view.backgroundColor = UIColor.whiteColor()
-        if fetchOnLoad {
+        if fetchOnLoad && !fetchAUtomatically {
             self.fetchData()
         }
     }
@@ -33,22 +34,29 @@ public class KZViewController: UIViewController, UITableViewDelegate, UITableVie
     override public func viewWillAppear(animated: Bool) {
         super.viewWillAppear(animated)
         self.view.setNeedsUpdateConstraints()
-        
+
         didPresentVC = false
+        startTimer()
+
     }
     
     override public func viewDidAppear(animated: Bool) {
         super.viewDidAppear(animated)
         
+        startTimer()
+    }
+
+    func startTimer() {
         if timer == nil && fetchAUtomatically {
             timer = NSTimer.scheduledTimerWithTimeInterval(15.0, target: self, selector: Selector("fetchData"), userInfo: nil, repeats: true)
+            timer?.fire()
         }
     }
     
     override public func viewDidDisappear(animated: Bool) {
         super.viewDidDisappear(animated)
         
-        if timer != nil {
+        if timer != nil && !reloadInbackground {
             timer?.invalidate()
             timer = nil
         }
@@ -83,6 +91,7 @@ public class KZViewController: UIViewController, UITableViewDelegate, UITableVie
     }
     
     deinit {
+        timer?.invalidate()
         NSNotificationCenter.defaultCenter().removeObserver(self)
     }
     
@@ -169,31 +178,64 @@ public class KZViewController: UIViewController, UITableViewDelegate, UITableVie
         let cell = tableView.dequeueReusableCell(indexPath: indexPath, cellType: cellClass)
         cell.setIndexPath(indexPath, last: indexPath.row == (self.tableView(tableView, numberOfRowsInSection: indexPath.section) - 1))
         if cell.tag != -1 {
-            cell.setContent(tableViewCellData(tableView, section: indexPath.section)[indexPath.row])
+            cell.setContent(tableViewCellData(tableView, section: indexPath.section)[indexPath.row], shallow: false)
         }
+
+        cell.frame.size.width = tableView.frame.width
         cell.updateConstraintsIfNeeded()
         cell.layoutIfNeeded()
         
         return cell
     }
-    
-    public func tableView(tableView: UITableView, heightForRowAtIndexPath indexPath: NSIndexPath) -> CGFloat {
+
+    public func tableView(tableView: UITableView, estimatedHeightForRowAtIndexPath indexPath: NSIndexPath) -> CGFloat {
         if self.tableViewCellData(tableView, section: indexPath.section).count == 0 && showsNoText {
             return tableView.frame.height
         }
-        
+
+        var cell: KZTableViewCell? = offscreenCells[String(tableViewCellClass(tableView, indexPath: indexPath))]
+        if cell == nil {
+            cell = tableViewCellClass(tableView, indexPath: indexPath).init(style: .Default, reuseIdentifier: String(tableView.tag))
+            offscreenCells.updateValue(cell!, forKey: String(tableViewCellClass(tableView, indexPath: indexPath)))
+        }
+
+        guard let tableCell = cell else {
+            return 0
+        }
+
+        tableCell.setIndexPath(indexPath, last: (indexPath.row + 1) == tableViewCellData(tableView, section: indexPath.section).count)
+        if tableCell.tag != -1 {
+            tableCell.setContent(tableViewCellData(tableView, section: indexPath.section)[indexPath.row], shallow: true)
+        }
+
+        return tableCell.estimatedHeight()
+    }
+    
+    public func tableView(tableView: UITableView, heightForRowAtIndexPath indexPath: NSIndexPath) -> CGFloat {
+        if tableViewCellData(tableView, section: indexPath.section).count == 0 {
+            if tableView.frame.size.height > 0 {
+                return tableView.frame.size.height
+            }
+
+            return 100
+        }
+
         var cell = offscreenCells[String(tableViewCellClass(tableView, indexPath: indexPath))]
         if cell == nil {
             cell = tableViewCellClass(tableView, indexPath: indexPath).init(style: .Default, reuseIdentifier: String(tableView.tag))
             offscreenCells.updateValue(cell!, forKey: String(tableViewCellClass(tableView, indexPath: indexPath)))
         }
-        
-        cell!.setIndexPath(indexPath, last: (indexPath.row + 1) == tableViewCellData(tableView, section: indexPath.section).count)
-        if cell!.tag != -1 {
-            cell!.setContent(tableViewCellData(tableView, section: indexPath.section)[indexPath.row])
+
+        guard let tableCell = cell else {
+            return 0
+        }
+
+        tableCell.setIndexPath(indexPath, last: (indexPath.row + 1) == tableViewCellData(tableView, section: indexPath.section).count)
+        if tableCell.tag != -1 {
+            tableCell.setContent(tableViewCellData(tableView, section: indexPath.section)[indexPath.row], shallow: true)
         }
         
-        return cell!.getHeight()
+        return tableCell.heightForRow()
     }
     
     public func tableView(_tableView: UITableView, willDisplayCell cell: UITableViewCell, forRowAtIndexPath indexPath: NSIndexPath) {
@@ -273,7 +315,6 @@ public class KZViewController: UIViewController, UITableViewDelegate, UITableVie
     public func tableView(tableView: UITableView, heightForFooterInSection section: Int) -> CGFloat {
         return CGFloat.min
     }
-    
     
     public func tableView(tableView: UITableView, didSelectRowAtIndexPath indexPath: NSIndexPath) {
         tableView.deselectRowAtIndexPath(indexPath, animated: true)

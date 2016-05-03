@@ -34,7 +34,7 @@ class SettingsNameCell: KZTableViewCell {
         topSeperator.alpha = 1.0
     }
 
-    override func fillInCellData() {
+    override func fillInCellData(shallow: Bool) {
         if let setting = model as? STMSetting {
             nameLabel.text = setting.name
         }

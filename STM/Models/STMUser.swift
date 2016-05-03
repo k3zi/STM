@@ -36,3 +36,7 @@ struct STMUser: Decodable {
     }
 
 }
+
+func == (lhs: STMUser, rhs: STMUser) -> Bool {
+    return lhs.id == rhs.id
+}

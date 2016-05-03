@@ -1097,10 +1097,6 @@ class HostViewController: KZViewController, UISearchBarDelegate, UIViewControlle
         }
     }
 
-    func tableView(tableView: UITableView, estimatedHeightForRowAtIndexPath indexPath: NSIndexPath) -> CGFloat {
-        return 50
-    }
-
 	// MARK: UISearchBar Delegate
 	func searchBarTextDidBeginEditing(searchBar: UISearchBar) {
 		searchBar.setShowsCancelButton(true, animated: true)
@@ -1538,18 +1534,26 @@ extension HostViewController: EZOutputDataSource {
 		EZOutput.sharedOutput().aacEncode = true
         AppDelegate.del().setUpAudioSession(withMic: true)
 
-		self.songs.removeAll()
-		let predicate1 = MPMediaPropertyPredicate(value: MPMediaType.AnyAudio.rawValue, forProperty: MPMediaItemPropertyMediaType)
-		let predicate12 = MPMediaPropertyPredicate(value: 0, forProperty: MPMediaItemPropertyIsCloudItem)
-		let query = MPMediaQuery(filterPredicates: [predicate1, predicate12])
-		if let items = query.items {
-			for item in items {
-				let newItem = KZPlayerItem(item: item)
-				if newItem.assetURL.characters.count > 0 {
-					self.songs.append(newItem)
-				}
-			}
-		}
+        dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_LOW, 0)) {
+            self.songs.removeAll()
+            let predicate1 = MPMediaPropertyPredicate(value: MPMediaType.AnyAudio.rawValue, forProperty: MPMediaItemPropertyMediaType)
+            let predicate12 = MPMediaPropertyPredicate(value: 0, forProperty: MPMediaItemPropertyIsCloudItem)
+            let query = MPMediaQuery(filterPredicates: [predicate1, predicate12])
+            var songs = [Any]()
+            if let items = query.items {
+                for item in items {
+                    let newItem = KZPlayerItem(item: item)
+                    if newItem.assetURL.characters.count > 0 {
+                        songs.append(newItem)
+                    }
+                }
+            }
+
+            dispatch_async(dispatch_get_main_queue(), {
+                self.songs = songs
+                self.songsTableView.reloadData()
+            })
+        }
 
 		EZOutput.sharedOutput().outputDataSource = self
 		EZOutput.sharedOutput().mixerNode.setVolume(0.0, forBus: 1)

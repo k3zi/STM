@@ -125,7 +125,7 @@ class ConversationViewController: KZViewController, MessageToolbarDelegate {
         commentToolbar.autoPinEdge(.Top, toEdge: .Bottom, ofView: tableView)
         commentToolbar.autoPinEdgeToSuperviewEdge(.Left)
         commentToolbar.autoPinEdgeToSuperviewEdge(.Right)
-        toolbarBottomConstraint = commentToolbar.autoPinToBottomLayoutGuideOfViewController(self, withInset: 0)
+        toolbarBottomConstraint = commentToolbar.autoPinEdgeToSuperviewEdge(.Bottom)
     }
 
     override func tableViewCellData(tableView: UITableView, section: Int) -> [Any] {
@@ -144,18 +144,6 @@ class ConversationViewController: KZViewController, MessageToolbarDelegate {
 
     override func tableViewNoDataText(tableView: UITableView) -> String {
         return "No Messages"
-    }
-
-    func tableView(tableView: UITableView, estimatedHeightForRowAtIndexPath indexPath: NSIndexPath) -> CGFloat {
-        return 50.0
-    }
-
-    override func tableView(tableView: UITableView, heightForRowAtIndexPath indexPath: NSIndexPath) -> CGFloat {
-        if messages.count > 0 {
-            return UITableViewAutomaticDimension
-        } else {
-            return super.tableView(tableView, heightForRowAtIndexPath: indexPath)
-        }
     }
 
     override func fetchData() {

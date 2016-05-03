@@ -56,13 +56,15 @@ class TimelineItemCell: KZTableViewCell {
 		dateLabel.autoAlignAxis(.Horizontal, toSameAxisOfView: messageLabel)
 	}
 
-	override func fillInCellData() {
+	override func fillInCellData(shallow: Bool) {
         guard let item = model as? STMTimelineItem else {
             return
         }
 
-        if let user = item.user {
-            avatar.kf_setImageWithURL(user.profilePictureURL(), placeholderImage: UIImage(named: "defaultProfilePicture"))
+        if !shallow {
+            if let user = item.user {
+                avatar.kf_setImageWithURL(user.profilePictureURL(), placeholderImage: UIImage(named: "defaultProfilePicture"))
+            }
         }
 
         messageLabel.text = item.message

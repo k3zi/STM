@@ -56,12 +56,14 @@ class UserSelectionCell: KZTableViewCell {
 		messageLabel.autoPinEdgeToSuperviewEdge(.Bottom, withInset: 10, relation: .GreaterThanOrEqual)
 	}
 
-	override func fillInCellData() {
+	override func fillInCellData(shallow: Bool) {
         guard let user = model as? STMUser else {
             return
         }
 
-        avatar.kf_setImageWithURL(user.profilePictureURL(), placeholderImage: UIImage(named: "defaultProfilePicture"))
+        if !shallow {
+            avatar.kf_setImageWithURL(user.profilePictureURL(), placeholderImage: UIImage(named: "defaultProfilePicture"))
+        }
 
         nameLabel.text = user.displayName
         messageLabel.text = "@" + user.username

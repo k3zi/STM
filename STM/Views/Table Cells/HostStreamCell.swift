@@ -40,25 +40,31 @@ class HostStreamCell: KZTableViewCell {
         NSLayoutConstraint.autoSetPriority(999) { () -> Void in
             self.avatar.autoSetDimensionsToSize(CGSize(width: 35.0, height: 35.0))
         }
+
         avatar.autoPinEdgeToSuperviewEdge(.Top, withInset: 10)
         avatar.autoPinEdgeToSuperviewEdge(.Bottom, withInset: 10)
         avatar.autoPinEdgeToSuperviewEdge(.Left, withInset: 10)
 
-        nameLabel.autoPinEdgeToSuperviewEdge(.Top, withInset: 10)
         nameLabel.autoPinEdge(.Left, toEdge: .Right, ofView: avatar, withOffset: 10)
-        nameLabel.autoPinEdgeToSuperviewEdge(.Bottom, withInset: 10)
+        nameLabel.autoAlignAxis(.Horizontal, toSameAxisOfView: avatar)
 
         tagLabel.autoPinEdgeToSuperviewEdge(.Right, withInset: 10)
         tagLabel.autoPinEdge(.Left, toEdge: .Right, ofView: nameLabel, withOffset: 10, relation: .GreaterThanOrEqual)
         tagLabel.autoAlignAxis(.Horizontal, toSameAxisOfView: nameLabel)
     }
 
-    override func fillInCellData() {
+    override func estimatedHeight() -> CGFloat {
+        return 10 + 35 + 10
+    }
+
+    override func fillInCellData(shallow: Bool) {
         if let stream = model as? STMStream {
             nameLabel.text = stream.name
             tagLabel.text = stream.alphaID()
 
-            avatar.kf_setImageWithURL(stream.pictureURL(), placeholderImage: UIImage(named: "defaultStreamImage"), optionsInfo: nil, progressBlock: nil, completionHandler: nil)
+            if !shallow {
+                avatar.kf_setImageWithURL(stream.pictureURL(), placeholderImage: UIImage(named: "defaultStreamImage"), optionsInfo: nil, progressBlock: nil, completionHandler: nil)
+            }
         }
     }
 

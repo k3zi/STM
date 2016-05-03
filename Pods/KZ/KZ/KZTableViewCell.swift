@@ -47,6 +47,26 @@ public class KZTableViewCell: UITableViewCell, Reusable {
         
         didSetupConstraints = true
     }
+
+    public func usesEstimatedHeight() -> Bool {
+        return true
+    }
+
+    public func estimatedHeight() -> CGFloat {
+        if usesEstimatedHeight() {
+            print("AutoLayout: \"\(self.dynamicType)\" estimatedHeight isn't implemented")
+        }
+
+        return UITableViewAutomaticDimension
+    }
+
+    func heightForRow() -> CGFloat {
+        if self.usesEstimatedHeight() {
+            return UITableViewAutomaticDimension
+        } else {
+            return self.getHeight()
+        }
+    }
     
     public func getHeight() -> CGFloat {
         self.contentView.bounds.size.height = 99999
@@ -61,6 +81,11 @@ public class KZTableViewCell: UITableViewCell, Reusable {
         let height = self.contentView.systemLayoutSizeFittingSize(UILayoutFittingCompressedSize).height
         return height + CGFloat(1.0)
     }
+
+    public override func layoutSubviews() {
+        super.layoutSubviews()
+        self.contentView.layoutIfNeeded()
+    }
     
     public func setIndexPath(indexPath: NSIndexPath, last: Bool) {
         if indexPath.row == 0 {
@@ -70,13 +95,13 @@ public class KZTableViewCell: UITableViewCell, Reusable {
         }
     }
     
-    public func setContent(content: Any) {
+    public func setContent(content: Any, shallow: Bool) {
         model = content
         
-        fillInCellData()
+        fillInCellData(shallow)
     }
     
-    public func fillInCellData() {
+    public func fillInCellData(shallow: Bool) {
         
     }
     

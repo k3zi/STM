@@ -143,6 +143,7 @@ class CreateStreamViewController: KZViewController {
         }
 
         self.title = "Host Stream"
+        fetchData()
     }
 
     override func setupConstraints() {
@@ -272,14 +273,6 @@ class CreateStreamViewController: KZViewController {
 
     override func tableViewCellClass(tableView: UITableView, indexPath: NSIndexPath?) -> KZTableViewCell.Type {
         return HostStreamCell.self
-    }
-
-    override func tableView(tableView: UITableView, heightForRowAtIndexPath indexPath: NSIndexPath) -> CGFloat {
-        if tableViewCellData(tableView, section: indexPath.section).count == 0 {
-            return 100
-        }
-
-        return super.tableView(tableView, heightForRowAtIndexPath: indexPath)
     }
 
     override func tableView(tableView: UITableView, didSelectRowAtIndexPath indexPath: NSIndexPath) {

@@ -73,7 +73,7 @@ class NewMessageViewController: KZViewController, UISearchBarDelegate {
         tableView.autoPinEdge(.Top, toEdge: .Bottom, ofView: searchBar)
         tableView.autoPinEdgeToSuperviewEdge(.Left)
         tableView.autoPinEdgeToSuperviewEdge(.Right)
-        tableViewBottomConstraint = tableView.autoPinToBottomLayoutGuideOfViewController(self, withInset: 0)
+        tableViewBottomConstraint = tableView.autoPinEdgeToSuperviewEdge(.Bottom)
     }
 
     override func tableViewCellData(tableView: UITableView, section: Int) -> [Any] {

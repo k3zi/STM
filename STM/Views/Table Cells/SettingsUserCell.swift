@@ -62,7 +62,7 @@ class SettingsUserCell: KZTableViewCell, UITextFieldDelegate, UITextViewDelegate
         topSeperator.alpha = 1.0
     }
 
-    override func fillInCellData() {
+    override func fillInCellData(shallow: Bool) {
         if let user = AppDelegate.del().currentUser {
             nameField.text = user.displayName
             descriptionField.text = user.description

@@ -49,9 +49,10 @@ class DashboardViewController: KZViewController, UIViewControllerPreviewingDeleg
         }, loadingView: loadingView)
         tableView.dg_setPullToRefreshFillColor(RGB(250, g: 251, b: 252))
 
-        NSNotificationCenter.defaultCenter().addObserver(self, selector: #selector(self.fetchData), name: Constants.Notification.DidLikeComment, object: nil)
-        NSNotificationCenter.defaultCenter().addObserver(self, selector: #selector(self.fetchData), name: Constants.Notification.DidRepostComment, object: nil)
-        NSNotificationCenter.defaultCenter().addObserver(self, selector: #selector(self.fetchData), name: Constants.Notification.DidPostComment, object: nil)
+        NSNotificationCenter.defaultCenter().addObserver(self, selector: #selector(self.fetchDataWithForce), name: Constants.Notification.DidLikeComment, object: nil)
+        NSNotificationCenter.defaultCenter().addObserver(self, selector: #selector(self.fetchDataWithForce), name: Constants.Notification.DidRepostComment, object: nil)
+        NSNotificationCenter.defaultCenter().addObserver(self, selector: #selector(self.fetchDataWithForce), name: Constants.Notification.DidPostComment, object: nil)
+        fetchData()
     }
 
     override func setupConstraints() {
@@ -85,22 +86,6 @@ class DashboardViewController: KZViewController, UIViewControllerPreviewingDeleg
         }
     }
 
-    override func tableView(tableView: UITableView, heightForRowAtIndexPath indexPath: NSIndexPath) -> CGFloat {
-        if tableViewCellData(tableView, section: indexPath.section).count == 0 {
-            return 100
-        }
-
-        if indexPath.section == 0 {
-            return super.tableView(tableView, heightForRowAtIndexPath: indexPath)
-        }
-
-        return UITableViewAutomaticDimension
-    }
-
-    func tableView(tableView: UITableView, estimatedHeightForRowAtIndexPath indexPath: NSIndexPath) -> CGFloat {
-        return 50.0
-    }
-
     override func tableView(tableView: UITableView, didSelectRowAtIndexPath indexPath: NSIndexPath) {
         super.tableView(tableView, didSelectRowAtIndexPath: indexPath)
 
@@ -113,10 +98,14 @@ class DashboardViewController: KZViewController, UIViewControllerPreviewingDeleg
     }
 
     override func fetchData() {
-        fetchDataWithCompletion(nil)
+        fetchDataWithCompletion()
     }
 
-    func fetchDataWithCompletion(completion: (() -> Void)?) {
+    func fetchDataWithForce() {
+        fetchDataWithCompletion(true, completion: nil)
+    }
+
+    func fetchDataWithCompletion(force: Bool = false, completion: (() -> Void)? = nil) {
         var count = 0
 
         func runCompletion() {
@@ -150,16 +139,30 @@ class DashboardViewController: KZViewController, UIViewControllerPreviewingDeleg
         count = count + 1
         Constants.Network.GET("/dashboard/comments", parameters: nil) { (response, error) -> Void in
             self.handleResponse(response, error: error, successCompletion: { (result) -> Void in
-                self.comments.removeAll()
-
                 guard let results = result as? [JSON] else {
                     return
                 }
 
                 let comments = [STMComment].fromJSONArray(results)
-                comments.forEach({ self.comments.append($0) })
+                var didSwipeOut = false
+                if let oldComments = self.comments as? [STMComment] {
+                    if oldComments.count == comments.count {
+                        for i in 0..<self.comments.count {
+                            self.comments[i] = comments[i]
+                        }
 
-                self.tableView.reloadData()
+                        if let indexPaths = self.tableView.indexPathsForVisibleRows {
+                            self.tableView.reloadRowsAtIndexPaths(indexPaths, withRowAnimation: .None)
+                            didSwipeOut = true
+                        }
+                    }
+                }
+
+                if !didSwipeOut {
+                    self.comments.removeAll()
+                    comments.forEach({ self.comments.append($0) })
+                    self.tableView.reloadData()
+                }
             })
 
             runCompletion()

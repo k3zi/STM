@@ -15,6 +15,7 @@ class STMConversation: Decodable {
     let users: [STMUser]?
     let name: String
     let lastMessage: STMMessage?
+    let unreadCount: Int
 
     // MARK: - Deserialization
 
@@ -27,6 +28,7 @@ class STMConversation: Decodable {
         self.users = "users" <~~ json
         self.name = ("name" <~~ json) ?? ""
         self.lastMessage = "lastMessage" <~~ json
+        self.unreadCount = "unreadCount" <~~ json ?? 0
     }
 
     func listNames() -> String {

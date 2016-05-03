@@ -62,13 +62,15 @@ class SearchStreamCell: KZTableViewCell {
 		messageLabel.autoPinEdgeToSuperviewEdge(.Bottom, withInset: 10, relation: .GreaterThanOrEqual)
 	}
 
-	override func fillInCellData() {
+	override func fillInCellData(shallow: Bool) {
 		if let stream = model as? STMStream {
             statusView.stream = stream
             nameLabel.text = stream.name
             messageLabel.text = stream.description
 
-            avatar.kf_setImageWithURL(stream.pictureURL(), placeholderImage: UIImage(named: "defaultStreamImage"), optionsInfo: nil, progressBlock: nil, completionHandler: nil)
+            if !shallow {
+                avatar.kf_setImageWithURL(stream.pictureURL(), placeholderImage: UIImage(named: "defaultStreamImage"), optionsInfo: nil, progressBlock: nil, completionHandler: nil)
+            }
 		}
 	}
 

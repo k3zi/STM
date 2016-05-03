@@ -529,14 +529,6 @@ class PlayerViewController: KZViewController, UISearchBarDelegate, UIViewControl
         }
     }
 
-    override func tableView(tableView: UITableView, heightForRowAtIndexPath indexPath: NSIndexPath) -> CGFloat {
-        return UITableViewAutomaticDimension
-    }
-
-    func tableView(tableView: UITableView, estimatedHeightForRowAtIndexPath indexPath: NSIndexPath) -> CGFloat {
-        return 50
-    }
-
     override func tableViewNoDataText(tableView: UITableView) -> String {
         if tableView == commentsTableView {
             return "No Comments\n\nBe the first one to comment :)"

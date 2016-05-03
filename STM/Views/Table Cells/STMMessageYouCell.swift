@@ -58,13 +58,21 @@ class STMMessageYouCell: KZTableViewCell {
         timeLabel.autoAlignAxis(.Horizontal, toSameAxisOfView: messageLabel)
     }
 
+    override func estimatedHeight() -> CGFloat {
+        let width = Constants.UI.Screen.width*0.7
+        var height = CGFloat(12) //top padding
+        height = height + messageLabel.estimatedHeight(width)
+        height = height + 12 //bottom padding
+        return ceil(height)
+    }
+
     override func layoutSubviews() {
         super.layoutSubviews()
         messageLabel.preferredMaxLayoutWidth = contentView.frame.size.width*0.7
         super.layoutSubviews()
     }
 
-    override func fillInCellData() {
+    override func fillInCellData(shallow: Bool) {
         if let message = model as? STMMessage {
             if let messageText = message.text {
                 messageLabel.text = messageText

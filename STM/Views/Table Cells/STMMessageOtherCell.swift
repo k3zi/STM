@@ -95,6 +95,14 @@ class STMMessageOtherCell: KZTableViewCell {
         timeLabel.autoAlignAxis(.Horizontal, toSameAxisOfView: messageLabel)
     }
 
+    override func estimatedHeight() -> CGFloat {
+        let width = Constants.UI.Screen.width*0.7 - (40 + 12 + 12)
+        var height = CGFloat(12) //top padding
+        height = height + messageLabel.estimatedHeight(width)
+        height = height + 12 //bottom padding
+        return ceil(height)
+    }
+
     override func layoutSubviews() {
         super.layoutSubviews()
         messageLabel.preferredMaxLayoutWidth = contentView.frame.size.width*0.7 - (40 + 12 + 12)
@@ -106,15 +114,17 @@ class STMMessageOtherCell: KZTableViewCell {
         bottomSeperator.alpha = 0.0
     }
 
-    override func fillInCellData() {
+    override func fillInCellData(shallow: Bool) {
         guard let message = model as? STMMessage else {
             return
         }
 
         messageLabel.text = message.text
 
-        if let sender = message.user {
-            avatar.kf_setImageWithURL(sender.profilePictureURL(), placeholderImage: UIImage(named: "defaultProfilePicture"))
+        if !shallow {
+            if let sender = message.user {
+                avatar.kf_setImageWithURL(sender.profilePictureURL(), placeholderImage: UIImage(named: "defaultProfilePicture"))
+            }
         }
 
         timeLabel.text = message.date?.shortTimeAgoSinceNow()

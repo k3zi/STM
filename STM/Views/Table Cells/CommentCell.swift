@@ -90,14 +90,16 @@ class CommentCell: KZTableViewCell {
 		messageLabel.autoPinEdgeToSuperviewEdge(.Bottom, withInset: 10, relation: .GreaterThanOrEqual)
 	}
 
-	override func fillInCellData() {
+	override func fillInCellData(shallow: Bool) {
 		if let comment = model as? STMComment {
 			messageLabel.text = comment.text
 
 			if let user = comment.user {
 				nameLabel.text = user.displayName
 
-                avatar.kf_setImageWithURL(user.profilePictureURL(), placeholderImage: UIImage(named: "defaultProfilePicture"))
+                if !shallow {
+                    avatar.kf_setImageWithURL(user.profilePictureURL(), placeholderImage: UIImage(named: "defaultProfilePicture"))
+                }
 			}
 
             if let date = comment.date {

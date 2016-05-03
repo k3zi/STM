@@ -137,6 +137,7 @@ class ProfileViewController: KZViewController, UIViewControllerPreviewingDelegat
             }
             }, loadingView: loadingView)
         tableView.dg_setPullToRefreshFillColor(RGB(255))
+        fetchData()
     }
 
     override func viewDidAppear(animated: Bool) {
@@ -294,10 +295,6 @@ class ProfileViewController: KZViewController, UIViewControllerPreviewingDelegat
         }
 
         return UITableViewAutomaticDimension
-    }
-
-    func tableView(tableView: UITableView, estimatedHeightForRowAtIndexPath indexPath: NSIndexPath) -> CGFloat {
-        return 50.0
     }
 
     override func tableView(tableView: UITableView, didSelectRowAtIndexPath indexPath: NSIndexPath) {
