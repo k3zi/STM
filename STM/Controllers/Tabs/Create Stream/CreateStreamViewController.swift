@@ -248,6 +248,10 @@ class CreateStreamViewController: KZViewController {
             return showError("No Description Entered")
         }
 
+        guard AppDelegate.del().activeStreamController == nil else {
+            return showError("You are already hosting/playing a stream. Please close it before starting another")
+        }
+
         let vc = HostViewController()
         //let streamType = streamTypeSegmentControl.selectedSegmentIndex == 0 ? StreamType.Global : StreamType.Local
         let passcodeString = privacySwitch.on ? (passcodeTextField.text ?? "") : ""
@@ -277,6 +281,10 @@ class CreateStreamViewController: KZViewController {
 
     override func tableView(tableView: UITableView, didSelectRowAtIndexPath indexPath: NSIndexPath) {
         super.tableView(tableView, didSelectRowAtIndexPath: indexPath)
+
+        guard AppDelegate.del().activeStreamController == nil else {
+            return showError("You are already hosting/playing a stream. Please close it before starting another")
+        }
 
         if let stream = items[indexPath.row] as? STMStream {
             let vc = HostViewController()
