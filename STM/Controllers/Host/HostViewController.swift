@@ -594,13 +594,15 @@ class HostViewController: KZViewController, UISearchBarDelegate, UIViewControlle
 
         if AppDelegate.del().activeStreamController == self {
             AppDelegate.del().activeStreamController = nil
-        }
+        } 
 
         audioFile0 = nil
         audioFile1 = nil
 
         delay(1.0) {
             self.stop()
+            self.socket?.disconnect()
+            self.commentSocket?.disconnect()
         }
 
         guard let holderView = view.superview else {
