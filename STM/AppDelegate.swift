@@ -24,16 +24,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 
 	func application(application: UIApplication, didFinishLaunchingWithOptions launchOptions: [NSObject: AnyObject]?) -> Bool {
 
-        //Setup some things...
-		NSUserDefaults.standardUserDefaults().setSecret(Constants.Config.userDefaultsSecret)
-		Fabric.with([Crashlytics.self, Twitter.self])
-        Constants.http.authzModule = STMAuthzModule()
-
-        let sessionConfig = NSURLSessionConfiguration.defaultSessionConfiguration()
-        let credentialStorage = NSURLCredentialStorage.sharedCredentialStorage()
-        credentialStorage.setCredential(Constants.Config.systemCredentials, forProtectionSpace: NSURLProtectionSpace(host: "api.stm.io", port: 0, protocol: "https", realm: nil, authenticationMethod: NSURLAuthenticationMethodHTTPBasic))
-        sessionConfig.URLCredentialStorage = credentialStorage
-        ImageDownloader.defaultDownloader.sessionConfiguration = NSURLSessionConfiguration.defaultSessionConfiguration()
+        configureApp()
 
 		let nav = NavigationController(rootViewController: InitialViewController())
 		nav.setNavigationBarHidden(true, animated: false)
@@ -59,6 +50,23 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 
 		return true
 	}
+
+    //MARK: Configure App
+
+    func configureApp() {
+        NSUserDefaults.standardUserDefaults().setSecret(Constants.Config.userDefaultsSecret)
+        Twitter.sharedInstance().startWithConsumerKey(Constants.Config.twitterConsumerKey, consumerSecret: Constants.Config.twitterConsumerSecret)
+        Fabric.with([Crashlytics.self, Twitter.self])
+        Constants.http.authzModule = STMAuthzModule()
+
+        //Use credentials to retieve images
+        let sessionConfig = NSURLSessionConfiguration.defaultSessionConfiguration()
+        let credentialStorage = NSURLCredentialStorage.sharedCredentialStorage()
+        credentialStorage.setCredential(Constants.Config.systemCredentials, forProtectionSpace: NSURLProtectionSpace(host: "api.stm.io", port: 0, protocol: "https", realm: nil, authenticationMethod: NSURLAuthenticationMethodHTTPBasic))
+        sessionConfig.URLCredentialStorage = credentialStorage
+        ImageDownloader.defaultDownloader.sessionConfiguration = NSURLSessionConfiguration.defaultSessionConfiguration()
+
+    }
 
 	func application(application: UIApplication, didRegisterForRemoteNotificationsWithDeviceToken deviceToken: NSData) {
 		let characterSet = NSCharacterSet(charactersInString: "<>")
@@ -102,6 +110,8 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         updateBadgeCount()
     }
 
+    //MARK: APNS Notifications
+
     func updateBadgeCount(completionHandler: (() -> Void)? = nil) {
         guard let tabs = self.window?.rootViewController as? UITabBarController else {
             return
@@ -121,25 +131,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 
         vc.fetchDataWithCompletion({
             let badgeCount = self.badgeCount()
-            UIApplication.sharedApplication().applicationIconBadgeNumber = badgeCount
-            Constants.Network.POST("/user/update/badge", parameters: ["value": badgeCount]) { (response, error) in
-                guard let response = response, success = response["success"] as? Bool else {
-                    completionHandler?()
-                    return
-                }
-
-                if success {
-                    guard let result = response["result"], userResult = result as? JSON else {
-                        return
-                    }
-
-                    if let user = STMUser(json: userResult) {
-                        AppDelegate.del().currentUser = user
-                    }
-                }
-
-                completionHandler?()
-            }
+            self.updateServerBadgeCount(badgeCount, completionHandler: completionHandler)
         })
 
     }
@@ -180,6 +172,8 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 
         return count
     }
+
+    //MARK: Login User
 
 	func createTabSet() -> UITabBarController {
 		let tabVC = UITabBarController()
@@ -230,9 +224,6 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 			UIView.transitionWithView(window, duration: window.screenIsReady == true ? 0.5 : 0.0, options: UIViewAnimationOptions.TransitionCrossDissolve, animations: {
 				AppDelegate.del().window?.rootViewController = tabSet
 				}, completion: { (finished) -> Void in
-				if window.screenIsReady == false {
-					window.screenIsReady = true
-				}
 			})
 		}
 
@@ -242,6 +233,8 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 			})
 		}
 	}
+
+    //MARK: Handle Stream Popups
 
     func presentStreamController(vc: UIViewController) {
         self.close()
@@ -273,6 +266,8 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
      - parameter withMic: Whether to allow recording
      */
     func setUpAudioSession(withMic withMic: Bool) {
+        NSNotificationCenter.defaultCenter().addObserver(self, selector: #selector(AppDelegate.audioWasInterupted(_:)), name: AVAudioSessionInterruptionNotification, object: nil)
+
         let category = withMic ? AVAudioSessionCategoryPlayAndRecord : AVAudioSessionCategoryPlayback
         var options = AVAudioSessionCategoryOptions()
         if withMic {
@@ -375,4 +370,9 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 
 		return AppDelegate()
 	}
+
+    deinit {
+        NSNotificationCenter.defaultCenter().removeObserver(self)
+    }
+
 }
