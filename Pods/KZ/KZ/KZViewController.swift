@@ -26,6 +26,7 @@ public class KZViewController: UIViewController, UITableViewDelegate, UITableVie
         
         // Do any additional setup after loading the view.
         self.view.backgroundColor = UIColor.whiteColor()
+        self.automaticallyAdjustsScrollViewInsets = false
         if fetchOnLoad && !fetchAUtomatically {
             self.fetchData()
         }
@@ -204,7 +205,7 @@ public class KZViewController: UIViewController, UITableViewDelegate, UITableVie
         }
 
         tableCell.setIndexPath(indexPath, last: (indexPath.row + 1) == tableViewCellData(tableView, section: indexPath.section).count)
-        if tableCell.tag != -1 {
+        if tableCell.tag != -1 && tableViewCellData(tableView, section: indexPath.section).count > indexPath.row {
             tableCell.setContent(tableViewCellData(tableView, section: indexPath.section)[indexPath.row], shallow: true)
         }
 

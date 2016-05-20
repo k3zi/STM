@@ -120,28 +120,41 @@ public extension UIViewController {
 	public func handleResponse(response: AnyObject?, error: NSError?, successCompletion: (AnyObject -> Void)? = nil, errorCompletion: (String -> Void)? = nil) {
 		dispatch_async(dispatch_get_main_queue(), { () -> Void in
 				if let error = error {
-					if let errorCompletion = errorCompletion {
-						errorCompletion(error.localizedDescription)
-					}
-                    self.showError(error.localizedDescription)
-				} else if let response = response {
-					if let success = response["success"] as? Bool {
-						if success {
-							if let result = response["result"] {
-								if let result = result {
-									if let successCompletion = successCompletion {
-										successCompletion(result)
-									}
-								}
-							}
-						} else if let error = response["error"] as? String {
-                            if let errorCompletion = errorCompletion {
-                                errorCompletion(error)
-                            }
+                    print(error)
+                    print(error.code)
+                    if let errorCompletion = errorCompletion {
+                        errorCompletion(error.localizedDescription)
+                    }
 
-                            self.showError(error)
-						}
-					}
+                    if ![-1011, -1001, 9, 404, 500].contains(error.code) {
+                        self.showError(error.localizedDescription)
+                    }
+				} else if let response = response {
+                    guard let success = response["success"] as? Bool else {
+                        return
+                    }
+
+                    if success {
+                        guard let result = response["result"] else {
+                            return
+                        }
+
+                        if let result = result, successCompletion = successCompletion {
+                            successCompletion(result)
+                        }
+                    } else if let error = response["error"] as? String {
+                        if let suppress = response["suppress"] as? Bool {
+                            if suppress {
+                                return
+                            }
+                        }
+                        
+                        if let errorCompletion = errorCompletion {
+                            errorCompletion(error)
+                        }
+
+                        self.showError(error)
+                    }
 				}
 			})
 	}
