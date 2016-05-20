@@ -96,14 +96,16 @@ class SearchViewController: KZViewController, UISearchBarDelegate, UIViewControl
             return
         }
 
-        if let stream = searchResults[indexPath.row] as? STMStream {
+        let model = tableViewCellData(tableView, section: indexPath.section)[indexPath.row]
+
+        if let stream = model as? STMStream {
             let vc = PlayerViewController()
             vc.start(stream, vc: self, showHUD: true, callback: { (success, error) in
                 if error == nil {
                     AppDelegate.del().presentStreamController(vc)
                 }
             })
-        } else if let user = searchResults[indexPath.row] as? STMUser {
+        } else if let user = model as? STMUser {
             guard AppDelegate.del().currentUser?.id != user.id else {
                 self.navigationController?.tabBarController?.selectedIndex = Constants.UI.Tabs.indexForProfile
                 return

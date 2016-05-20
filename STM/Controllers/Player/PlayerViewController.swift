@@ -26,10 +26,13 @@ class PlayerViewController: KZViewController, UISearchBarDelegate, UIViewControl
     var hud: M13ProgressHUD?
 
     let topView = UIView()
+    let innerTopView = UIView()
     let dismissBT = UIButton.styleForDismissButton()
     var dismissBTTopPadding: NSLayoutConstraint?
     let miscBT = UIButton.styleForMiscButton()
+    let streamTitleLabel = Label()
     let albumPoster = UIImageView()
+    let streamPictureView = UIImageView()
     let gradientView = GradientView()
     let gradientColorView = UIView()
     let visualizer = STMVisualizer()
@@ -67,6 +70,12 @@ class PlayerViewController: KZViewController, UISearchBarDelegate, UIViewControl
         fatalError("init(coder:) has not been implemented")
     }
 
+    deinit {
+        NSNotificationCenter.defaultCenter().removeObserver(self)
+        self.stop()
+        self.commentSocket?.disconnect()
+    }
+
     override func viewDidLoad() {
         super.viewDidLoad()
         view.backgroundColor = RGB(0)
@@ -90,7 +99,7 @@ class PlayerViewController: KZViewController, UISearchBarDelegate, UIViewControl
     override func viewDidAppear(animated: Bool) {
         super.viewDidAppear(animated)
 
-        PlayerViewController.cancelPreviousPerformRequestsWithTarget(self, selector: #selector(self.close(soft:)), object: true)
+        PlayerViewController.cancelPreviousPerformRequestsWithTarget(self, selector: #selector(self.closeButtonPressed), object: nil)
 
         if let hud = hud {
             hud.dismiss(true)
@@ -101,7 +110,7 @@ class PlayerViewController: KZViewController, UISearchBarDelegate, UIViewControl
         super.viewDidDisappear(animated)
 
         if isPreviewing {
-            self.performSelector(#selector(self.close(soft:)), withObject: true, afterDelay: 0.5)
+            self.performSelector(#selector(self.closeButtonPressed), withObject: nil, afterDelay: 0.5)
         }
     }
 
@@ -111,13 +120,19 @@ class PlayerViewController: KZViewController, UISearchBarDelegate, UIViewControl
 
         // Top View
         topView.autoPinEdgesToSuperviewEdgesWithInsets(UIEdgeInsetsZero, excludingEdge: .Bottom)
-        topView.autoMatchDimension(.Height, toDimension: .Height, ofView: view, withMultiplier: 0.334)
+        topView.autoMatchDimension(.Height, toDimension: .Height, ofView: view, withMultiplier: 0.4)
 
         dismissBTTopPadding = dismissBT.autoPinEdgeToSuperviewEdge(.Top, withInset: 25)
         dismissBT.autoPinEdgeToSuperviewEdge(.Left, withInset: 20)
 
         miscBT.autoAlignAxis(.Horizontal, toSameAxisOfView: dismissBT)
         miscBT.autoPinEdgeToSuperviewEdge(.Right, withInset: 20)
+
+        innerTopView.autoPinEdge(.Top, toEdge: .Bottom, ofView: streamTitleLabel)
+        innerTopView.autoPinEdgesToSuperviewEdgesWithInsets(UIEdgeInsetsZero, excludingEdge: .Top)
+
+        streamTitleLabel.autoAlignAxis(.Horizontal, toSameAxisOfView: dismissBT)
+        streamTitleLabel.autoAlignAxisToSuperviewAxis(.Vertical)
 
         albumPoster.autoPinEdgesToSuperviewEdges()
 
@@ -130,12 +145,16 @@ class PlayerViewController: KZViewController, UISearchBarDelegate, UIViewControl
         rewindBT.autoPinEdgeToSuperviewEdge(.Bottom, withInset: 20)
 
         // Info Holder
-        songInfoHolderViewTopPadding = songInfoHolderView.autoAlignAxis(.Horizontal, toSameAxisOfView: topView, withOffset: 5)
+        songInfoHolderView.autoAlignAxisToSuperviewAxis(.Horizontal)
         songInfoHolderView.autoAlignAxisToSuperviewAxis(.Vertical)
         songInfoHolderView.autoPinEdgeToSuperviewEdge(.Left, withInset: 20)
         songInfoHolderView.autoPinEdgeToSuperviewEdge(.Right, withInset: 20)
 
-        songInfoLabel1.autoPinEdgeToSuperviewEdge(.Top)
+        streamPictureView.autoPinEdgeToSuperviewEdge(.Top)
+        streamPictureView.autoSetDimensionsToSize(CGSize(width: 80, height: 80))
+        streamPictureView.autoAlignAxisToSuperviewAxis(.Vertical)
+
+        songInfoLabel1.autoPinEdge(.Top, toEdge: .Bottom, ofView: streamPictureView, withOffset: 20)
         songInfoLabel1.autoPinEdgeToSuperviewEdge(.Left)
         songInfoLabel1.autoPinEdgeToSuperviewEdge(.Right)
 
@@ -196,24 +215,43 @@ class PlayerViewController: KZViewController, UISearchBarDelegate, UIViewControl
         miscBT.addTarget(self, action: #selector(HostViewController.showMenu), forControlEvents: .TouchUpInside)
         topView.addSubview(miscBT)
 
-        topView.addSubview(songInfoHolderView)
+        streamTitleLabel.text = stream?.name
+        streamTitleLabel.textColor = themeColor()
+        streamTitleLabel.backgroundColor = RGB(255)
+        streamTitleLabel.layer.cornerRadius = 6.0
+        streamTitleLabel.clipsToBounds = true
+        streamTitleLabel.font = UIFont.systemFontOfSize(13.0)
+        streamTitleLabel.setContentEdgeInsets(UIEdgeInsets(top: 5, left: 20, bottom: 5, right: 20))
+        innerTopView.addSubview(streamTitleLabel)
+
+        innerTopView.addSubview(songInfoHolderView)
         [songInfoLabel1, songInfoLabel2, songInfoLabel3].forEach { (label) -> () in
             label.textAlignment = .Center
             label.textColor = RGB(255)
             if label != songInfoLabel1 {
                 label.alpha = 0.66
-                label.font = UIFont.systemFontOfSize(13, weight: UIFontWeightMedium)
+                label.font = UIFont.systemFontOfSize(12, weight: UIFontWeightMedium)
             } else {
                 label.text = "No Song Playing"
-                label.font = UIFont.systemFontOfSize(18, weight: UIFontWeightMedium)
+                label.font = UIFont.systemFontOfSize(14, weight: UIFontWeightMedium)
             }
             songInfoHolderView.addSubview(label)
         }
 
+        streamPictureView.layer.cornerRadius = 80.0/2.0
+        streamPictureView.clipsToBounds = true
+        streamPictureView.backgroundColor = Constants.UI.Color.imageViewDefault
+        if let stream = stream {
+            streamPictureView.kf_setImageWithURL(stream.pictureURL(), placeholderImage: UIImage(named: "defaultStreamImage"))
+        }
+        songInfoHolderView.addSubview(streamPictureView)
+
         rewindBT.hidden = true
         rewindBT.addTarget(self, action: #selector(PlayerViewController.didPressRewindBT), forControlEvents: .TouchUpInside)
         rewindBT.setImage(UIImage(named: "rewindBT"), forState: .Normal)
-        topView.addSubview(rewindBT)
+        innerTopView.addSubview(rewindBT)
+
+        topView.addSubview(innerTopView)
     }
 
     func setupCommentView() {
@@ -254,7 +292,7 @@ class PlayerViewController: KZViewController, UISearchBarDelegate, UIViewControl
     /**
      Close the host player view controller
      */
-    func close(soft soft: Bool = false) {
+    func close(soft soft: Bool = false, completion: (() -> Void)? = nil) {
 
         if AppDelegate.del().activeStreamController == self {
             AppDelegate.del().activeStreamController = nil
@@ -267,23 +305,23 @@ class PlayerViewController: KZViewController, UISearchBarDelegate, UIViewControl
             return
         }
 
-        guard let holderView = view.superview else {
-            return
-        }
-
-        guard let pVC = self.presentingViewController as? UITabBarController else {
-            return
-        }
-
         self.view.endEditing(true)
 
         func innerClose() {
             if let vc = presentingViewController {
-                vc.dismissViewControllerAnimated(true, completion: nil)
+                vc.dismissViewControllerAnimated(true, completion: completion)
             }
         }
 
         if self.dismissBT.selected {
+            guard let holderView = view.superview else {
+                return innerClose()
+            }
+
+            guard let pVC = self.presentingViewController as? UITabBarController else {
+                return innerClose()
+            }
+
             let oldHeight = holderView.frame.origin.y + 40
             UIView.animateWithDuration(0.4, animations: {
                 holderView.frame.origin.y += 40
@@ -382,6 +420,7 @@ class PlayerViewController: KZViewController, UISearchBarDelegate, UIViewControl
 
                 self.dismissBTTopPadding?.constant = 10
                 self.dismissBT.selected = true
+                self.topView.layoutIfNeeded()
             })
         } else if !minimize && self.dismissBT.selected {
             let oldHeight = holderView.frame.origin.y + 40
@@ -454,14 +493,6 @@ class PlayerViewController: KZViewController, UISearchBarDelegate, UIViewControl
             songInfoLabel3.text = nil
         }
 
-        if (songInfoLabel2.text?.characters.count == 0 && songInfoLabel3.text?.characters.count == 0) || (songInfoLabel2.text == nil || songInfoLabel3.text == nil) {
-            songInfoHolderViewTopPadding?.constant = 15
-        } else if (songInfoLabel2.text?.characters.count != 0 && songInfoLabel3.text?.characters.count != 0) || (songInfoLabel2.text != nil && songInfoLabel3.text != nil) {
-            songInfoHolderViewTopPadding?.constant = 5
-        } else {
-            songInfoHolderViewTopPadding?.constant = 10
-        }
-
         songInfoHolderView.layoutIfNeeded()
     }
 
@@ -519,13 +550,15 @@ class PlayerViewController: KZViewController, UISearchBarDelegate, UIViewControl
     override func tableView(tableView: UITableView, didSelectRowAtIndexPath indexPath: NSIndexPath) {
         super.tableView(tableView, didSelectRowAtIndexPath: indexPath)
 
-        if comments.count > 0 {
-            if let comment = comments[indexPath.row] as? STMComment {
-                let vc = CommentViewController(comment: comment)
-                let nav = NavigationController(rootViewController: vc)
-                vc.navigationItem.leftBarButtonItem = UIBarButtonItem(image: UIImage(named: "navBarDismissBT"), style: .Plain, target: self, action: #selector(self.dismissPopup))
-                self.presentViewController(nav, animated: true, completion: nil)
-            }
+        guard tableViewCellData(tableView, section: indexPath.section).count > 0 else {
+            return
+        }
+
+        if let comment = tableViewCellData(tableView, section: indexPath.section)[indexPath.row] as? STMComment {
+            let vc = CommentViewController(comment: comment)
+            let nav = NavigationController(rootViewController: vc)
+            vc.navigationItem.leftBarButtonItem = UIBarButtonItem(image: UIImage(named: "navBarDismissBT"), style: .Plain, target: self, action: #selector(self.dismissPopup))
+            self.presentViewController(nav, animated: true, completion: nil)
         }
     }
 
@@ -570,6 +603,14 @@ class PlayerViewController: KZViewController, UISearchBarDelegate, UIViewControl
     dynamic override func fetchData() {
         fetchData(false)
     }
+
+    func themeColor() -> UIColor {
+        if let stream = stream {
+            return stream.color()
+        } else {
+            return Constants.UI.Color.tint
+        }
+    }
 }
 
 //**********************************************************************
@@ -608,6 +649,10 @@ extension PlayerViewController: MessageToolbarDelegate {
         }
 
         view.endEditing(true)
+    }
+
+    func messageToolbarPrefillText() -> String {
+        return ""
     }
 
     func didBeginEditing() {
@@ -659,6 +704,38 @@ extension PlayerViewController: MessageToolbarDelegate {
                 self.commentsTableView.reloadSections(NSIndexSet(index: 0), withRowAnimation: .Fade)
             }
         })
+    }
+
+    func didUpdateThemeColor(response: AnyObject) {
+        guard let result = response as? JSON else {
+            return
+        }
+
+        guard let hexString = result["hexString"] as? String else {
+            return
+        }
+
+        let color = HEX(hexString)
+        self.stream?.colorHex = hexString
+        UIView.animateWithDuration(0.5) {
+            self.updateThemeColor(color)
+        }
+    }
+
+    func updateThemeColor(color: UIColor) {
+        if player?.state == .Playing || player?.state == .Buffering {
+            gradientColorView.backgroundColor = color.colorWithAlphaComponent(0.66)
+        } else {
+            gradientColorView.backgroundColor = Constants.UI.Color.off.colorWithAlphaComponent(0.66)
+        }
+
+        streamTitleLabel.textColor = color
+
+        var hue: CGFloat = 0
+        var saturation: CGFloat = 0
+        var brightness: CGFloat = 0
+        var alpha: CGFloat = 0
+        color.getHue(&hue, saturation: &saturation, brightness: &brightness, alpha: &alpha)
     }
 
     func fetchMeta() {
@@ -721,7 +798,7 @@ extension PlayerViewController: STKAudioPlayerDelegate {
      */
     func start(stream: STMStream, vc: UIViewController, showHUD: Bool = true, callback: ((Bool, String?) -> Void)? = nil) {
         let progressView = M13ProgressViewRing()
-        progressView.primaryColor = Constants.UI.Color.tint
+        progressView.primaryColor = stream.color()
         progressView.secondaryColor = Constants.UI.Color.disabled
         progressView.indeterminate = true
 
@@ -751,11 +828,15 @@ extension PlayerViewController: STKAudioPlayerDelegate {
                 return
             }
 
+            if activeVC.stream?.id == stream.id {
+                if let vc = AppDelegate.del().topViewController() {
+                    return vc.showError("You are already playing this stream")
+                }
+            }
+
             let alertVC = UIAlertController(title: "Confirm", message: "Continuing will stop the playback of the current stream", preferredStyle: .Alert)
             alertVC.addAction(UIAlertAction(title: "Continue", style: .Default, handler: { (action) in
-                activeVC.close()
-
-                delay(0.5, closure: {
+                activeVC.close(soft: false, completion: {
                     innerStart()
                 })
             }))
@@ -771,6 +852,8 @@ extension PlayerViewController: STKAudioPlayerDelegate {
             return
         }
 
+        updateThemeColor(stream.color())
+
         func proccessError(error: String? = nil, callback: ((Bool, String?) -> Void)?) {
             if let hud = self.hud {
                 hud.dismiss(true)
@@ -781,7 +864,7 @@ extension PlayerViewController: STKAudioPlayerDelegate {
             }
         }
 
-        Constants.Network.POST("/playStream/" + String(stream.id ?? 0), parameters: nil, completionHandler: { (response, error) -> Void in
+        Constants.Network.GET("/stream/\(stream.id)/startSession", parameters: nil, completionHandler: { (response, error) -> Void in
             (vc ?? self).handleResponse(response, error: error, successCompletion: { (result) -> Void in
                 guard let result = result as? [String: AnyObject] else {
                     return proccessError("Invalid response", callback: callback)
@@ -797,7 +880,7 @@ extension PlayerViewController: STKAudioPlayerDelegate {
 
                 AppDelegate.del().setUpAudioSession(withMic: false)
 
-                let streamURL = Constants.Config.apiBaseURL + "/streamLiveToDevice/\(stream.id)/\(user.id)/" + authKey
+                let streamURL = Constants.Config.apiBaseURL + "/stream/\(stream.id)/playStream/\(user.id)/\(authKey)"
 
                 var options = STKAudioPlayerOptions()
                 if let setting = result["secondsRequiredToStartPlaying"] as? Float32 {
@@ -890,6 +973,10 @@ extension PlayerViewController: STKAudioPlayerDelegate {
                 self.fetchMeta()
             }
 
+            socket.on("didUpdateHex") { data, ack in
+                self.didUpdateThemeColor(data[0])
+            }
+
             socket.connect()
         }
     }
@@ -900,7 +987,7 @@ extension PlayerViewController: STKAudioPlayerDelegate {
         let active = state == .Playing || state == .Buffering
         UIView.animateWithDuration(0.5) { () -> Void in
             if active {
-                self.gradientColorView.backgroundColor = Constants.UI.Color.tint.colorWithAlphaComponent(0.66)
+                self.gradientColorView.backgroundColor = self.stream?.color().colorWithAlphaComponent(0.66)
             } else {
                 self.gradientColorView.backgroundColor = Constants.UI.Color.off.colorWithAlphaComponent(0.66)
             }

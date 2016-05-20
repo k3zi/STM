@@ -24,13 +24,13 @@ class ProfileStatView: UIView {
 
         countLabel.text = count.formatUsingAbbrevation()
         countLabel.textAlignment = .Center
-        countLabel.textColor = RGB(128)
+        countLabel.textColor = RGB(255)
         countLabel.font = UIFont.systemFontOfSize(27, weight: UIFontWeightLight)
         addSubview(countLabel)
 
         nameLabel.text = name
         nameLabel.textAlignment = .Center
-        nameLabel.textColor = RGB(205)
+        nameLabel.textColor = RGB(244)
         nameLabel.font = UIFont.systemFontOfSize(13, weight: UIFontWeightMedium)
         addSubview(nameLabel)
 

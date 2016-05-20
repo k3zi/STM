@@ -25,6 +25,7 @@ class TimelineItemCell: KZTableViewCell {
 		avatar.layer.cornerRadius = 45.0 / 9.0
 		avatar.backgroundColor = Constants.UI.Color.imageViewDefault
 		avatar.clipsToBounds = true
+        avatar.addGestureRecognizer(UITapGestureRecognizer(target: self, action: #selector(goToUser)))
 		self.contentView.addSubview(avatar)
 
         dateLabel.textColor = RGB(180)
@@ -77,6 +78,27 @@ class TimelineItemCell: KZTableViewCell {
         }
 
         dateLabel.text = item.date.shortTimeAgoSinceNow()
+    }
+
+    func goToUser() {
+        guard let item = model as? STMTimelineItem else {
+            return
+        }
+
+        guard let user = item.user else {
+            return
+        }
+
+        let vc = ProfileViewController(user: user, isOwner: AppDelegate.del().currentUser?.id == user.id)
+        if let topVC = AppDelegate.del().topViewController() {
+            if let navVC = topVC.navigationController {
+                navVC.pushViewController(vc, animated: true)
+            } else {
+                let nav = NavigationController(rootViewController: vc)
+                vc.navigationItem.leftBarButtonItem = UIBarButtonItem(image: UIImage(named: "navBarDismissBT"), style: .Plain, target: topVC, action: #selector(topVC.dismissPopup))
+                topVC.presentViewController(nav, animated: true, completion: nil)
+            }
+        }
     }
 
 	override func prepareForReuse() {

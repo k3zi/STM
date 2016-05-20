@@ -7,6 +7,7 @@
 //
 
 import UIKit
+import TwitterKit
 
 class InitialViewController: KZViewController {
     let crowdBG = UIImageView(image: UIImage(named: "crowdBG"))
@@ -15,6 +16,7 @@ class InitialViewController: KZViewController {
 
     let signInBT = UIButton.styledForLaunchScreen()
     let createAccountBT = UIButton.styledForLaunchScreen()
+    var twitterSignInBT = TWTRLogInButton()
     let launchLogoWithText = UIImageView(image: UIImage(named: "launchLogoWithText"))
 
     override func viewDidLoad() {
@@ -42,6 +44,18 @@ class InitialViewController: KZViewController {
         createAccountBT.setTitle("Create An Account", forState: .Normal)
         createAccountBT.addTarget(self, action: #selector(InitialViewController.createAccount), forControlEvents: .TouchUpInside)
         view.addSubview(createAccountBT)
+
+        twitterSignInBT = TWTRLogInButton { (session, error) in
+            if let unwrappedSession = session {
+                self.handleTwitterSession(unwrappedSession)
+            } else if let error = error {
+                if error.code != 1 { //cancel code = 1
+                    self.showError(error.localizedDescription)
+                }
+            }
+        }
+        twitterSignInBT.layer.cornerRadius = 10.0
+        self.view.addSubview(twitterSignInBT)
     }
 
     override func viewDidAppear(animated: Bool) {
@@ -75,7 +89,12 @@ class InitialViewController: KZViewController {
 
         launchLogoWithText.autoAlignAxisToSuperviewAxis(.Vertical)
 
-        signInBT.autoPinEdge(.Top, toEdge: .Bottom, ofView: launchLogoWithText, withOffset: 90)
+        twitterSignInBT.autoPinEdge(.Top, toEdge: .Bottom, ofView: launchLogoWithText, withOffset: 90)
+        twitterSignInBT.autoPinEdgeToSuperviewEdge(.Left, withInset: 45)
+        twitterSignInBT.autoPinEdgeToSuperviewEdge(.Right, withInset: 45)
+        twitterSignInBT.autoSetDimension(.Height, toSize: 50)
+
+        signInBT.autoPinEdge(.Top, toEdge: .Bottom, ofView: twitterSignInBT, withOffset: 15)
         signInBT.autoPinEdgeToSuperviewEdge(.Left, withInset: 45)
         signInBT.autoPinEdgeToSuperviewEdge(.Right, withInset: 45)
         signInBT.autoSetDimension(.Height, toSize: 50)
@@ -106,6 +125,28 @@ class InitialViewController: KZViewController {
             let vc = SignInViewController()
             nav.pushViewController(vc, animated: true)
         }
+    }
+
+    func handleTwitterSession(session: TWTRSession) {
+        self.twitterSignInBT.showIndicator()
+        let params = ["twitterAuthToken": session.authToken, "username": session.userName]
+        Constants.Network.POST("/user/twitter/authenticate", parameters: params, completionHandler: { (response, error) -> Void in
+            self.twitterSignInBT.hideIndicator()
+            self.handleResponse(response, error: error, successCompletion: { (result) -> Void in
+                guard let result = result as? JSON else {
+                    return
+                }
+
+                if let user = STMUser(json: result) {
+                    Constants.Settings.setSecretObject(result, forKey: "user")
+                    Answers.logLoginWithMethod("Twitter", success: true, customAttributes: nil)
+                    return AppDelegate.del().loginUser(user)
+                } else if let usernameAvailable = result["usernameAvailable"] as? Bool {
+                    let vc = FinishTwitterAccountViewController(session: session, usernameAvailable: usernameAvailable)
+                    self.navigationController?.pushViewController(vc, animated: true)
+                }
+            })
+        })
     }
 
 }

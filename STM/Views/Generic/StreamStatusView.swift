@@ -46,7 +46,7 @@ class StreamStatusView: UIView {
         self.layer.cornerRadius = 10.0/2.0
         self.clipsToBounds = true
 
-        timer = NSTimer.scheduledTimerWithTimeInterval(5, target: self, selector: #selector(self.updateStatus), userInfo: nil, repeats: true)
+        timer = NSTimer.scheduledTimerWithTimeInterval(20, target: self, selector: #selector(self.updateStatus), userInfo: nil, repeats: true)
     }
 
     required init?(coder aDecoder: NSCoder) {

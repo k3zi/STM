@@ -102,6 +102,8 @@ class HostViewController: KZViewController, UISearchBarDelegate, UIViewControlle
     let metaDescriptionField = UITextView()
     var metaPictureSettingView = UIView()
     let metaPictureButton = UIImageView()
+    var metaColorSettingsView = UIView()
+    let metaColorSlider = GradientSlider()
 
 	let bottomBlurBar = UIToolbar()
 	var bottomBlurBarConstraint: NSLayoutConstraint?
@@ -129,6 +131,13 @@ class HostViewController: KZViewController, UISearchBarDelegate, UIViewControlle
         fatalError("init(coder:) has not been implemented")
     }
 
+    deinit {
+        NSNotificationCenter.defaultCenter().removeObserver(self)
+        self.stop()
+        self.socket?.disconnect()
+        self.commentSocket?.disconnect()
+    }
+
 	override func viewDidLoad() {
 		super.viewDidLoad()
 		view.backgroundColor = RGB(0)
@@ -145,14 +154,15 @@ class HostViewController: KZViewController, UISearchBarDelegate, UIViewControlle
             if let me = self {
                 me.toggleTop(!show)
 
+                let offset: CGFloat = me.micToggleBT.selected ? 88 : 44
+
                 if let con = me.commentFieldKeyboardConstraint {
-                    //Take into account the bottom toolbar
-                    con.constant = (show ? -(rect.size.height - 44) : 0)
+                    con.constant = (show ? -(rect.size.height - offset) : 0)
                     me.view.layoutIfNeeded()
                 }
 
                 if let con = me.settingsieldKeyboardConstraint {
-                    con.constant = (show ? -(rect.size.height - 44) : 0)
+                    con.constant = (show ? -(rect.size.height - offset) : 0)
                     me.view.layoutIfNeeded()
                 }
             }
@@ -316,7 +326,11 @@ class HostViewController: KZViewController, UISearchBarDelegate, UIViewControlle
         metaPictureSettingView.autoPinEdge(.Top, toEdge: .Bottom, ofView: metaDescriptionSettingView)
         metaPictureSettingView.autoPinEdgeToSuperviewEdge(.Left)
         metaPictureSettingView.autoPinEdgeToSuperviewEdge(.Right)
-		metaPictureSettingView.autoPinEdgeToSuperviewEdge(.Bottom, withInset: 0, relation: .GreaterThanOrEqual)
+
+        metaColorSettingsView.autoPinEdge(.Top, toEdge: .Bottom, ofView: metaPictureSettingView)
+        metaColorSettingsView.autoPinEdgeToSuperviewEdge(.Left)
+        metaColorSettingsView.autoPinEdgeToSuperviewEdge(.Right)
+		metaColorSettingsView.autoPinEdgeToSuperviewEdge(.Bottom, withInset: 0, relation: .GreaterThanOrEqual)
 
 		// Toolbar
 		bottomBlurBar.autoSetDimension(.Height, toSize: 88)
@@ -542,13 +556,35 @@ class HostViewController: KZViewController, UISearchBarDelegate, UIViewControlle
         tap.numberOfTapsRequired = 1
         tap.numberOfTouchesRequired = 1
         metaPictureButton.addGestureRecognizer(tap)
-        if let stream = stream {
-            metaPictureButton.kf_setImageWithURL(stream.pictureURL(), placeholderImage: UIImage(named: "defaultStreamImage"), optionsInfo: [KingfisherOptionsInfoItem.ForceRefresh], progressBlock: nil, completionHandler: nil)
-        }
         let metaPictureSettingView = SettingJoinedView(text: NSLocalizedString("Settings_StreamPhoto", comment: "Stream Photo"), detailText: NSLocalizedString("Settings_StreamPhotoDescription", comment: ""), control: metaPictureButtonHolder)
         self.metaPictureSettingView = metaPictureSettingView
         settingsContentView.addSubview(metaPictureSettingView)
         metaPictureSettingView.setPrevChain(metaDescriptionSettingView)
+
+        metaColorSlider.hasRainbow = true
+        metaColorSlider.actionBlock = { slider, value in
+            CATransaction.begin()
+            let color = UIColor(hue: value, saturation: 0.85, brightness: 0.99, alpha: 1.0)
+            CATransaction.setValue(true, forKey: kCATransactionDisableActions)
+            slider.thumbColor = color
+            self.updateThemeColor(color)
+            CATransaction.commit()
+        }
+        let metaColorSettingsView = SettingJoinedView(text: NSLocalizedString("Settings_StreamThemeColor", comment: "Stream Theme Color"), detailText: NSLocalizedString("Settings_StreamThemeColorDescription", comment: ""), control: metaColorSlider)
+        self.metaColorSettingsView = metaColorSettingsView
+        settingsContentView.addSubview(metaColorSettingsView)
+        metaColorSettingsView.setPrevChain(metaPictureSettingView)
+
+        if let stream = stream {
+            var hue: CGFloat = 0
+            var saturation: CGFloat = 0
+            var brightness: CGFloat = 0
+            var alpha: CGFloat = 0
+            stream.color().getHue(&hue, saturation: &saturation, brightness: &brightness, alpha: &alpha)
+            metaPictureButton.kf_setImageWithURL(stream.pictureURL(), placeholderImage: UIImage(named: "defaultStreamImage"), optionsInfo: [KingfisherOptionsInfoItem.ForceRefresh], progressBlock: nil, completionHandler: nil)
+            metaColorSlider.value = hue
+            metaColorSlider.thumbColor = UIColor(hue: metaColorSlider.value, saturation: 0.85, brightness: 0.99, alpha: 1.0)
+        }
 	}
 
 	func setupToolbar() {
@@ -594,7 +630,7 @@ class HostViewController: KZViewController, UISearchBarDelegate, UIViewControlle
 
         if AppDelegate.del().activeStreamController == self {
             AppDelegate.del().activeStreamController = nil
-        } 
+        }
 
         audioFile0 = nil
         audioFile1 = nil
@@ -699,6 +735,7 @@ class HostViewController: KZViewController, UISearchBarDelegate, UIViewControlle
 
                 self.dismissBTTopPadding?.constant = 10
                 self.dismissBT.selected = true
+                self.topView.layoutIfNeeded()
             })
         } else if !minimize && self.dismissBT.selected {
             let oldHeight = holderView.frame.origin.y + 40
@@ -850,8 +887,8 @@ class HostViewController: KZViewController, UISearchBarDelegate, UIViewControlle
 			}
 
 			recordingStatusLabel.textColor = RGB(255)
-			recordingStatusLabel.backgroundColor = recordSwitch.onTintColor
-			gradientColorView.backgroundColor = Constants.UI.Color.tint.colorWithAlphaComponent(0.66)
+			recordingStatusLabel.backgroundColor = stream?.color()
+			gradientColorView.backgroundColor = stream?.color().colorWithAlphaComponent(0.66)
 		} else {
 			recordingStatusLabel.text = "Not Broadcasting"
 			recordingStatusLabel.textColor = recordSwitch.onTintColor
@@ -954,6 +991,49 @@ class HostViewController: KZViewController, UISearchBarDelegate, UIViewControlle
 		}
 		center.nowPlayingInfo = dict
 	}
+
+    func updateThemeColor(color: UIColor) {
+        switcherControl.tintColor = color
+        if isOnAir() {
+            gradientColorView.backgroundColor = color.colorWithAlphaComponent(0.66)
+        } else {
+            gradientColorView.backgroundColor = Constants.UI.Color.off.colorWithAlphaComponent(0.66)
+        }
+
+        [settingsHeaderMeta, settingsHeaderStatus, settingsHeaderPlayback, settingsHeaderMicrophone].forEach({ $0.backgroundColor = color })
+
+        NSObject.cancelPreviousPerformRequestsWithTarget(self)
+        performSelector(#selector(didChangeThemeColor), withObject: color, afterDelay: 1.0)
+
+        var hue: CGFloat = 0
+        var saturation: CGFloat = 0
+        var brightness: CGFloat = 0
+        var alpha: CGFloat = 0
+        color.getHue(&hue, saturation: &saturation, brightness: &brightness, alpha: &alpha)
+    }
+
+    func didChangeThemeColor(color: UIColor) {
+        let hexString = color.hexString
+        stream?.colorHex = hexString
+        self.updateStream("colorHex", value: hexString)
+
+        guard let socket = self.socket else {
+            return
+        }
+
+        dispatch_async(backgroundQueue) { () -> Void in
+            while socket.status != .Connected {
+                NSRunLoop.mainRunLoop().runMode(NSDefaultRunLoopMode, beforeDate: NSDate.distantFuture())
+            }
+
+            var params = [String: AnyObject]()
+            params["hexString"] = hexString
+
+            socket.emitWithAck("updateHex", params)(timeoutAfter: 0) { data in
+                print("Socket: Sent Color")
+            }
+        }
+    }
 
 	// **********************************************************************
 	// **********************************************************************
@@ -1081,13 +1161,15 @@ class HostViewController: KZViewController, UISearchBarDelegate, UIViewControlle
     override func tableView(tableView: UITableView, didSelectRowAtIndexPath indexPath: NSIndexPath) {
         super.tableView(tableView, didSelectRowAtIndexPath: indexPath)
 
-        if comments.count > 0 {
-            if let comment = comments[indexPath.row] as? STMComment {
-                let vc = CommentViewController(comment: comment)
-                let nav = NavigationController(rootViewController: vc)
-                vc.navigationItem.leftBarButtonItem = UIBarButtonItem(image: UIImage(named: "navBarDismissBT"), style: .Plain, target: self, action: #selector(self.dismissPopup))
-                self.presentViewController(nav, animated: true, completion: nil)
-            }
+        guard tableViewCellData(tableView, section: indexPath.section).count > 0 else {
+            return
+        }
+
+        if let comment = tableViewCellData(tableView, section: indexPath.section)[indexPath.row] as? STMComment {
+            let vc = CommentViewController(comment: comment)
+            let nav = NavigationController(rootViewController: vc)
+            vc.navigationItem.leftBarButtonItem = UIBarButtonItem(image: UIImage(named: "navBarDismissBT"), style: .Plain, target: self, action: #selector(self.dismissPopup))
+            self.presentViewController(nav, animated: true, completion: nil)
         }
     }
 
@@ -1209,6 +1291,7 @@ class HostViewController: KZViewController, UISearchBarDelegate, UIViewControlle
         }
 
         Constants.Network.POST("/stream/\(stream.id)/update/\(property)", parameters: ["value": value]) { (response, error) in
+            print(response)
             self.handleResponse(response, error: error)
         }
     }
@@ -1246,7 +1329,7 @@ class HostViewController: KZViewController, UISearchBarDelegate, UIViewControlle
             AppDelegate.del().window?.addSubview(hud)
             hud.show(true)
 
-            Constants.Network.UPLOAD("/upload/stream/\(stream.id)/picture", data: imageData, parameters: nil, progress: { (bytesWritten, totalBytesWritten, totalBytesExpectedToWrite) in
+            Constants.Network.UPLOAD("/stream/\(stream.id)/upload/picture", data: imageData, parameters: nil, progress: { (bytesWritten, totalBytesWritten, totalBytesExpectedToWrite) in
                 let progress = CGFloat(totalBytesWritten)/CGFloat(totalBytesExpectedToWrite)
                 hud.setProgress(progress, animated: true)
                 }, completionHandler: { (response, error) in
@@ -1296,6 +1379,10 @@ extension HostViewController: MessageToolbarDelegate {
 
         view.endEditing(true)
 	}
+
+    func messageToolbarPrefillText() -> String {
+        return ""
+    }
 
     func didBeginEditing() {
         commentsTableView.scrollToBottom(true)
@@ -1444,25 +1531,35 @@ extension HostViewController {
 			hud.show(true)
 		}
 
+        func dismiss() {
+            if let hud = self.hud {
+                hud.dismiss(true)
+            }
+
+            self.close()
+        }
+
 		Constants.Network.POST("/stream/\(stream.id)/continue", parameters: nil, completionHandler: { (response, error) -> Void in
 			self.handleResponse(response, error: error, successCompletion: { (result) -> Void in
-				if let result = result as? JSON {
-					if let stream = STMStream(json: result) {
-						self.stream = stream
+                guard let result = result as? JSON else {
+                    return dismiss()
+                }
 
-						self.toggleAudioSession()
-						self.connectGlobalStream()
-						self.loadLibrary()
-						callback(true, nil)
-						Answers.logCustomEventWithName("Continued Stream", customAttributes: [:])
-					}
-				}
+                guard let stream = STMStream(json: result) else {
+                    return dismiss()
+                }
+
+                self.stream = stream
+
+                self.toggleAudioSession()
+                self.connectGlobalStream()
+                self.loadLibrary()
+                callback(true, nil)
+                Answers.logCustomEventWithName("Continued Stream", customAttributes: [:])
+
 				}, errorCompletion: { (error) -> Void in
-				if let hud = self.hud {
-					hud.dismiss(true)
-				}
-				self.close()
-				callback(false, error)
+                    dismiss()
+                    callback(false, error)
 			})
 		})
 	}
@@ -1507,6 +1604,7 @@ extension HostViewController: EZOutputDataSource {
         if let socket = self.socket {
             socket.on("connect") { data, ack in
                 print("Stream: Socket Connected")
+                self.updateThemeColor(stream.color())
             }
 
             socket.connect()
@@ -1641,15 +1739,18 @@ extension HostViewController: EZOutputDataSource {
 			params["data"] = data.base64EncodedStringWithOptions(NSDataBase64EncodingOptions())
 			params["time"] = NSDate().timeIntervalSince1970
 			socket.emitWithAck("dataForStream", params)(timeoutAfter: 0) { data in
-				if let response = data[0] as? [String: AnyObject] {
-					if let bytes = response["bytes"] as? Float {
-						self.statsPacketsReceived += bytes
-					}
 
-                    if let listeners = response["listeners"] as? Int {
-                        self.statsNumberOfListeners = listeners
-                    }
-				}
+				guard let response = data[0] as? [String: AnyObject] else {
+                    return
+                }
+
+                if let bytes = response["bytes"] as? Float {
+                    self.statsPacketsReceived += bytes
+                }
+
+                if let listeners = response["listeners"] as? Int {
+                    self.statsNumberOfListeners = listeners
+                }
 			}
 		}
 	}

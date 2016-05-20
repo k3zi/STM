@@ -16,6 +16,7 @@ struct STMUser: Decodable {
     let displayName: String?
     let description: String?
     let isFollowing: Bool
+    let isFollower: Bool
 
     // MARK: - Deserialization
 
@@ -29,6 +30,7 @@ struct STMUser: Decodable {
         self.displayName = "displayName" <~~ json
         self.description = "description" <~~ json
         self.isFollowing = ("isFollowing" <~~ json) ?? false
+        self.isFollower = ("isFollower" <~~ json) ?? false
     }
 
     func profilePictureURL() -> NSURL {

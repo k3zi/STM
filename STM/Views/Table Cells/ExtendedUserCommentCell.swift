@@ -112,7 +112,7 @@ class ExtendedUserCommentCell: KZTableViewCell {
             self.likeButton.count = self.likeButton.count + (self.likeButton.selected ? 1 : -1)
         }, completion: nil)
 
-        Constants.Network.GET("/comment/\(method)/\(comment.id)", parameters: nil) { (response, error) in
+        Constants.Network.GET("/comment/\(comment.id)/\(method)", parameters: nil) { (response, error) in
             dispatch_async(dispatch_get_main_queue(), {
                 comment.likes = self.likeButton.count
                 comment.didLike = self.likeButton.selected
@@ -136,7 +136,7 @@ class ExtendedUserCommentCell: KZTableViewCell {
             self.repostButton.count = self.repostButton.count + (self.repostButton.selected ? 1 : -1)
         }, completion: nil)
 
-        Constants.Network.GET("/comment/\(method)/\(comment.id)", parameters: nil) { (response, error) in
+        Constants.Network.GET("/comment/\(comment.id)/\(method)", parameters: nil) { (response, error) in
             dispatch_async(dispatch_get_main_queue(), {
                 UIView.transitionWithView(self.repostButton, duration: 0.2, options: .TransitionCrossDissolve, animations: {
                     comment.reposts = self.repostButton.count

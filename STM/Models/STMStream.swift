@@ -17,6 +17,7 @@ struct STMStream: Decodable {
     let description: String?
     let passcode: String?
     let securityHash: String?
+    var colorHex: String?
 
     // MARK: - Deserialization
 
@@ -31,6 +32,7 @@ struct STMStream: Decodable {
         self.description = "description" <~~ json
         self.passcode = "passcode" <~~ json
         self.securityHash = "securityHash" <~~ json
+        self.colorHex = "colorHex" <~~ json
     }
 
     func alphaID() -> String {
@@ -43,6 +45,18 @@ struct STMStream: Decodable {
 
     func pictureURL() -> NSURL {
         return NSURL(string: Constants.Config.apiBaseURL + "/stream/\(id)/picture") ?? NSURL()
+    }
+
+    func color() -> UIColor {
+        guard let colorHex = colorHex else {
+            return Constants.UI.Color.tint
+        }
+
+        guard colorHex.characters.count == 6 else {
+            return Constants.UI.Color.tint
+        }
+
+        return HEX(colorHex)
     }
 
 }

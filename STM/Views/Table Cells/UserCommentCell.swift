@@ -79,16 +79,15 @@ class UserCommentCell: KZTableViewCell {
             return
         }
 
-        guard let window = self.window, topVC = window.rootViewController else {
+        guard let topVC = AppDelegate.del().topViewController() else {
             return
         }
 
         let vc = PlayerViewController()
-        let activeVC = AppDelegate.del().activeStreamController
 
         vc.start(stream, vc: topVC) { (nothing, error) -> Void in
             if let error = error {
-                (activeVC ?? topVC).showError(error)
+                topVC.showError(error)
             } else {
                 AppDelegate.del().presentStreamController(vc)
             }
@@ -106,7 +105,7 @@ class UserCommentCell: KZTableViewCell {
             self.likeButton.count = self.likeButton.count + (self.likeButton.selected ? 1 : -1)
         }, completion: nil)
 
-        Constants.Network.GET("/comment/\(method)/\(comment.id)", parameters: nil) { (response, error) in
+        Constants.Network.GET("/comment/\(comment.id)/\(method)", parameters: nil) { (response, error) in
             dispatch_async(dispatch_get_main_queue(), {
                 comment.likes = self.likeButton.count
                 comment.didLike = self.likeButton.selected
@@ -130,7 +129,7 @@ class UserCommentCell: KZTableViewCell {
             self.repostButton.count = self.repostButton.count + (self.repostButton.selected ? 1 : -1)
         }, completion: nil)
 
-        Constants.Network.GET("/comment/\(method)/\(comment.id)", parameters: nil) { (response, error) in
+        Constants.Network.GET("/comment/\(comment.id)/\(method)", parameters: nil) { (response, error) in
             dispatch_async(dispatch_get_main_queue(), {
                 comment.reposts = self.repostButton.count
                 comment.didRepost = self.repostButton.selected

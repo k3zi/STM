@@ -39,6 +39,7 @@ class DashboardStreamInfoView: UIView {
         streamDescriptionLabel.textColor = RGB(91)
         streamDescriptionLabel.font = UIFont.systemFontOfSize(14)
         streamDescriptionLabel.text = stream.description
+        streamDescriptionLabel.numberOfLines = 0
         infoViewHolder.addSubview(streamDescriptionLabel)
 
         startBT.setTitle("Tune In", forState: .Normal)
@@ -72,5 +73,10 @@ class DashboardStreamInfoView: UIView {
         startBT.autoPinEdgeToSuperviewEdge(.Left)
         startBT.autoPinEdgeToSuperviewEdge(.Right)
         startBT.autoPinEdgeToSuperviewEdge(.Bottom)
+    }
+
+    override func layoutSubviews() {
+        super.layoutSubviews()
+        streamDescriptionLabel.preferredMaxLayoutWidth = streamDescriptionLabel.frame.size.width
     }
 }

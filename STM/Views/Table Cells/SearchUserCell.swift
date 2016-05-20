@@ -49,7 +49,7 @@ class SearchUserCell: KZTableViewCell {
         UIView.transitionWithView(self.followButton, duration: 0.2, options: .TransitionCrossDissolve, animations: {
             self.followButton.selected = !self.followButton.selected
         }, completion: nil)
-        Constants.Network.GET("/\(method)/\(user.id)", parameters: nil) { (response, error) in
+        Constants.Network.GET("/user/\(user.id)/\(method)", parameters: nil) { (response, error) in
             dispatch_async(dispatch_get_main_queue(), {
                 NSNotificationCenter.defaultCenter().postNotificationName(Constants.Notification.UpdateUserProfile, object: nil)
             })

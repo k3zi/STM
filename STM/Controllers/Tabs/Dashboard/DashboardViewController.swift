@@ -22,12 +22,7 @@ class DashboardViewController: KZViewController, UIViewControllerPreviewingDeleg
     override func viewDidLoad() {
         super.viewDidLoad()
 
-        if let window = AppDelegate.del().window as? Window {
-            window.screenIsReady = true
-        }
-
         self.title = "Dashboard"
-        self.automaticallyAdjustsScrollViewInsets = false
 
         tableView.delegate = self
         tableView.dataSource = self
@@ -89,11 +84,17 @@ class DashboardViewController: KZViewController, UIViewControllerPreviewingDeleg
     override func tableView(tableView: UITableView, didSelectRowAtIndexPath indexPath: NSIndexPath) {
         super.tableView(tableView, didSelectRowAtIndexPath: indexPath)
 
-        if indexPath.section == 1 {
-            if let comment = comments[indexPath.row] as? STMComment {
-                let vc = CommentViewController(comment: comment)
-                self.navigationController?.pushViewController(vc, animated: true)
-            }
+        guard indexPath.section == 1 else {
+            return
+        }
+
+        guard tableViewCellData(tableView, section: indexPath.section).count > 0 else {
+            return
+        }
+
+        if let comment = tableViewCellData(tableView, section: indexPath.section)[indexPath.row] as? STMComment {
+            let vc = CommentViewController(comment: comment)
+            self.navigationController?.pushViewController(vc, animated: true)
         }
     }
 
@@ -118,7 +119,7 @@ class DashboardViewController: KZViewController, UIViewControllerPreviewingDeleg
         }
 
         count = count + 1
-        Constants.Network.GET("/dashboard", parameters: nil) { (response, error) -> Void in
+        Constants.Network.GET("/dashboard/items", parameters: nil) { (response, error) -> Void in
             self.handleResponse(response, error: error, successCompletion: { (result) -> Void in
                 self.dashboardItems.removeAll()
                 if let result = result as? [JSON] {
@@ -137,7 +138,7 @@ class DashboardViewController: KZViewController, UIViewControllerPreviewingDeleg
         }
 
         count = count + 1
-        Constants.Network.GET("/dashboard/comments", parameters: nil) { (response, error) -> Void in
+        Constants.Network.GET("/dashboard/timeline", parameters: nil) { (response, error) -> Void in
             self.handleResponse(response, error: error, successCompletion: { (result) -> Void in
                 guard let results = result as? [JSON] else {
                     return
@@ -162,6 +163,10 @@ class DashboardViewController: KZViewController, UIViewControllerPreviewingDeleg
                     self.comments.removeAll()
                     comments.forEach({ self.comments.append($0) })
                     self.tableView.reloadData()
+                }
+
+                if let window = AppDelegate.del().window as? Window {
+                    window.screenIsReady = true
                 }
             })
 

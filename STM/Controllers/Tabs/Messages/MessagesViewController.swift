@@ -87,7 +87,7 @@ class MessagesViewController: KZViewController, UIViewControllerPreviewingDelega
         }
 
         count = count + 1
-        Constants.Network.GET("/messages/list", parameters: nil) { (response, error) -> Void in
+        Constants.Network.GET("/conversation/list", parameters: nil) { (response, error) -> Void in
             self.handleResponse(response, error: error, successCompletion: { (result) -> Void in
                 self.convos.removeAll()
 
@@ -116,11 +116,11 @@ class MessagesViewController: KZViewController, UIViewControllerPreviewingDelega
     override func tableView(tableView: UITableView, didSelectRowAtIndexPath indexPath: NSIndexPath) {
         super.tableView(tableView, didSelectRowAtIndexPath: indexPath)
 
-        guard convos.count > indexPath.row else {
+        guard tableViewCellData(tableView, section: indexPath.section).count > 0 else {
             return
         }
 
-        if let convo = convos[indexPath.row] as? STMConversation {
+        if let convo = tableViewCellData(tableView, section: indexPath.section)[indexPath.row] as? STMConversation {
             if let badgeString = self.navigationController?.tabBarItem.badgeValue {
                 var badgeInt = Int(badgeString) ?? 0
                 badgeInt = badgeInt - convo.unreadCount

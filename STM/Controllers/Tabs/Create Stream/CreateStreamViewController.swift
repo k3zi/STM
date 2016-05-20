@@ -45,7 +45,7 @@ class CreateStreamViewController: KZViewController {
         scrollView.showsVerticalScrollIndicator = false
         scrollView.addSubview(contentView)
         view.addSubview(scrollView)
-        view.backgroundColor = RGB(234)
+        view.backgroundColor = RGB(241, g: 242, b: 243)
 
         streamTypeSegmentControl.selectedSegmentIndex = 0
         streamTypeSegmentControl.tintColor = Constants.UI.Color.tint
@@ -282,11 +282,15 @@ class CreateStreamViewController: KZViewController {
     override func tableView(tableView: UITableView, didSelectRowAtIndexPath indexPath: NSIndexPath) {
         super.tableView(tableView, didSelectRowAtIndexPath: indexPath)
 
-        guard AppDelegate.del().activeStreamController == nil else {
-            return showError("You are already hosting/playing a stream. Please close it before starting another")
+        guard self.tableViewCellData(tableView, section: indexPath.section).count > 0 else {
+            return
         }
 
-        if let stream = items[indexPath.row] as? STMStream {
+        if let activeVC = AppDelegate.del().activeStreamController {
+            return activeVC.showError("You are already hosting/playing a stream. Please close it before starting another")
+        }
+
+        if let stream = self.tableViewCellData(tableView, section: indexPath.section)[indexPath.row] as? STMStream {
             let vc = HostViewController()
             vc.start(stream) { (nothing, error) -> Void in
                 if error == nil {

@@ -11,6 +11,7 @@ import CoreLocation
 
 //MARK: Constants
 //swiftlint:disable nesting
+//swiftlint:disable type_name
 
 struct Constants {
 
@@ -21,11 +22,19 @@ struct Constants {
         static let apiVersion = "1"
 
         static let siteBaseURL = "https://stm.io"
+        #if DEBUG
+        static let apiBaseURL = "https://api-dev.stm.io/v\(apiVersion)"
+        static let systemCredentials = NSURLCredential(user: "STM-DEV-API", password: "C/=}SU,nv)A**9cX.L&ML56", persistence: .ForSession)
+        #else
         static let apiBaseURL = "https://api.stm.io/v\(apiVersion)"
-		static let systemCredentials = NSURLCredential(user: "STM-API", password: "PXsd<rhKG0r'@U.-Z`>!9V%-Z<Z", persistence: .ForSession)
+        static let systemCredentials = NSURLCredential(user: "STM-API", password: "PXsd<rhKG0r'@U.-Z`>!9V%-Z<Z", persistence: .ForSession)
+        #endif
 		static let hashids = Hashids(salt: "pepper", minHashLength: 4, alphabet: "abcdefghijkmnpqrstuxyACDEFGHKMNPQRSTUQY23456789")
 		static let streamHash = "WrfN'/:_f.#8fYh(=RY(LxTDRrU"
         static let userDefaultsSecret = "eQpvrIz91DyP9Ge4GY4LRz0vbbG7ot"
+
+        static let twitterConsumerKey = "i9HggEKaSKNRVnHBBQDdFDQx1"
+        static let twitterConsumerSecret = "l2iuaqf8bKyW01El13M0NkC3M6fNGFlQAVWByhnZROsQwFIbFn"
 	}
 
 	struct Notification {
@@ -74,7 +83,17 @@ struct Constants {
             static let bounds = UIScreen.mainScreen().bounds
 
             static func keyboardAdjustment(show: Bool, rect: CGRect) -> CGFloat {
-                return (show ? (-rect.size.height + (AppDelegate.del().playerIsMinimized() ? 40 : 0)) : 0)
+                guard show else {
+                    return 0.0
+                }
+
+                var height = -rect.size.height
+
+                if AppDelegate.del().playerIsMinimized() {
+                    height = height + 40
+                }
+
+                return height
             }
         }
 
@@ -148,7 +167,8 @@ extension UITableView {
             return
         }
 
-        self.scrollToRowAtIndexPath(NSIndexPath(forRow: row - 1, inSection: section - 1), atScrollPosition: .Bottom, animated: animated)
+        let index = NSIndexPath(forRow: row - 1, inSection: section - 1)
+        self.scrollToRowAtIndexPath(index, atScrollPosition: .Bottom, animated: animated)
     }
 
 }
@@ -282,6 +302,19 @@ extension UIViewController {
 
 extension UIScrollView {
     func dg_stopScrollingAnimation() {}
+}
+
+extension UIColor {
+
+    var hexString: String {
+        let components = CGColorGetComponents(self.CGColor)
+
+        let red = Float(components[0])
+        let green = Float(components[1])
+        let blue = Float(components[2])
+        return String(format: "%02lX%02lX%02lX", lroundf(red * 255), lroundf(green * 255), lroundf(blue * 255))
+    }
+
 }
 
 extension _ArrayType where Generator.Element : Equatable {

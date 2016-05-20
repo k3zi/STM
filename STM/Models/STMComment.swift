@@ -45,6 +45,38 @@ class STMComment: Decodable, Equatable {
         return id == other.id && didRepost == other.didRepost && didLike == other.didLike && likes == other.likes && reposts == other.reposts
     }
 
+    func replyPlaceholder() -> String {
+        guard var username = user?.username else {
+            return ""
+        }
+
+        username = "@\(username)"
+
+        guard let text = text else {
+            return username + " "
+        }
+
+        let reg = "(^|[^@\\w])@(\\w{1,15})\\b"
+        let nsString = text as NSString
+
+        do {
+            let matches = try NSRegularExpression(pattern: reg, options: NSRegularExpressionOptions()).matchesInString(text, options: NSMatchingOptions(), range: NSRange(location: 0, length: text.characters.count))
+
+            var stringMatches = matches.map({ nsString.substringWithRange($0.range) })
+            if !stringMatches.contains(username) {
+                stringMatches.append(username)
+            }
+
+            if let currentUsername = AppDelegate.del().currentUser?.username {
+                stringMatches.removeObject("@" + currentUsername)
+            }
+
+            return stringMatches.joinWithSeparator(" ") + " "
+        } catch {
+            return username + " "
+        }
+    }
+
 }
 
 func == (rhs: STMComment, lhs: STMComment) -> Bool {

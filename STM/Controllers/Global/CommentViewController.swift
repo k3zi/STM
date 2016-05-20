@@ -45,6 +45,8 @@ class CommentViewController: KZViewController, UIViewControllerPreviewingDelegat
         view.addSubview(tableView)
 
         commentToolbar.delegate = self
+        commentToolbar.toolBar.placeholder = comment.replyPlaceholder()
+        commentToolbar.toolBar.text = comment.replyPlaceholder()
         view.addSubview(commentToolbar)
 
         registerForPreviewingWithDelegate(self, sourceView: tableView)
@@ -89,6 +91,7 @@ class CommentViewController: KZViewController, UIViewControllerPreviewingDelegat
         }
 
         self.commentToolbar.sendBT.enabled = false
+        self.commentToolbar.toolBar.text = comment.replyPlaceholder()
         Constants.Network.POST("/comment/\(comment.id)/reply", parameters: ["text": text, "streamID": streamID], completionHandler: { (response, error) -> Void in
             self.commentToolbar.sendBT.enabled = true
             self.handleResponse(response, error: error, successCompletion: { (result) -> Void in
@@ -99,6 +102,10 @@ class CommentViewController: KZViewController, UIViewControllerPreviewingDelegat
         })
 
         view.endEditing(true)
+    }
+
+    func messageToolbarPrefillText() -> String {
+        return comment.replyPlaceholder()
     }
 
     func didBeginEditing() {
@@ -142,11 +149,17 @@ class CommentViewController: KZViewController, UIViewControllerPreviewingDelegat
     override func tableView(tableView: UITableView, didSelectRowAtIndexPath indexPath: NSIndexPath) {
         super.tableView(tableView, didSelectRowAtIndexPath: indexPath)
 
-        if indexPath.section == 1 {
-            if let comment = replys[indexPath.row] as? STMComment {
-                let vc = CommentViewController(comment: comment)
-                self.navigationController?.pushViewController(vc, animated: true)
-            }
+        guard indexPath.section == 1 else {
+            return
+        }
+
+        guard tableViewCellData(tableView, section: indexPath.section).count > 0 else {
+            return
+        }
+
+        if let comment = tableViewCellData(tableView, section: indexPath.section)[indexPath.row] as? STMComment {
+            let vc = CommentViewController(comment: comment)
+            self.navigationController?.pushViewController(vc, animated: true)
         }
     }
 

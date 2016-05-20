@@ -90,6 +90,18 @@ class CommentCell: KZTableViewCell {
 		messageLabel.autoPinEdgeToSuperviewEdge(.Bottom, withInset: 10, relation: .GreaterThanOrEqual)
 	}
 
+    override func estimatedHeight() -> CGFloat {
+        let minHeight = CGFloat(10 + 45 + 10)
+
+        let rightSideWidth = Constants.UI.Screen.width - 10 - 45 - 10 - 10
+        var height = CGFloat(13) //top padding
+        height = height + nameLabel.estimatedHeight(rightSideWidth)
+        height = height + 2 //padding
+        height = height + messageLabel.estimatedHeight(rightSideWidth)
+        height = height + 10 //bottom padding
+        return ceil(max(minHeight, height))
+    }
+
 	override func fillInCellData(shallow: Bool) {
 		if let comment = model as? STMComment {
 			messageLabel.text = comment.text

@@ -106,7 +106,7 @@ class ProfileSettingsViewController: KZViewController {
                 AppDelegate.del().window?.addSubview(hud)
                 hud.show(true)
 
-                Constants.Network.UPLOAD("/upload/user/profilePicture", data: imageData, parameters: nil, progress: { (bytesWritten, totalBytesWritten, totalBytesExpectedToWrite) in
+                Constants.Network.UPLOAD("/user/upload/profilePicture", data: imageData, parameters: nil, progress: { (bytesWritten, totalBytesWritten, totalBytesExpectedToWrite) in
                     let progress = CGFloat(totalBytesWritten)/CGFloat(totalBytesExpectedToWrite)
                     hud.setProgress(progress, animated: true)
                 }, completionHandler: { (response, error) in

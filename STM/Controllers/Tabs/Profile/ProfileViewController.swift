@@ -26,7 +26,7 @@ class ProfileViewController: KZViewController, UIViewControllerPreviewingDelegat
     let followersStatView = ProfileStatView(count: 0, name: "FOLLOWERS")
     let followingStatView = ProfileStatView(count: 0, name: "FOLLOWING")
 
-    let segmentControl = NYSegmentedControl(items: ["Comments", "Streams", "Likes"])
+    let segmentControl = NYSegmentedControl(items: ["Timeline", "Streams", "Likes"])
 
     let tableView = KZIntrinsicTableView()
 
@@ -55,6 +55,8 @@ class ProfileViewController: KZViewController, UIViewControllerPreviewingDelegat
     override func viewDidLoad() {
         super.viewDidLoad()
 
+        headerView.backgroundColor = RGB(122, g: 86, b: 229, a: 255)
+
         self.navigationItem.title = isOwner ? "My Profile (@\(user.username))" : "@\(user.username)"
         self.automaticallyAdjustsScrollViewInsets = false
         if isOwner {
@@ -68,12 +70,14 @@ class ProfileViewController: KZViewController, UIViewControllerPreviewingDelegat
 
         displayNameLabel.font = UIFont.systemFontOfSize(19, weight: UIFontWeightBold)
         displayNameLabel.text = user.displayName
+        displayNameLabel.textColor = RGB(255)
         headerView.addSubview(displayNameLabel)
 
         descriptionLabel.text = user.description
         descriptionLabel.numberOfLines = 0
         descriptionLabel.font = UIFont.systemFontOfSize(13)
         descriptionLabel.textAlignment = .Center
+        descriptionLabel.textColor = RGB(255)
         headerView.addSubview(descriptionLabel)
 
         followButton.addTarget(self, action: #selector(self.toggleFollow), forControlEvents: .TouchUpInside)
@@ -99,8 +103,8 @@ class ProfileViewController: KZViewController, UIViewControllerPreviewingDelegat
         segmentControl.titleTextColor = Constants.UI.Color.tint
         segmentControl.selectedTitleTextColor = RGB(255)
         segmentControl.selectedTitleFont = UIFont.systemFontOfSize(15)
-        segmentControl.segmentIndicatorBackgroundColor =  Constants.UI.Color.tint
-        segmentControl.backgroundColor = RGB(218, g: 219, b: 220)
+        segmentControl.segmentIndicatorBackgroundColor = headerView.backgroundColor
+        segmentControl.backgroundColor = RGB(255)
         segmentControl.borderWidth = 0.0
         segmentControl.segmentIndicatorBorderWidth = 0.0
         segmentControl.segmentIndicatorInset = 2.0
@@ -108,6 +112,10 @@ class ProfileViewController: KZViewController, UIViewControllerPreviewingDelegat
         segmentControl.usesSpringAnimations = true
         segmentControl.addTarget(self, action: #selector(self.segmentDidChange), forControlEvents: .ValueChanged)
 
+        let tap1 = UITapGestureRecognizer(target: self, action: #selector(viewUserFollowing))
+        followingStatView.addGestureRecognizer(tap1)
+        let tap2 = UITapGestureRecognizer(target: self, action: #selector(viewUserFollowers))
+        followersStatView.addGestureRecognizer(tap2)
         [commentsStatView, followersStatView, followingStatView, segmentControl].forEach({ headerView.addSubview($0) })
 
         tableView.delegate = self
@@ -137,6 +145,7 @@ class ProfileViewController: KZViewController, UIViewControllerPreviewingDelegat
             }
             }, loadingView: loadingView)
         tableView.dg_setPullToRefreshFillColor(RGB(255))
+        tableView.dg_setPullToRefreshBackgroundColor(RGB(122, g: 86, b: 229, a: 255))
         fetchData()
     }
 
@@ -310,6 +319,12 @@ class ProfileViewController: KZViewController, UIViewControllerPreviewingDelegat
             let vc = CommentViewController(comment: comment)
             self.navigationController?.pushViewController(vc, animated: true)
         } else if let stream = model as? STMStream {
+            if AppDelegate.del().activeStreamController is HostViewController {
+                if let activeVC = AppDelegate.del().topViewController() {
+                    return activeVC.showError("You must close out of the stream you are currently hosting before you can listen to a different one")
+                }
+            }
+
             let vc = PlayerViewController()
             vc.start(stream, vc: self, showHUD: true, callback: { (success, error) in
                 if error == nil {
@@ -381,7 +396,7 @@ class ProfileViewController: KZViewController, UIViewControllerPreviewingDelegat
         }
 
         count = count + 1
-        Constants.Network.GET("/user/\(user.id)/info", parameters: nil) { (response, error) -> Void in
+        Constants.Network.GET("/user/\(user.id)/stats", parameters: nil) { (response, error) -> Void in
             self.handleResponse(response, error: error, successCompletion: { (result) -> Void in
                 if let followers = result["followers"] as? Int {
                     self.followersStatView.count = followers
@@ -468,7 +483,7 @@ class ProfileViewController: KZViewController, UIViewControllerPreviewingDelegat
         UIView.transitionWithView(self.followButton, duration: 0.2, options: .TransitionCrossDissolve, animations: {
             self.followButton.selected = !self.followButton.selected
         }, completion: nil)
-        Constants.Network.GET("/\(method)/\(user.id)", parameters: nil) { (response, error) in
+        Constants.Network.GET("/user/\(user.id)/\(method)", parameters: nil) { (response, error) in
             dispatch_async(dispatch_get_main_queue(), {
                 NSNotificationCenter.defaultCenter().postNotificationName(Constants.Notification.UpdateUserProfile, object: nil)
             })
@@ -530,7 +545,7 @@ class ProfileViewController: KZViewController, UIViewControllerPreviewingDelegat
         hud.show(true)
 
         let nav = self.navigationController
-        Constants.Network.POST("/messages/create", parameters: ["users": [user.id, currentUser.id]], completionHandler: { (response, error) -> Void in
+        Constants.Network.POST("/conversation/create", parameters: ["users": [user.id, currentUser.id]], completionHandler: { (response, error) -> Void in
             self.handleResponse(response, error: error, successCompletion: { (result) in
                 guard let result = result as? JSON else {
                     return
@@ -548,6 +563,16 @@ class ProfileViewController: KZViewController, UIViewControllerPreviewingDelegat
                     hud.hide(true)
             })
         })
+    }
+
+    func viewUserFollowing() {
+        let vc = ProfileStatsListViewController(user: user, type: .Following)
+        self.navigationController?.pushViewController(vc, animated: true)
+    }
+
+    func viewUserFollowers() {
+        let vc = ProfileStatsListViewController(user: user, type: .Followers)
+        self.navigationController?.pushViewController(vc, animated: true)
     }
 
 }

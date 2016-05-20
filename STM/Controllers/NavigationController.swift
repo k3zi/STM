@@ -19,6 +19,7 @@ class NavigationController: UINavigationController, UINavigationControllerDelega
         self.navigationBar.tintColor = UIColor.whiteColor()
         self.navigationBar.titleTextAttributes = [NSForegroundColorAttributeName: UIColor.whiteColor()]
         self.navigationBar.setBackgroundImage(imageLayerForGradientBackground(), forBarMetrics: .Default)
+        self.navigationBar.shadowImage = UIImage()
     }
 
     //MARK: Styling

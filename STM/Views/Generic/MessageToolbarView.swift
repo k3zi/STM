@@ -11,6 +11,7 @@ import HPGrowingTextView
 
 protocol MessageToolbarDelegate {
 	func handlePost(text: String)
+    func messageToolbarPrefillText() -> String
     func didBeginEditing()
 }
 
@@ -63,6 +64,7 @@ class MessageToolbarView: UIView, HPGrowingTextViewDelegate {
 
     func growingTextViewDidBeginEditing(growingTextView: HPGrowingTextView!) {
         self.delegate?.didBeginEditing()
+        performSelector(#selector(placeCursorAtEnd), withObject: growingTextView, afterDelay: 0.02)
     }
 
 	func growingTextView(growingTextView: HPGrowingTextView!, willChangeHeight height: Float) {
@@ -86,16 +88,26 @@ class MessageToolbarView: UIView, HPGrowingTextViewDelegate {
 		return true
 	}
 
-	func send() {
-		if let currentText = toolBar.text {
-			if let delegate = delegate {
-				delegate.handlePost(currentText)
+    func placeCursorAtEnd(growingTextView: HPGrowingTextView) {
+        growingTextView.selectedRange = NSRange(location: growingTextView.text.characters.count, length: 0)
+    }
 
-				UIView.transitionWithView(toolBar, duration: 0.4, options: .TransitionCrossDissolve, animations: { () -> Void in
-					self.toolBar.text = ""
-					}, completion: nil)
-			}
-		}
+	func send() {
+        guard let currentText = toolBar.text else {
+            return
+        }
+
+        guard let delegate = delegate else {
+            return
+        }
+
+        delegate.handlePost(currentText)
+
+        let prefillText = delegate.messageToolbarPrefillText()
+
+        UIView.transitionWithView(toolBar, duration: 0.4, options: .TransitionCrossDissolve, animations: { () -> Void in
+            self.toolBar.text = prefillText
+        }, completion: nil)
 	}
 
 	required init?(coder aDecoder: NSCoder) {

@@ -99,12 +99,10 @@ class ConversationViewController: KZViewController, MessageToolbarDelegate {
         }
 
         self.commentToolbar.sendBT.enabled = false
-        Constants.Network.POST("/messages/\(convo.id)/send", parameters: ["text": text], completionHandler: { (response, error) -> Void in
+        Constants.Network.POST("/conversation/\(convo.id)/send", parameters: ["text": text], completionHandler: { (response, error) -> Void in
+            print(response)
             self.commentToolbar.sendBT.enabled = true
             self.handleResponse(response, error: error, successCompletion: { (result) -> Void in
-                self.fetchDataWithCompletion({
-                    self.tableView.scrollToBottom()
-                })
                 Answers.logCustomEventWithName("Message", customAttributes: [:])
                 NSNotificationCenter.defaultCenter().postNotificationName(Constants.Notification.DidPostMessage, object: nil)
             })
@@ -113,8 +111,12 @@ class ConversationViewController: KZViewController, MessageToolbarDelegate {
         view.endEditing(true)
     }
 
+    func messageToolbarPrefillText() -> String {
+        return ""
+    }
+
     func didBeginEditing() {
-        tableView.scrollToBottom()
+        //tableView.scrollToBottom()
     }
 
     override func setupConstraints() {
@@ -163,7 +165,7 @@ class ConversationViewController: KZViewController, MessageToolbarDelegate {
         }
 
         count = count + 1
-        Constants.Network.GET("/messages/\(convo.id)/list", parameters: nil) { (response, error) -> Void in
+        Constants.Network.GET("/conversation/\(convo.id)/list", parameters: nil) { (response, error) -> Void in
             self.handleResponse(response, error: error, successCompletion: { (result) -> Void in
                 self.messages.removeAll()
 
@@ -176,7 +178,7 @@ class ConversationViewController: KZViewController, MessageToolbarDelegate {
 
                 self.tableView.reloadData()
                 if self.tableView.layer.animationForKey("bounds") == nil {
-                    self.tableView.scrollToBottom()
+                    self.tableView.scrollToBottom(false)
                 }
                 runCompletion()
             })

@@ -101,7 +101,7 @@ class NewMessageViewController: KZViewController, UISearchBarDelegate {
             return
         }
 
-        if let user = searchResults[indexPath.row] as? STMUser {
+        if let user = tableViewCellData(tableView, section: indexPath.section)[indexPath.row] as? STMUser {
             selectedUsers.append(user.id)
             tableView.cellForRowAtIndexPath(indexPath)?.accessoryType = .Checkmark
         }
@@ -199,7 +199,7 @@ class NewMessageViewController: KZViewController, UISearchBarDelegate {
 
         let nav = self.navigationController
         nav?.popViewControllerAnimated(false)
-        Constants.Network.POST("/messages/create", parameters: ["users": selectedUsers], completionHandler: { (response, error) -> Void in
+        Constants.Network.POST("/conversation/create", parameters: ["users": selectedUsers], completionHandler: { (response, error) -> Void in
             self.handleResponse(response, error: error, successCompletion: { (result) in
                 guard let result = result as? JSON else {
                     return

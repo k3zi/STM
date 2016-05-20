@@ -82,6 +82,9 @@
 		EA6F5B891CD1A99D00C9638D /* SettingsProfilePictureCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = EA6F5B881CD1A99D00C9638D /* SettingsProfilePictureCell.swift */; };
 		EA6F5B8B1CD1B1E400C9638D /* STMSetting.swift in Sources */ = {isa = PBXBuildFile; fileRef = EA6F5B8A1CD1B1E400C9638D /* STMSetting.swift */; };
 		EA6F5B8D1CD224A400C9638D /* UserCommentCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = EA6F5B8C1CD224A400C9638D /* UserCommentCell.swift */; };
+		EA79C7A41CDBCC3700A5CA94 /* ProfileStatsListViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = EA79C7A31CDBCC3700A5CA94 /* ProfileStatsListViewController.swift */; };
+		EA79C7A61CDBEF2B00A5CA94 /* GradientSlider.swift in Sources */ = {isa = PBXBuildFile; fileRef = EA79C7A51CDBEF2B00A5CA94 /* GradientSlider.swift */; };
+		EA79C7A81CDD423E00A5CA94 /* FinishTwitterAccountViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = EA79C7A71CDD423E00A5CA94 /* FinishTwitterAccountViewController.swift */; };
 		EA86DCFC1CCC156A00064040 /* STMAuthzModule.swift in Sources */ = {isa = PBXBuildFile; fileRef = EA86DCFB1CCC156900064040 /* STMAuthzModule.swift */; };
 		EA86DD001CCC281600064040 /* TimelineItemCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = EA86DCFF1CCC281600064040 /* TimelineItemCell.swift */; };
 		EA86DD021CCC291D00064040 /* STMTimelineItem.swift in Sources */ = {isa = PBXBuildFile; fileRef = EA86DD011CCC291D00064040 /* STMTimelineItem.swift */; };
@@ -213,6 +216,9 @@
 		EA6F5B881CD1A99D00C9638D /* SettingsProfilePictureCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SettingsProfilePictureCell.swift; sourceTree = "<group>"; };
 		EA6F5B8A1CD1B1E400C9638D /* STMSetting.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = STMSetting.swift; sourceTree = "<group>"; };
 		EA6F5B8C1CD224A400C9638D /* UserCommentCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = UserCommentCell.swift; sourceTree = "<group>"; };
+		EA79C7A31CDBCC3700A5CA94 /* ProfileStatsListViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ProfileStatsListViewController.swift; sourceTree = "<group>"; };
+		EA79C7A51CDBEF2B00A5CA94 /* GradientSlider.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = GradientSlider.swift; sourceTree = "<group>"; };
+		EA79C7A71CDD423E00A5CA94 /* FinishTwitterAccountViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FinishTwitterAccountViewController.swift; sourceTree = "<group>"; };
 		EA86DCFB1CCC156900064040 /* STMAuthzModule.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = STMAuthzModule.swift; sourceTree = "<group>"; };
 		EA86DCFF1CCC281600064040 /* TimelineItemCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TimelineItemCell.swift; sourceTree = "<group>"; };
 		EA86DD011CCC291D00064040 /* STMTimelineItem.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = STMTimelineItem.swift; sourceTree = "<group>"; };
@@ -402,6 +408,7 @@
 			children = (
 				EA09CAC31C5C5CD30067FF6A /* InitialViewController.swift */,
 				EA09CAD11C5C85AF0067FF6A /* CreateAccountViewController.swift */,
+				EA79C7A71CDD423E00A5CA94 /* FinishTwitterAccountViewController.swift */,
 				EA01AF891C5CB3C500F56792 /* SignInViewController.swift */,
 			);
 			path = Launch;
@@ -455,10 +462,10 @@
 				EA24C0621C683F8300FE4DD0 /* MCSwipeCell.swift */,
 				EA4E49471C613F7C00CB40D7 /* HostStreamCell.swift */,
 				EA209DA91C8292A800A22BC4 /* DashboardItemCell.swift */,
+				EA86DCFF1CCC281600064040 /* TimelineItemCell.swift */,
 				EAE063111C7E94D000C86823 /* CommentCell.swift */,
 				EA6F5B8C1CD224A400C9638D /* UserCommentCell.swift */,
 				EA2898A61CD3ED1B0025F43B /* ExtendedUserCommentCell.swift */,
-				EA86DCFF1CCC281600064040 /* TimelineItemCell.swift */,
 				EA3EF7D51CCF014C009E4524 /* SearchUserCell.swift */,
 				EA2898AD1CD4AD1F0025F43B /* UserSelectionCell.swift */,
 				EA3EF7D71CCF028F009E4524 /* SearchStreamCell.swift */,
@@ -479,6 +486,7 @@
 			children = (
 				EA4E494A1C61416400CB40D7 /* Label.swift */,
 				EA4E494C1C617FA000CB40D7 /* GradientView.swift */,
+				EA79C7A51CDBEF2B00A5CA94 /* GradientSlider.swift */,
 				EAB0E6A81C78F8E9008945FF /* SettingJoinedView.swift */,
 				EA8D3DE01C7D75C3003ACCFC /* MessageToolbarView.swift */,
 				EA6F5B821CD1466900C9638D /* ProfileStatView.swift */,
@@ -585,6 +593,7 @@
 			children = (
 				EA6F5B801CD1392A00C9638D /* ProfileViewController.swift */,
 				EA6F5B861CD1A90000C9638D /* ProfileSettingsViewController.swift */,
+				EA79C7A31CDBCC3700A5CA94 /* ProfileStatsListViewController.swift */,
 			);
 			path = Profile;
 			sourceTree = "<group>";
@@ -789,6 +798,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				EA79C7A41CDBCC3700A5CA94 /* ProfileStatsListViewController.swift in Sources */,
 				EAB0E6A91C78F8E9008945FF /* SettingJoinedView.swift in Sources */,
 				EA2898B81CD4D7430025F43B /* STMMessageYouCell.swift in Sources */,
 				EA4F49611C5EBFA000103559 /* YBAudioUnitGraph.m in Sources */,
@@ -855,6 +865,7 @@
 				EA2898AC1CD4A7260025F43B /* NewMessageViewController.swift in Sources */,
 				EA01AF911C5CB8DC00F56792 /* DashboardViewController.swift in Sources */,
 				EA6F5B8D1CD224A400C9638D /* UserCommentCell.swift in Sources */,
+				EA79C7A81CDD423E00A5CA94 /* FinishTwitterAccountViewController.swift in Sources */,
 				EA4F49621C5EBFA000103559 /* YBAudioUnitNode.m in Sources */,
 				EA2898A21CD328520025F43B /* CellButton.swift in Sources */,
 				EAE545041C76978F00180241 /* MeterTable.m in Sources */,
@@ -872,6 +883,7 @@
 				EA4F495D1C5EBFA000103559 /* YBPresetEQNode.m in Sources */,
 				EA4F498F1C5F2D3800103559 /* EZOutput.m in Sources */,
 				EA4F49851C5EC05700103559 /* EZAudio.m in Sources */,
+				EA79C7A61CDBEF2B00A5CA94 /* GradientSlider.swift in Sources */,
 				EAFFCB121C876F5800258C16 /* PlayerViewController.swift in Sources */,
 				EA3EF7D81CCF028F009E4524 /* SearchStreamCell.swift in Sources */,
 				EAB0E6A11C7813B5008945FF /* FUXEngine.swift in Sources */,
@@ -983,6 +995,7 @@
 				INFOPLIST_FILE = STM/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 9.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
+				OTHER_SWIFT_FLAGS = "$(inherited) \"-D\" \"COCOAPODS\" -DDEBUG";
 				PRODUCT_BUNDLE_IDENTIFIER = com.stormedgeapps.streamtome;
 				PRODUCT_NAME = STM;
 				PROVISIONING_PROFILE = "";
@@ -1001,6 +1014,7 @@
 				INFOPLIST_FILE = STM/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 9.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
+				OTHER_SWIFT_FLAGS = "$(inherited) \"-D\" \"COCOAPODS\" -DDEBUG";
 				PRODUCT_BUNDLE_IDENTIFIER = com.stormedgeapps.streamtome;
 				PRODUCT_NAME = STM;
 				PROVISIONING_PROFILE = "";

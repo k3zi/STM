@@ -1,5 +1,5 @@
 //
-//  CommentCell.swift
+//  SearchStreamCell.swift
 //  STM
 //
 //  Created by Kesi Maduka on 2/2/16.
@@ -61,6 +61,20 @@ class SearchStreamCell: KZTableViewCell {
 		messageLabel.autoPinEdgeToSuperviewEdge(.Right, withInset: 10)
 		messageLabel.autoPinEdgeToSuperviewEdge(.Bottom, withInset: 10, relation: .GreaterThanOrEqual)
 	}
+
+    override func estimatedHeight() -> CGFloat {
+        let minHeight = CGFloat(10 + 45 + 10)
+        let rightWidth = Constants.UI.Screen.width - 10 - 10 - 45 - 10
+
+        var height = CGFloat(0)
+        height = height + 10
+        height = height + nameLabel.estimatedHeight(rightWidth)
+        height = height + 2
+        height = height + messageLabel.estimatedHeight(rightWidth)
+        height = height + 10
+
+        return max(minHeight, height)
+    }
 
 	override func fillInCellData(shallow: Bool) {
 		if let stream = model as? STMStream {
