@@ -139,6 +139,7 @@ class CreateAccountViewController: KZViewController {
         createAccountBT.showIndicator()
         backBT.enabled = false
         Constants.Network.POST("/user/create", parameters: params, completionHandler: { (response, error) -> Void in
+            print(response)
             self.createAccountBT.hideIndicator()
             self.backBT.enabled = true
             self.handleResponse(response, error: error, successCompletion: { (result) -> Void in
@@ -146,12 +147,12 @@ class CreateAccountViewController: KZViewController {
 
                 Constants.Settings.setSecretObject(result, forKey: "user")
 
-                if let result = result as? JSON {
-                    if let user = STMUser(json: result) {
-                        AppDelegate.del().loginUser(user)
-                        Answers.logLoginWithMethod("Password", success: true, customAttributes: nil)
-                    }
+                guard let result = result as? JSON, user = STMUser(json: result) else {
+                    return
                 }
+
+                AppDelegate.del().loginUser(user)
+                Answers.logLoginWithMethod("Password", success: true, customAttributes: nil)
             })
         })
     }

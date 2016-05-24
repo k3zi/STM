@@ -248,11 +248,15 @@ class UserCommentCell: KZTableViewCell {
 	}
 
     func updateTime() {
-        if let comment = model as? STMComment {
-            if let date = comment.date {
-                dateLabel.text = date.shortTimeAgoSinceNow()
-            }
+        guard let comment = model as? STMComment else {
+            return
         }
+
+        guard let date = comment.date else {
+            return
+        }
+
+        dateLabel.text = date.shortTimeAgoSinceNow()
     }
 
 	override func prepareForReuse() {

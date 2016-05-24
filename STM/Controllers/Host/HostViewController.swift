@@ -1291,7 +1291,6 @@ class HostViewController: KZViewController, UISearchBarDelegate, UIViewControlle
         }
 
         Constants.Network.POST("/stream/\(stream.id)/update/\(property)", parameters: ["value": value]) { (response, error) in
-            print(response)
             self.handleResponse(response, error: error)
         }
     }

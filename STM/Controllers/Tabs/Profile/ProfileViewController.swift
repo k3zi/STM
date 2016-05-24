@@ -55,13 +55,17 @@ class ProfileViewController: KZViewController, UIViewControllerPreviewingDelegat
     override func viewDidLoad() {
         super.viewDidLoad()
 
+        if isOwner {
+            navigationItem.rightBarButtonItem = UIBarButtonItem(title: "Edit", style: .Plain, target: self, action: #selector(self.editProfile))
+
+            followButton.hidden = true
+            messageButton.hidden = true
+        }
+
         headerView.backgroundColor = RGB(122, g: 86, b: 229, a: 255)
 
         self.navigationItem.title = isOwner ? "My Profile (@\(user.username))" : "@\(user.username)"
         self.automaticallyAdjustsScrollViewInsets = false
-        if isOwner {
-            navigationItem.rightBarButtonItem = UIBarButtonItem(title: "Edit", style: .Plain, target: self, action: #selector(self.editProfile))
-        }
 
         avatarImageView.layer.cornerRadius = 140.0 / 9.0
         avatarImageView.backgroundColor = Constants.UI.Color.imageViewDefault
@@ -83,20 +87,17 @@ class ProfileViewController: KZViewController, UIViewControllerPreviewingDelegat
         followButton.addTarget(self, action: #selector(self.toggleFollow), forControlEvents: .TouchUpInside)
         followButton.setImage(UIImage(named: "profileFollowButton"), forState: .Normal)
         followButton.setImage(UIImage(named: "profileUnfollowButton"), forState: .Selected)
+        followButton.layer.cornerRadius = 70.0/2.0
+        followButton.clipsToBounds = true
         followButton.enabled = !isOwner
         followButton.selected = user.isFollowing
-        if isOwner {
-            followButton.alpha = 0.4
-        }
         rightSideHolder.addSubview(followButton)
         headerView.addSubview(rightSideHolder)
 
         messageButton.addTarget(self, action: #selector(self.messageUser), forControlEvents: .TouchUpInside)
         messageButton.setImage(UIImage(named: "profileMessageButton"), forState: .Normal)
+        messageButton.setImage(UIImage(named: "profileMessageButtonHighlighted"), forState: .Highlighted)
         messageButton.enabled = !isOwner
-        if isOwner {
-            messageButton.alpha = 0.4
-        }
         leftSideHolder.addSubview(messageButton)
         headerView.addSubview(leftSideHolder)
 
@@ -334,6 +335,19 @@ class ProfileViewController: KZViewController, UIViewControllerPreviewingDelegat
         }
     }
 
+    func scrollViewDidScroll(scrollView: UIScrollView) {
+        var shadowOffset = scrollView.contentOffset.y/72.0
+        shadowOffset = max(min(shadowOffset, 2.0), 0.0)
+
+        let shadowRadius = max(shadowOffset, 1.0)
+
+        //apply the offset and radius
+        self.navigationController?.navigationBar.layer.shadowOffset = CGSize(width: 0, height: shadowOffset)
+        self.navigationController?.navigationBar.layer.shadowRadius = shadowRadius
+        self.navigationController?.navigationBar.layer.shadowColor = RGB(0).CGColor
+        self.navigationController?.navigationBar.layer.shadowOpacity = shadowOffset == 0.0 ? 0.0 : 0.6
+    }
+
     //MARK: UIViewController Previewing Delegate
 
     func previewingContext(previewingContext: UIViewControllerPreviewing, viewControllerForLocation location: CGPoint) -> UIViewController? {
@@ -412,6 +426,11 @@ class ProfileViewController: KZViewController, UIViewControllerPreviewingDelegat
 
                 if let isFollowing = result["isFollowing"] as? Bool {
                     self.followButton.selected = isFollowing
+                }
+
+                if let isFollower = result["isFollower"] as? Bool {
+                    self.messageButton.enabled = isFollower
+                    self.messageButton.alpha = isFollower ? 1.0 : 0.4
                 }
             })
 

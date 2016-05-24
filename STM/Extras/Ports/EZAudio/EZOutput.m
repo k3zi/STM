@@ -98,6 +98,23 @@ static OSStatus InputFile2RenderCallback(void *inRefCon, AudioUnitRenderActionFl
     return noErr;
 }
 
+static OSStatus MicRenderCallback(void *inRefCon, AudioUnitRenderActionFlags  *ioActionFlags, const AudioTimeStamp *inTimeStamp, UInt32 inBusNumber, UInt32 inNumberFrames, AudioBufferList *ioData) {
+
+    EZOutput *output = (__bridge EZOutput*)inRefCon;
+
+    AudioUnitRender(output.remoteIONode.audioUnit, ioActionFlags, inTimeStamp, inBusNumber, inNumberFrames, ioData);
+
+    for (size_t i = 0; i < ioData->mNumberBuffers; ++i) {
+        AudioBuffer buffer = ioData->mBuffers[i];
+        for (size_t sampleIdx = 0; sampleIdx < inNumberFrames; ++sampleIdx) {
+            SInt16 *sampleBuffer = buffer.mData;
+            sampleBuffer[2*sampleIdx] = sampleBuffer[2*sampleIdx + 1];
+        }
+    }
+
+    return noErr;
+}
+
 static OSStatus EQConverterRenderCallback(void *inRefCon, AudioUnitRenderActionFlags  *ioActionFlags, const AudioTimeStamp *inTimeStamp, UInt32 inBusNumber, UInt32 inNumberFrames, AudioBufferList *ioData) {
     //Calls & stores in seperaye bundle)
     EZOutput *output = (__bridge EZOutput*)inRefCon;
@@ -503,6 +520,11 @@ OSStatus encoderDataProc(AudioConverterRef inAudioConverter, UInt32* ioNumberDat
     callbackStruct4.inputProc = RemoteIORenderCallback;
     callbackStruct4.inputProcRefCon = (__bridge void *)(self);
     [ioNode setCallback:callbackStruct4 forScope:kAudioUnitScope_Input bus:0];
+
+    AURenderCallbackStruct callbackStruct5;
+    callbackStruct5.inputProc = MicRenderCallback;
+    callbackStruct5.inputProcRefCon = (__bridge void *)(self);
+    [mixerNode setCallback:callbackStruct5 forScope:kAudioUnitScope_Input bus:1];
 
 
 

@@ -389,10 +389,7 @@
     {
         [self resetScrollPositionForIOS7];
     }
-    
-	if ([delegate respondsToSelector:@selector(growingTextView:didChangeHeight:)]) {
-		[delegate growingTextView:self didChangeHeight:self.frame.size.height];
-	}
+
 }
 
 -(void)touchesEnded:(NSSet *)touches withEvent:(UIEvent *)event

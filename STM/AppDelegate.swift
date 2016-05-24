@@ -75,23 +75,13 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 	}
 
     func application(application: UIApplication, didReceiveRemoteNotification userInfo: [NSObject : AnyObject]) {
-        print(userInfo)
         updateBadgeCount()
     }
 
     func application(application: UIApplication, didReceiveRemoteNotification userInfo: [NSObject : AnyObject], fetchCompletionHandler completionHandler: (UIBackgroundFetchResult) -> Void) {
-        print(userInfo)
         updateBadgeCount {
             completionHandler(.NoData)
         }
-    }
-
-    func application(application: UIApplication, handleActionWithIdentifier identifier: String?, forRemoteNotification userInfo: [NSObject : AnyObject], completionHandler: () -> Void) {
-        print(userInfo)
-    }
-
-    func application(application: UIApplication, handleActionWithIdentifier identifier: String?, forRemoteNotification userInfo: [NSObject : AnyObject], withResponseInfo responseInfo: [NSObject : AnyObject], completionHandler: () -> Void) {
-        print(userInfo)
     }
 
     func applicationDidBecomeActive(application: UIApplication) {

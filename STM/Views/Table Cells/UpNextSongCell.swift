@@ -35,7 +35,11 @@ class UpNextSongCell: MCSwipeCell {
         self.contentView.addSubview(songArtist)
     }
 
-    override internal func getHeight() -> CGFloat {
+    override func estimatedHeight() -> CGFloat {
+        return 65
+    }
+
+    override func getHeight() -> CGFloat {
         return 65
     }
 

@@ -100,7 +100,6 @@ class ConversationViewController: KZViewController, MessageToolbarDelegate {
 
         self.commentToolbar.sendBT.enabled = false
         Constants.Network.POST("/conversation/\(convo.id)/send", parameters: ["text": text], completionHandler: { (response, error) -> Void in
-            print(response)
             self.commentToolbar.sendBT.enabled = true
             self.handleResponse(response, error: error, successCompletion: { (result) -> Void in
                 Answers.logCustomEventWithName("Message", customAttributes: [:])

@@ -126,7 +126,7 @@ public extension UIViewController {
                         errorCompletion(error.localizedDescription)
                     }
 
-                    if ![-1011, -1001, 9, 404, 500].contains(error.code) {
+                    if ![-1011, -1001, 9, 404, 500, -1005].contains(error.code) {
                         self.showError(error.localizedDescription)
                     }
 				} else if let response = response {
