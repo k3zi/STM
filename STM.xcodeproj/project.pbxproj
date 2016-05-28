@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		29DA0B261CFA031600E30ADE /* STMTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 29DA0B251CFA031600E30ADE /* STMTests.swift */; };
 		4A9964A6337DD33DF5D797DE /* Pods_STM.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C247DFB18D94178F4088028F /* Pods_STM.framework */; };
 		EA01AF8A1C5CB3C500F56792 /* SignInViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = EA01AF891C5CB3C500F56792 /* SignInViewController.swift */; };
 		EA01AF911C5CB8DC00F56792 /* DashboardViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = EA01AF901C5CB8DC00F56792 /* DashboardViewController.swift */; };
@@ -111,7 +112,20 @@
 		EAFFCB171C8A1B1C00258C16 /* PlayerInfoHolderView.swift in Sources */ = {isa = PBXBuildFile; fileRef = EAFFCB161C8A1B1B00258C16 /* PlayerInfoHolderView.swift */; };
 /* End PBXBuildFile section */
 
+/* Begin PBXContainerItemProxy section */
+		29DA0B281CFA031600E30ADE /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = EA09CAA11C5C41510067FF6A /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = EA09CAA81C5C41510067FF6A;
+			remoteInfo = STM;
+		};
+/* End PBXContainerItemProxy section */
+
 /* Begin PBXFileReference section */
+		29DA0B231CFA031600E30ADE /* STMTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = STMTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
+		29DA0B251CFA031600E30ADE /* STMTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = STMTests.swift; sourceTree = "<group>"; };
+		29DA0B271CFA031600E30ADE /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		3534D789493137C70227BF7A /* Pods-STM.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-STM.debug.xcconfig"; path = "Pods/Target Support Files/Pods-STM/Pods-STM.debug.xcconfig"; sourceTree = "<group>"; };
 		3B4177B55191B175F8A0C4B8 /* Pods.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		6722F7E460A0B4E6C5F18396 /* Pods-STM.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-STM.release.xcconfig"; path = "Pods/Target Support Files/Pods-STM/Pods-STM.release.xcconfig"; sourceTree = "<group>"; };
@@ -250,6 +264,13 @@
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
+		29DA0B201CFA031600E30ADE /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		EA09CAA61C5C41510067FF6A /* Frameworks */ = {
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
@@ -262,6 +283,15 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		29DA0B241CFA031600E30ADE /* STMTests */ = {
+			isa = PBXGroup;
+			children = (
+				29DA0B251CFA031600E30ADE /* STMTests.swift */,
+				29DA0B271CFA031600E30ADE /* Info.plist */,
+			);
+			path = STMTests;
+			sourceTree = "<group>";
+		};
 		67BB41A52364203F8AF7FD2D /* Pods */ = {
 			isa = PBXGroup;
 			children = (
@@ -313,6 +343,7 @@
 			isa = PBXGroup;
 			children = (
 				EA09CAAB1C5C41510067FF6A /* STM */,
+				29DA0B241CFA031600E30ADE /* STMTests */,
 				EA09CAAA1C5C41510067FF6A /* Products */,
 				98574C4A951DCFEA0F886856 /* Frameworks */,
 				67BB41A52364203F8AF7FD2D /* Pods */,
@@ -323,6 +354,7 @@
 			isa = PBXGroup;
 			children = (
 				EA09CAA91C5C41510067FF6A /* STM.app */,
+				29DA0B231CFA031600E30ADE /* STMTests.xctest */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -622,6 +654,24 @@
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
+		29DA0B221CFA031600E30ADE /* STMTests */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 29DA0B2A1CFA031600E30ADE /* Build configuration list for PBXNativeTarget "STMTests" */;
+			buildPhases = (
+				29DA0B1F1CFA031600E30ADE /* Sources */,
+				29DA0B201CFA031600E30ADE /* Frameworks */,
+				29DA0B211CFA031600E30ADE /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				29DA0B291CFA031600E30ADE /* PBXTargetDependency */,
+			);
+			name = STMTests;
+			productName = STMTests;
+			productReference = 29DA0B231CFA031600E30ADE /* STMTests.xctest */;
+			productType = "com.apple.product-type.bundle.unit-test";
+		};
 		EA09CAA81C5C41510067FF6A /* STM */ = {
 			isa = PBXNativeTarget;
 			buildConfigurationList = EA09CABB1C5C41510067FF6A /* Build configuration list for PBXNativeTarget "STM" */;
@@ -656,6 +706,10 @@
 				LastUpgradeCheck = 0730;
 				ORGANIZATIONNAME = "Storm Edge Apps LLC";
 				TargetAttributes = {
+					29DA0B221CFA031600E30ADE = {
+						CreatedOnToolsVersion = 7.3.1;
+						TestTargetID = EA09CAA81C5C41510067FF6A;
+					};
 					EA09CAA81C5C41510067FF6A = {
 						CreatedOnToolsVersion = 7.3;
 						DevelopmentTeam = FYHEVSXTTV;
@@ -687,11 +741,19 @@
 			projectRoot = "";
 			targets = (
 				EA09CAA81C5C41510067FF6A /* STM */,
+				29DA0B221CFA031600E30ADE /* STMTests */,
 			);
 		};
 /* End PBXProject section */
 
 /* Begin PBXResourcesBuildPhase section */
+		29DA0B211CFA031600E30ADE /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		EA09CAA71C5C41510067FF6A /* Resources */ = {
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
@@ -794,6 +856,14 @@
 /* End PBXShellScriptBuildPhase section */
 
 /* Begin PBXSourcesBuildPhase section */
+		29DA0B1F1CFA031600E30ADE /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				29DA0B261CFA031600E30ADE /* STMTests.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		EA09CAA51C5C41510067FF6A /* Sources */ = {
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
@@ -899,7 +969,41 @@
 		};
 /* End PBXSourcesBuildPhase section */
 
+/* Begin PBXTargetDependency section */
+		29DA0B291CFA031600E30ADE /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = EA09CAA81C5C41510067FF6A /* STM */;
+			targetProxy = 29DA0B281CFA031600E30ADE /* PBXContainerItemProxy */;
+		};
+/* End PBXTargetDependency section */
+
 /* Begin XCBuildConfiguration section */
+		29DA0B2B1CFA031600E30ADE /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				CLANG_ANALYZER_NONNULL = YES;
+				INFOPLIST_FILE = STMTests/Info.plist;
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
+				PRODUCT_BUNDLE_IDENTIFIER = com.stormedgeapps.STMTests;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/STM.app/STM";
+			};
+			name = Debug;
+		};
+		29DA0B2C1CFA031600E30ADE /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				CLANG_ANALYZER_NONNULL = YES;
+				INFOPLIST_FILE = STMTests/Info.plist;
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
+				PRODUCT_BUNDLE_IDENTIFIER = com.stormedgeapps.STMTests;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/STM.app/STM";
+			};
+			name = Release;
+		};
 		EA09CAB91C5C41510067FF6A /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
@@ -1029,6 +1133,14 @@
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
+		29DA0B2A1CFA031600E30ADE /* Build configuration list for PBXNativeTarget "STMTests" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				29DA0B2B1CFA031600E30ADE /* Debug */,
+				29DA0B2C1CFA031600E30ADE /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+		};
 		EA09CAA41C5C41510067FF6A /* Build configuration list for PBXProject "STM" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (

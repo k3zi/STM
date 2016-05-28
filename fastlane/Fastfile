@@ -19,7 +19,7 @@ platform :ios do
   before_all do
     # ENV["SLACK_URL"] = "https://hooks.slack.com/services/..."
     cocoapods
-    
+
   end
 
   desc "Runs all the tests"
@@ -65,9 +65,18 @@ platform :ios do
   end
 end
 
+lane :before_integration do
+  # fetch the number of commits in the current branch
+  build_number = number_of_commits
 
-# More information about multiple platforms in fastlane: https://github.com/fastlane/fastlane/blob/master/fastlane/docs/Platforms.md
-# All available actions: https://github.com/fastlane/fastlane/blob/master/fastlane/docs/Actions.md
+  # Set number of commits as the build number in the project's plist file before the bot actually start building the project.
+  # This way, the generated archive will have an auto-incremented build number.
+  set_info_plist_value(
+    path: './STM/Info.plist',
+    key: 'CFBundleVersion',
+    value: "#{build_number}"
+  )
 
-# fastlane reports which actions are used
-# No personal data is recorded. Learn more at https://github.com/fastlane/enhancer
+  # Download provisioning profiles for the app and copy them to the correct folder.
+  sigh(output_path: '/Library/Developer/XcodeServer/ProvisioningProfiles', skip_install: true)
+end
