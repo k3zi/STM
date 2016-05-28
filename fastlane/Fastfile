@@ -66,23 +66,15 @@ platform :ios do
 end
 
 lane :before_integration do
-  # fetch the number of commits in the current branch
-  build_number = number_of_commits
-
-  # Set number of commits as the build number in the project's plist file before the bot actually start building the project.
-  # This way, the generated archive will have an auto-incremented build number.
-  set_info_plist_value(
-    path: './STM/Info.plist',
-    key: 'CFBundleVersion',
-    value: "#{build_number}"
-  )
+  increment_build_number
+  commit_version_bump
 
   # Download provisioning profiles for the app and copy them to the correct folder.
   sigh(output_path: '/Library/Developer/XcodeServer/ProvisioningProfiles', skip_install: true)
 end
 
 lane :deliver_beta do
-  ipa_folder = "#{ENV['XCS_OUTPUT_DIR']}/ExportedProduct/Apps/"
+  ipa_folder = "#{ENV['XCS_OUTPUT_DIR']}/ExportedProduct/Apps"
   ipa_path = "#{ipa_folder}/STM.ipa"
   deliver(force: true, ipa: ipa_path)
 end
