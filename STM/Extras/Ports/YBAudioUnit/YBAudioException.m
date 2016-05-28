@@ -75,5 +75,5 @@ void YBAudioThrow(OSStatus errCode, const char *functionInfo, int lineNumber) {
         return;
     }
     const char *errString = YBAudioGetErrorStringFromOSStatus(errCode);
-    [NSString stringWithFormat:@"Exception at %s [%d]: %s (OSStatus %d)", functionInfo, lineNumber, errString, (int)errCode];
+    NSLog(@"Exception at %s [%d]: %s (OSStatus %d)", functionInfo, lineNumber, errString, (int)errCode);
 }

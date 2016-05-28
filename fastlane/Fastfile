@@ -15,6 +15,28 @@ fastlane_version "1.91.0"
 
 default_platform :ios
 
+# Create a string of the app version & build number suitable for badging
+# Must be invoked w/in fastlane
+def get_badge_version_string
+  "#{get_version_number}-#{get_build_number}-blue"
+end
+
+# Create a string of the app version & build number
+# Must be invoked w/in fastlane
+def get_version_string
+  "#{get_version_number}.#{get_build_number}"
+end
+
+# Create a string of the build number for release
+# This adds a .1 to differentiate from the beta build number
+# Its a bit of a hack, but we cant use "b" to denote a beta (Testflight hates that)
+# Also test flight won't allow us to upload more than 1 build with the same build number
+# Must be invoked w/in fastlane
+def get_release_build_number
+  number = "#{get_build_number}.1"
+  number
+end
+
 platform :ios do
   before_all do
     # ENV["SLACK_URL"] = "https://hooks.slack.com/services/..."
@@ -65,7 +87,7 @@ platform :ios do
   end
 end
 
-lane :before_integration do
+lane :beta do
   increment_build_number
   new_version = get_version_string
   commit_version_bump
@@ -80,6 +102,10 @@ lane :before_integration do
 
   # Download provisioning profiles for the app and copy them to the correct folder.
   sigh(output_path: '/Library/Developer/XcodeServer/ProvisioningProfiles', skip_install: true)
+
+  gym
+
+  deliver
 end
 
 lane :deliver_beta do
