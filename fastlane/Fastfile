@@ -80,3 +80,9 @@ lane :before_integration do
   # Download provisioning profiles for the app and copy them to the correct folder.
   sigh(output_path: '/Library/Developer/XcodeServer/ProvisioningProfiles', skip_install: true)
 end
+
+lane :deliver_beta do
+  ipa_folder = "#{ENV['XCS_OUTPUT_DIR']}/ExportedProduct/Apps/"
+  ipa_path = "#{ipa_folder}/STM.ipa"
+  deliver(force: true, ipa: ipa_path)
+end
