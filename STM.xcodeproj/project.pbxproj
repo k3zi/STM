@@ -683,7 +683,6 @@
 				EA09CAA71C5C41510067FF6A /* Resources */,
 				C8BB1B58104A4B92E3BFF9F4 /* Embed Pods Frameworks */,
 				995E2A85AD31DC2FF9851682 /* Copy Pods Resources */,
-				EA09CAC91C5C62720067FF6A /* Run Script */,
 				EA8D3DDF1C7D4D56003ACCFC /* ShellScript */,
 			);
 			buildRules = (
@@ -812,20 +811,6 @@
 			shellPath = /bin/sh;
 			shellScript = "\"${SRCROOT}/Pods/Target Support Files/Pods-STM/Pods-STM-frameworks.sh\"\n";
 			showEnvVarsInLog = 0;
-		};
-		EA09CAC91C5C62720067FF6A /* Run Script */ = {
-			isa = PBXShellScriptBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			inputPaths = (
-			);
-			name = "Run Script";
-			outputPaths = (
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-			shellPath = /bin/sh;
-			shellScript = "#!/bin/bash\nbuildNumber=$(/usr/libexec/PlistBuddy -c \"Print CFBundleVersion\" \"$INFOPLIST_FILE\")\nbuildNumber=$(($buildNumber + 1))\n/usr/libexec/PlistBuddy -c \"Set :CFBundleVersion $buildNumber\" \"$INFOPLIST_FILE\"";
 		};
 		EA8D3DDF1C7D4D56003ACCFC /* ShellScript */ = {
 			isa = PBXShellScriptBuildPhase;

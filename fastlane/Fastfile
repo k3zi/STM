@@ -7,7 +7,7 @@
 # All lines starting with a # are ignored when running `fastlane`
 
 # If you want to automatically update fastlane if a new version is available:
-# update_fastlane
+update_fastlane
 
 # This is the minimum version number required.
 # Update this, if you use features of a newer version
@@ -37,79 +37,44 @@ def get_release_build_number
   number
 end
 
-platform :ios do
-  before_all do
-    # ENV["SLACK_URL"] = "https://hooks.slack.com/services/..."
-    cocoapods
-
-  end
-
-  desc "Runs all the tests"
-  lane :test do
-    scan
-  end
-
-  desc "Submit a new Beta Build to Apple TestFlight"
-  desc "This will also make sure the profile is up to date"
-  lane :beta do
-    # match(type: "appstore") # more information: https://codesigning.guide
-    gym(scheme: "STM") # Build your app - more options available
-    pilot
-
-    # sh "your_script.sh"
-    # You can also use other beta testing services here (run `fastlane actions`)
-  end
-
-  desc "Deploy a new version to the App Store"
-  lane :appstore do
-    # match(type: "appstore")
-    # snapshot
-    gym(scheme: "STM") # Build your app - more options available
-    deliver(force: true)
-    # frameit
-  end
-
-  # You can define as many lanes as you want
-
-  after_all do |lane|
-    # This block is called, only if the executed lane was successful
-
-    # slack(
-    #   message: "Successfully deployed new App Update."
-    # )
-  end
-
-  error do |lane, exception|
-    # slack(
-    #   message: exception.message,
-    #   success: false
-    # )
-  end
-end
-
-lane :beta do
+lane :post_beta do
+  ensure_git_branch(branch: 'master')
   increment_build_number
   new_version = get_version_string
   commit_version_bump
-  push_to_git_remote(
-      local_branch: 'beta',
-      remote_branch: 'beta',
-  )
+  push_to_git_remote(local_branch: 'master', remote_branch: 'master')
 
-  tag_name = "betas/#{new_version}"
+  tag_name = "beta-#{new_version}"
+  add_git_tag(tag: tag_name)
+  sh "git push origin --tags"
+
+  # Download provisioning profiles for the app and copy them to the correct folder.
+  sigh(output_path: '/Library/Developer/XcodeServer/ProvisioningProfiles', adhoc: true, skip_install: true)
+
+  gym(scheme: "STM", configuration: "Release")
+
+  deliver(force: true)
+end
+
+lane :post_store do
+  ensure_git_branch(branch: 'master')
+  increment_build_number
+  new_version = get_version_string
+  commit_version_bump
+  push_to_git_remote(local_branch: 'master', remote_branch: 'master')
+
+  tag_name = "release-#{new_version}"
   add_git_tag(tag: tag_name)
   sh "git push origin --tags"
 
   # Download provisioning profiles for the app and copy them to the correct folder.
   sigh(output_path: '/Library/Developer/XcodeServer/ProvisioningProfiles', skip_install: true)
 
-  gym
+  gym(scheme: "STM", configuration: "Release")
 
-  deliver
+  deliver(force: true)
 end
 
-lane :deliver_beta do
-  ipa_folder = "#{ENV['XCS_OUTPUT_DIR']}/ExportedProduct/Apps"
-  ipa_path = "#{ipa_folder}/STM.ipa"
-  deliver(force: true, ipa: ipa_path)
+lane :pre_dev do
+  sigh(output_path: '/Library/Developer/XcodeServer/ProvisioningProfiles', development: true, skip_install: true)
 end
