@@ -1095,6 +1095,7 @@
 				CODE_SIGN_ENTITLEMENTS = STM/STM.entitlements;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				CURRENT_PROJECT_VERSION = 1;
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
 				INFOPLIST_FILE = STM/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 9.0;
@@ -1106,6 +1107,7 @@
 				RESOURCES_TARGETED_DEVICE_FAMILY = "";
 				SWIFT_OBJC_BRIDGING_HEADER = "STM/Extras/STM-Bridging-Header.h";
 				TARGETED_DEVICE_FAMILY = 1;
+				VERSIONING_SYSTEM = "apple-generic";
 			};
 			name = Debug;
 		};
@@ -1117,6 +1119,7 @@
 				CODE_SIGN_ENTITLEMENTS = STM/STM.entitlements;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				CURRENT_PROJECT_VERSION = 1;
 				INFOPLIST_FILE = STM/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 9.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
@@ -1127,6 +1130,7 @@
 				RESOURCES_TARGETED_DEVICE_FAMILY = "";
 				SWIFT_OBJC_BRIDGING_HEADER = "STM/Extras/STM-Bridging-Header.h";
 				TARGETED_DEVICE_FAMILY = 1;
+				VERSIONING_SYSTEM = "apple-generic";
 			};
 			name = Release;
 		};
@@ -1140,6 +1144,7 @@
 				29DA0B2C1CFA031600E30ADE /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 		EA09CAA41C5C41510067FF6A /* Build configuration list for PBXProject "STM" */ = {
 			isa = XCConfigurationList;
