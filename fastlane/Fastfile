@@ -67,7 +67,16 @@ end
 
 lane :before_integration do
   increment_build_number
+  new_version = get_version_string
   commit_version_bump
+  push_to_git_remote(
+      local_branch: 'beta',
+      remote_branch: 'beta',
+  )
+
+  tag_name = "betas/#{new_version}"
+  add_git_tag(tag: tag_name)
+  sh "git push origin --tags"
 
   # Download provisioning profiles for the app and copy them to the correct folder.
   sigh(output_path: '/Library/Developer/XcodeServer/ProvisioningProfiles', skip_install: true)
