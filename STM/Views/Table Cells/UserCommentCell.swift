@@ -48,6 +48,7 @@ class UserCommentCell: KZTableViewCell {
         messageLabel.numberOfLines = 0
 		messageLabel.font = UIFont.systemFontOfSize(14)
         messageLabel.tintColor = Constants.UI.Color.tint
+        messageLabel.userHandleLinkTapHandler = AppDelegate.del().userHandleLinkTapHandler
 		self.contentView.addSubview(messageLabel)
 
         likeButton.selectedColor = RGB(227, g: 67, b: 51)

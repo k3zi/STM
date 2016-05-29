@@ -103,10 +103,6 @@ class SettingsUserCell: KZTableViewCell, UITextFieldDelegate, UITextViewDelegate
             return
         }
 
-        guard text.characters.count > 0 else {
-            return
-        }
-
         if textView == descriptionField {
             updateUser("description", value: text)
         }

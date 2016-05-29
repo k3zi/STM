@@ -30,7 +30,7 @@ class ConvoCell: KZTableViewCell {
         nameLabel.textColor = Constants.UI.Color.tint
 		self.contentView.addSubview(nameLabel)
 
-        messageLabel.numberOfLines = 0
+        messageLabel.numberOfLines = 1
 		messageLabel.font = UIFont.systemFontOfSize(14)
         messageLabel.tintColor = Constants.UI.Color.tint
 		self.contentView.addSubview(messageLabel)
@@ -113,12 +113,6 @@ class ConvoCell: KZTableViewCell {
     override func setIndexPath(indexPath: NSIndexPath, last: Bool) {
         topSeperator.alpha = 0.0
         bottomSeperator.alpha = 0.0
-    }
-
-    override func layoutSubviews() {
-        super.layoutSubviews()
-        messageLabel.preferredMaxLayoutWidth = messageLabel.frame.size.width
-        super.layoutSubviews()
     }
 
 	required init?(coder aDecoder: NSCoder) {
