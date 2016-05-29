@@ -18,6 +18,8 @@ struct STMUser: Decodable {
     let isFollowing: Bool
     let isFollower: Bool
 
+    var photoSignature: String
+
     // MARK: - Deserialization
 
     init?(json: JSON) {
@@ -31,10 +33,11 @@ struct STMUser: Decodable {
         self.description = "description" <~~ json
         self.isFollowing = ("isFollowing" <~~ json) ?? false
         self.isFollower = ("isFollower" <~~ json) ?? false
+        self.photoSignature = ("photoSignature" <~~ json) ?? ""
     }
 
     func profilePictureURL() -> NSURL {
-        return NSURL(string: Constants.Config.apiBaseURL + "/user/\(id)/profilePicture") ?? NSURL()
+        return NSURL(string: Constants.Config.apiBaseURL + "/user/\(id)/profilePicture?sig=\(photoSignature)") ?? NSURL()
     }
 
 }
