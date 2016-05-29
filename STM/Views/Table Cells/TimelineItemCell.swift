@@ -69,7 +69,7 @@ class TimelineItemCell: KZTableViewCell {
         }
 
         messageLabel.text = item.message
-        dateLabel.text = item.date.shortTimeAgoSinceNow()
+        dateLabel.text = item.date.shortRelativeDate()
 	}
 
     func updateTime() {
@@ -77,7 +77,7 @@ class TimelineItemCell: KZTableViewCell {
             return
         }
 
-        dateLabel.text = item.date.shortTimeAgoSinceNow()
+        dateLabel.text = item.date.shortRelativeDate()
     }
 
     func goToUser() {

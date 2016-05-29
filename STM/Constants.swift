@@ -239,6 +239,26 @@ extension Int {
 
 }
 
+extension NSDate {
+    func shortRelativeDate() -> String {
+
+        let timeInterval = -self.timeIntervalSinceNow
+
+        switch timeInterval {
+        case 0..<60:
+            return String(format: "%.fs", timeInterval)
+        case 60..<(60 * 60):
+            return String(format: "%.fm", timeInterval / 60)
+        case (60 * 60)..<(60 * 60 * 24):
+            return String(format: "%.fh", timeInterval / (60 * 60))
+        case (60 * 60 * 24)..<(60 * 60 * 24 * 365):
+            return String(format: "%.fd", timeInterval / (60 * 60 * 24))
+        default:
+            return String(format: "%.fy", timeInterval / (60 * 60 * 24 * 365))
+        }
+    }
+}
+
 extension NSData {
 
     func hexedString() -> String {

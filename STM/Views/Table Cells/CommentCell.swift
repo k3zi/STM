@@ -115,7 +115,7 @@ class CommentCell: KZTableViewCell {
 			}
 
             if let date = comment.date {
-                dateLabel.text = date.shortTimeAgoSinceNow()
+                dateLabel.text = date.shortRelativeDate()
             }
 		}
 	}
@@ -123,7 +123,7 @@ class CommentCell: KZTableViewCell {
     func updateTime() {
         if let comment = model as? STMComment {
             if let date = comment.date {
-                dateLabel.text = date.shortTimeAgoSinceNow()
+                dateLabel.text = date.shortRelativeDate()
             }
         }
     }

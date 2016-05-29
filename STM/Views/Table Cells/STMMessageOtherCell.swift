@@ -127,12 +127,12 @@ class STMMessageOtherCell: KZTableViewCell {
             }
         }
 
-        timeLabel.text = message.date?.shortTimeAgoSinceNow()
+        timeLabel.text = message.date?.shortRelativeDate()
     }
 
     func updateTime() {
         if let message = model as? STMMessage {
-            timeLabel.text = message.date?.shortTimeAgoSinceNow()
+            timeLabel.text = message.date?.shortRelativeDate()
         }
     }
 

@@ -252,7 +252,7 @@ class ExtendedUserCommentCell: KZTableViewCell {
         }
 
         if let date = comment.date {
-            dateLabel.text = date.shortTimeAgoSinceNow()
+            dateLabel.text = date.shortRelativeDate()
         }
 
         if let stream = comment.stream {
@@ -264,7 +264,7 @@ class ExtendedUserCommentCell: KZTableViewCell {
     func updateTime() {
         if let comment = model as? STMComment {
             if let date = comment.date {
-                dateLabel.text = date.shortTimeAgoSinceNow()
+                dateLabel.text = date.shortRelativeDate()
             }
         }
     }

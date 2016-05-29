@@ -238,7 +238,7 @@ class UserCommentCell: KZTableViewCell {
         }
 
         if let date = comment.date {
-            dateLabel.text = date.shortTimeAgoSinceNow()
+            dateLabel.text = date.shortRelativeDate()
         }
 
         if let stream = comment.stream {
@@ -256,7 +256,7 @@ class UserCommentCell: KZTableViewCell {
             return
         }
 
-        dateLabel.text = date.shortTimeAgoSinceNow()
+        dateLabel.text = date.shortRelativeDate()
     }
 
 	override func prepareForReuse() {
