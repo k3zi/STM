@@ -80,58 +80,9 @@ class ProfileSettingsViewController: KZViewController {
         super.tableView(tableView, didSelectRowAtIndexPath: indexPath)
 
         if indexPath.row == 0 {
-            let vc = CameraViewController(croppingEnabled: true) { image in
-                self.dismissViewControllerAnimated(true, completion: nil)
-                guard let image = image.0 else {
-                    return
-                }
-
-                guard let imageData = UIImagePNGRepresentation(resizeImage(image, newWidth: 200)) else {
-                    return
-                }
-
-                let progressView = M13ProgressViewRing()
-                progressView.primaryColor = RGB(255)
-                progressView.secondaryColor = Constants.UI.Color.disabled
-
-                let hud = M13ProgressHUD(progressView: progressView)
-                if let window = AppDelegate.del().window {
-                    hud.frame = window.bounds
-                }
-                hud.progressViewSize = CGSize(width: 60, height: 60)
-                hud.animationPoint = CGPoint(x: hud.frame.size.width / 2, y: hud.frame.size.height / 2)
-                hud.status = "Uploading Image"
-                hud.applyBlurToBackground = true
-                hud.maskType = M13ProgressHUDMaskTypeIOS7Blur
-                AppDelegate.del().window?.addSubview(hud)
-                hud.show(true)
-
-                Constants.Network.UPLOAD("/user/upload/profilePicture", data: imageData, parameters: nil, progress: { (bytesWritten, totalBytesWritten, totalBytesExpectedToWrite) in
-                    let progress = CGFloat(totalBytesWritten)/CGFloat(totalBytesExpectedToWrite)
-                    hud.setProgress(progress, animated: true)
-                }, completionHandler: { (response, error) in
-                    hud.hide(true)
-                    self.handleResponse(response, error: error, successCompletion: { (result) in
-
-                    })
-                })
-            }
-
-            presentViewController(vc, animated: true, completion: nil)
+            changeProfilePiture()
         } else if indexPath.row == 2 {
-            guard let window = AppDelegate.del().window else {
-                return
-            }
-
-            AppDelegate.del().currentUser = nil
-            Constants.Settings.setObject(nil, forKey: "user")
-
-            let nav = NavigationController(rootViewController: InitialViewController())
-            nav.setNavigationBarHidden(true, animated: false)
-            UIView.transitionWithView(window, duration: 0.5, options: UIViewAnimationOptions.TransitionCrossDissolve, animations: {
-                AppDelegate.del().window?.rootViewController = nav
-                }, completion: { (finished) -> Void in
-            })
+            logoutUser()
         }
     }
 
@@ -143,4 +94,64 @@ class ProfileSettingsViewController: KZViewController {
         tableView.reloadData()
     }
 
+    func changeProfilePiture() {
+        let vc = CameraViewController(croppingEnabled: true) { image in
+            self.dismissViewControllerAnimated(true, completion: nil)
+            guard let image = image.0 else {
+                return
+            }
+
+            guard let imageData = UIImagePNGRepresentation(resizeImage(image, newWidth: 200)) else {
+                return
+            }
+
+            let progressView = M13ProgressViewRing()
+            progressView.primaryColor = RGB(255)
+            progressView.secondaryColor = Constants.UI.Color.disabled
+
+            let hud = M13ProgressHUD(progressView: progressView)
+            if let window = AppDelegate.del().window {
+                hud.frame = window.bounds
+            }
+            hud.progressViewSize = CGSize(width: 60, height: 60)
+            hud.animationPoint = CGPoint(x: hud.frame.size.width / 2, y: hud.frame.size.height / 2)
+            hud.status = "Uploading Image"
+            hud.applyBlurToBackground = true
+            hud.maskType = M13ProgressHUDMaskTypeIOS7Blur
+            AppDelegate.del().window?.addSubview(hud)
+            hud.show(true)
+
+            Constants.Network.UPLOAD("/user/upload/profilePicture", data: imageData, parameters: nil, progress: { (bytesWritten, totalBytesWritten, totalBytesExpectedToWrite) in
+                let progress = CGFloat(totalBytesWritten)/CGFloat(totalBytesExpectedToWrite)
+                hud.setProgress(progress, animated: true)
+                }, completionHandler: { (response, error) in
+                    hud.hide(true)
+                    self.handleResponse(response, error: error, successCompletion: { (result) in
+                        guard let result = result as? JSON, user = STMUser(json: result) else {
+                            return
+                        }
+
+                        AppDelegate.del().currentUser = user
+                    })
+            })
+        }
+
+        presentViewController(vc, animated: true, completion: nil)
+    }
+
+    func logoutUser() {
+        guard let window = AppDelegate.del().window else {
+            return
+        }
+
+        AppDelegate.del().currentUser = nil
+        Constants.Settings.setObject(nil, forKey: "user")
+
+        let nav = NavigationController(rootViewController: InitialViewController())
+        nav.setNavigationBarHidden(true, animated: false)
+        UIView.transitionWithView(window, duration: 0.5, options: UIViewAnimationOptions.TransitionCrossDissolve, animations: {
+            AppDelegate.del().window?.rootViewController = nav
+            }, completion: { (finished) -> Void in
+        })
+    }
 }

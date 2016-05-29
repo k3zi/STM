@@ -17,6 +17,7 @@ class ProfileViewController: KZViewController, UIViewControllerPreviewingDelegat
     let avatarImageView = UIImageView()
     let displayNameLabel = UILabel()
     let descriptionLabel = UILabel()
+    var descriptionLabelPadding: NSLayoutConstraint?
     let rightSideHolder = UIView()
     let leftSideHolder = UIView()
     let followButton = UIButton()
@@ -64,7 +65,6 @@ class ProfileViewController: KZViewController, UIViewControllerPreviewingDelegat
 
         headerView.backgroundColor = RGB(122, g: 86, b: 229, a: 255)
 
-        self.navigationItem.title = isOwner ? "My Profile (@\(user.username))" : "@\(user.username)"
         self.automaticallyAdjustsScrollViewInsets = false
 
         avatarImageView.layer.cornerRadius = 140.0 / 9.0
@@ -73,11 +73,9 @@ class ProfileViewController: KZViewController, UIViewControllerPreviewingDelegat
         headerView.addSubview(avatarImageView)
 
         displayNameLabel.font = UIFont.systemFontOfSize(19, weight: UIFontWeightBold)
-        displayNameLabel.text = user.displayName
         displayNameLabel.textColor = RGB(255)
         headerView.addSubview(displayNameLabel)
 
-        descriptionLabel.text = user.description
         descriptionLabel.numberOfLines = 0
         descriptionLabel.font = UIFont.systemFontOfSize(13)
         descriptionLabel.textAlignment = .Center
@@ -90,7 +88,6 @@ class ProfileViewController: KZViewController, UIViewControllerPreviewingDelegat
         followButton.layer.cornerRadius = 70.0/2.0
         followButton.clipsToBounds = true
         followButton.enabled = !isOwner
-        followButton.selected = user.isFollowing
         rightSideHolder.addSubview(followButton)
         headerView.addSubview(rightSideHolder)
 
@@ -147,6 +144,8 @@ class ProfileViewController: KZViewController, UIViewControllerPreviewingDelegat
             }, loadingView: loadingView)
         tableView.dg_setPullToRefreshFillColor(RGB(255))
         tableView.dg_setPullToRefreshBackgroundColor(RGB(122, g: 86, b: 229, a: 255))
+
+        fillUserData()
         fetchData()
     }
 
@@ -174,6 +173,13 @@ class ProfileViewController: KZViewController, UIViewControllerPreviewingDelegat
                 tableView.tableHeaderView = headerView
             }
         }
+
+        scrollViewDidScroll(tableView)
+    }
+
+    override func viewWillDisappear(animated: Bool) {
+        super.viewWillDisappear(animated)
+        self.navigationController?.navigationBar.layer.shadowOpacity = 0.0
     }
 
     override func viewDidLayoutSubviews() {
@@ -227,7 +233,7 @@ class ProfileViewController: KZViewController, UIViewControllerPreviewingDelegat
         displayNameLabel.autoSetDimension(.Width, toSize: 250, relation: .LessThanOrEqual)
         displayNameLabel.autoAlignAxisToSuperviewAxis(.Vertical)
 
-        descriptionLabel.autoPinEdge(.Top, toEdge: .Bottom, ofView: displayNameLabel, withOffset: 10)
+        descriptionLabelPadding = descriptionLabel.autoPinEdge(.Top, toEdge: .Bottom, ofView: displayNameLabel, withOffset: 10)
         descriptionLabel.autoSetDimension(.Width, toSize: 250, relation: .LessThanOrEqual)
         descriptionLabel.autoAlignAxisToSuperviewAxis(.Vertical)
 
@@ -337,13 +343,11 @@ class ProfileViewController: KZViewController, UIViewControllerPreviewingDelegat
 
     func scrollViewDidScroll(scrollView: UIScrollView) {
         var shadowOffset = scrollView.contentOffset.y/72.0
-        shadowOffset = max(min(shadowOffset, 2.0), 0.0)
-
-        let shadowRadius = max(shadowOffset, 1.0)
+        shadowOffset = min(shadowOffset, 1.0)
 
         //apply the offset and radius
         self.navigationController?.navigationBar.layer.shadowOffset = CGSize(width: 0, height: shadowOffset)
-        self.navigationController?.navigationBar.layer.shadowRadius = shadowRadius
+        self.navigationController?.navigationBar.layer.shadowRadius = 1.0
         self.navigationController?.navigationBar.layer.shadowColor = RGB(0).CGColor
         self.navigationController?.navigationBar.layer.shadowOpacity = shadowOffset == 0.0 ? 0.0 : 0.6
     }
@@ -390,6 +394,22 @@ class ProfileViewController: KZViewController, UIViewControllerPreviewingDelegat
             AppDelegate.del().presentStreamController(vc)
         } else {
             self.navigationController?.pushViewController(viewControllerToCommit, animated: true)
+        }
+    }
+
+    //MARK: Handdle Data
+
+    func fillUserData() {
+        self.navigationItem.title = isOwner ? "My Profile (@\(user.username))" : "@\(user.username)'s Profile"
+        descriptionLabel.text = user.description
+        displayNameLabel.text = user.displayName
+        followButton.enabled = !isOwner
+        followButton.selected = user.isFollowing
+
+        if descriptionLabel.text?.characters.count == 0 {
+            descriptionLabelPadding?.constant = 0
+        } else {
+            descriptionLabelPadding?.constant = 10
         }
     }
 
@@ -491,6 +511,8 @@ class ProfileViewController: KZViewController, UIViewControllerPreviewingDelegat
             runCompletion()
         }
     }
+
+    //MARK: Handle Actions
 
     func editProfile() {
         let vc = ProfileSettingsViewController()
