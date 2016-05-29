@@ -16,6 +16,8 @@ class DashboardStreamInfoView: UIView {
     let streamNameLabel = UILabel()
     let streamDescriptionLabel = UILabel()
 
+    let statusView = StreamStatusView()
+
     var stream: STMStream
 
     init(stream: STMStream) {
@@ -30,6 +32,9 @@ class DashboardStreamInfoView: UIView {
         infoViewHolder.backgroundColor = color
         infoViewHolder.clipsToBounds = true
         addSubview(infoViewHolder)
+
+        statusView.stream = stream
+        infoViewHolder.addSubview(statusView)
 
         streamNameLabel.textColor = Constants.UI.Color.tint
         streamNameLabel.font = UIFont.systemFontOfSize(17, weight: UIFontWeightMedium)
@@ -63,7 +68,12 @@ class DashboardStreamInfoView: UIView {
         infoViewHolder.autoPinEdgeToSuperviewEdge(.Right)
         infoViewHolder.autoPinEdgeToSuperviewEdge(.Bottom)
 
-        streamNameLabel.autoPinEdgesToSuperviewEdgesWithInsets(UIEdgeInsets(top: 15, left: 15, bottom: 0, right: 15), excludingEdge: .Bottom)
+        statusView.autoPinEdgeToSuperviewEdge(.Left, withInset: 15)
+        statusView.autoAlignAxis(.Horizontal, toSameAxisOfView: streamNameLabel)
+
+        streamNameLabel.autoPinEdgeToSuperviewEdge(.Top, withInset: 15)
+        streamNameLabel.autoPinEdge(.Left, toEdge: .Right, ofView: statusView, withOffset: 10)
+        streamNameLabel.autoPinEdgeToSuperviewEdge(.Right, withInset: 15)
 
         streamDescriptionLabel.autoPinEdge(.Top, toEdge: .Bottom, ofView: streamNameLabel, withOffset: 15)
         streamDescriptionLabel.autoPinEdgeToSuperviewEdge(.Left, withInset: 15)
