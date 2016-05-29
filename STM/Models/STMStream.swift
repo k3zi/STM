@@ -39,7 +39,7 @@ struct STMStream: Decodable {
         return Constants.Config.hashids.encode(id) ?? ""
     }
 
-    func url() -> NSURL {
+    func shareURL() -> NSURL {
         return NSURL(string: Constants.Config.siteBaseURL + "/s/" + alphaID()) ?? NSURL()
     }
 

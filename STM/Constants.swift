@@ -15,7 +15,7 @@ import CoreLocation
 
 struct Constants {
 
-	static let http = Http(baseURL: Config.apiBaseURL)
+	static let http = Http(baseURL: Config.apiBaseURL, sessionConfig: Config.sessionConfig())
 	static let Settings = NSUserDefaults.standardUserDefaults()
 
 	struct Config {
@@ -35,6 +35,15 @@ struct Constants {
 
         static let twitterConsumerKey = "i9HggEKaSKNRVnHBBQDdFDQx1"
         static let twitterConsumerSecret = "l2iuaqf8bKyW01El13M0NkC3M6fNGFlQAVWByhnZROsQwFIbFn"
+
+        static func sessionConfig() -> NSURLSessionConfiguration {
+            let sessionConfig = NSURLSessionConfiguration.defaultSessionConfiguration()
+            let credentialStorage = NSURLCredentialStorage.sharedCredentialStorage()
+            credentialStorage.setCredential(Constants.Config.systemCredentials, forProtectionSpace: NSURLProtectionSpace(host: "api.stm.io", port: 443, protocol: "https", realm: nil, authenticationMethod: NSURLAuthenticationMethodHTTPBasic))
+            credentialStorage.setCredential(Constants.Config.systemCredentials, forProtectionSpace: NSURLProtectionSpace(host: "api-dev.stm.io", port: 443, protocol: "https", realm: nil, authenticationMethod: NSURLAuthenticationMethodHTTPBasic))
+            sessionConfig.URLCredentialStorage = credentialStorage
+            return sessionConfig
+        }
 	}
 
 	struct Notification {

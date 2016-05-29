@@ -11,6 +11,7 @@ import MediaPlayer
 import Fabric
 import TwitterKit
 import Crashlytics
+import KILabel
 
 @UIApplicationMain
 class AppDelegate: UIResponder, UIApplicationDelegate {
@@ -57,14 +58,9 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         NSUserDefaults.standardUserDefaults().setSecret(Constants.Config.userDefaultsSecret)
         Twitter.sharedInstance().startWithConsumerKey(Constants.Config.twitterConsumerKey, consumerSecret: Constants.Config.twitterConsumerSecret)
         Fabric.with([Crashlytics.self, Twitter.self])
-        Constants.http.authzModule = STMAuthzModule()
 
-        //Use credentials to retieve images
-        let sessionConfig = NSURLSessionConfiguration.defaultSessionConfiguration()
-        let credentialStorage = NSURLCredentialStorage.sharedCredentialStorage()
-        credentialStorage.setCredential(Constants.Config.systemCredentials, forProtectionSpace: NSURLProtectionSpace(host: "api.stm.io", port: 0, protocol: "https", realm: nil, authenticationMethod: NSURLAuthenticationMethodHTTPBasic))
-        sessionConfig.URLCredentialStorage = credentialStorage
-        ImageDownloader.defaultDownloader.sessionConfiguration = NSURLSessionConfiguration.defaultSessionConfiguration()
+        Constants.http.authzModule = STMAuthzModule()
+        ImageDownloader.defaultDownloader.sessionConfiguration = Constants.Config.sessionConfig()
 
     }
 
@@ -100,6 +96,75 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         updateBadgeCount()
     }
 
+    //MARK: Handle Open Requests
+
+
+    func application(application: UIApplication, openURL url: NSURL, sourceApplication: String?, annotation: AnyObject) -> Bool {
+        return self.application(application, handleOpenURL: url)
+    }
+
+    func application(app: UIApplication, openURL url: NSURL, options: [String : AnyObject]) -> Bool {
+        return self.application(app, handleOpenURL: url)
+    }
+
+    func application(application: UIApplication, handleOpenURL url: NSURL) -> Bool {
+        guard url.scheme == "streamtome" else {
+            return false
+        }
+
+        guard let query = url.query else {
+            return false
+        }
+
+        let mixedVars = query.componentsSeparatedByString("&")
+        var dict = [String: String]()
+
+        for set in mixedVars {
+            let arr = set.componentsSeparatedByString("=")
+
+            guard arr.count == 2 else {
+                break
+            }
+
+            dict.updateValue(arr[1], forKey: arr[0])
+        }
+
+        let path = url.absoluteString.componentsSeparatedByString("//")[1].componentsSeparatedByString("?")[0]
+
+        if path == "open-stream" {
+            guard dict["stream"] != nil else {
+                return false
+            }
+
+            let streamID = Constants.Config.hashids.decode(dict["stream"])[0]
+
+            guard let topVC = self.topViewController() else {
+                return false
+            }
+
+            Constants.Network.GET("/stream/\(streamID)", parameters: nil) { (response, error) -> Void in
+                self.topViewController()?.handleResponse(response, error: error, successCompletion: { (result) -> Void in
+                    guard let result = result as? JSON, stream = STMStream(json: result) else {
+                        return
+                    }
+
+                    let vc = PlayerViewController()
+                    let activeVC = AppDelegate.del().activeStreamController
+
+                    vc.start(stream, vc: topVC) { (nothing, error) -> Void in
+                        if let error = error {
+                            (activeVC ?? topVC).showError(error)
+                        } else {
+                            AppDelegate.del().presentStreamController(vc)
+                        }
+                    }
+                })
+            }
+        }
+
+        return true
+    }
+
     //MARK: APNS Notifications
 
     func updateBadgeCount(completionHandler: (() -> Void)? = nil) {
@@ -127,6 +192,11 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     }
 
     func updateServerBadgeCount(badgeCount: Int, completionHandler: (() -> Void)? = nil) {
+        guard let _ = AppDelegate.del().currentUser else {
+            completionHandler?()
+            return
+        }
+
         UIApplication.sharedApplication().applicationIconBadgeNumber = badgeCount
         Constants.Network.POST("/user/update/badge", parameters: ["value": badgeCount]) { (response, error) in
             guard let response = response, success = response["success"] as? Bool else {
@@ -246,6 +316,13 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         }
 
         return false
+    }
+
+    //MARK: Handle Label Clicks
+
+    var userHandleLinkTapHandler: KILinkTapHandler = { (label: KILabel, string: String, range: NSRange) -> Void in
+        let username = (string as NSString).substringWithRange(range) as String
+        print(username)
     }
 
     //MARK: Audio

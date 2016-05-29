@@ -119,7 +119,9 @@ class PlayerViewController: KZViewController, UISearchBarDelegate, UIViewControl
         super.setupConstraints()
 
         // Top View
-        topView.autoPinEdgesToSuperviewEdgesWithInsets(UIEdgeInsetsZero, excludingEdge: .Bottom)
+        topView.autoPinToTopLayoutGuideOfViewController(self, withInset: -20)
+        topView.autoPinEdgeToSuperviewEdge(.Left, withInset: 0)
+        topView.autoPinEdgeToSuperviewEdge(.Right, withInset: 0)
         topView.autoMatchDimension(.Height, toDimension: .Height, ofView: view, withMultiplier: 0.4)
 
         dismissBTTopPadding = dismissBT.autoPinEdgeToSuperviewEdge(.Top, withInset: 25)
@@ -360,9 +362,9 @@ class PlayerViewController: KZViewController, UISearchBarDelegate, UIViewControl
             }
         }))
 
-        /*menu.addAction(UIAlertAction(title: "Share", style: .Default, handler: { (action) in
+        menu.addAction(UIAlertAction(title: "Share", style: .Default, handler: { (action) in
             self.showShareDialog()
-        }))*/
+        }))
 
         menu.addAction(UIAlertAction(title: "Close Stream", style: .Destructive, handler: { (action) in
             self.close()
@@ -378,7 +380,7 @@ class PlayerViewController: KZViewController, UISearchBarDelegate, UIViewControl
             return
         }
 
-        let streamURL = stream.url()
+        let streamURL = stream.shareURL()
         let vc = UIActivityViewController(activityItems: [streamURL], applicationActivities: nil)
         self.presentViewController(vc, animated: true, completion: nil)
     }

@@ -675,12 +675,12 @@ class HostViewController: KZViewController, UISearchBarDelegate, UIViewControlle
         let menu = UIAlertController(title: "Host Menu", message: nil, preferredStyle: .ActionSheet)
         menu.popoverPresentationController?.sourceView = miscBT
 
-        /*menu.addAction(UIAlertAction(title: "Share", style: .Default, handler: { (action) in
-            self.showShareDialog()
-        }))*/
-
         menu.addAction(UIAlertAction(title: "Play Next Song", style: .Default, handler: { (action) in
             self.next()
+        }))
+
+        menu.addAction(UIAlertAction(title: "Share", style: .Default, handler: { (action) in
+            self.showShareDialog()
         }))
 
         menu.addAction(UIAlertAction(title: "Close Stream", style: .Destructive, handler: { (action) in
@@ -697,7 +697,7 @@ class HostViewController: KZViewController, UISearchBarDelegate, UIViewControlle
             return
         }
 
-        let streamURL = stream.url()
+        let streamURL = stream.shareURL()
         let vc = UIActivityViewController(activityItems: [streamURL], applicationActivities: nil)
         self.presentViewController(vc, animated: true, completion: nil)
     }
