@@ -4,18 +4,22 @@
 //  Copyright (c) 2015 Twitter. All rights reserved.
 //
 
-
-#import <Accounts/Accounts.h>
+#if __has_feature(modules)
+@import AVFoundation;
+@import Accounts;
+@import CoreMedia;
+@import Foundation;
+@import Social;
+@import TwitterCore;
+@import UIKit;
+#else
 #import <AVFoundation/AVFoundation.h>
+#import <Accounts/Accounts.h>
 #import <CoreMedia/CoreMedia.h>
 #import <Foundation/Foundation.h>
 #import <Social/Social.h>
-#import <UIKit/UIKit.h>
-
-#if __has_feature(modules)
-@import TwitterCore;
-#else
 #import <TwitterCore/TwitterCore.h>
+#import <UIKit/UIKit.h>
 #endif
 
 
@@ -33,6 +37,8 @@
 #import <TwitterKit/TWTRJSONConvertible.h>
 #import <TwitterKit/TWTRListTimelineDataSource.h>
 #import <TwitterKit/TWTRLogInButton.h>
+#import <TwitterKit/TWTRMoPubAdConfiguration.h>
+#import <TwitterKit/TWTRMoPubNativeAdContainerView.h>
 #import <TwitterKit/TWTRNotificationConstants.h>
 #import <TwitterKit/TWTROAuthSigning.h>
 #import <TwitterKit/TWTRSearchTimelineDataSource.h>

@@ -1,18 +1,18 @@
 PODS:
   - AeroGearHttp (0.5.1)
-  - ALCameraViewController (1.1.9)
+  - ALCameraViewController (1.2.0)
   - CocoaSecurity (1.2.4)
   - Crashlytics (3.7.0):
     - Fabric (~> 1.6.3)
   - DateTools (1.7.0)
   - DGElasticPullToRefresh (1.0.3)
   - Fabric (1.6.7)
-  - Gloss (0.7.2)
+  - Gloss (0.7.3)
   - Hashids-Swift (0.3.0)
   - HPGrowingTextView (1.1)
   - Keynode (1.5.0)
   - KILabel (1.0.1)
-  - Kingfisher (2.2.2)
+  - Kingfisher (2.4.1)
   - KMPlaceholderTextView (1.2.0)
   - KZ (2.0.0):
     - PureLayout
@@ -25,13 +25,13 @@ PODS:
   - SAConfettiView (0.1.8)
   - SecureNSUserDefaults (1.0.1):
     - CocoaSecurity (~> 1.2.4)
-  - Socket.IO-Client-Swift (6.1.0)
+  - Socket.IO-Client-Swift (6.1.2)
   - SpinKit (1.2.0)
   - StreamingKit (0.1.29)
-  - TwitterCore (2.0.2):
+  - TwitterCore (2.1.1):
     - Fabric
-  - TwitterKit (2.0.2):
-    - TwitterCore (= 2.0.2)
+  - TwitterKit (2.1.1):
+    - TwitterCore (= 2.1.1)
 
 DEPENDENCIES:
   - AeroGearHttp
@@ -63,18 +63,18 @@ DEPENDENCIES:
 
 SPEC CHECKSUMS:
   AeroGearHttp: 9eb405b694aa9ac5daff842f68648f4a9fe0fa66
-  ALCameraViewController: f171ffb7e84d211277a0f97823a2bda7418dc573
+  ALCameraViewController: 03b480d0b41d3afc21fca48fc45345893ce2680a
   CocoaSecurity: d288a6f87e0f363823d2cb83e753814a6944f71a
   Crashlytics: c3a2333dea9e2733d2777f730910321fc9e25c0d
   DateTools: 53288ee8b905fdc75897a1e6b5cc0144b14cba60
   DGElasticPullToRefresh: 040f39ae69840b3261d163fe6735c5901bf851e9
   Fabric: caf7580c725e64db144f610ac65cd60956911dc7
-  Gloss: 45eb51aaa6f2725341aec8d8caa65cfcc31f7f3b
+  Gloss: c97a95d6279821f35fa0138700bce0391bce87c1
   Hashids-Swift: 5d7c069b0d4a3b70d4e2a840c420115dd517050d
   HPGrowingTextView: 88a716d97fb853bcb08a4a08e4727da17efc9b19
   Keynode: 28f90c306d60bf19b56422dd5c6d6949407ef4de
   KILabel: 4797807cdc0b4992dad8bf91175ddc973c3b569b
-  Kingfisher: 7e8de5b0cf7b5dc8ec559d193029a0859df93ef1
+  Kingfisher: 41aed5b6c1ed8fa98cf6d75283ce89cf7890f517
   KMPlaceholderTextView: cae8ee889bd38d20587eee6b2623b8218f31b8f5
   KZ: 6b563b34ec0f80bddb74282ed7a5d77b5b4e2aa7
   M13ProgressSuite: 03d194af6359da440641ba758aed5a18b0386a86
@@ -84,10 +84,10 @@ SPEC CHECKSUMS:
   Reusable: 4a86b0fa0eefbe3126675617a7e921b673d530c1
   SAConfettiView: c87031a2280659261b730fce3669fb10e73636ee
   SecureNSUserDefaults: 8a07fc6a6fde31c7f8fa6ead73d3c9c3706a6364
-  Socket.IO-Client-Swift: b0ebbd80f039992bad6d0f74730b5a540d979520
+  Socket.IO-Client-Swift: 60a60e8bfd7b16bc57c90ff6329e9f536b5eacdd
   SpinKit: 65906a8b534a4e14cbfd3f8b0b6c329131faef4a
   StreamingKit: c329785aaef3ac142d4ae388345bfe1ed23cfd45
-  TwitterCore: 0f44d8980a6879d5205dcb4e010d15e643e56fa0
-  TwitterKit: c4e40f289a3d7cc9fab9f241edd7502385468b65
+  TwitterCore: abc46da2bc4b76e2c68a74cd8671a071a8e3abbf
+  TwitterKit: 38232c31f622db1f26a5952436eaa88d10763fd0
 
 COCOAPODS: 0.39.0

@@ -18,6 +18,8 @@ framework module TwitterKit {
     header "TWTRJSONConvertible.h"
     header "TWTRListTimelineDataSource.h"
     header "TWTRLogInButton.h"
+    header "TWTRMoPubAdConfiguration.h"
+    header "TWTRMoPubNativeAdContainerView.h"
     header "TWTRNotificationConstants.h"
     header "TWTROAuthSigning.h"
     header "TWTRSearchTimelineDataSource.h"

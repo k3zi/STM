@@ -22,7 +22,7 @@
 
 import Foundation
 
-protocol SocketParsable : SocketClientSpec {
+protocol SocketParsable : SocketIOClientSpec {
     func parseBinaryData(data: NSData)
     func parseSocketMessage(message: String)
 }
@@ -35,8 +35,6 @@ extension SocketParsable {
     private func handleConnect(p: SocketPacket) {
         if p.nsp == "/" && nsp != "/" {
             joinNamespace(nsp)
-        } else if p.nsp != "/" && nsp == "/" {
-            didConnect()
         } else {
             didConnect()
         }
@@ -45,8 +43,7 @@ extension SocketParsable {
     private func handlePacket(pack: SocketPacket) {
         switch pack.type {
         case .Event where isCorrectNamespace(pack.nsp):
-            handleEvent(pack.event, data: pack.args,
-                isInternalMessage: false, withAck: pack.id)
+            handleEvent(pack.event, data: pack.args, isInternalMessage: false, withAck: pack.id)
         case .Ack where isCorrectNamespace(pack.nsp):
             handleAck(pack.id, data: pack.data)
         case .BinaryEvent where isCorrectNamespace(pack.nsp):
@@ -92,8 +89,7 @@ extension SocketParsable {
         }
         
         if !parser.hasNext {
-            return .Right(SocketPacket(type: type, id: -1,
-                nsp: namespace ?? "/", placeholders: placeholders))
+            return .Right(SocketPacket(type: type, nsp: namespace, placeholders: placeholders))
         }
         
         var idString = ""
@@ -112,12 +108,11 @@ extension SocketParsable {
         }
         
         let d = message[parser.currentIndex.advancedBy(1)..<message.endIndex]
-        let noPlaceholders = d["(\\{\"_placeholder\":true,\"num\":(\\d*)\\})"] <~ "\"~~$2\""
         
-        switch parseData(noPlaceholders) {
+        switch parseData(d) {
         case let .Left(err):
             // Errors aren't always enclosed in an array
-            if case let .Right(data) = parseData("\([noPlaceholders as AnyObject])") {
+            if case let .Right(data) = parseData("\([d as AnyObject])") {
                 return .Right(SocketPacket(type: type, data: data, id: Int(idString) ?? -1,
                     nsp: namespace, placeholders: placeholders))
             } else {

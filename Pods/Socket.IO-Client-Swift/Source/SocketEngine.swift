@@ -34,6 +34,7 @@ public final class SocketEngine : NSObject, SocketEnginePollable, SocketEngineWe
             (urlPolling, urlWebSocket) = createURLs()
         }
     }
+    
     public var postWait = [String]()
     public var waitingForPoll = false
     public var waitingForPost = false
@@ -61,9 +62,6 @@ public final class SocketEngine : NSObject, SocketEnginePollable, SocketEngineWe
     
     private weak var sessionDelegate: NSURLSessionDelegate?
 
-    private typealias Probe = (msg: String, type: SocketEnginePacketType, data: [NSData])
-    private typealias ProbeWaitQueue = [Probe]
-
     private let logType = "SocketEngine"
     private let url: NSURL
     
@@ -73,6 +71,7 @@ public final class SocketEngine : NSObject, SocketEnginePollable, SocketEngineWe
             pongsMissedMax = Int(pingTimeout / (pingInterval ?? 25))
         }
     }
+    
     private var pongsMissed = 0
     private var pongsMissedMax = 0
     private var probeWait = ProbeWaitQueue()
@@ -133,23 +132,16 @@ public final class SocketEngine : NSObject, SocketEnginePollable, SocketEngineWe
             allowLossyConversion: false) else { return }
         
         do {
-            if let dict = try NSJSONSerialization.JSONObjectWithData(stringData,
-                options: NSJSONReadingOptions.MutableContainers) as? NSDictionary {
-                    guard let code = dict["code"] as? Int else { return }
-                    guard let error = dict["message"] as? String else { return }
-                    
-                    switch code {
-                    case 0: // Unknown transport
-                        didError(error)
-                    case 1: // Unknown sid.
-                        didError(error)
-                    case 2: // Bad handshake request
-                        didError(error)
-                    case 3: // Bad request
-                        didError(error)
-                    default:
-                        didError(error)
-                    }
+            if let dict = try NSJSONSerialization.JSONObjectWithData(stringData, options: .MutableContainers) as? NSDictionary {
+                guard let error = dict["message"] as? String else { return }
+                
+                /*
+                 0: Unknown transport
+                 1: Unknown sid
+                 2: Bad handshake request
+                 3: Bad request
+                 */
+                didError(error)
             }
         } catch {
             didError("Got unknown error from server \(msg)")
@@ -204,7 +196,9 @@ public final class SocketEngine : NSObject, SocketEnginePollable, SocketEngineWe
             }
         }
         
-        doLongPoll(reqPolling)
+        dispatch_async(emitQueue) {
+            self.doLongPoll(reqPolling)
+        }
     }
 
     private func createURLs() -> (NSURL, NSURL) {
@@ -218,8 +212,6 @@ public final class SocketEngine : NSObject, SocketEnginePollable, SocketEngineWe
         
         urlWebSocket.path = socketPath
         urlPolling.path = socketPath
-        urlWebSocket.query = "transport=websocket"
-        urlPolling.query = "transport=polling&b64=1"
 
         if secure {
             urlPolling.scheme = "https"
@@ -231,12 +223,15 @@ public final class SocketEngine : NSObject, SocketEnginePollable, SocketEngineWe
 
         if connectParams != nil {
             for (key, value) in connectParams! {
-                queryString += "&\(key)=\(value)"
+                let keyEsc   = key.urlEncode()!
+                let valueEsc = "\(value)".urlEncode()!
+
+                queryString += "&\(keyEsc)=\(valueEsc)"
             }
         }
 
-        urlWebSocket.query = urlWebSocket.query! + queryString
-        urlPolling.query = urlPolling.query! + queryString
+        urlWebSocket.percentEncodedQuery = "transport=websocket" + queryString
+        urlPolling.percentEncodedQuery = "transport=polling&b64=1" + queryString
         
         return (urlPolling.URL!, urlWebSocket.URL!)
     }
@@ -286,7 +281,8 @@ public final class SocketEngine : NSObject, SocketEnginePollable, SocketEngineWe
         DefaultSocketLogger.Logger.log("Engine is being closed.", type: logType)
         
         if closed {
-            return postSendClose(nil, nil, nil)
+            client?.engineDidClose(reason)
+            return
         }
         
         if websocket {
@@ -389,11 +385,10 @@ public final class SocketEngine : NSObject, SocketEnginePollable, SocketEngineWe
                     doPoll()
                 }
                 
-                client?.engineDidOpen?("Connect")
+                client?.engineDidOpen("Connect")
             }
         } catch {
             didError("Error parsing open packet")
-            return
         }
     }
 
