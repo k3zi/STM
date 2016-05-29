@@ -9,7 +9,7 @@
 import UIKit
 import TwitterKit
 
-class FinishTwitterAccountViewController: KZViewController {
+class FinishTwitterAccountViewController: KZViewController, UITextFieldDelegate {
     let crowdBG = UIImageView(image: UIImage(named: "crowdBG"))
     let crowdBGGradient = CAGradientLayer()
     let crowdBGGOverlay = CALayer()
@@ -54,7 +54,7 @@ class FinishTwitterAccountViewController: KZViewController {
 
         welcomeLabel.text = "Hi" + (usernameAvailable ? " @\(session.userName)!" : "! Unfortunately this username isn't available. Please pick another:")
         welcomeLabel.textColor = RGB(255)
-        welcomeLabel.font = UIFont.systemFontOfSize(20)
+        welcomeLabel.font = UIFont.systemFontOfSize(10)
         welcomeLabel.numberOfLines = 0
         welcomeLabel.textAlignment = .Center
         view.addSubview(welcomeLabel)
@@ -62,20 +62,24 @@ class FinishTwitterAccountViewController: KZViewController {
         //Fields
 
         displayNameTextField.placeholder = "Display Name"
+        displayNameTextField.delegate = self
         view.addSubview(displayNameTextField)
 
         usernameTextField.placeholder = "Username"
         usernameTextField.text = usernameAvailable ? session.userName : ""
         usernameTextField.unstyleField()
+        usernameTextField.delegate = self
         view.addSubview(usernameTextField)
 
         passwordTextField.placeholder = "Password"
         passwordTextField.protectField()
+        passwordTextField.delegate = self
         view.addSubview(passwordTextField)
 
         emailTextField.placeholder = "Email"
         emailTextField.keyboardType = .EmailAddress
         emailTextField.unstyleField()
+        emailTextField.delegate = self
         view.addSubview(emailTextField)
 
         createAccountBT.setTitle("Create Account", forState: .Normal)
@@ -179,6 +183,11 @@ class FinishTwitterAccountViewController: KZViewController {
         let emailTest = NSPredicate(format:"SELF MATCHES %@", emailRegEx)
         let result = emailTest.evaluateWithObject(testStr)
         return result
+    }
+
+    func textFieldShouldReturn(textField: UITextField) -> Bool {
+        textField.resignFirstResponder()
+        return false
     }
 
 }
