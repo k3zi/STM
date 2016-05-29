@@ -127,8 +127,8 @@ enum StreamType {
 	@IBInspectable var touchMargin: CGFloat = 30.0
 
 	override func pointInside(point: CGPoint, withEvent event: UIEvent?) -> Bool {
-		let extendedArea = CGRectInset(self.bounds, -touchMargin, -touchMargin)
-		return CGRectContainsPoint(extendedArea, point)
+		let extendedArea = self.bounds.insetBy(dx: -touchMargin, dy: -touchMargin)
+		return extendedArea.contains(point)
 	}
 }
 

@@ -56,6 +56,7 @@ Temporary Items
 ## Obj-C/Swift specific
 *.hmap
 *.ipa
+*.zip
 
 ## Playgrounds
 timeline.xctimeline

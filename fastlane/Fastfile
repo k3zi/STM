@@ -1,0 +1,80 @@
+# Customise this file, documentation can be found here:
+# https://github.com/fastlane/fastlane/tree/master/fastlane/docs
+# All available actions: https://github.com/fastlane/fastlane/blob/master/fastlane/docs/Actions.md
+# can also be listed using the `fastlane actions` command
+
+# Change the syntax highlighting to Ruby
+# All lines starting with a # are ignored when running `fastlane`
+
+# If you want to automatically update fastlane if a new version is available:
+update_fastlane
+
+# This is the minimum version number required.
+# Update this, if you use features of a newer version
+fastlane_version "1.91.0"
+
+default_platform :ios
+
+# Create a string of the app version & build number suitable for badging
+# Must be invoked w/in fastlane
+def get_badge_version_string
+  "#{get_version_number}-#{get_build_number}-blue"
+end
+
+# Create a string of the app version & build number
+# Must be invoked w/in fastlane
+def get_version_string
+  "#{get_version_number}.#{get_build_number}"
+end
+
+# Create a string of the build number for release
+# This adds a .1 to differentiate from the beta build number
+# Its a bit of a hack, but we cant use "b" to denote a beta (Testflight hates that)
+# Also test flight won't allow us to upload more than 1 build with the same build number
+# Must be invoked w/in fastlane
+def get_release_build_number
+  number = "#{get_build_number}.1"
+  number
+end
+
+lane :post_beta do
+  ensure_git_branch(branch: 'master')
+  increment_build_number
+  new_version = get_version_string
+  commit_version_bump
+  push_to_git_remote(local_branch: 'master', remote_branch: 'master')
+
+  tag_name = "beta-#{new_version}"
+  add_git_tag(tag: tag_name)
+  sh "git push origin --tags"
+
+  # Download provisioning profiles for the app and copy them to the correct folder.
+  sigh(output_path: '/Library/Developer/XcodeServer/ProvisioningProfiles', adhoc: true, skip_install: true)
+
+  gym(scheme: "STM", configuration: "Release")
+
+  deliver(force: true)
+end
+
+lane :post_store do
+  ensure_git_branch(branch: 'master')
+  increment_build_number
+  new_version = get_version_string
+  commit_version_bump
+  push_to_git_remote(local_branch: 'master', remote_branch: 'master')
+
+  tag_name = "release-#{new_version}"
+  add_git_tag(tag: tag_name)
+  sh "git push origin --tags"
+
+  # Download provisioning profiles for the app and copy them to the correct folder.
+  sigh(output_path: '/Library/Developer/XcodeServer/ProvisioningProfiles', skip_install: true)
+
+  gym(scheme: "STM", configuration: "Release")
+
+  deliver(force: true)
+end
+
+lane :pre_dev do
+  sigh(output_path: '/Library/Developer/XcodeServer/ProvisioningProfiles', development: true, skip_install: true)
+end
