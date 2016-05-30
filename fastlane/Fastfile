@@ -41,18 +41,18 @@ lane :post_beta do
   ensure_git_branch(branch: 'master')
   increment_build_number
   new_version = get_version_string
-  commit_version_bump(message: "bump version: #{get_build_number}")
+  commit_version_bump(message: "bump version to: #{get_build_number}")
   push_to_git_remote(local_branch: 'master', remote_branch: 'master')
 
   tag_name = "beta-#{new_version}"
   add_git_tag(tag: tag_name)
   sh "git push origin --tags"
 
-  badge(shield: "#{get_version_number}-#{get_build_number}-blue", shield_no_resize: true)
+  badge(shield: "#{get_version_number}-#{get_build_number}-blue", shield_no_resize: true, dark: true)
   sigh(output_path: '/Library/Developer/XcodeServer/ProvisioningProfiles', skip_install: true)
   gym(scheme: "STM", configuration: "Release", export_method: "app-store", include_symbols: true, include_bitcode: true)
   pilot(team_id: "2276103", skip_waiting_for_build_processing: true)
-  sh "git checkout -- STM/Assets.xcassets/"
+  sh "git checkout -- ."
 end
 
 lane :post_store do
@@ -67,7 +67,7 @@ lane :post_store do
   sh "git push origin --tags"
 
   sigh(output_path: '/Library/Developer/XcodeServer/ProvisioningProfiles', skip_install: true)
-  gym(scheme: "STM", configuration: "Release")
+  gym(scheme: "STM", configuration: "Release", export_method: "app-store", include_symbols: true, include_bitcode: true)
   deliver(force: true, skip_screenshots: true, skip_screenshots: true)
 end
 
