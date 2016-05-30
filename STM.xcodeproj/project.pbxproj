@@ -126,7 +126,6 @@
 		29DA0B231CFA031600E30ADE /* STMTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = STMTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		29DA0B251CFA031600E30ADE /* STMTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = STMTests.swift; sourceTree = "<group>"; };
 		29DA0B271CFA031600E30ADE /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
-		3534D789493137C70227BF7A /* Pods-STM.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-STM.debug.xcconfig"; path = "Pods/Target Support Files/Pods-STM/Pods-STM.debug.xcconfig"; sourceTree = "<group>"; };
 		3B4177B55191B175F8A0C4B8 /* Pods.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		6E02C4DF3246D35EA74B8538 /* Pods_STM.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_STM.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		715090A97A76B608B8C3A348 /* Pods-STM.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-STM.release.xcconfig"; path = "Pods/Target Support Files/Pods-STM/Pods-STM.release.xcconfig"; sourceTree = "<group>"; };
@@ -283,6 +282,14 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		2936AA581CFC19E400C647D0 /* Recovered References */ = {
+			isa = PBXGroup;
+			children = (
+				715090A97A76B608B8C3A348 /* Pods-STM.release.xcconfig */,
+			);
+			name = "Recovered References";
+			sourceTree = "<group>";
+		};
 		29DA0B241CFA031600E30ADE /* STMTests */ = {
 			isa = PBXGroup;
 			children = (
@@ -290,15 +297,6 @@
 				29DA0B271CFA031600E30ADE /* Info.plist */,
 			);
 			path = STMTests;
-			sourceTree = "<group>";
-		};
-		67BB41A52364203F8AF7FD2D /* Pods */ = {
-			isa = PBXGroup;
-			children = (
-				1E7B6983153969DD1FFA11A0 /* Pods-STM.debug.xcconfig */,
-				715090A97A76B608B8C3A348 /* Pods-STM.release.xcconfig */,
-			);
-			name = Pods;
 			sourceTree = "<group>";
 		};
 		98574C4A951DCFEA0F886856 /* Frameworks */ = {
@@ -346,7 +344,7 @@
 				29DA0B241CFA031600E30ADE /* STMTests */,
 				EA09CAAA1C5C41510067FF6A /* Products */,
 				98574C4A951DCFEA0F886856 /* Frameworks */,
-				26B82C7B33D9097FD4F5CAEC /* Pods */,
+				2936AA581CFC19E400C647D0 /* Recovered References */,
 			);
 			sourceTree = "<group>";
 		};
@@ -681,12 +679,9 @@
 				EA09CAA51C5C41510067FF6A /* Sources */,
 				EA09CAA61C5C41510067FF6A /* Frameworks */,
 				EA09CAA71C5C41510067FF6A /* Resources */,
-				C8BB1B58104A4B92E3BFF9F4 /* Embed Pods Frameworks */,
-				995E2A85AD31DC2FF9851682 /* Copy Pods Resources */,
 				EA8D3DDF1C7D4D56003ACCFC /* ShellScript */,
 				E4ECB80398462AE398E7BDB7 /* 📦 Embed Pods Frameworks */,
 				33824C52E81F866E384E139F /* 📦 Copy Pods Resources */,
-				AA59CCAE0C98619CA0480B84 /* Embed Pods Frameworks */,
 			);
 			buildRules = (
 			);
@@ -814,20 +809,6 @@
 			shellPath = /bin/sh;
 			shellScript = "\"${SRCROOT}/Pods/Target Support Files/Pods-STM/Pods-STM-frameworks.sh\"\n";
 			showEnvVarsInLog = 0;
-		};
-		EA09CAC91C5C62720067FF6A /* Run Script */ = {
-			isa = PBXShellScriptBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			inputPaths = (
-			);
-			name = "Run Script";
-			outputPaths = (
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-			shellPath = /bin/sh;
-			shellScript = "#!/bin/bash\nbuildNumber=$(/usr/libexec/PlistBuddy -c \"Print CFBundleVersion\" \"$INFOPLIST_FILE\")\nbuildNumber=$(($buildNumber + 1))\n/usr/libexec/PlistBuddy -c \"Set :CFBundleVersion $buildNumber\" \"$INFOPLIST_FILE\"";
 		};
 		EA8D3DDF1C7D4D56003ACCFC /* ShellScript */ = {
 			isa = PBXShellScriptBuildPhase;
@@ -1091,7 +1072,6 @@
 		};
 		EA09CABC1C5C41510067FF6A /* Debug */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = 1E7B6983153969DD1FFA11A0 /* Pods-STM.debug.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_ENTITLEMENTS = STM/STM.entitlements;
@@ -1105,7 +1085,7 @@
 				OTHER_SWIFT_FLAGS = "$(inherited) \"-D\" \"COCOAPODS\" -DDEBUG";
 				PRODUCT_BUNDLE_IDENTIFIER = com.stormedgeapps.streamtome;
 				PRODUCT_NAME = STM;
-				PROVISIONING_PROFILE = "2955ab7f-8f06-4804-87b7-1f30712212fc";
+				PROVISIONING_PROFILE = "";
 				RESOURCES_TARGETED_DEVICE_FAMILY = "";
 				SWIFT_OBJC_BRIDGING_HEADER = "STM/Extras/STM-Bridging-Header.h";
 				TARGETED_DEVICE_FAMILY = 1;
@@ -1128,7 +1108,7 @@
 				OTHER_SWIFT_FLAGS = "$(inherited) \"-D\" \"COCOAPODS\"";
 				PRODUCT_BUNDLE_IDENTIFIER = com.stormedgeapps.streamtome;
 				PRODUCT_NAME = STM;
-				PROVISIONING_PROFILE = "2955ab7f-8f06-4804-87b7-1f30712212fc";
+				PROVISIONING_PROFILE = "";
 				RESOURCES_TARGETED_DEVICE_FAMILY = "";
 				SWIFT_OBJC_BRIDGING_HEADER = "STM/Extras/STM-Bridging-Header.h";
 				TARGETED_DEVICE_FAMILY = 1;
