@@ -41,38 +41,34 @@ lane :post_beta do
   ensure_git_branch(branch: 'master')
   increment_build_number
   new_version = get_version_string
-  commit_version_bump
+  commit_version_bump(message: "bump version: #{get_build_number}")
   push_to_git_remote(local_branch: 'master', remote_branch: 'master')
 
   tag_name = "beta-#{new_version}"
   add_git_tag(tag: tag_name)
   sh "git push origin --tags"
 
-  # Download provisioning profiles for the app and copy them to the correct folder.
+  badge(shield: "#{get_version_number}-#{get_build_number}-blue", shield_no_resize: true)
   sigh(output_path: '/Library/Developer/XcodeServer/ProvisioningProfiles', adhoc: true, skip_install: true)
-
   gym(scheme: "STM", configuration: "Release")
-
-  deliver(force: true)
+  pilot(team_id: "2276103")
+  sh "git checkout -- STM/Assets.xcassets/"
 end
 
 lane :post_store do
   ensure_git_branch(branch: 'master')
   increment_build_number
   new_version = get_version_string
-  commit_version_bump
+  commit_version_bump(message: "bump version: #{get_build_number}")
   push_to_git_remote(local_branch: 'master', remote_branch: 'master')
 
   tag_name = "release-#{new_version}"
   add_git_tag(tag: tag_name)
   sh "git push origin --tags"
 
-  # Download provisioning profiles for the app and copy them to the correct folder.
   sigh(output_path: '/Library/Developer/XcodeServer/ProvisioningProfiles', skip_install: true)
-
   gym(scheme: "STM", configuration: "Release")
-
-  deliver(force: true)
+  deliver(force: true, skip_screenshots: true, skip_screenshots: true)
 end
 
 lane :pre_dev do
