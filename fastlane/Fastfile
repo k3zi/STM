@@ -52,7 +52,7 @@ lane :post_beta do
   sigh(output_path: '/Library/Developer/XcodeServer/ProvisioningProfiles', skip_install: true)
   gym(scheme: "STM", configuration: "Release", export_method: "app-store", include_symbols: true, include_bitcode: true)
   pilot(team_id: "2276103", skip_waiting_for_build_processing: true)
-  sh "git checkout -- ."
+  `git checkout -- .`
 end
 
 lane :post_store do
