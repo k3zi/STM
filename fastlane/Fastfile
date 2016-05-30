@@ -49,9 +49,9 @@ lane :post_beta do
   sh "git push origin --tags"
 
   badge(shield: "#{get_version_number}-#{get_build_number}-blue", shield_no_resize: true)
-  sigh(output_path: '/Library/Developer/XcodeServer/ProvisioningProfiles', adhoc: true, skip_install: true)
-  gym(scheme: "STM", configuration: "Release")
-  pilot(team_id: "2276103")
+  sigh(output_path: '/Library/Developer/XcodeServer/ProvisioningProfiles', skip_install: true)
+  gym(scheme: "STM", configuration: "Release", export_method: "app-store", include_symbols: true, include_bitcode: true)
+  pilot(team_id: "2276103", skip_waiting_for_build_processing: true)
   sh "git checkout -- STM/Assets.xcassets/"
 end
 
