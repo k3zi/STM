@@ -31,7 +31,7 @@ class ProfileSettingsViewController: KZViewController {
         let footerView = UIView()
         footerView.backgroundColor = RGB(250, g: 251, b: 252)
         let footerLabel = UILabel()
-        if let version = NSBundle.mainBundle().infoDictionary?["CFBundleShortVersionString"] as? String, let build = NSBundle.mainBundle().infoDictionary?["CFBundleVersion"] as? String {
+        if let version = NSBundle.mainBundle().infoDictionary?["CFBundleShortVersionString"] as? String, build = NSBundle.mainBundle().infoDictionary?["CFBundleVersion"] as? String {
             footerLabel.text = "STM | Version: \(version) (\(build))"
         }
         footerLabel.textAlignment = .Center

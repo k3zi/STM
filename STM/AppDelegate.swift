@@ -37,18 +37,6 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 		application.registerUserNotificationSettings(UIUserNotificationSettings(forTypes: [.Alert, .Badge, .Sound], categories: nil))
 		application.registerForRemoteNotifications()
 
-        NSNotificationCenter.defaultCenter().addObserver(self, selector: #selector(AppDelegate.audioWasInterupted(_:)), name: AVAudioSessionInterruptionNotification, object: nil)
-
-        func exceptionHandler(exception: NSException) {
-            print(exception)
-            print(exception.callStackSymbols)
-        }
-        NSSetUncaughtExceptionHandler(exceptionHandler)
-
-        UITabBar.appearance().tintColor = Constants.UI.Color.tint
-
-		setUpAudioSession(withMic: false)
-
 		return true
 	}
 
@@ -62,6 +50,17 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         Constants.http.authzModule = STMAuthzModule()
         ImageDownloader.defaultDownloader.sessionConfiguration = Constants.Config.sessionConfig()
 
+        NSNotificationCenter.defaultCenter().addObserver(self, selector: #selector(AppDelegate.audioWasInterupted(_:)), name: AVAudioSessionInterruptionNotification, object: nil)
+
+        func exceptionHandler(exception: NSException) {
+            print(exception)
+            print(exception.callStackSymbols)
+        }
+        NSSetUncaughtExceptionHandler(exceptionHandler)
+
+        UITabBar.appearance().tintColor = Constants.UI.Color.tint
+
+        setUpAudioSession(withMic: false)
     }
 
 	func application(application: UIApplication, didRegisterForRemoteNotificationsWithDeviceToken deviceToken: NSData) {

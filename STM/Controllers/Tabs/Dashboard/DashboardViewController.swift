@@ -44,9 +44,9 @@ class DashboardViewController: KZViewController, UIViewControllerPreviewingDeleg
         }, loadingView: loadingView)
         tableView.dg_setPullToRefreshFillColor(RGB(250, g: 251, b: 252))
 
-        NSNotificationCenter.defaultCenter().addObserver(self, selector: #selector(self.fetchDataWithForce), name: Constants.Notification.DidLikeComment, object: nil)
-        NSNotificationCenter.defaultCenter().addObserver(self, selector: #selector(self.fetchDataWithForce), name: Constants.Notification.DidRepostComment, object: nil)
-        NSNotificationCenter.defaultCenter().addObserver(self, selector: #selector(self.fetchDataWithForce), name: Constants.Notification.DidPostComment, object: nil)
+        NSNotificationCenter.defaultCenter().addObserver(self, selector: #selector(fetchDataWithForce), name: Constants.Notification.DidLikeComment, object: nil)
+        NSNotificationCenter.defaultCenter().addObserver(self, selector: #selector(fetchDataWithForce), name: Constants.Notification.DidRepostComment, object: nil)
+        NSNotificationCenter.defaultCenter().addObserver(self, selector: #selector(fetchDataWithForce), name: Constants.Notification.DidPostComment, object: nil)
         fetchData()
     }
 
