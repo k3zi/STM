@@ -1,37 +1,41 @@
 PODS:
-  - AeroGearHttp (0.5.1)
-  - ALCameraViewController (1.2.0)
+  - AeroGearHttp (0.6.0)
+  - ALCameraViewController (1.2.1)
   - CocoaSecurity (1.2.4)
-  - Crashlytics (3.7.0):
+  - Crashlytics (3.7.2):
     - Fabric (~> 1.6.3)
   - DateTools (1.7.0)
   - DGElasticPullToRefresh (1.0.3)
   - Fabric (1.6.7)
-  - Gloss (0.7.3)
+  - Gloss (0.7.4)
   - Hashids-Swift (0.3.0)
   - HPGrowingTextView (1.1)
   - Keynode (1.5.0)
   - KILabel (1.0.1)
-  - Kingfisher (2.4.1)
-  - KMPlaceholderTextView (1.2.0)
-  - KZ (2.0.0):
+  - Kingfisher (2.4.2)
+  - KMPlaceholderTextView (1.2.2)
+  - KZ (2.1.0):
     - PureLayout
     - Reusable
   - M13ProgressSuite (1.2.7)
   - NYSegmentedControl (1.0.7)
   - PRTween (0.1.0)
-  - PureLayout (3.0.1)
-  - Reusable (2.2.1)
+  - PureLayout (3.0.2)
+  - Reusable (2.4.0):
+    - Reusable/Storyboard (= 2.4.0)
+    - Reusable/View (= 2.4.0)
+  - Reusable/Storyboard (2.4.0)
+  - Reusable/View (2.4.0)
   - SAConfettiView (0.1.8)
   - SecureNSUserDefaults (1.0.1):
     - CocoaSecurity (~> 1.2.4)
-  - Socket.IO-Client-Swift (6.1.2)
+  - Socket.IO-Client-Swift (6.1.5)
   - SpinKit (1.2.0)
   - StreamingKit (0.1.29)
-  - TwitterCore (2.1.1):
+  - TwitterCore (2.3.0):
     - Fabric
-  - TwitterKit (2.1.1):
-    - TwitterCore (= 2.1.1)
+  - TwitterKit (2.3.0):
+    - TwitterCore (= 2.3.0)
 
 DEPENDENCIES:
   - AeroGearHttp
@@ -62,34 +66,34 @@ DEPENDENCIES:
   - TwitterKit
 
 SPEC CHECKSUMS:
-  AeroGearHttp: 9eb405b694aa9ac5daff842f68648f4a9fe0fa66
-  ALCameraViewController: 03b480d0b41d3afc21fca48fc45345893ce2680a
+  AeroGearHttp: e958f301cc2d1c7fbfd4b61af187ea3490040a48
+  ALCameraViewController: 51c3617ad4f955106e4bf3a34578433cfff1ec99
   CocoaSecurity: d288a6f87e0f363823d2cb83e753814a6944f71a
-  Crashlytics: c3a2333dea9e2733d2777f730910321fc9e25c0d
+  Crashlytics: 130ab943f8c78cda7a814b434f270b2e2c8a3cba
   DateTools: 53288ee8b905fdc75897a1e6b5cc0144b14cba60
   DGElasticPullToRefresh: 040f39ae69840b3261d163fe6735c5901bf851e9
   Fabric: caf7580c725e64db144f610ac65cd60956911dc7
-  Gloss: c97a95d6279821f35fa0138700bce0391bce87c1
+  Gloss: d86009ef4d12c221d889c4e3f9e1eb547ee6251d
   Hashids-Swift: 5d7c069b0d4a3b70d4e2a840c420115dd517050d
   HPGrowingTextView: 88a716d97fb853bcb08a4a08e4727da17efc9b19
   Keynode: 28f90c306d60bf19b56422dd5c6d6949407ef4de
   KILabel: 4797807cdc0b4992dad8bf91175ddc973c3b569b
-  Kingfisher: 41aed5b6c1ed8fa98cf6d75283ce89cf7890f517
-  KMPlaceholderTextView: cae8ee889bd38d20587eee6b2623b8218f31b8f5
-  KZ: 6b563b34ec0f80bddb74282ed7a5d77b5b4e2aa7
+  Kingfisher: 05bf8d04408aaa70fcd2c8c81b9f1d0f1ad313dd
+  KMPlaceholderTextView: bbff031935d84f7eedb585e7f77120020fbae9e8
+  KZ: 441c871d29c61622344f6a86c7cea9ffb938fb7b
   M13ProgressSuite: 03d194af6359da440641ba758aed5a18b0386a86
   NYSegmentedControl: 55b4f9eb652767cae9799623ec3e49e50029ef47
   PRTween: 6c58c7e32ebcf31e33e6a6e6bc727ebef3b668ef
-  PureLayout: f35f5384c9c4e4479df041dbe33ad7577b71ddfb
-  Reusable: 4a86b0fa0eefbe3126675617a7e921b673d530c1
+  PureLayout: 4d550abe49a94f24c2808b9b95db9131685fe4cd
+  Reusable: c23110dd77e6d3cb2ee2197289ef5e21005ba8f0
   SAConfettiView: c87031a2280659261b730fce3669fb10e73636ee
   SecureNSUserDefaults: 8a07fc6a6fde31c7f8fa6ead73d3c9c3706a6364
-  Socket.IO-Client-Swift: 60a60e8bfd7b16bc57c90ff6329e9f536b5eacdd
+  Socket.IO-Client-Swift: 5141e781303bab379bd2ef6b2f59b5a9183aeb16
   SpinKit: 65906a8b534a4e14cbfd3f8b0b6c329131faef4a
   StreamingKit: c329785aaef3ac142d4ae388345bfe1ed23cfd45
-  TwitterCore: abc46da2bc4b76e2c68a74cd8671a071a8e3abbf
-  TwitterKit: 38232c31f622db1f26a5952436eaa88d10763fd0
+  TwitterCore: 817eae3e291fa4125b47789e26a4f6f024115c1f
+  TwitterKit: 8a383da8d9c21b0423716381ea8bbfce20622d91
 
 PODFILE CHECKSUM: b10b457a3d2cc8ab5ebc9aff2dfc4b158b9bbc22
 
-COCOAPODS: 1.0.0
+COCOAPODS: 1.1.0.beta.1

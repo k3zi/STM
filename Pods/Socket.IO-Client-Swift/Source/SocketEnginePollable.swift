@@ -59,6 +59,8 @@ extension SocketEnginePollable {
     }
     
     func createRequestForPostWithPostWait() -> NSURLRequest {
+        defer { postWait.removeAll(keepCapacity: true) }
+
         var postStr = ""
         
         for packet in postWait {
@@ -69,18 +71,13 @@ extension SocketEnginePollable {
         
         DefaultSocketLogger.Logger.log("Created POST string: %@", type: "SocketEnginePolling", args: postStr)
         
-        postWait.removeAll(keepCapacity: false)
-        
         let req = NSMutableURLRequest(URL: urlPollingWithSid)
+        let postData = postStr.dataUsingEncoding(NSUTF8StringEncoding, allowLossyConversion: false)!
         
         addHeaders(req)
         
         req.HTTPMethod = "POST"
         req.setValue("text/plain; charset=UTF-8", forHTTPHeaderField: "Content-Type")
-        
-        let postData = postStr.dataUsingEncoding(NSUTF8StringEncoding,
-            allowLossyConversion: false)!
-        
         req.HTTPBody = postData
         req.setValue(String(postData.length), forHTTPHeaderField: "Content-Length")
         
@@ -88,11 +85,10 @@ extension SocketEnginePollable {
     }
     
     public func doPoll() {
-        if websocket || waitingForPoll || !connected || closed {
-            return
-        }
+        if websocket || waitingForPoll || !connected || closed { return }
         
         waitingForPoll = true
+        
         let req = NSMutableURLRequest(URL: urlPollingWithSid)
         
         addHeaders(req)
@@ -123,7 +119,7 @@ extension SocketEnginePollable {
                 
                 return
             }
-
+            
             DefaultSocketLogger.Logger.log("Got polling response", type: "SocketEnginePolling")
             
             if let str = String(data: data!, encoding: NSUTF8StringEncoding) {
@@ -213,9 +209,7 @@ extension SocketEnginePollable {
             fixedMessage = message
         }
         
-        let strMsg = "\(type.rawValue)\(fixedMessage)"
-        
-        postWait.append(strMsg)
+        postWait.append(String(type.rawValue) + fixedMessage)
         
         for data in datas {
             if case let .Right(bin) = createBinaryDataForSend(data) {

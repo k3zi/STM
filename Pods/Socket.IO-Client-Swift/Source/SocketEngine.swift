@@ -76,6 +76,7 @@ public final class SocketEngine : NSObject, SocketEnginePollable, SocketEngineWe
     private var pongsMissedMax = 0
     private var probeWait = ProbeWaitQueue()
     private var secure = false
+    private var security: SSLSecurity?
     private var selfSigned = false
     private var voipEnabled = false
 
@@ -105,6 +106,8 @@ public final class SocketEngine : NSObject, SocketEnginePollable, SocketEngineWe
                 voipEnabled = enable
             case let .Secure(secure):
                 self.secure = secure
+            case let .Security(security):
+                self.security = security
             case let .SelfSigned(selfSigned):
                 self.selfSigned = selfSigned
             default:
@@ -128,23 +131,19 @@ public final class SocketEngine : NSObject, SocketEnginePollable, SocketEngineWe
     }
     
     private func checkAndHandleEngineError(msg: String) {
-        guard let stringData = msg.dataUsingEncoding(NSUTF8StringEncoding,
-            allowLossyConversion: false) else { return }
-        
         do {
-            if let dict = try NSJSONSerialization.JSONObjectWithData(stringData, options: .MutableContainers) as? NSDictionary {
-                guard let error = dict["message"] as? String else { return }
-                
-                /*
-                 0: Unknown transport
-                 1: Unknown sid
-                 2: Bad handshake request
-                 3: Bad request
-                 */
-                didError(error)
-            }
+            let dict = try msg.toNSDictionary()
+            guard let error = dict["message"] as? String else { return }
+            
+            /*
+             0: Unknown transport
+             1: Unknown sid
+             2: Bad handshake request
+             3: Bad request
+             */
+            didError(error)
         } catch {
-            didError("Got unknown error from server \(msg)")
+            client?.engineDidError("Got unknown error from server \(msg)")
         }
     }
 
@@ -153,15 +152,25 @@ public final class SocketEngine : NSObject, SocketEnginePollable, SocketEngineWe
             // binary in base64 string
             let noPrefix = message[message.startIndex.advancedBy(2)..<message.endIndex]
 
-            if let data = NSData(base64EncodedString: noPrefix,
-                options: .IgnoreUnknownCharacters) {
-                    client?.parseEngineBinaryData(data)
+            if let data = NSData(base64EncodedString: noPrefix, options: .IgnoreUnknownCharacters) {
+                client?.parseEngineBinaryData(data)
             }
             
             return true
         } else {
             return false
         }
+    }
+    
+    private func closeOutEngine(reason: String) {
+        sid = ""
+        closed = true
+        invalidated = true
+        connected = false
+        
+        ws?.disconnect()
+        stopPolling()
+        client?.engineDidClose(reason)
     }
     
     /// Starts the connection to the server
@@ -171,7 +180,7 @@ public final class SocketEngine : NSObject, SocketEnginePollable, SocketEngineWe
             disconnect("reconnect")
         }
         
-        DefaultSocketLogger.Logger.log("Starting engine", type: logType)
+        DefaultSocketLogger.Logger.log("Starting engine. Server: %@", type: logType, args: url)
         DefaultSocketLogger.Logger.log("Handshaking", type: logType)
         
         resetEngine()
@@ -256,46 +265,42 @@ public final class SocketEngine : NSObject, SocketEnginePollable, SocketEngineWe
         ws?.voipEnabled = voipEnabled
         ws?.delegate = self
         ws?.selfSignedSSL = selfSigned
+        ws?.security = security
 
         ws?.connect()
     }
     
     public func didError(error: String) {
-        DefaultSocketLogger.Logger.error(error, type: logType)
+        DefaultSocketLogger.Logger.error("%@", type: logType, args: error)
         client?.engineDidError(error)
         disconnect(error)
     }
     
     public func disconnect(reason: String) {
-        func postSendClose(data: NSData?, _ res: NSURLResponse?, _ err: NSError?) {
-            sid = ""
-            closed = true
-            invalidated = true
-            connected = false
-            
-            ws?.disconnect()
-            stopPolling()
-            client?.engineDidClose(reason)
-        }
+        guard connected else { return closeOutEngine(reason) }
         
         DefaultSocketLogger.Logger.log("Engine is being closed.", type: logType)
         
         if closed {
-            client?.engineDidClose(reason)
-            return
+            return closeOutEngine(reason)
         }
         
         if websocket {
             sendWebSocketMessage("", withType: .Close, withData: [])
-            postSendClose(nil, nil, nil)
+            closeOutEngine(reason)
         } else {
-            // We need to take special care when we're polling that we send it ASAP
-            // Also make sure we're on the emitQueue since we're touching postWait
-            dispatch_sync(emitQueue) {
-                self.postWait.append(String(SocketEnginePacketType.Close.rawValue))
-                let req = self.createRequestForPostWithPostWait()
-                self.doRequest(req, withCallback: postSendClose)
-            }
+            disconnectPolling(reason)
+        }
+    }
+    
+    // We need to take special care when we're polling that we send it ASAP
+    // Also make sure we're on the emitQueue since we're touching postWait
+    private func disconnectPolling(reason: String) {
+        dispatch_sync(emitQueue) {
+            self.postWait.append(String(SocketEnginePacketType.Close.rawValue))
+            let req = self.createRequestForPostWithPostWait()
+            self.doRequest(req) {_, _, _ in }
+            self.closeOutEngine(reason)
         }
     }
 
@@ -335,7 +340,7 @@ public final class SocketEngine : NSObject, SocketEnginePollable, SocketEngineWe
         guard let ws = self.ws else { return }
         
         for msg in postWait {
-            ws.writeString(fixDoubleUTF8(msg))
+            ws.writeString(msg)
         }
         
         postWait.removeAll(keepCapacity: true)
@@ -354,23 +359,22 @@ public final class SocketEngine : NSObject, SocketEnginePollable, SocketEngineWe
     }
 
     private func handleOpen(openData: String) {
-        let mesData = openData.dataUsingEncoding(NSUTF8StringEncoding, allowLossyConversion: false)!
         do {
-            let json = try NSJSONSerialization.JSONObjectWithData(mesData,
-                options: NSJSONReadingOptions.AllowFragments) as? NSDictionary
-            if let sid = json?["sid"] as? String {
+            let json = try openData.toNSDictionary()
+            
+            if let sid = json["sid"] as? String {
                 let upgradeWs: Bool
 
                 self.sid = sid
                 connected = true
 
-                if let upgrades = json?["upgrades"] as? [String] {
+                if let upgrades = json["upgrades"] as? [String] {
                     upgradeWs = upgrades.contains("websocket")
                 } else {
                     upgradeWs = false
                 }
 
-                if let pingInterval = json?["pingInterval"] as? Double, pingTimeout = json?["pingTimeout"] as? Double {
+                if let pingInterval = json["pingInterval"] as? Double, pingTimeout = json["pingTimeout"] as? Double {
                     self.pingInterval = pingInterval / 1000.0
                     self.pingTimeout = pingTimeout / 1000.0
                 }
@@ -535,13 +539,11 @@ public final class SocketEngine : NSObject, SocketEnginePollable, SocketEngineWe
             connected = false
             websocket = false
             
-            let reason = error?.localizedDescription ?? "Socket Disconnected"
-            
-            if error != nil {
+            if let reason = error?.localizedDescription {
                 didError(reason)
+            } else {
+                client?.engineDidClose("Socket Disconnected")
             }
-            
-            client?.engineDidClose(reason)
         } else {
             flushProbeWait()
         }

@@ -9,23 +9,23 @@
 import UIKit
 
 public class KZTableViewController: KZViewController {
-    
+
     public var tableView: UITableView? = nil
     public var items = [Any]()
     public var createTable = true
-    
+
     //MARK: Setup View
-    
+
     public convenience init(createTable: Bool) {
         self.init()
         self.createTable = createTable
     }
-    
+
     override public func viewDidLoad() {
         super.viewDidLoad()
-        
+
         // Do any additional setup after loading the view.
-        
+
         if createTable {
             tableView = UITableView(frame: view.bounds, style: .Grouped)
             tableView!.delegate = self
@@ -37,10 +37,10 @@ public class KZTableViewController: KZViewController {
             view.addSubview(tableView!)
         }
     }
-    
+
     override public func setupConstraints() {
         super.setupConstraints()
-        
+
         if createTable {
             tableView!.autoPinToTopLayoutGuideOfViewController(self, withInset: 0.0)
             tableView!.autoPinEdgeToSuperviewEdge(.Left)
@@ -48,7 +48,7 @@ public class KZTableViewController: KZViewController {
             tableView!.autoPinEdgeToSuperviewEdge(.Bottom)
         }
     }
-    
+
     public override func tableViewCellData(tableView: UITableView, section: Int) -> [Any] {
         return items
     }
@@ -57,7 +57,7 @@ public class KZTableViewController: KZViewController {
 public struct TableSection {
     public var sectionName: String
     public var sectionObjects: [Any]
-    
+
     public init(sectionName: String, sectionObjects: [Any]) {
         self.sectionName = sectionName
         self.sectionObjects = sectionObjects

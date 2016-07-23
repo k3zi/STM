@@ -37,9 +37,11 @@ public typealias CompletionHandler = ((image: Image?, error: NSError?, cacheType
 /// It contains an async task of getting image from disk and from network.
 public class RetrieveImageTask {
     
+    static let emptyTask = RetrieveImageTask()
+    
     // If task is canceled before the download task started (which means the `downloadTask` is nil),
     // the download task should not begin.
-    var cancelledBeforeDownlodStarting: Bool = false
+    var cancelledBeforeDownloadStarting: Bool = false
     
     /// The disk retrieve task in this image task. Kingfisher will try to look up in cache first. This task represent the cache search task.
     public var diskRetrieveTask: RetrieveImageDiskTask?
@@ -61,7 +63,7 @@ public class RetrieveImageTask {
         if let downloadTask = downloadTask {
             downloadTask.cancel()
         } else {
-            cancelledBeforeDownlodStarting = true
+            cancelledBeforeDownloadStarting = true
         }
     }
 }
