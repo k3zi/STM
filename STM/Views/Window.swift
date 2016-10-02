@@ -13,7 +13,7 @@ class Window: UIWindow {
     let splashView = UIView()
     var screenIsReady = false
 
-    override func addSubview(view: UIView) {
+    override func addSubview(_ view: UIView) {
         if !hasHidden {
             self.insertSubview(view, belowSubview: splashView)
         } else {
@@ -36,27 +36,27 @@ class Window: UIWindow {
         imageView.autoCenterInSuperview()
 
         self.addSubview(self.splashView)
-        self.splashView.autoPinEdgesToSuperviewEdgesWithInsets(UIEdgeInsetsZero)
+        self.splashView.autoPinEdgesToSuperviewEdges(with: UIEdgeInsets.zero)
         self.splashView.autoCenterInSuperview()
 
-        dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0)) { () -> Void in
+        DispatchQueue.global(priority: DispatchQueue.GlobalQueuePriority.default).async { () -> Void in
             while !self.screenIsReady {
-                NSRunLoop.currentRunLoop().runMode(NSDefaultRunLoopMode, beforeDate: NSDate.distantFuture())
+                RunLoop.current.run(mode: RunLoopMode.defaultRunLoopMode, before: Date.distantFuture)
             }
 
-            dispatch_async(dispatch_get_main_queue()) { () -> Void in
+            DispatchQueue.main.async { () -> Void in
                 let lScale = 1.5*((AppDelegate.del().window?.frame.size.width)!/imageView.frame.size.width)
-                UIView.animateWithDuration(0.25, animations: { () -> Void in
-                    imageView.transform = CGAffineTransformScale(CGAffineTransformIdentity, 0.5, 0.5)
-                    }) { (complete) -> Void in
-                        UIView.animateWithDuration(0.5, animations: { () -> Void in
-                            imageView.transform = CGAffineTransformScale(CGAffineTransformIdentity, lScale, lScale)
+                UIView.animate(withDuration: 0.25, animations: { () -> Void in
+                    imageView.transform = CGAffineTransform.identity.scaledBy(x: 0.5, y: 0.5)
+                    }, completion: { (complete) -> Void in
+                        UIView.animate(withDuration: 0.5, animations: { () -> Void in
+                            imageView.transform = CGAffineTransform.identity.scaledBy(x: lScale, y: lScale)
                             self.splashView.alpha = 0.0
-                            }) { (complete) -> Void in
+                            }, completion: { (complete) -> Void in
                                 self.splashView.removeFromSuperview()
                                 self.hasHidden = true
-                        }
-                }
+                        }) 
+                }) 
             }
         }
     }

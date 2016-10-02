@@ -17,7 +17,7 @@ class SettingsProfilePictureCell: KZTableViewCell {
     required init(style: UITableViewCellStyle, reuseIdentifier: String?) {
         super.init(style: style, reuseIdentifier: reuseIdentifier)
         self.backgroundColor = RGB(255)
-        self.accessoryType = .DisclosureIndicator
+        self.accessoryType = .disclosureIndicator
 
         nameLabel.numberOfLines = 1
         nameLabel.text = "Profile Image"
@@ -25,7 +25,7 @@ class SettingsProfilePictureCell: KZTableViewCell {
         self.contentView.addSubview(nameLabel)
 
         avatar.layer.borderWidth = 0.5
-        avatar.layer.borderColor = RGB(179).CGColor
+        avatar.layer.borderColor = RGB(179).cgColor
         avatar.layer.cornerRadius = 85.0/9.0
         avatar.clipsToBounds = true
         self.contentView.addSubview(avatar)
@@ -34,30 +34,30 @@ class SettingsProfilePictureCell: KZTableViewCell {
     override func updateConstraints() {
         super.updateConstraints()
 
-        nameLabel.autoAlignAxisToSuperviewAxis(.Horizontal)
-        nameLabel.autoPinEdgeToSuperviewEdge(.Left, withInset: 11)
+        nameLabel.autoAlignAxis(toSuperviewAxis: .horizontal)
+        nameLabel.autoPinEdge(toSuperviewEdge: .left, withInset: 11)
 
         NSLayoutConstraint.autoSetPriority(999) {
-            self.avatar.autoSetDimension(.Height, toSize: 85)
+            self.avatar.autoSetDimension(.height, toSize: 85)
         }
-        avatar.autoSetDimension(.Width, toSize: 85)
-        avatar.autoPinEdgeToSuperviewEdge(.Top, withInset: 12)
-        avatar.autoPinEdgeToSuperviewEdge(.Right, withInset: 12)
-        avatar.autoPinEdgeToSuperviewEdge(.Bottom, withInset: 12)
+        avatar.autoSetDimension(.width, toSize: 85)
+        avatar.autoPinEdge(toSuperviewEdge: .top, withInset: 12)
+        avatar.autoPinEdge(toSuperviewEdge: .right, withInset: 12)
+        avatar.autoPinEdge(toSuperviewEdge: .bottom, withInset: 12)
     }
 
-    override func setIndexPath(indexPath: NSIndexPath, last: Bool) {
+    override func setIndexPath(_ indexPath: IndexPath, last: Bool) {
         topSeperator.alpha = 1.0
     }
 
-    override func fillInCellData(shallow: Bool) {
+    override func fillInCellData(_ shallow: Bool) {
         if let setting = model as? STMSetting {
             nameLabel.text = setting.name
         }
 
         if !shallow {
             if let user = AppDelegate.del().currentUser {
-                avatar.kf_setImageWithURL(user.profilePictureURL(), placeholderImage: UIImage(named: "defaultProfilePicture"), optionsInfo: [KingfisherOptionsInfoItem.ForceRefresh], progressBlock: nil, completionHandler: nil)
+                avatar.kf.setImage(with: user.profilePictureURL(), placeholder: UIImage(named: "defaultProfilePicture"), options: [KingfisherOptionsInfoItem.forceRefresh], progressBlock: nil, completionHandler: nil)
             }
         }
     }
@@ -67,7 +67,7 @@ class SettingsProfilePictureCell: KZTableViewCell {
 
         nameLabel.text = ""
 
-        avatar.kf_cancelDownloadTask()
+        avatar.kf.cancelDownloadTask()
         avatar.image = nil
     }
 

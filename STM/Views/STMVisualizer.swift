@@ -33,33 +33,33 @@ class STMVisualizer: UIView {
             self.addSubview(bar)
 
             if i == 0 {
-                bar.autoPinEdgeToSuperviewEdge(.Left)
+                bar.autoPinEdge(toSuperviewEdge: .left)
             } else {
                 let lastBar = bars[i-1]
-                bar.autoPinEdge(.Left, toEdge: .Right, ofView: lastBar)
-                bar.autoMatchDimension(.Width, toDimension: .Width, ofView: lastBar)
+                bar.autoPinEdge(.left, to: .right, of: lastBar)
+                bar.autoMatch(.width, to: .width, of: lastBar)
             }
 
-            bar.autoAlignAxisToSuperviewAxis(.Horizontal)
-            barConstraints.append(bar.autoSetDimension(.Height, toSize: 1.0))
+            bar.autoAlignAxis(toSuperviewAxis: .horizontal)
+            barConstraints.append(bar.autoSetDimension(.height, toSize: 1.0))
 
             if i == (numbrerOfBars - 1) {
-                bar.autoPinEdgeToSuperviewEdge(.Right)
+                bar.autoPinEdge(toSuperviewEdge: .right)
             }
 
             bars.append(bar)
         }
     }
 
-    func setBarHeight(index: Int, height: CGFloat) {
+    func setBarHeight(_ index: Int, height: CGFloat) {
         guard index < barConstraints.count else {
             return
         }
 
-        let height = (isnan(height) || isinf(height)) ? 1.0 : height
+        let height = (height.isNaN || height.isInfinite) ? 1.0 : height
 
         let barConstraint = barConstraints[index]
-        UIView.animateWithDuration(1.0, delay: 0.0, options: .BeginFromCurrentState, animations: { () -> Void in
+        UIView.animate(withDuration: 1.0, delay: 0.0, options: .beginFromCurrentState, animations: { () -> Void in
             barConstraint.constant = height
             self.bars[index].layoutIfNeeded()
             }, completion: nil)

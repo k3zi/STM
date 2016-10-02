@@ -85,8 +85,9 @@ strip_invalid_archs() {
 
 if [[ "$CONFIGURATION" == "Debug" ]]; then
   install_framework "$BUILT_PRODUCTS_DIR/ALCameraViewController/ALCameraViewController.framework"
-  install_framework "$BUILT_PRODUCTS_DIR/AeroGearHttp/AeroGearHttp.framework"
+  install_framework "$BUILT_PRODUCTS_DIR/Alamofire/Alamofire.framework"
   install_framework "$BUILT_PRODUCTS_DIR/CocoaSecurity/CocoaSecurity.framework"
+  install_framework "$BUILT_PRODUCTS_DIR/CryptoSwift/CryptoSwift.framework"
   install_framework "$BUILT_PRODUCTS_DIR/DGElasticPullToRefresh/DGElasticPullToRefresh.framework"
   install_framework "$BUILT_PRODUCTS_DIR/DateTools/DateTools.framework"
   install_framework "$BUILT_PRODUCTS_DIR/Gloss/Gloss.framework"
@@ -104,14 +105,15 @@ if [[ "$CONFIGURATION" == "Debug" ]]; then
   install_framework "$BUILT_PRODUCTS_DIR/Reusable/Reusable.framework"
   install_framework "$BUILT_PRODUCTS_DIR/SAConfettiView/SAConfettiView.framework"
   install_framework "$BUILT_PRODUCTS_DIR/SecureNSUserDefaults/SecureNSUserDefaults.framework"
-  install_framework "$BUILT_PRODUCTS_DIR/Socket.IO-Client-Swift/SocketIOClientSwift.framework"
+  install_framework "$BUILT_PRODUCTS_DIR/Socket.IO-Client-Swift/SocketIO.framework"
   install_framework "$BUILT_PRODUCTS_DIR/SpinKit/SpinKit.framework"
   install_framework "$BUILT_PRODUCTS_DIR/StreamingKit/StreamingKit.framework"
 fi
 if [[ "$CONFIGURATION" == "Release" ]]; then
   install_framework "$BUILT_PRODUCTS_DIR/ALCameraViewController/ALCameraViewController.framework"
-  install_framework "$BUILT_PRODUCTS_DIR/AeroGearHttp/AeroGearHttp.framework"
+  install_framework "$BUILT_PRODUCTS_DIR/Alamofire/Alamofire.framework"
   install_framework "$BUILT_PRODUCTS_DIR/CocoaSecurity/CocoaSecurity.framework"
+  install_framework "$BUILT_PRODUCTS_DIR/CryptoSwift/CryptoSwift.framework"
   install_framework "$BUILT_PRODUCTS_DIR/DGElasticPullToRefresh/DGElasticPullToRefresh.framework"
   install_framework "$BUILT_PRODUCTS_DIR/DateTools/DateTools.framework"
   install_framework "$BUILT_PRODUCTS_DIR/Gloss/Gloss.framework"
@@ -129,7 +131,7 @@ if [[ "$CONFIGURATION" == "Release" ]]; then
   install_framework "$BUILT_PRODUCTS_DIR/Reusable/Reusable.framework"
   install_framework "$BUILT_PRODUCTS_DIR/SAConfettiView/SAConfettiView.framework"
   install_framework "$BUILT_PRODUCTS_DIR/SecureNSUserDefaults/SecureNSUserDefaults.framework"
-  install_framework "$BUILT_PRODUCTS_DIR/Socket.IO-Client-Swift/SocketIOClientSwift.framework"
+  install_framework "$BUILT_PRODUCTS_DIR/Socket.IO-Client-Swift/SocketIO.framework"
   install_framework "$BUILT_PRODUCTS_DIR/SpinKit/SpinKit.framework"
   install_framework "$BUILT_PRODUCTS_DIR/StreamingKit/StreamingKit.framework"
 fi

@@ -16,34 +16,34 @@ class CommentCell: KZTableViewCell {
 	let dateLabel = UILabel()
 	let messageLabel = KILabel()
 
-    var timer: NSTimer?
+    var timer: Timer?
 
 	required init(style: UITableViewCellStyle, reuseIdentifier: String?) {
 		super.init(style: style, reuseIdentifier: reuseIdentifier)
 		self.backgroundColor = RGB(255)
-        self.selectionStyle = .None
+        self.selectionStyle = .none
 
 		avatar.layer.cornerRadius = 45.0 / 9.0
 		avatar.backgroundColor = Constants.UI.Color.imageViewDefault
 		avatar.clipsToBounds = true
-        avatar.userInteractionEnabled = true
+        avatar.isUserInteractionEnabled = true
         avatar.addGestureRecognizer(UITapGestureRecognizer(target: self, action: #selector(goToUser)))
 		self.contentView.addSubview(avatar)
 
         dateLabel.textColor = RGB(180)
-		dateLabel.font = UIFont.systemFontOfSize(14)
+		dateLabel.font = UIFont.systemFont(ofSize: 14)
 		self.contentView.addSubview(dateLabel)
 
-		nameLabel.font = UIFont.boldSystemFontOfSize(14)
+		nameLabel.font = UIFont.boldSystemFont(ofSize: 14)
         nameLabel.textColor = Constants.UI.Color.tint
 		self.contentView.addSubview(nameLabel)
 
         messageLabel.numberOfLines = 0
-		messageLabel.font = UIFont.systemFontOfSize(14)
+		messageLabel.font = UIFont.systemFont(ofSize: 14)
         messageLabel.tintColor = Constants.UI.Color.tint
 		self.contentView.addSubview(messageLabel)
 
-        timer = NSTimer.scheduledTimerWithTimeInterval(1.0, target: self, selector: #selector(CommentCell.updateTime), userInfo: nil, repeats: true)
+        timer = Timer.scheduledTimer(timeInterval: 1.0, target: self, selector: #selector(CommentCell.updateTime), userInfo: nil, repeats: true)
 	}
 
     func goToUser() {
@@ -61,8 +61,8 @@ class CommentCell: KZTableViewCell {
                 navVC.pushViewController(vc, animated: true)
             } else {
                 let nav = NavigationController(rootViewController: vc)
-                vc.navigationItem.leftBarButtonItem = UIBarButtonItem(image: UIImage(named: "navBarDismissBT"), style: .Plain, target: topVC, action: #selector(topVC.dismissPopup))
-                topVC.presentViewController(nav, animated: true, completion: nil)
+                vc.navigationItem.leftBarButtonItem = UIBarButtonItem(image: UIImage(named: "navBarDismissBT"), style: .plain, target: topVC, action: #selector(topVC.dismissPopup))
+                topVC.present(nav, animated: true, completion: nil)
             }
         }
     }
@@ -70,24 +70,24 @@ class CommentCell: KZTableViewCell {
 	override func updateConstraints() {
 		super.updateConstraints()
 		NSLayoutConstraint.autoSetPriority(999) { () -> Void in
-			self.avatar.autoSetDimensionsToSize(CGSize(width: 45.0, height: 45.0))
+			self.avatar.autoSetDimensions(to: CGSize(width: 45.0, height: 45.0))
 		}
 
-		avatar.autoPinEdgeToSuperviewEdge(.Top, withInset: 10)
-		avatar.autoPinEdgeToSuperviewEdge(.Bottom, withInset: 10, relation: .GreaterThanOrEqual)
-		avatar.autoPinEdgeToSuperviewEdge(.Left, withInset: 10)
+		avatar.autoPinEdge(toSuperviewEdge: .top, withInset: 10)
+		avatar.autoPinEdge(toSuperviewEdge: .bottom, withInset: 10, relation: .greaterThanOrEqual)
+		avatar.autoPinEdge(toSuperviewEdge: .left, withInset: 10)
 
-		nameLabel.autoPinEdgeToSuperviewEdge(.Top, withInset: 13)
-		nameLabel.autoPinEdge(.Left, toEdge: .Right, ofView: avatar, withOffset: 10)
+		nameLabel.autoPinEdge(toSuperviewEdge: .top, withInset: 13)
+		nameLabel.autoPinEdge(.left, to: .right, of: avatar, withOffset: 10)
 
-		dateLabel.autoPinEdge(.Left, toEdge: .Right, ofView: nameLabel, withOffset: 10, relation: .GreaterThanOrEqual)
-		dateLabel.autoPinEdgeToSuperviewEdge(.Right, withInset: 10)
-		dateLabel.autoAlignAxis(.Horizontal, toSameAxisOfView: nameLabel)
+		dateLabel.autoPinEdge(.left, to: .right, of: nameLabel, withOffset: 10, relation: .greaterThanOrEqual)
+		dateLabel.autoPinEdge(toSuperviewEdge: .right, withInset: 10)
+		dateLabel.autoAlignAxis(.horizontal, toSameAxisOf: nameLabel)
 
-		messageLabel.autoPinEdge(.Top, toEdge: .Bottom, ofView: nameLabel, withOffset: 2)
-		messageLabel.autoPinEdge(.Left, toEdge: .Right, ofView: avatar, withOffset: 10)
-		messageLabel.autoPinEdgeToSuperviewEdge(.Right, withInset: 10)
-		messageLabel.autoPinEdgeToSuperviewEdge(.Bottom, withInset: 10, relation: .GreaterThanOrEqual)
+		messageLabel.autoPinEdge(.top, to: .bottom, of: nameLabel, withOffset: 2)
+		messageLabel.autoPinEdge(.left, to: .right, of: avatar, withOffset: 10)
+		messageLabel.autoPinEdge(toSuperviewEdge: .right, withInset: 10)
+		messageLabel.autoPinEdge(toSuperviewEdge: .bottom, withInset: 10, relation: .greaterThanOrEqual)
 	}
 
     override func estimatedHeight() -> CGFloat {
@@ -102,7 +102,7 @@ class CommentCell: KZTableViewCell {
         return ceil(max(minHeight, height))
     }
 
-	override func fillInCellData(shallow: Bool) {
+	override func fillInCellData(_ shallow: Bool) {
 		if let comment = model as? STMComment {
 			messageLabel.text = comment.text
 
@@ -110,7 +110,7 @@ class CommentCell: KZTableViewCell {
 				nameLabel.text = user.displayName
 
                 if !shallow {
-                    avatar.kf_setImageWithURL(user.profilePictureURL(), placeholderImage: UIImage(named: "defaultProfilePicture"))
+                    avatar.kf.setImage(with: user.profilePictureURL(), placeholder: UIImage(named: "defaultProfilePicture"))
                 }
 			}
 
@@ -134,11 +134,11 @@ class CommentCell: KZTableViewCell {
 		nameLabel.text = ""
 		dateLabel.text = ""
 
-        avatar.kf_cancelDownloadTask()
+        avatar.kf.cancelDownloadTask()
         avatar.image = nil
 	}
 
-    override func setIndexPath(indexPath: NSIndexPath, last: Bool) {
+    override func setIndexPath(_ indexPath: IndexPath, last: Bool) {
         topSeperator.alpha = 0.0
         bottomSeperator.alpha = 0.0
     }

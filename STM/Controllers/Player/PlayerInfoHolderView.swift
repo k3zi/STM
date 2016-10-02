@@ -12,22 +12,22 @@ class PlayerInfoHolderView: UIView {
 
     var comments: Int = 0 {
         didSet {
-            dispatch_async(dispatch_get_main_queue()) { () -> Void in
-                UIView.animateWithDuration(0.5) { () -> Void in
+            DispatchQueue.main.async { () -> Void in
+                UIView.animate(withDuration: 0.5, animations: { () -> Void in
                     self.commentCount.text = String(self.comments)
                     self.layoutIfNeeded()
-                }
+                }) 
             }
         }
     }
 
     var listeners: Int = 0 {
         didSet {
-            dispatch_async(dispatch_get_main_queue()) { () -> Void in
-                UIView.animateWithDuration(0.5) { () -> Void in
+            DispatchQueue.main.async { () -> Void in
+                UIView.animate(withDuration: 0.5, animations: { () -> Void in
                     self.listenerCount.text = String(self.listeners)
                     self.layoutIfNeeded()
-                }
+                }) 
             }
         }
     }
@@ -45,21 +45,21 @@ class PlayerInfoHolderView: UIView {
     override init(frame: CGRect) {
         super.init(frame: frame)
 
-        self.autoSetDimension(.Height, toSize: 16)
+        self.autoSetDimension(.height, toSize: 16)
 
-        listenerCount.hidden = true
-        listenerCountImageView.hidden = true
+        listenerCount.isHidden = true
+        listenerCountImageView.isHidden = true
         [commentCount, commentCountImageView, listenerCount, listenerCountImageView].forEach({ self.addSubview($0) })
 
         [commentCount, listenerCount].forEach({ $0.textColor = RGB(92, g: 38, b: 254) })
-        [commentCount, listenerCount].forEach({ $0.font = UIFont.systemFontOfSize(13) })
+        [commentCount, listenerCount].forEach({ $0.font = UIFont.systemFont(ofSize: 13) })
 
-        commentCountImageView.autoAlignAxisToSuperviewAxis(.Horizontal)
-        commentCountImageView.autoPinEdgeToSuperviewEdge(.Left)
+        commentCountImageView.autoAlignAxis(toSuperviewAxis: .horizontal)
+        commentCountImageView.autoPinEdge(toSuperviewEdge: .left)
 
-        commentCount.autoAlignAxis(.Horizontal, toSameAxisOfView: commentCountImageView)
-        commentCount.autoPinEdge(.Left, toEdge: .Right, ofView: commentCountImageView, withOffset: 4)
-        commentCount.autoPinEdgeToSuperviewEdge(.Right)
+        commentCount.autoAlignAxis(.horizontal, toSameAxisOf: commentCountImageView)
+        commentCount.autoPinEdge(.left, to: .right, of: commentCountImageView, withOffset: 4)
+        commentCount.autoPinEdge(toSuperviewEdge: .right)
 
         /*
         listenerCountImageView.autoPinEdge(.Left, toEdge: .Right, ofView: commentCount, withOffset: 12)

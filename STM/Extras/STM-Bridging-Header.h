@@ -4,13 +4,13 @@
 
 @import UIKit;
 @import KZ;
-@import AeroGearHttp;
+@import Alamofire;
 @import PureLayout;
 @import SpinKit;
 @import SecureNSUserDefaults;
 @import Gloss;
 @import Hashids_Swift;
-@import SocketIOClientSwift;
+@import SocketIO;
 @import Reusable;
 @import Crashlytics;
 @import Keynode;

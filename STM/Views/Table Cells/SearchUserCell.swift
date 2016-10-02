@@ -19,24 +19,24 @@ class SearchUserCell: KZTableViewCell {
 	required init(style: UITableViewCellStyle, reuseIdentifier: String?) {
 		super.init(style: style, reuseIdentifier: reuseIdentifier)
 		self.backgroundColor = RGB(255)
-        self.selectionStyle = .None
-        self.accessoryType = .DisclosureIndicator
+        self.selectionStyle = .none
+        self.accessoryType = .disclosureIndicator
 
 		avatar.layer.cornerRadius = 45.0 / 9.0
 		avatar.backgroundColor = Constants.UI.Color.imageViewDefault
 		avatar.clipsToBounds = true
 		self.contentView.addSubview(avatar)
 
-		nameLabel.font = UIFont.boldSystemFontOfSize(14)
+		nameLabel.font = UIFont.boldSystemFont(ofSize: 14)
         nameLabel.textColor = Constants.UI.Color.tint
 		self.contentView.addSubview(nameLabel)
 
         messageLabel.numberOfLines = 0
-		messageLabel.font = UIFont.systemFontOfSize(14)
+		messageLabel.font = UIFont.systemFont(ofSize: 14)
         messageLabel.tintColor = Constants.UI.Color.tint
 		self.contentView.addSubview(messageLabel)
 
-        followButton.addTarget(self, action: #selector(self.toggleFollow), forControlEvents: .TouchUpInside)
+        followButton.addTarget(self, action: #selector(self.toggleFollow), for: .touchUpInside)
         self.contentView.addSubview(followButton)
 	}
 
@@ -45,13 +45,13 @@ class SearchUserCell: KZTableViewCell {
             return
         }
 
-        let method = followButton.selected ? "unfollow" : "follow"
-        UIView.transitionWithView(self.followButton, duration: 0.2, options: .TransitionCrossDissolve, animations: {
-            self.followButton.selected = !self.followButton.selected
+        let method = followButton.isSelected ? "unfollow" : "follow"
+        UIView.transition(with: self.followButton, duration: 0.2, options: .transitionCrossDissolve, animations: {
+            self.followButton.isSelected = !self.followButton.isSelected
         }, completion: nil)
         Constants.Network.GET("/user/\(user.id)/\(method)", parameters: nil) { (response, error) in
-            dispatch_async(dispatch_get_main_queue(), {
-                NSNotificationCenter.defaultCenter().postNotificationName(Constants.Notification.UpdateUserProfile, object: nil)
+            DispatchQueue.main.async(execute: {
+                NotificationCenter.default.post(name: NSNotification.Name(rawValue: Constants.Notification.UpdateUserProfile), object: nil)
             })
         }
     }
@@ -59,42 +59,42 @@ class SearchUserCell: KZTableViewCell {
 	override func updateConstraints() {
 		super.updateConstraints()
 		NSLayoutConstraint.autoSetPriority(999) { () -> Void in
-			self.avatar.autoSetDimensionsToSize(CGSize(width: 45.0, height: 45.0))
+			self.avatar.autoSetDimensions(to: CGSize(width: 45.0, height: 45.0))
 		}
 
-		avatar.autoPinEdgeToSuperviewEdge(.Top, withInset: 10)
-		avatar.autoPinEdgeToSuperviewEdge(.Bottom, withInset: 10, relation: .GreaterThanOrEqual)
-		avatar.autoPinEdgeToSuperviewEdge(.Left, withInset: 10)
+		avatar.autoPinEdge(toSuperviewEdge: .top, withInset: 10)
+		avatar.autoPinEdge(toSuperviewEdge: .bottom, withInset: 10, relation: .greaterThanOrEqual)
+		avatar.autoPinEdge(toSuperviewEdge: .left, withInset: 10)
 
-		nameLabel.autoPinEdgeToSuperviewEdge(.Top, withInset: 13)
-		nameLabel.autoPinEdge(.Left, toEdge: .Right, ofView: avatar, withOffset: 10)
+		nameLabel.autoPinEdge(toSuperviewEdge: .top, withInset: 13)
+		nameLabel.autoPinEdge(.left, to: .right, of: avatar, withOffset: 10)
 
-		messageLabel.autoPinEdge(.Top, toEdge: .Bottom, ofView: nameLabel, withOffset: 2)
-		messageLabel.autoPinEdge(.Left, toEdge: .Right, ofView: avatar, withOffset: 10)
-        messageLabel.autoMatchDimension(.Width, toDimension: .Width, ofView: nameLabel)
-		messageLabel.autoPinEdgeToSuperviewEdge(.Bottom, withInset: 10, relation: .GreaterThanOrEqual)
+		messageLabel.autoPinEdge(.top, to: .bottom, of: nameLabel, withOffset: 2)
+		messageLabel.autoPinEdge(.left, to: .right, of: avatar, withOffset: 10)
+        messageLabel.autoMatch(.width, to: .width, of: nameLabel)
+		messageLabel.autoPinEdge(toSuperviewEdge: .bottom, withInset: 10, relation: .greaterThanOrEqual)
 
-        followButton.autoPinEdge(.Left, toEdge: .Right, ofView: nameLabel, withOffset: 10)
-        followButton.autoPinEdgeToSuperviewEdge(.Right, withInset: 10)
-        followButton.autoAlignAxis(.Horizontal, toSameAxisOfView: avatar)
-        followButton.autoSetDimension(.Height, toSize: 30.0)
+        followButton.autoPinEdge(.left, to: .right, of: nameLabel, withOffset: 10)
+        followButton.autoPinEdge(toSuperviewEdge: .right, withInset: 10)
+        followButton.autoAlignAxis(.horizontal, toSameAxisOf: avatar)
+        followButton.autoSetDimension(.height, toSize: 30.0)
         NSLayoutConstraint.autoSetPriority(999) {
-            self.followButton.autoSetContentHuggingPriorityForAxis(.Horizontal)
+            self.followButton.autoSetContentHuggingPriority(for: .horizontal)
         }
 	}
 
-	override func fillInCellData(shallow: Bool) {
+	override func fillInCellData(_ shallow: Bool) {
         guard let user = model as? STMUser else {
             return
         }
 
         if !shallow {
-            avatar.kf_setImageWithURL(user.profilePictureURL(), placeholderImage: UIImage(named: "defaultProfilePicture"))
+            avatar.kf.setImage(with: user.profilePictureURL(), placeholder: UIImage(named: "defaultProfilePicture"))
         }
 
         nameLabel.text = user.displayName
-        followButton.selected = user.isFollowing
-        followButton.hidden = AppDelegate.del().currentUser?.id == user.id
+        followButton.isSelected = user.isFollowing
+        followButton.isHidden = AppDelegate.del().currentUser?.id == user.id
         messageLabel.text = "@" + user.username
 	}
 
@@ -104,11 +104,11 @@ class SearchUserCell: KZTableViewCell {
 		nameLabel.text = ""
 		messageLabel.text = ""
 
-        avatar.kf_cancelDownloadTask()
+        avatar.kf.cancelDownloadTask()
         avatar.image = nil
 	}
 
-    override func setIndexPath(indexPath: NSIndexPath, last: Bool) {
+    override func setIndexPath(_ indexPath: IndexPath, last: Bool) {
         topSeperator.alpha = 0.0
         bottomSeperator.alpha = 0.0
     }

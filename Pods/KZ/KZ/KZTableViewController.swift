@@ -8,11 +8,11 @@
 
 import UIKit
 
-public class KZTableViewController: KZViewController {
+open class KZTableViewController: KZViewController {
 
-    public var tableView: UITableView? = nil
-    public var items = [Any]()
-    public var createTable = true
+    open var tableView: UITableView? = nil
+    open var items = [Any]()
+    open var createTable = true
 
     //MARK: Setup View
 
@@ -21,16 +21,16 @@ public class KZTableViewController: KZViewController {
         self.createTable = createTable
     }
 
-    override public func viewDidLoad() {
+    override open func viewDidLoad() {
         super.viewDidLoad()
 
         // Do any additional setup after loading the view.
 
         if createTable {
-            tableView = UITableView(frame: view.bounds, style: .Grouped)
+            tableView = UITableView(frame: view.bounds, style: .grouped)
             tableView!.delegate = self
             tableView!.dataSource = self
-            tableView?.separatorStyle = .None
+            tableView?.separatorStyle = .none
             tableView?.showsVerticalScrollIndicator = false
             tableView?.sectionIndexBackgroundColor = RGB(224)
             tableView?.sectionIndexColor = RGB(103)
@@ -38,18 +38,18 @@ public class KZTableViewController: KZViewController {
         }
     }
 
-    override public func setupConstraints() {
+    override open func setupConstraints() {
         super.setupConstraints()
 
         if createTable {
-            tableView!.autoPinToTopLayoutGuideOfViewController(self, withInset: 0.0)
-            tableView!.autoPinEdgeToSuperviewEdge(.Left)
-            tableView!.autoPinEdgeToSuperviewEdge(.Right)
-            tableView!.autoPinEdgeToSuperviewEdge(.Bottom)
+            tableView!.autoPin(toTopLayoutGuideOf: self, withInset: 0.0)
+            tableView!.autoPinEdge(toSuperviewEdge: .left)
+            tableView!.autoPinEdge(toSuperviewEdge: .right)
+            tableView!.autoPinEdge(toSuperviewEdge: .bottom)
         }
     }
 
-    public override func tableViewCellData(tableView: UITableView, section: Int) -> [Any] {
+    open override func tableViewCellData(_ tableView: UITableView, section: Int) -> [Any] {
         return items
     }
 }

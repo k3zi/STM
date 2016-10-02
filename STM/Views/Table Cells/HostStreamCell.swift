@@ -22,48 +22,48 @@ class HostStreamCell: KZTableViewCell {
         avatar.clipsToBounds = true
         self.contentView.addSubview(avatar)
 
-        nameLabel.font = UIFont.systemFontOfSize(14)
+        nameLabel.font = UIFont.systemFont(ofSize: 14)
         self.contentView.addSubview(nameLabel)
 
         tagLabel.textColor = RGB(127, g: 127, b: 127)
-        tagLabel.font = UIFont.systemFontOfSize(12, weight: UIFontWeightBold)
+        tagLabel.font = UIFont.systemFont(ofSize: 12, weight: UIFontWeightBold)
         tagLabel.setContentEdgeInsets(UIEdgeInsets(top: 4, left: 5, bottom: 4, right: 5))
         tagLabel.backgroundColor = RGB(230)
         tagLabel.layer.cornerRadius = 5
         self.contentView.addSubview(tagLabel)
 
-        self.accessoryType = .DisclosureIndicator
+        self.accessoryType = .disclosureIndicator
     }
 
     override func updateConstraints() {
         super.updateConstraints()
         NSLayoutConstraint.autoSetPriority(999) { () -> Void in
-            self.avatar.autoSetDimensionsToSize(CGSize(width: 35.0, height: 35.0))
+            self.avatar.autoSetDimensions(to: CGSize(width: 35.0, height: 35.0))
         }
 
-        avatar.autoPinEdgeToSuperviewEdge(.Top, withInset: 10)
-        avatar.autoPinEdgeToSuperviewEdge(.Bottom, withInset: 10)
-        avatar.autoPinEdgeToSuperviewEdge(.Left, withInset: 10)
+        avatar.autoPinEdge(toSuperviewEdge: .top, withInset: 10)
+        avatar.autoPinEdge(toSuperviewEdge: .bottom, withInset: 10)
+        avatar.autoPinEdge(toSuperviewEdge: .left, withInset: 10)
 
-        nameLabel.autoPinEdge(.Left, toEdge: .Right, ofView: avatar, withOffset: 10)
-        nameLabel.autoAlignAxis(.Horizontal, toSameAxisOfView: avatar)
+        nameLabel.autoPinEdge(.left, to: .right, of: avatar, withOffset: 10)
+        nameLabel.autoAlignAxis(.horizontal, toSameAxisOf: avatar)
 
-        tagLabel.autoPinEdgeToSuperviewEdge(.Right, withInset: 10)
-        tagLabel.autoPinEdge(.Left, toEdge: .Right, ofView: nameLabel, withOffset: 10, relation: .GreaterThanOrEqual)
-        tagLabel.autoAlignAxis(.Horizontal, toSameAxisOfView: nameLabel)
+        tagLabel.autoPinEdge(toSuperviewEdge: .right, withInset: 10)
+        tagLabel.autoPinEdge(.left, to: .right, of: nameLabel, withOffset: 10, relation: .greaterThanOrEqual)
+        tagLabel.autoAlignAxis(.horizontal, toSameAxisOf: nameLabel)
     }
 
     override func estimatedHeight() -> CGFloat {
         return 10 + 35 + 10
     }
 
-    override func fillInCellData(shallow: Bool) {
+    override func fillInCellData(_ shallow: Bool) {
         if let stream = model as? STMStream {
             nameLabel.text = stream.name
             tagLabel.text = stream.alphaID()
 
             if !shallow {
-                avatar.kf_setImageWithURL(stream.pictureURL(), placeholderImage: UIImage(named: "defaultStreamImage"), optionsInfo: nil, progressBlock: nil, completionHandler: nil)
+                avatar.kf.setImage(with: stream.pictureURL(), placeholder: UIImage(named: "defaultStreamImage"), options: nil, progressBlock: nil, completionHandler: nil)
             }
         }
     }
@@ -79,25 +79,25 @@ class HostStreamCell: KZTableViewCell {
         fatalError("init(coder:) has not been implemented")
     }
 
-    override func setHighlighted(highlighted: Bool, animated: Bool) {
+    override func setHighlighted(_ highlighted: Bool, animated: Bool) {
         func change() {
             self.backgroundColor = highlighted ? RGB(250) : RGB(255)
         }
 
         if animated {
-            UIView.animateWithDuration(0.5, animations: change)
+            UIView.animate(withDuration: 0.5, animations: change)
         } else {
             change()
         }
     }
 
-    override func setSelected(selected: Bool, animated: Bool) {
+    override func setSelected(_ selected: Bool, animated: Bool) {
         func change() {
             self.backgroundColor = selected ? RGB(250) : RGB(255)
         }
 
         if animated {
-            UIView.animateWithDuration(0.5, animations: change)
+            UIView.animate(withDuration: 0.5, animations: change)
         } else {
             change()
         }

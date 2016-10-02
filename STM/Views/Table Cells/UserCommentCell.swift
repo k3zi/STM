@@ -23,43 +23,43 @@ class UserCommentCell: KZTableViewCell {
     let statusView = StreamStatusView()
     let streamNameLabel = Label()
 
-    var timer: NSTimer?
+    var timer: Timer?
 
 	required init(style: UITableViewCellStyle, reuseIdentifier: String?) {
 		super.init(style: style, reuseIdentifier: reuseIdentifier)
 		self.backgroundColor = RGB(255)
-        self.selectionStyle = .None
+        self.selectionStyle = .none
 
 		avatar.layer.cornerRadius = 45.0 / 9.0
 		avatar.backgroundColor = Constants.UI.Color.imageViewDefault
 		avatar.clipsToBounds = true
-        avatar.userInteractionEnabled = true
+        avatar.isUserInteractionEnabled = true
         avatar.addGestureRecognizer(UITapGestureRecognizer(target: self, action: #selector(goToUser)))
 		self.contentView.addSubview(avatar)
 
         dateLabel.textColor = RGB(180)
-		dateLabel.font = UIFont.systemFontOfSize(14)
+		dateLabel.font = UIFont.systemFont(ofSize: 14)
 		self.contentView.addSubview(dateLabel)
 
-		nameLabel.font = UIFont.boldSystemFontOfSize(14)
+		nameLabel.font = UIFont.boldSystemFont(ofSize: 14)
         nameLabel.textColor = Constants.UI.Color.tint
 		self.contentView.addSubview(nameLabel)
 
         messageLabel.numberOfLines = 0
-		messageLabel.font = UIFont.systemFontOfSize(14)
+		messageLabel.font = UIFont.systemFont(ofSize: 14)
         messageLabel.tintColor = Constants.UI.Color.tint
         messageLabel.userHandleLinkTapHandler = AppDelegate.del().userHandleLinkTapHandler
 		self.contentView.addSubview(messageLabel)
 
         likeButton.selectedColor = RGB(227, g: 67, b: 51)
-        likeButton.actionButton.addTarget(self, action: #selector(self.toggleLike), forControlEvents: .TouchUpInside)
+        likeButton.actionButton.addTarget(self, action: #selector(self.toggleLike), for: .touchUpInside)
         self.contentView.addSubview(likeButton)
 
         repostButton.selectedColor = RGB(78, g: 188, b: 119)
-        repostButton.actionButton.addTarget(self, action: #selector(self.toggleRepost), forControlEvents: .TouchUpInside)
+        repostButton.actionButton.addTarget(self, action: #selector(self.toggleRepost), for: .touchUpInside)
         self.contentView.addSubview(repostButton)
 
-        streamNameLabel.font = UIFont.systemFontOfSize(12.0)
+        streamNameLabel.font = UIFont.systemFont(ofSize: 12.0)
         streamNameLabel.textColor = RGB(172)
         streamView.addSubview(streamNameLabel)
 
@@ -72,11 +72,11 @@ class UserCommentCell: KZTableViewCell {
         streamView.addGestureRecognizer(tap)
         self.contentView.addSubview(streamView)
 
-        timer = NSTimer.scheduledTimerWithTimeInterval(1.0, target: self, selector: #selector(CommentCell.updateTime), userInfo: nil, repeats: true)
+        timer = Timer.scheduledTimer(timeInterval: 1.0, target: self, selector: #selector(CommentCell.updateTime), userInfo: nil, repeats: true)
 	}
 
     func goToStream() {
-        guard let comment = model as? STMComment, stream = comment.stream else {
+        guard let comment = model as? STMComment, let stream = comment.stream else {
             return
         }
 
@@ -101,16 +101,16 @@ class UserCommentCell: KZTableViewCell {
         }
 
         let method = likeButton.selected ? "unlike" : "like"
-        UIView.transitionWithView(self.likeButton, duration: 0.2, options: .TransitionCrossDissolve, animations: {
+        UIView.transition(with: self.likeButton, duration: 0.2, options: .transitionCrossDissolve, animations: {
             self.likeButton.selected = !self.likeButton.selected
             self.likeButton.count = self.likeButton.count + (self.likeButton.selected ? 1 : -1)
         }, completion: nil)
 
         Constants.Network.GET("/comment/\(comment.id)/\(method)", parameters: nil) { (response, error) in
-            dispatch_async(dispatch_get_main_queue(), {
+            DispatchQueue.main.async(execute: {
                 comment.likes = self.likeButton.count
                 comment.didLike = self.likeButton.selected
-                NSNotificationCenter.defaultCenter().postNotificationName(Constants.Notification.DidLikeComment, object: nil)
+                NotificationCenter.default.post(name: NSNotification.Name(rawValue: Constants.Notification.DidLikeComment), object: nil)
             })
         }
     }
@@ -125,16 +125,16 @@ class UserCommentCell: KZTableViewCell {
         }
 
         let method = repostButton.selected ? "unrepost" : "repost"
-        UIView.transitionWithView(self.repostButton, duration: 0.2, options: .TransitionCrossDissolve, animations: {
+        UIView.transition(with: self.repostButton, duration: 0.2, options: .transitionCrossDissolve, animations: {
             self.repostButton.selected = !self.repostButton.selected
             self.repostButton.count = self.repostButton.count + (self.repostButton.selected ? 1 : -1)
         }, completion: nil)
 
         Constants.Network.GET("/comment/\(comment.id)/\(method)", parameters: nil) { (response, error) in
-            dispatch_async(dispatch_get_main_queue(), {
+            DispatchQueue.main.async(execute: {
                 comment.reposts = self.repostButton.count
                 comment.didRepost = self.repostButton.selected
-                NSNotificationCenter.defaultCenter().postNotificationName(Constants.Notification.DidRepostComment, object: nil)
+                NotificationCenter.default.post(name: NSNotification.Name(rawValue: Constants.Notification.DidRepostComment), object: nil)
             })
         }
     }
@@ -154,8 +154,8 @@ class UserCommentCell: KZTableViewCell {
                 navVC.pushViewController(vc, animated: true)
             } else {
                 let nav = NavigationController(rootViewController: vc)
-                vc.navigationItem.leftBarButtonItem = UIBarButtonItem(image: UIImage(named: "navBarDismissBT"), style: .Plain, target: topVC, action: #selector(topVC.dismissPopup))
-                topVC.presentViewController(nav, animated: true, completion: nil)
+                vc.navigationItem.leftBarButtonItem = UIBarButtonItem(image: UIImage(named: "navBarDismissBT"), style: .plain, target: topVC, action: #selector(topVC.dismissPopup))
+                topVC.present(nav, animated: true, completion: nil)
             }
         }
     }
@@ -163,40 +163,40 @@ class UserCommentCell: KZTableViewCell {
 	override func updateConstraints() {
 		super.updateConstraints()
 		NSLayoutConstraint.autoSetPriority(999) { () -> Void in
-			self.avatar.autoSetDimensionsToSize(CGSize(width: 45.0, height: 45.0))
+			self.avatar.autoSetDimensions(to: CGSize(width: 45.0, height: 45.0))
 		}
 
-		avatar.autoPinEdgeToSuperviewEdge(.Top, withInset: 10)
-		avatar.autoPinEdgeToSuperviewEdge(.Bottom, withInset: 10, relation: .GreaterThanOrEqual)
-		avatar.autoPinEdgeToSuperviewEdge(.Left, withInset: 12)
+		avatar.autoPinEdge(toSuperviewEdge: .top, withInset: 10)
+		avatar.autoPinEdge(toSuperviewEdge: .bottom, withInset: 10, relation: .greaterThanOrEqual)
+		avatar.autoPinEdge(toSuperviewEdge: .left, withInset: 12)
 
-		nameLabel.autoPinEdgeToSuperviewEdge(.Top, withInset: 13)
-		nameLabel.autoPinEdge(.Left, toEdge: .Right, ofView: avatar, withOffset: 10)
+		nameLabel.autoPinEdge(toSuperviewEdge: .top, withInset: 13)
+		nameLabel.autoPinEdge(.left, to: .right, of: avatar, withOffset: 10)
 
-		dateLabel.autoPinEdge(.Left, toEdge: .Right, ofView: nameLabel, withOffset: 10, relation: .GreaterThanOrEqual)
-		dateLabel.autoPinEdgeToSuperviewEdge(.Right, withInset: 10)
-		dateLabel.autoAlignAxis(.Horizontal, toSameAxisOfView: nameLabel)
+		dateLabel.autoPinEdge(.left, to: .right, of: nameLabel, withOffset: 10, relation: .greaterThanOrEqual)
+		dateLabel.autoPinEdge(toSuperviewEdge: .right, withInset: 10)
+		dateLabel.autoAlignAxis(.horizontal, toSameAxisOf: nameLabel)
 
-		messageLabel.autoPinEdge(.Top, toEdge: .Bottom, ofView: nameLabel, withOffset: 2)
-		messageLabel.autoPinEdge(.Left, toEdge: .Right, ofView: avatar, withOffset: 10)
-		messageLabel.autoPinEdgeToSuperviewEdge(.Right, withInset: 10)
+		messageLabel.autoPinEdge(.top, to: .bottom, of: nameLabel, withOffset: 2)
+		messageLabel.autoPinEdge(.left, to: .right, of: avatar, withOffset: 10)
+		messageLabel.autoPinEdge(toSuperviewEdge: .right, withInset: 10)
 
-        likeButton.autoPinEdge(.Top, toEdge: .Bottom, ofView: messageLabel, withOffset: 12)
-        likeButton.autoPinEdgeToSuperviewEdge(.Bottom, withInset: 8, relation: .GreaterThanOrEqual)
-        likeButton.autoPinEdge(.Left, toEdge: .Right, ofView: avatar, withOffset: 10)
+        likeButton.autoPinEdge(.top, to: .bottom, of: messageLabel, withOffset: 12)
+        likeButton.autoPinEdge(toSuperviewEdge: .bottom, withInset: 8, relation: .greaterThanOrEqual)
+        likeButton.autoPinEdge(.left, to: .right, of: avatar, withOffset: 10)
 
-        repostButton.autoAlignAxis(.Horizontal, toSameAxisOfView: likeButton)
-        repostButton.autoPinEdge(.Left, toEdge: .Right, ofView: likeButton, withOffset: 10)
+        repostButton.autoAlignAxis(.horizontal, toSameAxisOf: likeButton)
+        repostButton.autoPinEdge(.left, to: .right, of: likeButton, withOffset: 10)
 
-        streamView.autoPinEdgeToSuperviewEdge(.Right, withInset: 10)
-        streamView.autoAlignAxis(.Horizontal, toSameAxisOfView: repostButton)
-        streamView.autoPinEdge(.Left, toEdge: .Right, ofView: repostButton, withOffset: 10, relation: .GreaterThanOrEqual)
+        streamView.autoPinEdge(toSuperviewEdge: .right, withInset: 10)
+        streamView.autoAlignAxis(.horizontal, toSameAxisOf: repostButton)
+        streamView.autoPinEdge(.left, to: .right, of: repostButton, withOffset: 10, relation: .greaterThanOrEqual)
 
-        streamNameLabel.autoPinEdgesToSuperviewEdgesWithInsets(UIEdgeInsets(top: 5, left: 5, bottom: 5, right: 0), excludingEdge: .Right)
+        streamNameLabel.autoPinEdgesToSuperviewEdges(with: UIEdgeInsets(top: 5, left: 5, bottom: 5, right: 0), excludingEdge: .right)
 
-        statusView.autoAlignAxis(.Horizontal, toSameAxisOfView: streamNameLabel)
-        statusView.autoPinEdge(.Left, toEdge: .Right, ofView: streamNameLabel, withOffset: 10)
-        statusView.autoPinEdgeToSuperviewEdge(.Right, withInset: 5)
+        statusView.autoAlignAxis(.horizontal, toSameAxisOf: streamNameLabel)
+        statusView.autoPinEdge(.left, to: .right, of: streamNameLabel, withOffset: 10)
+        statusView.autoPinEdge(toSuperviewEdge: .right, withInset: 5)
 	}
 
     override func estimatedHeight() -> CGFloat {
@@ -211,7 +211,7 @@ class UserCommentCell: KZTableViewCell {
         return ceil(height)
     }
 
-	override func fillInCellData(shallow: Bool) {
+	override func fillInCellData(_ shallow: Bool) {
         guard let comment = model as? STMComment else {
             return
         }
@@ -230,11 +230,11 @@ class UserCommentCell: KZTableViewCell {
 
         if let user = comment.user {
             repostButton.alpha = (AppDelegate.del().currentUser?.id == user.id) ? 0.4 : 1.0
-            repostButton.actionButton.enabled = (AppDelegate.del().currentUser?.id != user.id)
+            repostButton.actionButton.isEnabled = (AppDelegate.del().currentUser?.id != user.id)
             nameLabel.text = user.displayName
 
             if !shallow {
-                avatar.kf_setImageWithURL(user.profilePictureURL(), placeholderImage: UIImage(named: "defaultProfilePicture"))
+                avatar.kf.setImage(with: user.profilePictureURL(), placeholder: UIImage(named: "defaultProfilePicture"))
             }
         }
 
@@ -267,13 +267,13 @@ class UserCommentCell: KZTableViewCell {
 		dateLabel.text = ""
         streamNameLabel.text = ""
 
-        avatar.kf_cancelDownloadTask()
+        avatar.kf.cancelDownloadTask()
         avatar.image = nil
 
         statusView.stream = nil
 	}
 
-    override func setIndexPath(indexPath: NSIndexPath, last: Bool) {
+    override func setIndexPath(_ indexPath: IndexPath, last: Bool) {
         topSeperator.alpha = 0.0
         bottomSeperator.alpha = 0.0
     }

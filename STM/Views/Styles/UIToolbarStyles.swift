@@ -10,13 +10,13 @@ import UIKit
 
 extension UIToolbar {
 
-    class func styleWithButtons(vc: UIViewController) -> UIToolbar {
+    class func styleWithButtons(_ vc: UIViewController) -> UIToolbar {
         let toolBar = UIToolbar()
-        toolBar.barStyle = .Black
+        toolBar.barStyle = .black
 
-        let doneButton = UIBarButtonItem(title: "Done", style: .Done, target: vc, action: #selector(UIViewController.donePressed))
-        let cancelButton = UIBarButtonItem(title: "Cancel", style: .Plain, target: vc, action: #selector(UIViewController.cancelPressed))
-        let spaceButton = UIBarButtonItem(barButtonSystemItem: UIBarButtonSystemItem.FlexibleSpace, target: nil, action: nil)
+        let doneButton = UIBarButtonItem(title: "Done", style: .done, target: vc, action: #selector(UIViewController.donePressed))
+        let cancelButton = UIBarButtonItem(title: "Cancel", style: .plain, target: vc, action: #selector(UIViewController.cancelPressed))
+        let spaceButton = UIBarButtonItem(barButtonSystemItem: UIBarButtonSystemItem.flexibleSpace, target: nil, action: nil)
         toolBar.setItems([cancelButton, spaceButton, doneButton], animated: false)
         toolBar.sizeToFit()
         return toolBar

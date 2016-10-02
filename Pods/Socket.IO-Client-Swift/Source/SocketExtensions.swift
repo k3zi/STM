@@ -24,27 +24,88 @@
 
 import Foundation
 
-enum JSONError : ErrorType {
+enum JSONError : Error {
     case notArray
     case notNSDictionary
 }
 
-extension Array where Element: AnyObject {
-    func toJSON() throws -> NSData {
-        return try NSJSONSerialization.dataWithJSONObject(self as NSArray, options: NSJSONWritingOptions(rawValue: 0))
+extension Array {
+    func toJSON() throws -> Data {
+        return try JSONSerialization.data(withJSONObject: self, options: JSONSerialization.WritingOptions(rawValue: 0))
     }
 }
 
-extension NSCharacterSet {
-    class var allowedURLCharacterSet: NSCharacterSet {
-        return NSCharacterSet(charactersInString: "!*'();:@&=+$,/?%#[]\" {}").invertedSet
+extension CharacterSet {
+    static var allowedURLCharacterSet: CharacterSet {
+        return CharacterSet(charactersIn: "!*'();:@&=+$,/?%#[]\" {}").inverted
+    }
+}
+
+extension NSDictionary {
+    private static func keyValueToSocketIOClientOption(key: String, value: Any) -> SocketIOClientOption? {
+        switch (key, value) {
+        case let ("connectParams", params as [String: Any]):
+            return .connectParams(params)
+        case let ("cookies", cookies as [HTTPCookie]):
+            return .cookies(cookies)
+        case let ("doubleEncodeUTF8", encode as Bool):
+            return .doubleEncodeUTF8(encode)
+        case let ("extraHeaders", headers as [String: String]):
+            return .extraHeaders(headers)
+        case let ("forceNew", force as Bool):
+            return .forceNew(force)
+        case let ("forcePolling", force as Bool):
+            return .forcePolling(force)
+        case let ("forceWebsockets", force as Bool):
+            return .forceWebsockets(force)
+        case let ("handleQueue", queue as DispatchQueue):
+            return .handleQueue(queue)
+        case let ("log", log as Bool):
+            return .log(log)
+        case let ("logger", logger as SocketLogger):
+            return .logger(logger)
+        case let ("nsp", nsp as String):
+            return .nsp(nsp)
+        case let ("path", path as String):
+            return .path(path)
+        case let ("reconnects", reconnects as Bool):
+            return .reconnects(reconnects)
+        case let ("reconnectAttempts", attempts as Int):
+            return .reconnectAttempts(attempts)
+        case let ("reconnectWait", wait as Int):
+            return .reconnectWait(wait)
+        case let ("secure", secure as Bool):
+            return .secure(secure)
+        case let ("security", security as SSLSecurity):
+            return .security(security)
+        case let ("selfSigned", selfSigned as Bool):
+            return .selfSigned(selfSigned)
+        case let ("sessionDelegate", delegate as URLSessionDelegate):
+            return .sessionDelegate(delegate)
+        case let ("voipEnabled", enable as Bool):
+            return .voipEnabled(enable)
+        default:
+            return nil
+        }
+    }
+    
+    func toSocketConfiguration() -> SocketIOClientConfiguration {
+        var options = [] as SocketIOClientConfiguration
+        
+        for (rawKey, value) in self {
+            if let key = rawKey as? String, let opt = NSDictionary.keyValueToSocketIOClientOption(key: key, value: value) {
+                options.insert(opt)
+            }
+        }
+        
+        return options
     }
 }
 
 extension String {
-    func toArray() throws -> [AnyObject] {
-        guard let stringData = dataUsingEncoding(NSUTF8StringEncoding, allowLossyConversion: false) else { return [] }
-        guard let array = try NSJSONSerialization.JSONObjectWithData(stringData, options: .MutableContainers) as? [AnyObject] else {
+    func toArray() throws -> [Any] {
+        guard let stringData = data(using: .utf8, allowLossyConversion: false) else { return [] }
+        guard let array = try JSONSerialization.jsonObject(with: stringData, options: .mutableContainers) as? [Any] else {
              throw JSONError.notArray
         }
         
@@ -52,8 +113,8 @@ extension String {
     }
     
     func toNSDictionary() throws -> NSDictionary {
-        guard let binData = dataUsingEncoding(NSUTF8StringEncoding, allowLossyConversion: false) else { return [:] }
-        guard let json = try NSJSONSerialization.JSONObjectWithData(binData, options: .AllowFragments) as? NSDictionary else {
+        guard let binData = data(using: .utf8, allowLossyConversion: false) else { return [:] }
+        guard let json = try JSONSerialization.jsonObject(with: binData, options: .allowFragments) as? NSDictionary else {
             throw JSONError.notNSDictionary
         }
         
@@ -61,6 +122,6 @@ extension String {
     }
     
     func urlEncode() -> String? {
-        return stringByAddingPercentEncodingWithAllowedCharacters(.allowedURLCharacterSet)
+        return addingPercentEncoding(withAllowedCharacters: .allowedURLCharacterSet)
     }
 }

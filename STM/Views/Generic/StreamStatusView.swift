@@ -15,38 +15,38 @@ class StreamStatusView: UIView {
     var stream: STMStream? {
         didSet {
             if !shallow {
-                self.status = .Offline
+                self.status = .offline
                 timer?.fire()
             }
         }
     }
 
-    var status = STMStreamStatus.Offline {
+    var status = STMStreamStatus.offline {
         didSet {
             if !shallow {
                 switch status {
-                case .Offline:
+                case .offline:
                     self.backgroundColor = RGB(200)
-                case .Online:
+                case .online:
                     self.backgroundColor = RGB(74, g: 237, b: 93)
-                case .RecentlyOnline:
+                case .recentlyOnline:
                     self.backgroundColor = RGB(237, g: 181, b: 74)
                 }
             }
         }
     }
 
-    var timer: NSTimer?
+    var timer: Timer?
 
     init(stream: STMStream? = nil) {
         self.stream = stream
         super.init(frame: CGRect.zero)
 
-        self.autoSetDimensionsToSize(CGSize(width: 10, height: 10))
+        self.autoSetDimensions(to: CGSize(width: 10, height: 10))
         self.layer.cornerRadius = 10.0/2.0
         self.clipsToBounds = true
 
-        timer = NSTimer.scheduledTimerWithTimeInterval(20, target: self, selector: #selector(self.updateStatus), userInfo: nil, repeats: true)
+        timer = Timer.scheduledTimer(timeInterval: 20, target: self, selector: #selector(self.updateStatus), userInfo: nil, repeats: true)
     }
 
     required init?(coder aDecoder: NSCoder) {
@@ -63,27 +63,27 @@ class StreamStatusView: UIView {
         }
 
         Constants.Network.GET("/stream/\(stream.id)/isOnline", parameters: nil) { (response, error) in
-            guard let response = response, success = response["success"] as? Bool else {
-                self.status = .Offline
+            guard let response = response, let success = response["success"] as? Bool else {
+                self.status = .offline
                 return
             }
 
             guard success else {
-                self.status = .Offline
+                self.status = .offline
                 return
             }
 
-            guard let result = response["result"], innerResult = result as? JSON else {
-                self.status = .Offline
+            guard let result = response["result"], let innerResult = result as? JSON else {
+                self.status = .offline
                 return
             }
 
             guard let online = innerResult["online"] as? Int else {
-                self.status = .Offline
+                self.status = .offline
                 return
             }
 
-            self.status = STMStreamStatus(rawValue: online) ?? .Offline
+            self.status = STMStreamStatus(rawValue: online) ?? .offline
         }
     }
 

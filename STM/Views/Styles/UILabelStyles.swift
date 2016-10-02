@@ -10,24 +10,24 @@ import UIKit
 
 extension UILabel {
 
-    class func styledForSettingsHeader(text: String = "{HEADER TEXT}") -> UILabel {
+    class func styledForSettingsHeader(_ text: String = "{HEADER TEXT}") -> UILabel {
         let label = UILabel()
         label.backgroundColor = Constants.UI.Color.tint
         label.text = text
-        label.textAlignment = .Center
-        label.font = UIFont.systemFontOfSize(13, weight: UIFontWeightLight)
+        label.textAlignment = .center
+        label.font = UIFont.systemFont(ofSize: 13, weight: UIFontWeightLight)
         label.textColor = RGB(255)
-        label.autoSetDimension(.Height, toSize: 22)
+        label.autoSetDimension(.height, toSize: 22)
         return label
     }
 
-    class func styledForDashboardHeader(text: String = "{HEADER TEXT}") -> UILabel {
+    class func styledForDashboardHeader(_ text: String = "{HEADER TEXT}") -> UILabel {
         let label = UILabel()
         label.textColor = Constants.UI.Color.tint
         label.text = text
-        label.font = UIFont.systemFontOfSize(15, weight: UIFontWeightMedium)
-        label.backgroundColor = UIColor.clearColor()
-        label.autoSetDimension(.Height, toSize: 20)
+        label.font = UIFont.systemFont(ofSize: 15, weight: UIFontWeightMedium)
+        label.backgroundColor = UIColor.clear
+        label.autoSetDimension(.height, toSize: 20)
         return label
     }
 

@@ -15,7 +15,7 @@ class DashboardItemCollectionCell: UICollectionViewCell, Reusable {
     override init(frame: CGRect) {
         super.init(frame: frame)
 
-        imageView.contentMode = .ScaleAspectFit
+        imageView.contentMode = .scaleAspectFit
         imageView.backgroundColor = RGB(255)
         imageView.layer.cornerRadius = 62.0/2.0
         imageView.clipsToBounds = true
@@ -24,14 +24,14 @@ class DashboardItemCollectionCell: UICollectionViewCell, Reusable {
     }
 
     func setupConstraints() {
-        imageView.autoSetDimensionsToSize(CGSize(width: 62, height: 62))
-        imageView.autoPinEdgesToSuperviewEdgesWithInsets(UIEdgeInsetsZero)
+        imageView.autoSetDimensions(to: CGSize(width: 62, height: 62))
+        imageView.autoPinEdgesToSuperviewEdges(with: UIEdgeInsets.zero)
     }
 
-    func setContent(model: Any?) {
+    func setContent(_ model: Any?) {
         self.model = model
         if let stream = model as? STMStream {
-            imageView.kf_setImageWithURL(stream.pictureURL(), placeholderImage: UIImage(named: "defaultStreamImage"), optionsInfo: nil, progressBlock: nil, completionHandler: nil)
+            imageView.kf.setImage(with: stream.pictureURL(), placeholder: UIImage(named: "defaultStreamImage"), options: nil, progressBlock: nil, completionHandler: nil)
         }
     }
 

@@ -8,26 +8,26 @@
 
 import Foundation
 
-public class Box<T> {
+open class Box<T> {
     let unbox: T
     public init(_ value: T) { self.unbox = value }
 }
 
 public enum FUXTween {
-    case Tween(Float, FUXValue)
-    case Easing(Box<FUXTween>, Float -> Float)
-    case Delay(Float, Box<FUXTween>)
-    case Speed(Float, Box<FUXTween>)
-    case Reverse(Box<FUXTween>)
-    case YoYo(Box<FUXTween>)
-    case Repeat(Int, Box<FUXTween>)
+    case tween(Float, FUXValue)
+    case easing(Box<FUXTween>, (Float) -> Float)
+    case delay(Float, Box<FUXTween>)
+    case speed(Float, Box<FUXTween>)
+    case reverse(Box<FUXTween>)
+    case yoYo(Box<FUXTween>)
+    case `repeat`(Int, Box<FUXTween>)
     //case After(Box<FUXTween>, Box<FUXTween>)
-    case OnComplete(Box<FUXTween>, () -> ())
+    case onComplete(Box<FUXTween>, () -> ())
     //case OnStart(Box<FUXTween>, () -> ())
     //case OnUpdate(Box<FUXTween>, (Float, Float) -> ())
 }
 
 public enum FUXValue {
-    case Value(Float -> ())
-    case Values([ Box<FUXValue> ])
+    case value((Float) -> ())
+    case values([ Box<FUXValue> ])
 }

@@ -15,7 +15,7 @@ class GradientView: UIView {
         super.init(frame : frame)
 
         gradientLayer.frame = self.bounds
-        gradientLayer.colors = [UIColor.redColor().CGColor, UIColor.whiteColor().CGColor]
+        gradientLayer.colors = [UIColor.red.cgColor, UIColor.white.cgColor]
         self.layer.addSublayer(gradientLayer)
     }
 

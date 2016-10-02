@@ -12,33 +12,33 @@ class HostInfoHolderView: UIView {
 
     var comments: Int = 0 {
         didSet {
-            dispatch_async(dispatch_get_main_queue()) { () -> Void in
-                UIView.animateWithDuration(0.5) { () -> Void in
+            DispatchQueue.main.async { () -> Void in
+                UIView.animate(withDuration: 0.5, animations: { () -> Void in
                     self.commentCount.text = String(self.comments)
                     self.layoutIfNeeded()
-                }
+                }) 
             }
         }
     }
 
     var listeners: Int = 0 {
         didSet {
-            dispatch_async(dispatch_get_main_queue()) { () -> Void in
-                UIView.animateWithDuration(0.5) { () -> Void in
+            DispatchQueue.main.async { () -> Void in
+                UIView.animate(withDuration: 0.5, animations: { () -> Void in
                     self.listenerCount.text = String(self.listeners)
                     self.layoutIfNeeded()
-                }
+                }) 
             }
         }
     }
 
     var bandwidth: Float = 0.0 {
         didSet {
-            dispatch_async(dispatch_get_main_queue()) { () -> Void in
-                UIView.animateWithDuration(0.5) { () -> Void in
+            DispatchQueue.main.async { () -> Void in
+                UIView.animate(withDuration: 0.5, animations: { () -> Void in
                     self.bandwidthCount.text = String(self.bytesToSize(self.bandwidth))
                     self.layoutIfNeeded()
-                }
+                }) 
             }
         }
     }
@@ -59,20 +59,20 @@ class HostInfoHolderView: UIView {
     override init(frame: CGRect) {
         super.init(frame: frame)
 
-        self.autoSetDimension(.Height, toSize: 16)
+        self.autoSetDimension(.height, toSize: 16)
 
-        listenerCount.hidden = true
-        listenerCountImageView.hidden = true
+        listenerCount.isHidden = true
+        listenerCountImageView.isHidden = true
         [commentCount, commentCountImageView, listenerCount, listenerCountImageView, bandwidthCount, bandwidthCountImageView].forEach({ self.addSubview($0) })
 
         [commentCount, listenerCount, bandwidthCount].forEach({ $0.textColor = RGB(92, g: 38, b: 254) })
-        [commentCount, listenerCount, bandwidthCount].forEach({ $0.font = UIFont.systemFontOfSize(13) })
+        [commentCount, listenerCount, bandwidthCount].forEach({ $0.font = UIFont.systemFont(ofSize: 13) })
 
-        commentCountImageView.autoAlignAxisToSuperviewAxis(.Horizontal)
-        commentCountImageView.autoPinEdgeToSuperviewEdge(.Left)
+        commentCountImageView.autoAlignAxis(toSuperviewAxis: .horizontal)
+        commentCountImageView.autoPinEdge(toSuperviewEdge: .left)
 
-        commentCount.autoAlignAxis(.Horizontal, toSameAxisOfView: commentCountImageView)
-        commentCount.autoPinEdge(.Left, toEdge: .Right, ofView: commentCountImageView, withOffset: 4)
+        commentCount.autoAlignAxis(.horizontal, toSameAxisOf: commentCountImageView)
+        commentCount.autoPinEdge(.left, to: .right, of: commentCountImageView, withOffset: 4)
 
         /*listenerCountImageView.autoPinEdge(.Left, toEdge: .Right, ofView: commentCount, withOffset: 12)
         listenerCountImageView.autoAlignAxis(.Horizontal, toSameAxisOfView: commentCount)
@@ -80,12 +80,12 @@ class HostInfoHolderView: UIView {
         listenerCount.autoAlignAxis(.Horizontal, toSameAxisOfView: listenerCountImageView)
         listenerCount.autoPinEdge(.Left, toEdge: .Right, ofView: listenerCountImageView, withOffset: 4)*/
 
-        bandwidthCountImageView.autoPinEdge(.Left, toEdge: .Right, ofView: commentCount, withOffset: 12)
-        bandwidthCountImageView.autoAlignAxis(.Horizontal, toSameAxisOfView: commentCount)
+        bandwidthCountImageView.autoPinEdge(.left, to: .right, of: commentCount, withOffset: 12)
+        bandwidthCountImageView.autoAlignAxis(.horizontal, toSameAxisOf: commentCount)
 
-        bandwidthCount.autoAlignAxis(.Horizontal, toSameAxisOfView: bandwidthCountImageView)
-        bandwidthCount.autoPinEdge(.Left, toEdge: .Right, ofView: bandwidthCountImageView, withOffset: 4)
-        bandwidthCount.autoPinEdgeToSuperviewEdge(.Right)
+        bandwidthCount.autoAlignAxis(.horizontal, toSameAxisOf: bandwidthCountImageView)
+        bandwidthCount.autoPinEdge(.left, to: .right, of: bandwidthCountImageView, withOffset: 4)
+        bandwidthCount.autoPinEdge(toSuperviewEdge: .right)
     }
 
     /**
@@ -95,7 +95,7 @@ class HostInfoHolderView: UIView {
 
      - returns: the data size in Bytes, KB, MB, GB or TB
      */
-    func bytesToSize(bytes: Float) -> String {
+    func bytesToSize(_ bytes: Float) -> String {
         if bytes == 0 {
             return "0 Bytes"
         }

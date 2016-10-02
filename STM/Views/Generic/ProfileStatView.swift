@@ -23,15 +23,15 @@ class ProfileStatView: UIView {
         self.translatesAutoresizingMaskIntoConstraints = false
 
         countLabel.text = count.formatUsingAbbrevation()
-        countLabel.textAlignment = .Center
+        countLabel.textAlignment = .center
         countLabel.textColor = RGB(255)
-        countLabel.font = UIFont.systemFontOfSize(27, weight: UIFontWeightLight)
+        countLabel.font = UIFont.systemFont(ofSize: 27, weight: UIFontWeightLight)
         addSubview(countLabel)
 
         nameLabel.text = name
-        nameLabel.textAlignment = .Center
+        nameLabel.textAlignment = .center
         nameLabel.textColor = RGB(244)
-        nameLabel.font = UIFont.systemFontOfSize(13, weight: UIFontWeightMedium)
+        nameLabel.font = UIFont.systemFont(ofSize: 13, weight: UIFontWeightMedium)
         addSubview(nameLabel)
 
         setupConstraints()
@@ -39,12 +39,12 @@ class ProfileStatView: UIView {
 
     func setupConstraints() {
 
-        countLabel.autoPinEdgeToSuperviewEdge(.Top, withInset: 10)
-        countLabel.autoAlignAxisToSuperviewAxis(.Vertical)
+        countLabel.autoPinEdge(toSuperviewEdge: .top, withInset: 10)
+        countLabel.autoAlignAxis(toSuperviewAxis: .vertical)
 
-        nameLabel.autoPinEdge(.Top, toEdge: .Bottom, ofView: countLabel, withOffset: 10)
+        nameLabel.autoPinEdge(.top, to: .bottom, of: countLabel, withOffset: 10)
         NSLayoutConstraint.autoSetPriority(999) {
-            self.nameLabel.autoPinEdgesToSuperviewEdgesWithInsets(UIEdgeInsets(top: 0, left: 10, bottom: 0, right: 10), excludingEdge: .Top)
+            self.nameLabel.autoPinEdgesToSuperviewEdges(with: UIEdgeInsets(top: 0, left: 10, bottom: 0, right: 10), excludingEdge: .top)
         }
 
     }

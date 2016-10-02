@@ -19,22 +19,22 @@ class ProfileSettingsViewController: KZViewController {
         super.viewDidLoad()
 
         self.navigationItem.title = "Edit Profile"
-        self.navigationItem.backBarButtonItem = UIBarButtonItem(title:"", style:.Plain, target:nil, action:nil)
+        self.navigationItem.backBarButtonItem = UIBarButtonItem(title:"", style:.plain, target:nil, action:nil)
 
         tableView.delegate = self
         tableView.dataSource = self
-        tableView.registerReusableCell(SettingsProfilePictureCell)
-        tableView.registerReusableCell(SettingsUserCell)
-        tableView.registerReusableCell(SettingsNameCell)
-        tableView.backgroundColor = UIColor.whiteColor()
+        tableView.registerReusableCell(SettingsProfilePictureCell.self)
+        tableView.registerReusableCell(SettingsUserCell.self)
+        tableView.registerReusableCell(SettingsNameCell.self.self)
+        tableView.backgroundColor = UIColor.white
 
         let footerView = UIView()
         footerView.backgroundColor = RGB(250, g: 251, b: 252)
         let footerLabel = UILabel()
-        if let version = NSBundle.mainBundle().infoDictionary?["CFBundleShortVersionString"] as? String, build = NSBundle.mainBundle().infoDictionary?["CFBundleVersion"] as? String {
+        if let version = Bundle.main.infoDictionary?["CFBundleShortVersionString"] as? String, let build = Bundle.main.infoDictionary?["CFBundleVersion"] as? String {
             footerLabel.text = "STM | Version: \(version) (\(build))"
         }
-        footerLabel.textAlignment = .Center
+        footerLabel.textAlignment = .center
         footerLabel.sizeToFit()
         footerView.addSubview(footerLabel)
         footerView.frame = footerLabel.frame
@@ -49,7 +49,7 @@ class ProfileSettingsViewController: KZViewController {
         fetchOnce()
     }
 
-    override func viewDidAppear(animated: Bool) {
+    override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
 
         self.tableView.reloadData()
@@ -58,15 +58,15 @@ class ProfileSettingsViewController: KZViewController {
     override func setupConstraints() {
         super.setupConstraints()
 
-        tableView.autoPinEdgesToSuperviewEdgesWithInsets(UIEdgeInsetsZero, excludingEdge: .Bottom)
-        tableView.autoPinToBottomLayoutGuideOfViewController(self, withInset: 0)
+        tableView.autoPinEdgesToSuperviewEdges(with: UIEdgeInsets.zero, excludingEdge: .bottom)
+        tableView.autoPin(toBottomLayoutGuideOf: self, withInset: 0)
     }
 
-    override func tableViewCellData(tableView: UITableView, section: Int) -> [Any] {
+    override func tableViewCellData(_ tableView: UITableView, section: Int) -> [Any] {
         return items
     }
 
-    override func tableViewCellClass(tableView: UITableView, indexPath: NSIndexPath? = nil) -> KZTableViewCell.Type {
+    override func tableViewCellClass(_ tableView: UITableView, indexPath: IndexPath? = nil) -> KZTableViewCell.Type {
         if indexPath?.row == 0 {
             return SettingsProfilePictureCell.self
         } else if indexPath?.row == 1 {
@@ -76,8 +76,8 @@ class ProfileSettingsViewController: KZViewController {
         return SettingsNameCell.self
     }
 
-    override func tableView(tableView: UITableView, didSelectRowAtIndexPath indexPath: NSIndexPath) {
-        super.tableView(tableView, didSelectRowAtIndexPath: indexPath)
+    override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        super.tableView(tableView, didSelectRowAt: indexPath)
 
         if indexPath.row == 0 {
             changeProfilePiture()
@@ -96,7 +96,7 @@ class ProfileSettingsViewController: KZViewController {
 
     func changeProfilePiture() {
         let vc = CameraViewController(croppingEnabled: true) { image in
-            self.dismissViewControllerAnimated(true, completion: nil)
+            self.dismiss(animated: true, completion: nil)
             guard let image = image.0 else {
                 return
             }
@@ -111,23 +111,22 @@ class ProfileSettingsViewController: KZViewController {
 
             let hud = M13ProgressHUD(progressView: progressView)
             if let window = AppDelegate.del().window {
-                hud.frame = window.bounds
+                hud?.frame = window.bounds
             }
-            hud.progressViewSize = CGSize(width: 60, height: 60)
-            hud.animationPoint = CGPoint(x: hud.frame.size.width / 2, y: hud.frame.size.height / 2)
-            hud.status = "Uploading Image"
-            hud.applyBlurToBackground = true
-            hud.maskType = M13ProgressHUDMaskTypeIOS7Blur
-            AppDelegate.del().window?.addSubview(hud)
-            hud.show(true)
+            hud?.progressViewSize = CGSize(width: 60, height: 60)
+            hud?.animationPoint = CGPoint(x: (hud?.frame.size.width)! / 2, y: (hud?.frame.size.height)! / 2)
+            hud?.status = "Uploading Image"
+            hud?.applyBlurToBackground = true
+            hud?.maskType = M13ProgressHUDMaskTypeIOS7Blur
+            AppDelegate.del().window?.addSubview(hud!)
+            hud?.show(true)
 
-            Constants.Network.UPLOAD("/user/upload/profilePicture", data: imageData, parameters: nil, progress: { (bytesWritten, totalBytesWritten, totalBytesExpectedToWrite) in
-                let progress = CGFloat(totalBytesWritten)/CGFloat(totalBytesExpectedToWrite)
-                hud.setProgress(progress, animated: true)
+            Constants.Network.UPLOAD("/user/upload/profilePicture", data: imageData, progressHandler: { (progress) in
+                hud?.setProgress(CGFloat(progress), animated: true)
                 }, completionHandler: { (response, error) in
-                    hud.hide(true)
-                    self.handleResponse(response, error: error, successCompletion: { (result) in
-                        guard let result = result as? JSON, user = STMUser(json: result) else {
+                    hud?.hide(true)
+                    self.handleResponse(response, error: error as NSError?, successCompletion: { (result) in
+                        guard let result = result as? JSON, let user = STMUser(json: result) else {
                             return
                         }
 
@@ -136,7 +135,7 @@ class ProfileSettingsViewController: KZViewController {
             })
         }
 
-        presentViewController(vc, animated: true, completion: nil)
+        present(vc, animated: true, completion: nil)
     }
 
     func logoutUser() {
@@ -145,11 +144,11 @@ class ProfileSettingsViewController: KZViewController {
         }
 
         AppDelegate.del().currentUser = nil
-        Constants.Settings.setObject(nil, forKey: "user")
+        Constants.Settings.set(nil, forKey: "user")
 
         let nav = NavigationController(rootViewController: InitialViewController())
         nav.setNavigationBarHidden(true, animated: false)
-        UIView.transitionWithView(window, duration: 0.5, options: UIViewAnimationOptions.TransitionCrossDissolve, animations: {
+        UIView.transition(with: window, duration: 0.5, options: UIViewAnimationOptions.transitionCrossDissolve, animations: {
             AppDelegate.del().window?.rootViewController = nav
             }, completion: { (finished) -> Void in
         })

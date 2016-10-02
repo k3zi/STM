@@ -17,9 +17,9 @@ class SettingJoinedView: UIView {
     let padding = CGFloat(12.0)
 
     init(text: String, detailText: String = "", control: UIView) {
-        self.textLabel.font = UIFont.systemFontOfSize(16, weight: UIFontWeightMedium)
+        self.textLabel.font = UIFont.systemFont(ofSize: 16, weight: UIFontWeightMedium)
         self.textLabel.numberOfLines = 0
-        self.detailLabel.font = UIFont.systemFontOfSize(13, weight: UIFontWeightLight)
+        self.detailLabel.font = UIFont.systemFont(ofSize: 13, weight: UIFontWeightLight)
         self.detailLabel.numberOfLines = 0
 
         self.detailLabel.text = detailText
@@ -36,40 +36,40 @@ class SettingJoinedView: UIView {
         holdingView.addSubview(textLabel)
         self.addSubview(control)
 
-        holdingView.autoPinEdgeToSuperviewEdge(.Top, withInset: padding, relation: .GreaterThanOrEqual)
-        holdingView.autoPinEdgeToSuperviewEdge(.Left, withInset: padding)
-        holdingView.autoMatchDimension(.Width, toDimension: .Width, ofView: self, withMultiplier: 0.4, relation: .LessThanOrEqual)
-        holdingView.autoPinEdgeToSuperviewEdge(.Bottom, withInset: padding, relation: .GreaterThanOrEqual)
+        holdingView.autoPinEdge(toSuperviewEdge: .top, withInset: padding, relation: .greaterThanOrEqual)
+        holdingView.autoPinEdge(toSuperviewEdge: .left, withInset: padding)
+        holdingView.autoMatch(.width, to: .width, of: self, withMultiplier: 0.4, relation: .lessThanOrEqual)
+        holdingView.autoPinEdge(toSuperviewEdge: .bottom, withInset: padding, relation: .greaterThanOrEqual)
 
-        textLabel.autoPinEdgesToSuperviewEdgesWithInsets(UIEdgeInsetsZero, excludingEdge: .Bottom)
+        textLabel.autoPinEdgesToSuperviewEdges(with: UIEdgeInsets.zero, excludingEdge: .bottom)
 
         if detailLabel.text?.characters.count == 0 {
-            textLabel.autoPinEdgeToSuperviewEdge(.Bottom)
+            textLabel.autoPinEdge(toSuperviewEdge: .bottom)
         } else {
             holdingView.addSubview(detailLabel)
-            detailLabel.autoPinEdge(.Top, toEdge: .Bottom, ofView: textLabel, withOffset: 4)
-            detailLabel.autoPinEdgesToSuperviewEdgesWithInsets(UIEdgeInsetsZero, excludingEdge: .Top)
+            detailLabel.autoPinEdge(.top, to: .bottom, of: textLabel, withOffset: 4)
+            detailLabel.autoPinEdgesToSuperviewEdges(with: UIEdgeInsets.zero, excludingEdge: .top)
         }
 
-        control.autoPinEdgeToSuperviewEdge(.Top, withInset: padding, relation: .GreaterThanOrEqual)
-        control.autoPinEdge(.Left, toEdge: .Right, ofView: holdingView, withOffset: 25)
-        control.autoPinEdgeToSuperviewEdge(.Right, withInset: padding)
-        control.autoPinEdgeToSuperviewEdge(.Bottom, withInset: padding, relation: .GreaterThanOrEqual)
+        control.autoPinEdge(toSuperviewEdge: .top, withInset: padding, relation: .greaterThanOrEqual)
+        control.autoPinEdge(.left, to: .right, of: holdingView, withOffset: 25)
+        control.autoPinEdge(toSuperviewEdge: .right, withInset: padding)
+        control.autoPinEdge(toSuperviewEdge: .bottom, withInset: padding, relation: .greaterThanOrEqual)
 
-        control.autoAlignAxis(.Horizontal, toSameAxisOfView: holdingView)
+        control.autoAlignAxis(.horizontal, toSameAxisOf: holdingView)
     }
 
-    func setPrevChain(prevChain: UIView?) {
+    func setPrevChain(_ prevChain: UIView?) {
         if let prevChain = prevChain as? SettingJoinedView {
             let line = UIView.lineWithBGColor(RGB(217))
             if let su = self.superview {
                 su.addSubview(line)
-                line.autoPinEdge(.Top, toEdge: .Bottom, ofView: prevChain)
-                line.autoPinEdgeToSuperviewEdge(.Left)
-                line.autoPinEdgeToSuperviewEdge(.Right)
-                self.autoPinEdge(.Top, toEdge: .Bottom, ofView: line)
+                line.autoPinEdge(.top, to: .bottom, of: prevChain)
+                line.autoPinEdge(toSuperviewEdge: .left)
+                line.autoPinEdge(toSuperviewEdge: .right)
+                self.autoPinEdge(.top, to: .bottom, of: line)
             }
-            self.holdingView.autoMatchDimension(.Width, toDimension: .Width, ofView: prevChain.holdingView)
+            self.holdingView.autoMatch(.width, to: .width, of: prevChain.holdingView)
         }
     }
 

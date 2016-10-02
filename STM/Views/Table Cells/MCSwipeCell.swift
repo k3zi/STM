@@ -9,26 +9,26 @@
 import UIKit
 
 enum MCSwipeTableViewCellDirection {
-    case Left
-    case Right
-    case Center
+    case left
+    case right
+    case center
 }
 
 enum MCSwipeTableViewCellState {
-    case None
-    case State1
-    case State2
-    case State3
-    case State4
+    case none
+    case state1
+    case state2
+    case state3
+    case state4
 }
 
 enum MCSwipeTableViewCellMode {
-    case None
-    case Exit
-    case Switch
+    case none
+    case exit
+    case `switch`
 }
 
-typealias MCSwipeCompletionBlock = (cell: MCSwipeCell, state: MCSwipeTableViewCellState, mode: MCSwipeTableViewCellMode) -> Void
+typealias MCSwipeCompletionBlock = (_ cell: MCSwipeCell, _ state: MCSwipeTableViewCellState, _ mode: MCSwipeTableViewCellMode) -> Void
 
 // swiftlint:disable variable_name
 // swiftlint:disable type_body_length
@@ -39,18 +39,18 @@ class MCSwipeCell: KZTableViewCell {
     var _contentScreenshotView: UIImageView?
     var _colorIndicatorView: UIView?
     var _slidingView: UIView?
-    var _direction = MCSwipeTableViewCellDirection.Center
+    var _direction = MCSwipeTableViewCellDirection.center
 
     var _isExited = false
     var settings_damping = CGFloat(0.6)
     var settings_velocity = CGFloat(0.9)
-    var settings_animationDuration = NSTimeInterval(0.4)
+    var settings_animationDuration = TimeInterval(0.4)
     var currentPercentage = CGFloat(0)
 
     let settings_firstTrigger = CGFloat(0.15)
     let settings_secondTrigger = CGFloat(0.47)
 
-    var defaultColor = UIColor.whiteColor()
+    var defaultColor = UIColor.white
 
     var _view1: UIView?
     var _view2: UIView?
@@ -62,10 +62,10 @@ class MCSwipeCell: KZTableViewCell {
     var _color3: UIColor?
     var _color4: UIColor?
 
-    var _modeForState1 = MCSwipeTableViewCellMode.None
-    var _modeForState2 = MCSwipeTableViewCellMode.None
-    var _modeForState3 = MCSwipeTableViewCellMode.None
-    var _modeForState4 = MCSwipeTableViewCellMode.None
+    var _modeForState1 = MCSwipeTableViewCellMode.none
+    var _modeForState2 = MCSwipeTableViewCellMode.none
+    var _modeForState3 = MCSwipeTableViewCellMode.none
+    var _modeForState4 = MCSwipeTableViewCellMode.none
 
     var completionBlock1: MCSwipeCompletionBlock?
     var completionBlock2: MCSwipeCompletionBlock?
@@ -102,10 +102,10 @@ class MCSwipeCell: KZTableViewCell {
         _color3 = nil
         _color4 = nil
 
-        _modeForState1 = .None
-        _modeForState2 = .None
-        _modeForState3 = .None
-        _modeForState4 = .None
+        _modeForState1 = .none
+        _modeForState2 = .none
+        _modeForState3 = .none
+        _modeForState4 = .none
 
         completionBlock1 = nil
         completionBlock2 = nil
@@ -123,12 +123,12 @@ class MCSwipeCell: KZTableViewCell {
         let contentViewScreenshotImage = imageWithView(self)
 
         let colorIndicatorView = UIView(frame: self.bounds)
-        colorIndicatorView.autoresizingMask = [.FlexibleWidth, .FlexibleHeight]
+        colorIndicatorView.autoresizingMask = [.flexibleWidth, .flexibleHeight]
         colorIndicatorView.backgroundColor = defaultColor
         self.addSubview(colorIndicatorView)
 
         let slidingView = UIView()
-        slidingView.contentMode = .Center
+        slidingView.contentMode = .center
         colorIndicatorView.addSubview(slidingView)
 
         let contentScreenshotView = UIImageView(image: contentViewScreenshotImage)
@@ -156,7 +156,7 @@ class MCSwipeCell: KZTableViewCell {
         }
     }
 
-    func setViewOfSlidingView(slidingView: UIView) {
+    func setViewOfSlidingView(_ slidingView: UIView) {
         if let parentSlidingView = _slidingView {
             parentSlidingView.subviews.forEach({ $0.removeFromSuperview() })
             parentSlidingView.addSubview(slidingView)
@@ -165,29 +165,29 @@ class MCSwipeCell: KZTableViewCell {
 
     //MARK: Swipe Config
 
-    func setSwipeGestureWith(view: UIView, color: UIColor, mode: MCSwipeTableViewCellMode = .None, state: MCSwipeTableViewCellState = .State1, completionBlock: MCSwipeCompletionBlock) {
-        if state == .State1 {
+    func setSwipeGestureWith(_ view: UIView, color: UIColor, mode: MCSwipeTableViewCellMode = .none, state: MCSwipeTableViewCellState = .state1, completionBlock: @escaping MCSwipeCompletionBlock) {
+        if state == .state1 {
             completionBlock1 = completionBlock
             _color1 = color
             _view1 = view
             _modeForState1 = mode
         }
 
-        if state == .State2 {
+        if state == .state2 {
             completionBlock2 = completionBlock
             _color2 = color
             _view2 = view
             _modeForState2 = mode
         }
 
-        if state == .State3 {
+        if state == .state3 {
             completionBlock3 = completionBlock
             _color3 = color
             _view3 = view
             _modeForState3 = mode
         }
 
-        if state == .State4 {
+        if state == .state4 {
             completionBlock4 = completionBlock
             _color4 = color
             _view4 = view
@@ -197,50 +197,50 @@ class MCSwipeCell: KZTableViewCell {
 
     //MARK: Gestures
 
-    func handlePanGestureRecognizer(gesture: UIPanGestureRecognizer) {
+    func handlePanGestureRecognizer(_ gesture: UIPanGestureRecognizer) {
         if _isExited {
             return
         }
 
-        let translation = gesture.translationInView(self)
-        let velocity = gesture.velocityInView(self)
+        let translation = gesture.translation(in: self)
+        let velocity = gesture.velocity(in: self)
         let animationDuration = animationDurationWithVelocity(velocity)
         var percentage = CGFloat(0)
         if let contentScreenshotView = _contentScreenshotView {
-            percentage = percentageWithOffset(CGRectGetMinX(contentScreenshotView.frame), relativeToWidth: CGRectGetWidth(self.bounds))
+            percentage = percentageWithOffset(contentScreenshotView.frame.minX, relativeToWidth: (self.bounds).width)
             _direction = directionWithPercentage(percentage)
         }
 
         //------------------ ----------------\\
 
-        if gesture.state == .Began || gesture.state == .Changed {
+        if gesture.state == .began || gesture.state == .changed {
             setupSwipingView()
 
             if let contentScreenshotView = _contentScreenshotView {
                 if canTravelTo(percentage) {
                     contentScreenshotView.center = CGPoint(x: contentScreenshotView.center.x + translation.x, y: contentScreenshotView.center.y)
-                    animateWithOffset(CGRectGetMinX(contentScreenshotView.frame))
-                    gesture.setTranslation(CGPoint.zero, inView: self)
+                    animateWithOffset(contentScreenshotView.frame.minX)
+                    gesture.setTranslation(CGPoint.zero, in: self)
                 }
             }
-        } else if gesture.state == .Ended || gesture.state == .Cancelled {
+        } else if gesture.state == .ended || gesture.state == .cancelled {
             _activeView = self.viewWithPercentage(percentage)
             currentPercentage = percentage
 
             let state = stateWithPercentage(percentage)
-            var mode = MCSwipeTableViewCellMode.None
+            var mode = MCSwipeTableViewCellMode.none
 
-            if state == .State1 {
+            if state == .state1 {
                 mode = _modeForState1
-            } else if state == .State2 {
+            } else if state == .state2 {
                 mode = _modeForState2
-            } else if state == .State2 {
+            } else if state == .state2 {
                 mode = _modeForState3
-            } else if state == .State4 {
+            } else if state == .state4 {
                 mode = _modeForState4
             }
 
-            if mode == .Exit && _direction != .Center {
+            if mode == .exit && _direction != .center {
                 self.moveWithDuration(animationDuration, direction: _direction)
             } else {
                 self.swipeToOriginWithCompletion({ () -> Void in
@@ -250,12 +250,12 @@ class MCSwipeCell: KZTableViewCell {
         }
     }
 
-    override func gestureRecognizerShouldBegin(gestureRecognizer: UIGestureRecognizer) -> Bool {
+    override func gestureRecognizerShouldBegin(_ gestureRecognizer: UIGestureRecognizer) -> Bool {
         if let gesture = gestureRecognizer as? UIPanGestureRecognizer {
-            let point = gesture.velocityInView(self)
+            let point = gesture.velocity(in: self)
 
             if fabs(point.x) > fabs(point.y) {
-                if point.x > 0 && _modeForState1 == .None && _modeForState2 == .None {
+                if point.x > 0 && _modeForState1 == .none && _modeForState2 == .none {
                     return false
                 }
 
@@ -268,8 +268,8 @@ class MCSwipeCell: KZTableViewCell {
 
     //MARK: Movement
 
-    func animateWithOffset(offset: CGFloat) {
-        let percentage = percentageWithOffset(offset, relativeToWidth: CGRectGetWidth(self.bounds))
+    func animateWithOffset(_ offset: CGFloat) {
+        let percentage = percentageWithOffset(offset, relativeToWidth: (self.bounds).width)
 
         if let view = viewWithPercentage(percentage) {
             setViewOfSlidingView(view)
@@ -285,29 +285,29 @@ class MCSwipeCell: KZTableViewCell {
         }
     }
 
-    func slideViewWithPercentage(percentage: CGFloat, view: UIView?, isDragging: Bool) {
+    func slideViewWithPercentage(_ percentage: CGFloat, view: UIView?, isDragging: Bool) {
         guard let view = view else {
             return
         }
 
         var position = CGPoint.zero
-        position.y = CGRectGetHeight(self.bounds) / 2.0
+        position.y = (self.bounds).height / 2.0
 
         if isDragging {
             if percentage >= 0 && percentage < settings_firstTrigger {
-                position.x = offsetWithPercentage(settings_firstTrigger/2, relativeToWidth: CGRectGetWidth(self.bounds))
+                position.x = offsetWithPercentage(settings_firstTrigger/2, relativeToWidth: (self.bounds).width)
             } else if percentage >= settings_firstTrigger {
-                position.x = offsetWithPercentage(percentage - (settings_firstTrigger/2), relativeToWidth: CGRectGetWidth(self.bounds))
+                position.x = offsetWithPercentage(percentage - (settings_firstTrigger/2), relativeToWidth: (self.bounds).width)
             } else if percentage < 0 && percentage >= -settings_firstTrigger {
-                position.x = CGRectGetWidth(self.bounds) - offsetWithPercentage(settings_firstTrigger/2, relativeToWidth: CGRectGetWidth(self.bounds))
+                position.x = (self.bounds).width - offsetWithPercentage(settings_firstTrigger/2, relativeToWidth: (self.bounds).width)
             } else if percentage < -settings_firstTrigger {
-                position.x = CGRectGetWidth(self.bounds) + offsetWithPercentage(percentage + (settings_firstTrigger/2), relativeToWidth: CGRectGetWidth(self.bounds))
+                position.x = (self.bounds).width + offsetWithPercentage(percentage + (settings_firstTrigger/2), relativeToWidth: (self.bounds).width)
             }
         } else {
-            if _direction == .Right {
-                position.x = offsetWithPercentage(settings_firstTrigger/2, relativeToWidth: CGRectGetWidth(self.bounds))
-            } else if _direction == .Left {
-                position.x = CGRectGetWidth(self.bounds) - offsetWithPercentage(settings_firstTrigger/2, relativeToWidth: CGRectGetWidth(self.bounds))
+            if _direction == .right {
+                position.x = offsetWithPercentage(settings_firstTrigger/2, relativeToWidth: (self.bounds).width)
+            } else if _direction == .left {
+                position.x = (self.bounds).width - offsetWithPercentage(settings_firstTrigger/2, relativeToWidth: (self.bounds).width)
             } else {
                 return
             }
@@ -315,21 +315,21 @@ class MCSwipeCell: KZTableViewCell {
 
         let activeViewSize = view.bounds.size
         var activeViewFrame = CGRect(x: position.x - activeViewSize.width / 2.0, y: position.y - activeViewSize.height / 2.0, width: activeViewSize.width, height: activeViewSize.height)
-        activeViewFrame = CGRectIntegral(activeViewFrame)
+        activeViewFrame = activeViewFrame.integral
 
         if let slidingView = _slidingView {
             slidingView.frame = activeViewFrame
         }
     }
 
-    func moveWithDuration(duration: NSTimeInterval, direction: MCSwipeTableViewCellDirection) {
+    func moveWithDuration(_ duration: TimeInterval, direction: MCSwipeTableViewCellDirection) {
         _isExited = true
 
         var origin = CGFloat(0)
-        if direction == .Left {
-            origin = -CGRectGetWidth(self.bounds)
-        } else if direction == .Right {
-            origin = CGRectGetWidth(self.bounds)
+        if direction == .left {
+            origin = -(self.bounds).width
+        } else if direction == .right {
+            origin = (self.bounds).width
         }
 
         guard let contentScreenshotView = _contentScreenshotView else {
@@ -340,11 +340,11 @@ class MCSwipeCell: KZTableViewCell {
             return
         }
 
-        let percentage = percentageWithOffset(origin, relativeToWidth: CGRectGetWidth(self.bounds))
+        let percentage = percentageWithOffset(origin, relativeToWidth: (self.bounds).width)
         var frame = contentScreenshotView.frame
         frame.origin.x = origin
 
-        UIView.animateWithDuration(duration, delay: 0, options: [.CurveEaseOut, .AllowUserInteraction], animations: { () -> Void in
+        UIView.animate(withDuration: duration, delay: 0, options: [.curveEaseOut, .allowUserInteraction], animations: { () -> Void in
             contentScreenshotView.frame = frame
             slidingView.alpha = 0
             self.slideViewWithPercentage(percentage, view: self._activeView, isDragging: true)
@@ -353,8 +353,8 @@ class MCSwipeCell: KZTableViewCell {
         }
     }
 
-    func swipeToOriginWithCompletion(completion: (() -> Void)?) {
-        UIView.animateWithDuration(settings_animationDuration, delay: 0.0, usingSpringWithDamping: settings_damping, initialSpringVelocity: settings_velocity, options: [.CurveEaseInOut], animations: { () -> Void in
+    func swipeToOriginWithCompletion(_ completion: (() -> Void)?) {
+        UIView.animate(withDuration: settings_animationDuration, delay: 0.0, usingSpringWithDamping: settings_damping, initialSpringVelocity: settings_velocity, options: UIViewAnimationOptions(), animations: { () -> Void in
             if let contentScreenshotView = self._contentScreenshotView {
                 contentScreenshotView.frame.origin.x = 0
             }
@@ -377,28 +377,28 @@ class MCSwipeCell: KZTableViewCell {
         }
     }
 
-    func imageWithView(view: UIView) -> UIImage {
-        let scale = UIScreen.mainScreen().scale
+    func imageWithView(_ view: UIView) -> UIImage {
+        let scale = UIScreen.main.scale
         UIGraphicsBeginImageContextWithOptions(view.bounds.size, false, scale)
 
         if let context = UIGraphicsGetCurrentContext() {
-            view.layer.renderInContext(context)
+            view.layer.render(in: context)
             let image =  UIGraphicsGetImageFromCurrentImageContext()
             UIGraphicsEndImageContext()
-            return image
+            return image!
         }
 
         return UIImage()
     }
 
-    func canTravelTo(percentage: CGFloat) -> Bool {
-        if _modeForState1 == .None && _modeForState2 == .None {
+    func canTravelTo(_ percentage: CGFloat) -> Bool {
+        if _modeForState1 == .none && _modeForState2 == .none {
             if percentage > 0.0 {
                 return false
             }
         }
 
-        if _modeForState3 == .None && _modeForState4 == .None {
+        if _modeForState3 == .none && _modeForState4 == .none {
             if percentage < 0.0 {
                 return false
             }
@@ -409,7 +409,7 @@ class MCSwipeCell: KZTableViewCell {
 
     //MARK: Percentage
 
-    func offsetWithPercentage(percentage: CGFloat, relativeToWidth width: CGFloat) -> CGFloat {
+    func offsetWithPercentage(_ percentage: CGFloat, relativeToWidth width: CGFloat) -> CGFloat {
         var offset = percentage * width
         if offset < -width {
             offset = -width
@@ -420,7 +420,7 @@ class MCSwipeCell: KZTableViewCell {
         return offset
     }
 
-    func percentageWithOffset(offset: CGFloat, relativeToWidth width: CGFloat) -> CGFloat {
+    func percentageWithOffset(_ offset: CGFloat, relativeToWidth width: CGFloat) -> CGFloat {
         var percentage = offset/width
         if percentage < -1.0 {
             percentage = -1.0
@@ -431,8 +431,8 @@ class MCSwipeCell: KZTableViewCell {
         return percentage
     }
 
-    func animationDurationWithVelocity(velocity: CGPoint) -> NSTimeInterval {
-        let width = CGRectGetWidth(self.bounds)
+    func animationDurationWithVelocity(_ velocity: CGPoint) -> TimeInterval {
+        let width = (self.bounds).width
         let animationDurationDiff = CGFloat(0.1 - 0.25)
         var horizontalVelocity = velocity.x
 
@@ -442,42 +442,42 @@ class MCSwipeCell: KZTableViewCell {
             horizontalVelocity = width
         }
 
-        return (0.1 + 0.25) - NSTimeInterval(((horizontalVelocity / width) * animationDurationDiff))
+        return (0.1 + 0.25) - TimeInterval(((horizontalVelocity / width) * animationDurationDiff))
     }
 
-    func directionWithPercentage(percentage: CGFloat) -> MCSwipeTableViewCellDirection {
+    func directionWithPercentage(_ percentage: CGFloat) -> MCSwipeTableViewCellDirection {
         if percentage < 0 {
-            return .Left
+            return .left
         } else if percentage > 0 {
-            return .Right
+            return .right
         }
 
-        return .Center
+        return .center
     }
 
-    func viewWithPercentage(percentage: CGFloat) -> UIView? {
+    func viewWithPercentage(_ percentage: CGFloat) -> UIView? {
         var view: UIView?
 
-        if percentage >= 0 && _modeForState1 != .None {
+        if percentage >= 0 && _modeForState1 != .none {
             view = _view1
         }
 
-        if percentage >= settings_secondTrigger && _modeForState2 != .None {
+        if percentage >= settings_secondTrigger && _modeForState2 != .none {
             view = _view2
         }
 
-        if percentage < 0 && _modeForState3 != .None {
+        if percentage < 0 && _modeForState3 != .none {
             view = _view3
         }
 
-        if percentage <= -settings_secondTrigger && _modeForState4 != .None {
+        if percentage <= -settings_secondTrigger && _modeForState4 != .none {
             view = _view4
         }
 
         return view
     }
 
-    func alphaWithPercentage(percentage: CGFloat) -> CGFloat {
+    func alphaWithPercentage(_ percentage: CGFloat) -> CGFloat {
         var alpha = CGFloat(1.0)
 
         if percentage >= 0 && percentage < settings_firstTrigger {
@@ -491,76 +491,76 @@ class MCSwipeCell: KZTableViewCell {
         return alpha
     }
 
-    func colorWithPercentage(percentage: CGFloat) -> UIColor {
+    func colorWithPercentage(_ percentage: CGFloat) -> UIColor {
         var color = defaultColor
 
-        if percentage > settings_firstTrigger && _modeForState1 != .None {
+        if percentage > settings_firstTrigger && _modeForState1 != .none {
             color = _color1 ?? color
         }
 
-        if percentage > settings_secondTrigger && _modeForState2 != .None {
+        if percentage > settings_secondTrigger && _modeForState2 != .none {
             color = _color2 ?? color
         }
 
-        if percentage < -settings_firstTrigger && _modeForState3 != .None {
+        if percentage < -settings_firstTrigger && _modeForState3 != .none {
             color = _color3 ?? color
         }
 
-        if percentage <= -settings_secondTrigger && _modeForState4 != .None {
+        if percentage <= -settings_secondTrigger && _modeForState4 != .none {
             color = _color4 ?? color
         }
 
         return color
     }
 
-    func stateWithPercentage(percentage: CGFloat) -> MCSwipeTableViewCellState {
-        var state = MCSwipeTableViewCellState.None
+    func stateWithPercentage(_ percentage: CGFloat) -> MCSwipeTableViewCellState {
+        var state = MCSwipeTableViewCellState.none
 
-        if percentage > settings_firstTrigger && _modeForState1 != .None {
-            state = .State1
+        if percentage > settings_firstTrigger && _modeForState1 != .none {
+            state = .state1
         }
 
-        if percentage >= settings_secondTrigger && _modeForState2 != .None {
-            state = .State2
+        if percentage >= settings_secondTrigger && _modeForState2 != .none {
+            state = .state2
         }
 
-        if percentage <= -settings_firstTrigger && _modeForState3 != .None {
-            state = .State3
+        if percentage <= -settings_firstTrigger && _modeForState3 != .none {
+            state = .state3
         }
 
-        if percentage <= -settings_secondTrigger && _modeForState4 != .None {
-            state = .State4
+        if percentage <= -settings_secondTrigger && _modeForState4 != .none {
+            state = .state4
         }
 
         return state
     }
 
-    class func viewWithImageName(name: String) -> UIView {
+    class func viewWithImageName(_ name: String) -> UIView {
         let image = UIImage(named: name)
         let imageView = UIImageView(image: image)
-        imageView.contentMode = UIViewContentMode.Center
+        imageView.contentMode = UIViewContentMode.center
         return imageView
     }
 
     func executeCompletionBlock() {
         let state = stateWithPercentage(currentPercentage)
-        var mode = MCSwipeTableViewCellMode.None
+        var mode = MCSwipeTableViewCellMode.none
         var completionBlock: MCSwipeCompletionBlock?
 
         switch state {
-        case .State1:
+        case .state1:
             mode = _modeForState1
             completionBlock = completionBlock1
             break
-        case .State2:
+        case .state2:
             mode = _modeForState2
             completionBlock = completionBlock2
             break
-        case .State3:
+        case .state3:
             mode = _modeForState3
             completionBlock = completionBlock3
             break
-        case .State4:
+        case .state4:
             mode = _modeForState4
             completionBlock = completionBlock4
             break
@@ -570,7 +570,7 @@ class MCSwipeCell: KZTableViewCell {
         }
 
         if let completionBlock = completionBlock {
-            completionBlock(cell: self, state: state, mode: mode)
+            completionBlock(self, state, mode)
         }
     }
 

@@ -12,6 +12,26 @@ import Fabric
 import TwitterKit
 import Crashlytics
 import KILabel
+fileprivate func < <T : Comparable>(lhs: T?, rhs: T?) -> Bool {
+  switch (lhs, rhs) {
+  case let (l?, r?):
+    return l < r
+  case (nil, _?):
+    return true
+  default:
+    return false
+  }
+}
+
+fileprivate func > <T : Comparable>(lhs: T?, rhs: T?) -> Bool {
+  switch (lhs, rhs) {
+  case let (l?, r?):
+    return l > r
+  default:
+    return rhs < lhs
+  }
+}
+
 
 @UIApplicationMain
 class AppDelegate: UIResponder, UIApplicationDelegate {
@@ -23,7 +43,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 
     var activeStreamController: UIViewController?
 
-	func application(application: UIApplication, didFinishLaunchingWithOptions launchOptions: [NSObject: AnyObject]?) -> Bool {
+	func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplicationLaunchOptionsKey: Any]?) -> Bool {
 
         configureApp()
 
@@ -34,7 +54,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 		window?.rootViewController = nav
 		window?.makeKeyAndVisible()
 
-		application.registerUserNotificationSettings(UIUserNotificationSettings(forTypes: [.Alert, .Badge, .Sound], categories: nil))
+		application.registerUserNotificationSettings(UIUserNotificationSettings(types: [.alert, .badge, .sound], categories: nil))
 		application.registerForRemoteNotifications()
 
 		return true
@@ -43,16 +63,15 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     //MARK: Configure App
 
     func configureApp() {
-        NSUserDefaults.standardUserDefaults().setSecret(Constants.Config.userDefaultsSecret)
-        Twitter.sharedInstance().startWithConsumerKey(Constants.Config.twitterConsumerKey, consumerSecret: Constants.Config.twitterConsumerSecret)
+        UserDefaults.standard.setSecret(Constants.Config.userDefaultsSecret)
+        Twitter.sharedInstance().start(withConsumerKey: Constants.Config.twitterConsumerKey, consumerSecret: Constants.Config.twitterConsumerSecret)
         Fabric.with([Crashlytics.self, Twitter.self])
 
-        Constants.http.authzModule = STMAuthzModule()
-        ImageDownloader.defaultDownloader.sessionConfiguration = Constants.Config.sessionConfig()
+        ImageDownloader.default.sessionConfiguration = Constants.Config.sessionConfig()
 
-        NSNotificationCenter.defaultCenter().addObserver(self, selector: #selector(AppDelegate.audioWasInterupted(_:)), name: AVAudioSessionInterruptionNotification, object: nil)
+        NotificationCenter.default.addObserver(self, selector: #selector(AppDelegate.audioWasInterupted(_:)), name: NSNotification.Name.AVAudioSessionInterruption, object: nil)
 
-        func exceptionHandler(exception: NSException) {
+        func exceptionHandler(_ exception: NSException) {
             print(exception)
             print(exception.callStackSymbols)
         }
@@ -60,53 +79,53 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 
         UITabBar.appearance().tintColor = Constants.UI.Color.tint
 
-        setUpAudioSession(withMic: false)
+        setUpAudioSession(false)
     }
 
-	func application(application: UIApplication, didRegisterForRemoteNotificationsWithDeviceToken deviceToken: NSData) {
-		let characterSet = NSCharacterSet(charactersInString: "<>")
-		let deviceTokenString = (deviceToken.description as NSString).stringByTrimmingCharactersInSet(characterSet).stringByReplacingOccurrencesOfString(" ", withString: "") as String
+	func application(_ application: UIApplication, didRegisterForRemoteNotificationsWithDeviceToken deviceToken: Data) {
+		let characterSet = CharacterSet(charactersIn: "<>")
+		let deviceTokenString = (deviceToken.description as NSString).trimmingCharacters(in: characterSet).replacingOccurrences(of: " ", with: "") as String
 		Constants.Settings.setSecretObject(deviceTokenString, forKey: "deviceTokenString")
 	}
 
-    func application(application: UIApplication, didReceiveRemoteNotification userInfo: [NSObject : AnyObject]) {
+    func application(_ application: UIApplication, didReceiveRemoteNotification userInfo: [AnyHashable: Any]) {
         updateBadgeCount()
     }
 
-    func application(application: UIApplication, didReceiveRemoteNotification userInfo: [NSObject : AnyObject], fetchCompletionHandler completionHandler: (UIBackgroundFetchResult) -> Void) {
+    func application(_ application: UIApplication, didReceiveRemoteNotification userInfo: [AnyHashable: Any], fetchCompletionHandler completionHandler: @escaping (UIBackgroundFetchResult) -> Void) {
         updateBadgeCount {
-            completionHandler(.NoData)
+            completionHandler(.noData)
         }
     }
 
-    func applicationDidBecomeActive(application: UIApplication) {
+    func applicationDidBecomeActive(_ application: UIApplication) {
         updateBadgeCount()
     }
 
-    func applicationWillResignActive(application: UIApplication) {
+    func applicationWillResignActive(_ application: UIApplication) {
         updateBadgeCount()
     }
 
-    func applicationWillTerminate(application: UIApplication) {
+    func applicationWillTerminate(_ application: UIApplication) {
         updateBadgeCount()
     }
 
-    func applicationDidEnterBackground(application: UIApplication) {
+    func applicationDidEnterBackground(_ application: UIApplication) {
         updateBadgeCount()
     }
 
     //MARK: Handle Open Requests
 
 
-    func application(application: UIApplication, openURL url: NSURL, sourceApplication: String?, annotation: AnyObject) -> Bool {
-        return self.application(application, handleOpenURL: url)
+    func application(_ application: UIApplication, open url: URL, sourceApplication: String?, annotation: Any) -> Bool {
+        return self.application(application, handleOpen: url)
     }
 
-    func application(app: UIApplication, openURL url: NSURL, options: [String : AnyObject]) -> Bool {
-        return self.application(app, handleOpenURL: url)
+    func application(_ app: UIApplication, open url: URL, options: [UIApplicationOpenURLOptionsKey : Any]) -> Bool {
+        return self.application(app, handleOpen: url)
     }
 
-    func application(application: UIApplication, handleOpenURL url: NSURL) -> Bool {
+    func application(_ application: UIApplication, handleOpen url: URL) -> Bool {
         guard url.scheme == "streamtome" else {
             return false
         }
@@ -115,11 +134,11 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
             return false
         }
 
-        let mixedVars = query.componentsSeparatedByString("&")
+        let mixedVars = query.components(separatedBy: "&")
         var dict = [String: String]()
 
         for set in mixedVars {
-            let arr = set.componentsSeparatedByString("=")
+            let arr = set.components(separatedBy: "=")
 
             guard arr.count == 2 else {
                 break
@@ -128,7 +147,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
             dict.updateValue(arr[1], forKey: arr[0])
         }
 
-        let path = url.absoluteString.componentsSeparatedByString("//")[1].componentsSeparatedByString("?")[0]
+        let path = url.absoluteString.components(separatedBy: "//")[1].components(separatedBy: "?")[0]
 
         if path == "open-stream" {
             guard dict["stream"] != nil else {
@@ -142,8 +161,8 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
             }
 
             Constants.Network.GET("/stream/\(streamID)", parameters: nil) { (response, error) -> Void in
-                self.topViewController()?.handleResponse(response, error: error, successCompletion: { (result) -> Void in
-                    guard let result = result as? JSON, stream = STMStream(json: result) else {
+                self.topViewController()?.handleResponse(response as AnyObject?, error: error as NSError?, successCompletion: { (result) -> Void in
+                    guard let result = result as? JSON, let stream = STMStream(json: result) else {
                         return
                     }
 
@@ -166,7 +185,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 
     //MARK: APNS Notifications
 
-    func updateBadgeCount(completionHandler: (() -> Void)? = nil) {
+    func updateBadgeCount(_ completionHandler: (() -> Void)? = nil) {
         guard let tabs = self.window?.rootViewController as? UITabBarController else {
             return
         }
@@ -190,21 +209,21 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 
     }
 
-    func updateServerBadgeCount(badgeCount: Int, completionHandler: (() -> Void)? = nil) {
+    func updateServerBadgeCount(_ badgeCount: Int, completionHandler: (() -> Void)? = nil) {
         guard let _ = AppDelegate.del().currentUser else {
             completionHandler?()
             return
         }
 
-        UIApplication.sharedApplication().applicationIconBadgeNumber = badgeCount
+        UIApplication.shared.applicationIconBadgeNumber = badgeCount
         Constants.Network.POST("/user/update/badge", parameters: ["value": badgeCount]) { (response, error) in
-            guard let response = response, success = response["success"] as? Bool else {
+            guard let response = response, let success = response["success"] as? Bool else {
                 completionHandler?()
                 return
             }
 
             if success {
-                guard let result = response["result"], userResult = result as? JSON else {
+                guard let result = response["result"], let userResult = result as? JSON else {
                     return
                 }
 
@@ -273,20 +292,20 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 		return tabVC
 	}
 
-	func loginUser(user: STMUser) {
+	func loginUser(_ user: STMUser) {
 		currentUser = user
 		Crashlytics.sharedInstance().setUserIdentifier(String(user.id))
 		Crashlytics.sharedInstance().setUserName(user.username)
 
 		if let window = window as? Window {
 			let tabSet = AppDelegate.del().createTabSet()
-			UIView.transitionWithView(window, duration: window.screenIsReady == true ? 0.5 : 0.0, options: UIViewAnimationOptions.TransitionCrossDissolve, animations: {
+			UIView.transition(with: window, duration: window.screenIsReady == true ? 0.5 : 0.0, options: UIViewAnimationOptions.transitionCrossDissolve, animations: {
 				AppDelegate.del().window?.rootViewController = tabSet
 				}, completion: { (finished) -> Void in
 			})
 		}
 
-		if let token = Constants.Settings.secretObjectForKey("deviceTokenString") {
+		if let token = Constants.Settings.secretObject(forKey: "deviceTokenString") {
 			Constants.Network.POST("/user/updateAPNS", parameters: ["token": token], completionHandler: { (response, error) -> Void in
 				print("Network: Updated Token")
 			})
@@ -295,9 +314,9 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 
     //MARK: Handle Stream Popups
 
-    func presentStreamController(vc: UIViewController) {
+    func presentStreamController(_ vc: UIViewController) {
         self.close()
-        self.window?.rootViewController?.presentViewController(vc, animated: true, completion: nil)
+        self.window?.rootViewController?.present(vc, animated: true, completion: nil)
         self.activeStreamController = vc
     }
 
@@ -307,11 +326,11 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         }
 
         if let player = vc as? PlayerViewController {
-            return player.dismissBT.selected
+            return player.dismissBT.isSelected
         }
 
         if let host = vc as? HostViewController {
-            return host.dismissBT.selected
+            return host.dismissBT.isSelected
         }
 
         return false
@@ -320,7 +339,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     //MARK: Handle Label Clicks
 
     var userHandleLinkTapHandler: KILinkTapHandler = { (label: KILabel, string: String, range: NSRange) -> Void in
-        let username = (string as NSString).substringWithRange(range) as String
+        let username = (string as NSString).substring(with: range) as String
         print(username)
     }
 
@@ -331,33 +350,33 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 
      - parameter withMic: Whether to allow recording
      */
-    func setUpAudioSession(withMic withMic: Bool) {
-        NSNotificationCenter.defaultCenter().addObserver(self, selector: #selector(AppDelegate.audioWasInterupted(_:)), name: AVAudioSessionInterruptionNotification, object: nil)
+    func setUpAudioSession(_ withMic: Bool) {
+        NotificationCenter.default.addObserver(self, selector: #selector(AppDelegate.audioWasInterupted(_:)), name: NSNotification.Name.AVAudioSessionInterruption, object: nil)
 
         let category = withMic ? AVAudioSessionCategoryPlayAndRecord : AVAudioSessionCategoryPlayback
         var options = AVAudioSessionCategoryOptions()
         if withMic {
-            options.insert(.DefaultToSpeaker)
+            options.insert(.defaultToSpeaker)
         }
 
 		do {
 			try AVAudioSession.sharedInstance().setPreferredIOBufferDuration(0.03)
 			try AVAudioSession.sharedInstance().setPreferredSampleRate(44100)
-			try AVAudioSession.sharedInstance().setCategory(category, withOptions: options)
+			try AVAudioSession.sharedInstance().setCategory(category, with: options)
 			try AVAudioSession.sharedInstance().setActive(true)
 		} catch {
 			print("Error starting audio sesssion")
 		}
 	}
 
-    func audioWasInterupted(notification: NSNotification) {
-        if let type = notification.userInfo?[AVAudioSessionInterruptionTypeKey] as? NSNumber {
-            switch type.unsignedIntegerValue {
-            case AVAudioSessionInterruptionType.Began.rawValue:
+    func audioWasInterupted(_ notification: Notification) {
+        if let type = (notification as NSNotification).userInfo?[AVAudioSessionInterruptionTypeKey] as? NSNumber {
+            switch type.uintValue {
+            case AVAudioSessionInterruptionType.began.rawValue:
                 self.stop()
                 break
 
-            case AVAudioSessionInterruptionType.Ended.rawValue:
+            case AVAudioSessionInterruptionType.ended.rawValue:
                 self.play() //Check AVAudioSessionInterruptionOptionShouldResume, after there is a way to resume manualy
                 break
 
@@ -393,7 +412,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 
     //MARK: Window Effects
 
-    func topViewController(base: UIViewController? = UIApplication.sharedApplication().keyWindow?.rootViewController) -> UIViewController? {
+    func topViewController(_ base: UIViewController? = UIApplication.shared.keyWindow?.rootViewController) -> UIViewController? {
         if let nav = base as? UINavigationController {
             return topViewController(nav.visibleViewController)
         }
@@ -416,7 +435,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
             return
         }
 
-        UIView.animateWithDuration(Constants.UI.Animation.visualEffectsLength, animations: { () -> Void in
+        UIView.animate(withDuration: Constants.UI.Animation.visualEffectsLength, animations: { () -> Void in
             effectViews.forEach({ (view) -> () in
                 if let view = view as? UIVisualEffectView {
                     view.effect = nil
@@ -424,13 +443,13 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
                     view.alpha = 0.0
                 }
             })
-        }) { (finished) -> Void in
+        }, completion: { (finished) -> Void in
                 effectViews.forEach({ $0.removeFromSuperview() })
-        }
+        }) 
     }
 
 	class func del() -> AppDelegate {
-		if let del = UIApplication.sharedApplication().delegate as? AppDelegate {
+		if let del = UIApplication.shared.delegate as? AppDelegate {
 			return del
 		}
 
@@ -438,7 +457,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 	}
 
     deinit {
-        NSNotificationCenter.defaultCenter().removeObserver(self)
+        NotificationCenter.default.removeObserver(self)
     }
 
 }

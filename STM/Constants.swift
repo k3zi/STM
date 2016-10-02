@@ -8,27 +8,47 @@
 
 import Foundation
 import CoreLocation
+import CryptoSwift
 
 //MARK: Constants
 //swiftlint:disable nesting
 //swiftlint:disable type_name
 
+typealias CompletionBlock = (JSON?, Error?) -> Void
+
+// Create a protocol extension that objects can conform to.
+protocol Initializer {}
+extension Initializer {
+    func with(_ bootStrap: (inout Self) -> ()) -> Self {
+        var s = self
+        bootStrap(&s)
+        return s
+    }
+
+    func withStatic(_ bootStrap: (inout Self) -> ()) {
+        var s = self
+        bootStrap(&s)
+    }
+}
+// Enable all NSObjects to have "with"
+extension NSObject: Initializer {}
+
+
 struct Constants {
 
-	static let http = Http(baseURL: Config.apiBaseURL, sessionConfig: Config.sessionConfig())
-	static let Settings = NSUserDefaults.standardUserDefaults()
+	static let Settings = UserDefaults.standard
 
 	struct Config {
         static let apiVersion = "1"
 
         static let siteBaseURL = "https://stm.io"
-        #if DEBUG
+        /*#if DEBUG
         static let apiBaseURL = "https://api-dev.stm.io/v\(apiVersion)"
-        static let systemCredentials = NSURLCredential(user: "STM-DEV-API", password: "C/=}SU,nv)A**9cX.L&ML56", persistence: .ForSession)
-        #else
+        static let systemCredentials = URLCredential(user: "STM-DEV-API", password: "C/=}SU,nv)A**9cX.L&ML56", persistence: .forSession)
+        #else*/
         static let apiBaseURL = "https://api.stm.io/v\(apiVersion)"
-        static let systemCredentials = NSURLCredential(user: "STM-API", password: "PXsd<rhKG0r'@U.-Z`>!9V%-Z<Z", persistence: .ForSession)
-        #endif
+        static let systemCredentials = URLCredential(user: "STM-API", password: "PXsd<rhKG0r'@U.-Z`>!9V%-Z<Z", persistence: .forSession)
+        //#endif
 		static let hashids = Hashids(salt: "pepper", minHashLength: 4, alphabet: "abcdefghijkmnpqrstuxyACDEFGHKMNPQRSTUQY23456789")
 		static let streamHash = "WrfN'/:_f.#8fYh(=RY(LxTDRrU"
         static let userDefaultsSecret = "eQpvrIz91DyP9Ge4GY4LRz0vbbG7ot"
@@ -36,12 +56,12 @@ struct Constants {
         static let twitterConsumerKey = "i9HggEKaSKNRVnHBBQDdFDQx1"
         static let twitterConsumerSecret = "l2iuaqf8bKyW01El13M0NkC3M6fNGFlQAVWByhnZROsQwFIbFn"
 
-        static func sessionConfig() -> NSURLSessionConfiguration {
-            let sessionConfig = NSURLSessionConfiguration.defaultSessionConfiguration()
-            let credentialStorage = NSURLCredentialStorage.sharedCredentialStorage()
-            credentialStorage.setCredential(Constants.Config.systemCredentials, forProtectionSpace: NSURLProtectionSpace(host: "api.stm.io", port: 443, protocol: "https", realm: nil, authenticationMethod: NSURLAuthenticationMethodHTTPBasic))
-            credentialStorage.setCredential(Constants.Config.systemCredentials, forProtectionSpace: NSURLProtectionSpace(host: "api-dev.stm.io", port: 443, protocol: "https", realm: nil, authenticationMethod: NSURLAuthenticationMethodHTTPBasic))
-            sessionConfig.URLCredentialStorage = credentialStorage
+        static func sessionConfig() -> URLSessionConfiguration {
+            let sessionConfig = URLSessionConfiguration.default
+            let credentialStorage = URLCredentialStorage.shared
+            credentialStorage.set(Constants.Config.systemCredentials, for: URLProtectionSpace(host: "api.stm.io", port: 443, protocol: "https", realm: nil, authenticationMethod: NSURLAuthenticationMethodHTTPBasic))
+            credentialStorage.set(Constants.Config.systemCredentials, for: URLProtectionSpace(host: "api-dev.stm.io", port: 443, protocol: "https", realm: nil, authenticationMethod: NSURLAuthenticationMethodHTTPBasic))
+            sessionConfig.urlCredentialStorage = credentialStorage
             return sessionConfig
         }
 	}
@@ -54,29 +74,115 @@ struct Constants {
         static let DidLikeComment = "STMNotificationDidLikeComment"
         static let DidRepostComment = "STMNotificationDidRepostComment"
 
-        func UpdateForComment(comment: STMComment) -> String {
+        func UpdateForComment(_ comment: STMComment) -> String {
             return "STMNotificationUpdateForComment-\(comment.id)"
         }
 	}
 
 	struct Network {
-		static func POST(url: String, parameters: [String: AnyObject]?, completionHandler: CompletionBlock) {
-			Constants.http.request(.POST, path: url, parameters: parameters, credential: Constants.Config.systemCredentials, completionHandler: completionHandler)
-		}
+        static func defaultHeaders() -> [String: String]? {
+            guard let user = Constants.Settings.secretObject(forKey: "user") as? [String: AnyObject] else {
+                return nil
+            }
 
-		static func GET(url: String, parameters: [String: AnyObject]?, completionHandler: CompletionBlock) {
-			Constants.http.request(.GET, path: url, parameters: parameters, credential: Constants.Config.systemCredentials, completionHandler: completionHandler)
-		}
+            guard let username = user["username"] as? String else {
+                return nil
+            }
 
-        static func UPLOAD(url: String, data: NSData, parameters: [String: AnyObject]?, progress: ProgressBlock? = nil, completionHandler: CompletionBlock) {
-            Constants.http.upload(url, data: data, parameters: parameters, credential: Constants.Config.systemCredentials, method: .POST, responseSerializer: JsonResponseSerializer(), progress: progress, completionHandler: completionHandler)
+            guard let password = user["password"] as? String else {
+                return nil
+            }
+
+            return ["STM-Username": username, "STM-Password": password]
         }
-	}
+
+        static func POST(_ url: String, parameters: [String: Any]? = nil, completionHandler: @escaping CompletionBlock) {
+            guard let absoluteURL = URL(string: Constants.Config.apiBaseURL + url) else {
+                completionHandler(nil, nil)
+                return
+            }
+
+            var request = URLRequest(url: absoluteURL)
+            request.httpMethod = "POST"
+            request.setValue("application/json", forHTTPHeaderField: "Content-Type")
+            if let headers = Constants.Network.defaultHeaders() {
+                for (field, value) in headers {
+                    request.setValue(value, forHTTPHeaderField: field)
+                }
+            }
+
+            if let parameters = parameters {
+                request.httpBody = try! JSONSerialization.data(withJSONObject: parameters)
+            }
+
+            Alamofire.request(request)
+                .authenticate(usingCredential: Constants.Config.systemCredentials).responseJSON { (response) in
+                    switch response.result {
+                    case .success:
+                        if let json = response.result.value as? JSON {
+                            completionHandler(json, nil)
+                        }
+                    case .failure(let error):
+                        completionHandler(nil, error)
+                    }
+            }
+        }
+
+        static func GET(_ url: String, parameters: [String: AnyObject]? = nil, completionHandler: @escaping CompletionBlock) {
+            guard let absoluteURL = URL(string: Constants.Config.apiBaseURL + url) else {
+                completionHandler(nil, nil)
+                return
+            }
+
+            var request = URLRequest(url: absoluteURL)
+            request.httpMethod = "GET"
+            request.setValue("application/json", forHTTPHeaderField: "Content-Type")
+            if let headers = Constants.Network.defaultHeaders() {
+                for (field, value) in headers {
+                   request.setValue(value, forHTTPHeaderField: field)
+                }
+            }
+
+            if let parameters = parameters {
+                request.httpBody = try! JSONSerialization.data(withJSONObject: parameters)
+            }
+
+            Alamofire.request(request)
+                .authenticate(usingCredential: Constants.Config.systemCredentials).responseJSON { (response) in
+                    switch response.result {
+                    case .success:
+                        if let json = response.result.value as? JSON {
+                            completionHandler(json, nil)
+                        }
+                    case .failure(let error):
+                        completionHandler(nil, error)
+                    }
+            }
+        }
+
+        static func UPLOAD(_ url: String, data: Data, progressHandler: @escaping (Double) -> Void, completionHandler: @escaping CompletionBlock) {
+            Alamofire.upload(data, to: Constants.Config.apiBaseURL + url, headers: Constants.Network.defaultHeaders())
+                .authenticate(usingCredential: Constants.Config.systemCredentials)
+                .uploadProgress { progress in // main queue by default
+                    progressHandler(progress.fractionCompleted)
+                }
+                .responseJSON { (response) in
+                    switch response.result {
+                    case .success:
+                        if let json = response.result.value as? JSON {
+                            completionHandler(json, nil)
+                        }
+                    case .failure(let error):
+                        completionHandler(nil, error)
+                    }
+            }
+        }
+    }
 
     struct UI {
 
         struct Animation {
-            static let visualEffectsLength =  NSTimeInterval(0.5)
+            static let visualEffectsLength =  TimeInterval(0.5)
         }
 
         struct Color {
@@ -87,11 +193,11 @@ struct Constants {
         }
 
         struct Screen {
-            static let width = UIScreen.mainScreen().bounds.width
-            static let height = UIScreen.mainScreen().bounds.height
-            static let bounds = UIScreen.mainScreen().bounds
+            static let width = UIScreen.main.bounds.width
+            static let height = UIScreen.main.bounds.height
+            static let bounds = UIScreen.main.bounds
 
-            static func keyboardAdjustment(show: Bool, rect: CGRect) -> CGFloat {
+            static func keyboardAdjustment(_ show: Bool, rect: CGRect) -> CGFloat {
                 guard show else {
                     return 0.0
                 }
@@ -119,14 +225,14 @@ struct Constants {
 }
 
 enum StreamType {
-	case Local
-	case Global
+	case local
+	case global
 }
 
 @IBDesignable class ExtendedButton: UIButton {
 	@IBInspectable var touchMargin: CGFloat = 30.0
 
-	override func pointInside(point: CGPoint, withEvent event: UIEvent?) -> Bool {
+    override func point(inside point: CGPoint, with event: UIEvent?) -> Bool {
 		let extendedArea = self.bounds.insetBy(dx: -touchMargin, dy: -touchMargin)
 		return extendedArea.contains(point)
 	}
@@ -138,63 +244,63 @@ enum StreamType {
  - parameter delay:   The number of seconds to delay for
  - parameter closure: The block to be executed after the delay
  */
-func delay(delay: Double, closure: () -> ()) {
-	dispatch_after(dispatch_time(DISPATCH_TIME_NOW, Int64(delay * Double(NSEC_PER_SEC))), dispatch_get_main_queue(), closure)
+func delay(_ delay: Double, closure: @escaping () -> ()) {
+	DispatchQueue.main.asyncAfter(deadline: DispatchTime.now() + Double(Int64(delay * Double(NSEC_PER_SEC))) / Double(NSEC_PER_SEC), execute: closure)
 }
 
 extension UIButton {
 
-	public override func intrinsicContentSize() -> CGSize {
-		let intrinsicContentSize = super.intrinsicContentSize()
+    open override var intrinsicContentSize: CGSize {
+		let intrinsicContentSize = super.intrinsicContentSize
 		let adjustedWidth = intrinsicContentSize.width + titleEdgeInsets.left + titleEdgeInsets.right
 		let adjustedHeight = intrinsicContentSize.height + titleEdgeInsets.top + titleEdgeInsets.bottom
 		return CGSize(width: adjustedWidth, height: adjustedHeight)
 	}
 
-	public func setBackgroundColor(color: UIColor, forState: UIControlState) {
+	public func setBackgroundColor(_ color: UIColor, forState: UIControlState) {
 		UIGraphicsBeginImageContext(CGSize(width: 1, height: 1))
-		CGContextSetFillColorWithColor(UIGraphicsGetCurrentContext(), color.CGColor)
-		CGContextFillRect(UIGraphicsGetCurrentContext(), CGRect(x: 0, y: 0, width: 1, height: 1))
+		UIGraphicsGetCurrentContext()!.setFillColor(color.cgColor)
+		UIGraphicsGetCurrentContext()!.fill(CGRect(x: 0, y: 0, width: 1, height: 1))
 		let colorImage = UIGraphicsGetImageFromCurrentImageContext()
 		UIGraphicsEndImageContext()
 
-		self.setBackgroundImage(colorImage, forState: forState)
+		self.setBackgroundImage(colorImage, for: forState)
 	}
 
 }
 
 extension UITableView {
 
-    func scrollToBottom(animated: Bool = true) {
+    func scrollToBottom(_ animated: Bool = true) {
         let section = self.numberOfSections
         guard section > 0 else {
             return
         }
 
-        let row = self.numberOfRowsInSection(section - 1)
+        let row = self.numberOfRows(inSection: section - 1)
         guard row > 0 else {
             return
         }
 
-        let index = NSIndexPath(forRow: row - 1, inSection: section - 1)
-        self.scrollToRowAtIndexPath(index, atScrollPosition: .Bottom, animated: animated)
+        let index = IndexPath(row: row - 1, section: section - 1)
+        self.scrollToRow(at: index, at: .bottom, animated: animated)
     }
 
 }
 
 extension UIView {
 
-	class func lineWithBGColor(backgroundColor: UIColor, vertical: Bool = false, lineHeight: CGFloat = 1.0) -> UIView {
+	class func lineWithBGColor(_ backgroundColor: UIColor, vertical: Bool = false, lineHeight: CGFloat = 1.0) -> UIView {
 		let view = UIView()
 		NSLayoutConstraint.autoSetPriority(999) { () -> Void in
-			view.autoSetDimension(vertical ? .Width : .Height, toSize: (lineHeight / UIScreen.mainScreen().scale))
+			view.autoSetDimension(vertical ? .width : .height, toSize: (lineHeight / UIScreen.main.scale))
 		}
 		view.backgroundColor = backgroundColor
 		return view
 	}
 
-    func estimatedHeight(maxWidth: CGFloat) -> CGFloat {
-        return self.sizeThatFits(CGSize(width: maxWidth, height: CGFloat.max)).height
+    func estimatedHeight(_ maxWidth: CGFloat) -> CGFloat {
+        return self.sizeThatFits(CGSize(width: maxWidth, height: CGFloat.greatestFiniteMagnitude)).height
     }
 
 }
@@ -206,7 +312,7 @@ extension Int {
     }
 
    func formatUsingAbbrevation() -> String {
-        let numFormatter = NSNumberFormatter()
+        let numFormatter = NumberFormatter()
 
         typealias Abbrevation = (threshold: Double, divisor: Double, suffix: String)
         let abbreviations: [Abbrevation] = [(0, 1, ""),
@@ -234,12 +340,12 @@ extension Int {
         numFormatter.minimumFractionDigits = 0
         numFormatter.maximumFractionDigits = 1
 
-        return numFormatter.stringFromNumber(NSNumber (double:value)) ?? ""
+        return numFormatter.string(from: NSNumber (value: value as Double)) ?? ""
     }
 
 }
 
-extension NSDate {
+extension Date {
     func shortRelativeDate() -> String {
 
         let timeInterval = -self.timeIntervalSinceNow
@@ -259,26 +365,18 @@ extension NSDate {
     }
 }
 
-extension NSData {
+extension Data {
 
     func hexedString() -> String {
-        var string = String()
-        for i in UnsafeBufferPointer<UInt8>(start: UnsafeMutablePointer<UInt8>(bytes), count: length) {
-            string += Int(i).hexedString()
-        }
-        return string
+        return self.bytes.toHexString()
     }
 
-    func MD5() -> NSData {
-        let result = NSMutableData(length: Int(CC_MD5_DIGEST_LENGTH))!
-        CC_MD5(bytes, CC_LONG(length), UnsafeMutablePointer<UInt8>(result.mutableBytes))
-        return NSData(data: result)
+    func MD5() -> Data {
+        return self.md5()
     }
 
-    func SHA1() -> NSData {
-        let result = NSMutableData(length: Int(CC_SHA1_DIGEST_LENGTH))!
-        CC_SHA1(bytes, CC_LONG(length), UnsafeMutablePointer<UInt8>(result.mutableBytes))
-        return NSData(data: result)
+    func SHA1() -> Data? {
+        return self.sha1()
     }
 
 }
@@ -286,23 +384,27 @@ extension NSData {
 extension String {
 
     func MD5() -> String {
-        return (self as NSString).dataUsingEncoding(NSUTF8StringEncoding)!.MD5().hexedString()
+        return (self as NSString).data(using: String.Encoding.utf8.rawValue)!.MD5().hexedString()
     }
 
     func SHA1() -> String {
-        return (self as NSString).dataUsingEncoding(NSUTF8StringEncoding)!.SHA1().hexedString()
+        if let data = self.data(using: .utf8), let hex = data.SHA1() {
+            return hex.hexedString()
+        }
+
+        return ""
     }
 
 }
 
 extension UIImage {
 
-    convenience init(view: UIView) {
+     class func imageFrom(view: UIView) -> UIImage {
         UIGraphicsBeginImageContext(view.frame.size)
-        view.layer.renderInContext(UIGraphicsGetCurrentContext()!)
+        view.layer.render(in: UIGraphicsGetCurrentContext()!)
         let image = UIGraphicsGetImageFromCurrentImageContext()
         UIGraphicsEndImageContext()
-        self.init(CGImage: image.CGImage!)
+        return UIImage(cgImage: (image?.cgImage!)!)
     }
 
 }
@@ -317,14 +419,14 @@ extension UIViewController {
         view.endEditing(true)
     }
 
-    func showAlert(title: String, message: String) {
-        let alert = UIAlertController(title: title, message: message, preferredStyle: UIAlertControllerStyle.Alert)
-        alert.addAction(UIAlertAction(title: "Ok", style: UIAlertActionStyle.Default, handler: nil))
-        self.presentViewController(alert, animated: true, completion: nil)
+    func showAlert(_ title: String, message: String) {
+        let alert = UIAlertController(title: title, message: message, preferredStyle: UIAlertControllerStyle.alert)
+        alert.addAction(UIAlertAction(title: "Ok", style: UIAlertActionStyle.default, handler: nil))
+        self.present(alert, animated: true, completion: nil)
     }
 
     func dismissPopup() {
-        self.dismissViewControllerAnimated(true, completion: nil)
+        self.dismiss(animated: true, completion: nil)
     }
 
 }
@@ -336,50 +438,50 @@ extension UIScrollView {
 extension UIColor {
 
     var hexString: String {
-        let components = CGColorGetComponents(self.CGColor)
+        let components = self.cgColor.components
 
-        let red = Float(components[0])
-        let green = Float(components[1])
-        let blue = Float(components[2])
+        let red = Float((components?[0])!)
+        let green = Float((components?[1])!)
+        let blue = Float((components?[2])!)
         return String(format: "%02lX%02lX%02lX", lroundf(red * 255), lroundf(green * 255), lroundf(blue * 255))
     }
 
 }
 
-extension _ArrayType where Generator.Element : Equatable {
-    mutating func removeObject(object: Self.Generator.Element) {
-        while let index = self.indexOf(object) {
-            self.removeAtIndex(index)
+extension Array where Element: Equatable {
+    mutating func removeObject(_ object: Element) {
+        if let index = index(of: object) {
+            remove(at: index)
         }
     }
 }
 
-func resizeImage(image: UIImage, newWidth: CGFloat) -> UIImage {
+func resizeImage(_ image: UIImage, newWidth: CGFloat) -> UIImage {
     let newWidth = round(newWidth)
     let scale = newWidth / image.size.width
     if scale < 1.0 {
         let newHeight = round(image.size.height * scale)
         UIGraphicsBeginImageContext(CGSize(width: newWidth, height: newHeight))
-        image.drawInRect(CGRect(x: 0, y: 0, width: newWidth, height: newHeight))
+        image.draw(in: CGRect(x: 0, y: 0, width: newWidth, height: newHeight))
         let newImage = UIGraphicsGetImageFromCurrentImageContext()
         UIGraphicsEndImageContext()
-        return newImage
+        return newImage!
     }
 
     return image
 }
 
-func numberOfLinesInLabel(yourString: String, labelWidth: CGFloat, labelHeight: CGFloat, font: UIFont) -> Int {
+func numberOfLinesInLabel(_ yourString: String, labelWidth: CGFloat, labelHeight: CGFloat, font: UIFont) -> Int {
     let paragraphStyle = NSMutableParagraphStyle()
     paragraphStyle.minimumLineHeight = labelHeight
     paragraphStyle.maximumLineHeight = labelHeight
-    paragraphStyle.lineBreakMode = .ByWordWrapping
+    paragraphStyle.lineBreakMode = .byWordWrapping
 
     let attributes: [String: AnyObject] = [NSFontAttributeName: font, NSParagraphStyleAttributeName: paragraphStyle]
 
     let constrain = CGSize(width: labelWidth, height: CGFloat(Float.infinity))
 
-    let size = yourString.sizeWithAttributes(attributes)
+    let size = yourString.size(attributes: attributes)
     let stringWidth = size.width
 
     let numberOfLines = ceil(Double(stringWidth/constrain.width))

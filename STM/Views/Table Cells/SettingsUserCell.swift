@@ -23,9 +23,9 @@ class SettingsUserCell: KZTableViewCell, UITextFieldDelegate, UITextViewDelegate
         nameField.clipsToBounds = true
         nameField.delegate = self
         nameField.inputAccessoryView = cellToolbar()
-        nameField.autocorrectionType = .No
-        nameField.textAlignment = .Center
-        nameField.font = UIFont.systemFontOfSize(16)
+        nameField.autocorrectionType = .no
+        nameField.textAlignment = .center
+        nameField.font = UIFont.systemFont(ofSize: 16)
         self.contentView.addSubview(nameField)
 
         descriptionField.backgroundColor = RGB(235, g: 236, b: 237)
@@ -33,36 +33,36 @@ class SettingsUserCell: KZTableViewCell, UITextFieldDelegate, UITextViewDelegate
         descriptionField.clipsToBounds = true
         descriptionField.delegate = self
         descriptionField.inputAccessoryView = cellToolbar()
-        descriptionField.font = UIFont.systemFontOfSize(16)
-        descriptionField.textAlignment = .Center
+        descriptionField.font = UIFont.systemFont(ofSize: 16)
+        descriptionField.textAlignment = .center
         self.contentView.addSubview(descriptionField)
     }
 
     override func updateConstraints() {
         super.updateConstraints()
 
-        nameField.autoPinEdgeToSuperviewEdge(.Top, withInset: 12)
-        nameField.autoPinEdgeToSuperviewEdge(.Left, withInset: 12)
-        nameField.autoPinEdgeToSuperviewEdge(.Right, withInset: 12)
+        nameField.autoPinEdge(toSuperviewEdge: .top, withInset: 12)
+        nameField.autoPinEdge(toSuperviewEdge: .left, withInset: 12)
+        nameField.autoPinEdge(toSuperviewEdge: .right, withInset: 12)
         NSLayoutConstraint.autoSetPriority(999) {
-            self.nameField.autoSetDimension(.Height, toSize: 35)
+            self.nameField.autoSetDimension(.height, toSize: 35)
         }
 
-        descriptionField.autoPinEdge(.Top, toEdge: .Bottom, ofView: nameField, withOffset: 12)
-        descriptionField.autoPinEdgeToSuperviewEdge(.Left, withInset: 12)
-        descriptionField.autoPinEdgeToSuperviewEdge(.Right, withInset: 12)
-        descriptionField.autoPinEdgeToSuperviewEdge(.Bottom, withInset: 12)
+        descriptionField.autoPinEdge(.top, to: .bottom, of: nameField, withOffset: 12)
+        descriptionField.autoPinEdge(toSuperviewEdge: .left, withInset: 12)
+        descriptionField.autoPinEdge(toSuperviewEdge: .right, withInset: 12)
+        descriptionField.autoPinEdge(toSuperviewEdge: .bottom, withInset: 12)
 
         NSLayoutConstraint.autoSetPriority(999) {
-            self.descriptionField.autoSetDimension(.Height, toSize: 100)
+            self.descriptionField.autoSetDimension(.height, toSize: 100)
         }
     }
 
-    override func setIndexPath(indexPath: NSIndexPath, last: Bool) {
+    override func setIndexPath(_ indexPath: IndexPath, last: Bool) {
         topSeperator.alpha = 1.0
     }
 
-    override func fillInCellData(shallow: Bool) {
+    override func fillInCellData(_ shallow: Bool) {
         if let user = AppDelegate.del().currentUser {
             nameField.text = user.displayName
             descriptionField.text = user.description
@@ -79,11 +79,11 @@ class SettingsUserCell: KZTableViewCell, UITextFieldDelegate, UITextViewDelegate
 
     func cellToolbar() -> UIToolbar {
         let toolBar = UIToolbar()
-        toolBar.barStyle = .Black
+        toolBar.barStyle = .black
 
-        let doneButton = UIBarButtonItem(title: "Done", style: .Done, target: self, action: #selector(self.donePressed))
-        let cancelButton = UIBarButtonItem(title: "Cancel", style: .Plain, target: self, action: #selector(self.cancelPressed))
-        let spaceButton = UIBarButtonItem(barButtonSystemItem: UIBarButtonSystemItem.FlexibleSpace, target: nil, action: nil)
+        let doneButton = UIBarButtonItem(title: "Done", style: .done, target: self, action: #selector(self.donePressed))
+        let cancelButton = UIBarButtonItem(title: "Cancel", style: .plain, target: self, action: #selector(self.cancelPressed))
+        let spaceButton = UIBarButtonItem(barButtonSystemItem: UIBarButtonSystemItem.flexibleSpace, target: nil, action: nil)
         toolBar.setItems([cancelButton, spaceButton, doneButton], animated: false)
         toolBar.sizeToFit()
         return toolBar
@@ -98,24 +98,24 @@ class SettingsUserCell: KZTableViewCell, UITextFieldDelegate, UITextViewDelegate
     }
 
     //MARK: UITextView Delegate
-    func textViewDidEndEditing(textView: UITextView) {
+    func textViewDidEndEditing(_ textView: UITextView) {
         guard let text = textView.text else {
             return
         }
 
         if textView == descriptionField {
-            updateUser("description", value: text)
+            updateUser("description", value: text as AnyObject)
         }
     }
 
-    func updateUser(property: String, value: AnyObject) {
+    func updateUser(_ property: String, value: AnyObject) {
         Constants.Network.POST("/user/update/\(property)", parameters: ["value": value]) { (response, error) in
-            guard let response = response, success = response["success"] as? Bool else {
+            guard let response = response, let success = response["success"] as? Bool else {
                 return
             }
 
             if success {
-                guard let result = response["result"], userResult = result as? JSON else {
+                guard let result = response["result"], let userResult = result as? JSON else {
                     return
                 }
 
@@ -128,11 +128,11 @@ class SettingsUserCell: KZTableViewCell, UITextFieldDelegate, UITextViewDelegate
 
     //MARK: UITextField Delegate
 
-    func textFieldDidEndEditing(textField: UITextField) {
+    func textFieldDidEndEditing(_ textField: UITextField) {
         textFieldShouldReturn(textField)
     }
 
-    func textFieldShouldReturn(textField: UITextField) -> Bool {
+    func textFieldShouldReturn(_ textField: UITextField) -> Bool {
         guard let text = textField.text else {
             return false
         }
@@ -142,7 +142,7 @@ class SettingsUserCell: KZTableViewCell, UITextFieldDelegate, UITextViewDelegate
         }
 
         if textField == nameField {
-            updateUser("displayName", value: text)
+            updateUser("displayName", value: text as AnyObject)
         }
 
         textField.resignFirstResponder()

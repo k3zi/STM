@@ -8,18 +8,18 @@
 
 import Foundation
 
-public func RGB(r: CGFloat, g: CGFloat, b: CGFloat, a: CGFloat = 1.0) -> UIColor {
+public func RGB(_ r: CGFloat, g: CGFloat, b: CGFloat, a: CGFloat = 1.0) -> UIColor {
 	return UIColor(red: r / 255.0, green: g / 255.0, blue: b / 255.0, alpha: a)
 }
 
-public func RGB(x: CGFloat, a: CGFloat = 1.0) -> UIColor {
+public func RGB(_ x: CGFloat, a: CGFloat = 1.0) -> UIColor {
 	return RGB(x, g: x, b: x, a: a)
 }
 
-public func HEX(str: String) -> UIColor {
-	let hex = str.stringByTrimmingCharactersInSet(NSCharacterSet.alphanumericCharacterSet().invertedSet)
+public func HEX(_ str: String) -> UIColor {
+	let hex = str.trimmingCharacters(in: CharacterSet.alphanumerics.inverted)
 	var int = UInt32()
-	NSScanner(string: hex).scanHexInt(&int)
+	Scanner(string: hex).scanHexInt32(&int)
 	let r, g, b: UInt32
 	switch hex.characters.count {
 	case 3:
@@ -33,11 +33,7 @@ public func HEX(str: String) -> UIColor {
 	return RGB(CGFloat(r), g: CGFloat(g), b: CGFloat(b))
 }
 
-public func delay(delay: Double, closure: () -> ()) {
-	dispatch_after(
-		dispatch_time(
-			DISPATCH_TIME_NOW,
-			Int64(delay * Double(NSEC_PER_SEC))
-		),
-		dispatch_get_main_queue(), closure)
+public func delay(_ delay: Double, closure: @escaping () -> ()) {
+	DispatchQueue.main.asyncAfter(
+		deadline: DispatchTime.now() + Double(Int64(delay * Double(NSEC_PER_SEC))) / Double(NSEC_PER_SEC), execute: closure)
 }

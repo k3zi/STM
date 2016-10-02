@@ -16,7 +16,7 @@ class MessagesViewController: KZViewController, UIViewControllerPreviewingDelega
 
     deinit {
         tableView.dg_removePullToRefresh()
-        NSNotificationCenter.defaultCenter().removeObserver(self)
+        NotificationCenter.default.removeObserver(self)
     }
 
     override func viewDidLoad() {
@@ -25,14 +25,14 @@ class MessagesViewController: KZViewController, UIViewControllerPreviewingDelega
         self.title = "Messages"
         self.automaticallyAdjustsScrollViewInsets = false
 
-        navigationItem.rightBarButtonItem = UIBarButtonItem(image: UIImage(named: "navBarMessageBT"), style: .Plain, target: self, action: #selector(self.createNewMessage))
+        navigationItem.rightBarButtonItem = UIBarButtonItem(image: UIImage(named: "navBarMessageBT"), style: .plain, target: self, action: #selector(self.createNewMessage))
 
         tableView.delegate = self
         tableView.dataSource = self
-        tableView.registerReusableCell(ConvoCell)
+        tableView.registerReusableCell(ConvoCell.self)
         view.addSubview(tableView)
 
-        registerForPreviewingWithDelegate(self, sourceView: tableView)
+        registerForPreviewing(with: self, sourceView: tableView)
 
         let loadingView = DGElasticPullToRefreshLoadingViewCircle()
         loadingView.tintColor = Constants.UI.Color.tint
@@ -46,7 +46,7 @@ class MessagesViewController: KZViewController, UIViewControllerPreviewingDelega
             }, loadingView: loadingView)
         tableView.dg_setPullToRefreshFillColor(RGB(250, g: 251, b: 252))
 
-        NSNotificationCenter.defaultCenter().addObserver(self, selector: #selector(self.fetchData), name: Constants.Notification.DidPostMessage, object: nil)
+        NotificationCenter.default.addObserver(self, selector: #selector(self.fetchData), name: NSNotification.Name(rawValue: Constants.Notification.DidPostMessage), object: nil)
         fetchData()
     }
 
@@ -58,15 +58,15 @@ class MessagesViewController: KZViewController, UIViewControllerPreviewingDelega
     override func setupConstraints() {
         super.setupConstraints()
 
-        tableView.autoPinEdgesToSuperviewEdgesWithInsets(UIEdgeInsetsZero, excludingEdge: .Bottom)
-        tableView.autoPinToBottomLayoutGuideOfViewController(self, withInset: 0)
+        tableView.autoPinEdgesToSuperviewEdges(with: UIEdgeInsets.zero, excludingEdge: .bottom)
+        tableView.autoPin(toBottomLayoutGuideOf: self, withInset: 0)
     }
 
-    override func tableViewCellData(tableView: UITableView, section: Int) -> [Any] {
+    override func tableViewCellData(_ tableView: UITableView, section: Int) -> [Any] {
         return convos
     }
 
-    override func tableViewCellClass(tableView: UITableView, indexPath: NSIndexPath?) -> KZTableViewCell.Type {
+    override func tableViewCellClass(_ tableView: UITableView, indexPath: IndexPath?) -> KZTableViewCell.Type {
         return ConvoCell.self
     }
 
@@ -74,7 +74,7 @@ class MessagesViewController: KZViewController, UIViewControllerPreviewingDelega
         fetchDataWithCompletion(nil)
     }
 
-    func fetchDataWithCompletion(completion: (() -> Void)?) {
+    func fetchDataWithCompletion(_ completion: (() -> Void)?) {
         var count = 0
 
         func runCompletion() {
@@ -88,7 +88,7 @@ class MessagesViewController: KZViewController, UIViewControllerPreviewingDelega
 
         count = count + 1
         Constants.Network.GET("/conversation/list", parameters: nil) { (response, error) -> Void in
-            self.handleResponse(response, error: error, successCompletion: { (result) -> Void in
+            self.handleResponse(response as AnyObject?, error: error as NSError?, successCompletion: { (result) -> Void in
                 self.convos.removeAll()
 
                 guard let results = result as? [JSON] else {
@@ -97,7 +97,7 @@ class MessagesViewController: KZViewController, UIViewControllerPreviewingDelega
 
                 let convos = [STMConversation].fromJSONArray(results)
                 var unreadCount = 0
-                convos.forEach({
+                convos?.forEach({
                     unreadCount = unreadCount + $0.unreadCount
                     self.convos.append($0)
                 })
@@ -109,12 +109,12 @@ class MessagesViewController: KZViewController, UIViewControllerPreviewingDelega
         }
     }
 
-    override func tableViewNoDataText(tableView: UITableView) -> String {
+    override func tableViewNoDataText(_ tableView: UITableView) -> String {
         return "No Conversations"
     }
 
-    override func tableView(tableView: UITableView, didSelectRowAtIndexPath indexPath: NSIndexPath) {
-        super.tableView(tableView, didSelectRowAtIndexPath: indexPath)
+    override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        super.tableView(tableView, didSelectRowAt: indexPath)
 
         guard tableViewCellData(tableView, section: indexPath.section).count > 0 else {
             return
@@ -135,8 +135,8 @@ class MessagesViewController: KZViewController, UIViewControllerPreviewingDelega
 
     //MARK: UIViewController Previewing Delegate
 
-    func previewingContext(previewingContext: UIViewControllerPreviewing, viewControllerForLocation location: CGPoint) -> UIViewController? {
-        guard let indexPath = tableView.indexPathForRowAtPoint(location), cell = tableView.cellForRowAtIndexPath(indexPath) else {
+    func previewingContext(_ previewingContext: UIViewControllerPreviewing, viewControllerForLocation location: CGPoint) -> UIViewController? {
+        guard let indexPath = tableView.indexPathForRow(at: location), let cell = tableView.cellForRow(at: indexPath) else {
             return nil
         }
 
@@ -158,7 +158,7 @@ class MessagesViewController: KZViewController, UIViewControllerPreviewingDelega
         return vc
     }
 
-    func previewingContext(previewingContext: UIViewControllerPreviewing, commitViewController viewControllerToCommit: UIViewController) {
+    func previewingContext(_ previewingContext: UIViewControllerPreviewing, commit viewControllerToCommit: UIViewController) {
         self.navigationController?.pushViewController(viewControllerToCommit, animated: true)
     }
 

@@ -22,18 +22,18 @@ class SignInViewController: KZViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
 
-        crowdBGGradient.colors = [RGB(0, a: 0.63).CGColor, RGB(255, a: 0).CGColor, RGB(255, a: 0).CGColor, RGB(0, a: 0.63).CGColor]
-        crowdBGGradient.locations = [NSNumber(float: 0.0), NSNumber(float: 0.315), NSNumber(float: 0.685), NSNumber(float: 1.0)]
+        crowdBGGradient.colors = [RGB(0, a: 0.63).cgColor, RGB(255, a: 0).cgColor, RGB(255, a: 0).cgColor, RGB(0, a: 0.63).cgColor]
+        crowdBGGradient.locations = [NSNumber(value: 0.0 as Float), NSNumber(value: 0.315 as Float), NSNumber(value: 0.685 as Float), NSNumber(value: 1.0 as Float)]
         crowdBG.layer.addSublayer(crowdBGGradient)
 
         crowdBGGOverlay.opacity = 0.66
-        crowdBGGOverlay.backgroundColor = Constants.UI.Color.tint.CGColor
+        crowdBGGOverlay.backgroundColor = Constants.UI.Color.tint.cgColor
         crowdBG.layer.addSublayer(crowdBGGOverlay)
 
-        crowdBG.contentMode = .ScaleAspectFill
+        crowdBG.contentMode = .scaleAspectFill
         view.addSubview(crowdBG)
 
-        backBT.addTarget(self, action: #selector(SignInViewController.dismiss), forControlEvents: .TouchUpInside)
+        backBT.addTarget(self, action: #selector(self.popVC), for: .touchUpInside)
         view.addSubview(backBT)
 
         //Fields
@@ -46,12 +46,12 @@ class SignInViewController: KZViewController {
         passwordTextField.protectField()
         view.addSubview(passwordTextField)
 
-        signInBT.setTitle("Sign In", forState: .Normal)
-        signInBT.addTarget(self, action: #selector(SignInViewController.signIn), forControlEvents: .TouchUpInside)
+        signInBT.setTitle("Sign In", for: UIControlState())
+        signInBT.addTarget(self, action: #selector(SignInViewController.signIn), for: .touchUpInside)
         view.addSubview(signInBT)
     }
 
-    override func viewWillAppear(animated: Bool) {
+    override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
 
         usernameTextField.becomeFirstResponder()
@@ -61,16 +61,16 @@ class SignInViewController: KZViewController {
         crowdBG.autoPinEdgesToSuperviewEdges()
 
         for view in [usernameTextField, passwordTextField, signInBT] {
-            view.autoPinEdgeToSuperviewEdge(.Left, withInset: 45)
-            view.autoPinEdgeToSuperviewEdge(.Right, withInset: 45)
-            view.autoSetDimension(.Height, toSize: 50)
+            view.autoPinEdge(toSuperviewEdge: .left, withInset: 45)
+            view.autoPinEdge(toSuperviewEdge: .right, withInset: 45)
+            view.autoSetDimension(.height, toSize: 50)
         }
 
-        backBT.autoPinToTopLayoutGuideOfViewController(self, withInset: 20)
-        backBT.autoPinEdgeToSuperviewEdge(.Left, withInset: 25)
-        usernameTextField.autoPinEdge(.Top, toEdge: .Bottom, ofView: backBT, withOffset: 30)
-        passwordTextField.autoPinEdge(.Top, toEdge: .Bottom, ofView: usernameTextField, withOffset: 15)
-        signInBT.autoPinEdge(.Top, toEdge: .Bottom, ofView: passwordTextField, withOffset: 15)
+        backBT.autoPin(toTopLayoutGuideOf: self, withInset: 20)
+        backBT.autoPinEdge(toSuperviewEdge: .left, withInset: 25)
+        usernameTextField.autoPinEdge(.top, to: .bottom, of: backBT, withOffset: 30)
+        passwordTextField.autoPinEdge(.top, to: .bottom, of: usernameTextField, withOffset: 15)
+        signInBT.autoPinEdge(.top, to: .bottom, of: passwordTextField, withOffset: 15)
     }
 
     override func viewDidLayoutSubviews() {
@@ -98,27 +98,27 @@ class SignInViewController: KZViewController {
         }
 
         signInBT.showIndicator()
-        backBT.enabled = false
+        backBT.isEnabled = false
 
         Constants.Network.POST("/user/login", parameters: ["username": username, "password": password], completionHandler: { (response, error) -> Void in
             self.signInBT.hideIndicator()
-            self.backBT.enabled = true
-            self.handleResponse(response, error: error, successCompletion: { (result) -> Void in
+            self.backBT.isEnabled = true
+            self.handleResponse(response as AnyObject?, error: error as NSError?, successCompletion: { (result) -> Void in
                 Constants.Settings.setSecretObject(result, forKey: "user")
 
                 if let result = result as? JSON {
                     if let user = STMUser(json: result) {
                         AppDelegate.del().loginUser(user)
-                        Answers.logLoginWithMethod("Password", success: true, customAttributes: nil)
+                        Answers.logLogin(withMethod: "Password", success: true, customAttributes: nil)
                     }
                 }
             })
         })
     }
 
-    func dismiss() {
+    func popVC() {
         if let vc = self.navigationController {
-            vc.popViewControllerAnimated(true)
+            vc.popViewController(animated: true)
         }
     }
 

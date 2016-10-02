@@ -39,12 +39,12 @@ struct STMStream: Decodable {
         return Constants.Config.hashids.encode(id) ?? ""
     }
 
-    func shareURL() -> NSURL {
-        return NSURL(string: Constants.Config.siteBaseURL + "/s/" + alphaID()) ?? NSURL()
+    func shareURL() -> URL? {
+        return URL(string: Constants.Config.siteBaseURL + "/s/" + alphaID())
     }
 
-    func pictureURL() -> NSURL {
-        return NSURL(string: Constants.Config.apiBaseURL + "/stream/\(id)/picture") ?? NSURL()
+    func pictureURL() -> URL? {
+        return URL(string: Constants.Config.apiBaseURL + "/stream/\(id)/picture")
     }
 
     func color() -> UIColor {
@@ -62,13 +62,13 @@ struct STMStream: Decodable {
 }
 
 enum STMStreamStatus: Int {
-    case Offline = 0
-    case Online = 1
-    case RecentlyOnline = 2
+    case offline = 0
+    case online = 1
+    case recentlyOnline = 2
 }
 
 enum STMStreamType: Int {
-    case Radio = 0
-    case Podcast = 1
-    case Live = 2
+    case radio = 0
+    case podcast = 1
+    case live = 2
 }

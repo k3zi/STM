@@ -10,7 +10,7 @@ import UIKit
 import HPGrowingTextView
 
 protocol MessageToolbarDelegate {
-	func handlePost(text: String)
+	func handlePost(_ text: String)
     func messageToolbarPrefillText() -> String
     func didBeginEditing()
 }
@@ -33,62 +33,62 @@ class MessageToolbarView: UIView, HPGrowingTextViewDelegate {
 		toolBar.contentInset = UIEdgeInsetsMake(0, 5, 0, 5)
 		toolBar.minNumberOfLines = 1
 		toolBar.maxNumberOfLines = 3
-		toolBar.returnKeyType = .Default
+		toolBar.returnKeyType = .default
 		toolBar.delegate = self
-		toolBar.font = UIFont.systemFontOfSize(15)
+		toolBar.font = UIFont.systemFont(ofSize: 15)
 		toolBar.textColor = RGB(255)
 		toolBar.internalTextView.scrollIndicatorInsets = UIEdgeInsetsMake(5, 0, 5, 0)
-		toolBar.backgroundColor = UIColor.clearColor()
+		toolBar.backgroundColor = UIColor.clear
 		toolBar.placeholder = "Type a new comment..."
-		heightTextContConstraint = toolBar.autoSetDimension(.Height, toSize: 30)
+		heightTextContConstraint = toolBar.autoSetDimension(.height, toSize: 30)
 		toolBarContainer.addSubview(toolBar)
 
-		sendBT.titleLabel?.font = UIFont.boldSystemFontOfSize(16)
-		sendBT.addTarget(self, action: #selector(MessageToolbarView.send), forControlEvents: .TouchUpInside)
-		sendBT.setTitle("Post", forState: .Normal)
-		sendBT.setTitleColor(RGB(255), forState: .Normal)
+		sendBT.titleLabel?.font = UIFont.boldSystemFont(ofSize: 16)
+		sendBT.addTarget(self, action: #selector(MessageToolbarView.send), for: .touchUpInside)
+		sendBT.setTitle("Post", for: .normal)
+		sendBT.setTitleColor(RGB(255), for: .normal)
 		toolBarContainer.addSubview(sendBT)
 
 		toolBarContainer.autoPinEdgesToSuperviewEdges()
 
-		toolBar.autoPinEdgeToSuperviewEdge(.Left, withInset: 10)
-		toolBar.autoPinEdgeToSuperviewEdge(.Top, withInset: 5)
-		toolBar.autoPinEdgeToSuperviewEdge(.Bottom, withInset: 5)
+		toolBar.autoPinEdge(toSuperviewEdge: .left, withInset: 10)
+		toolBar.autoPinEdge(toSuperviewEdge: .top, withInset: 5)
+		toolBar.autoPinEdge(toSuperviewEdge: .bottom, withInset: 5)
 
-		sendBT.autoPinEdge(.Left, toEdge: .Right, ofView: toolBar, withOffset: 10)
-		sendBT.autoPinEdgeToSuperviewEdge(.Right, withInset: 25)
-		sendBT.autoPinEdgeToSuperviewEdge(.Bottom, withInset: 7)
+		sendBT.autoPinEdge(.left, to: .right, of: toolBar, withOffset: 10)
+		sendBT.autoPinEdge(toSuperviewEdge: .right, withInset: 25)
+		sendBT.autoPinEdge(toSuperviewEdge: .bottom, withInset: 7)
 
 		toolBar.refreshHeight()
 	}
 
-    func growingTextViewDidBeginEditing(growingTextView: HPGrowingTextView!) {
+    func growingTextViewDidBeginEditing(_ growingTextView: HPGrowingTextView!) {
         self.delegate?.didBeginEditing()
-        performSelector(#selector(placeCursorAtEnd), withObject: growingTextView, afterDelay: 0.02)
+        perform(#selector(placeCursorAtEnd), with: growingTextView, afterDelay: 0.02)
     }
 
-	func growingTextView(growingTextView: HPGrowingTextView!, willChangeHeight height: Float) {
-		UIView.animateWithDuration(0.4) { () -> Void in
+	func growingTextView(_ growingTextView: HPGrowingTextView!, willChangeHeight height: Float) {
+		UIView.animate(withDuration: 0.4, animations: { () -> Void in
 			self.heightTextContConstraint?.constant = CGFloat(height)
 			self.layoutIfNeeded()
-		}
+		}) 
 	}
 
-	func growingTextView(growingTextView: HPGrowingTextView!, shouldChangeTextInRange range: NSRange, replacementText text: String!) -> Bool {
+	func growingTextView(_ growingTextView: HPGrowingTextView!, shouldChangeTextIn range: NSRange, replacementText text: String!) -> Bool {
 		let currentText = growingTextView.text as NSString
-		let proposedText = currentText.stringByReplacingCharactersInRange(range, withString: text)
+		let proposedText = currentText.replacingCharacters(in: range, with: text)
 		if proposedText.characters.count > 150 {
 			return false
 		}
 
-		if proposedText.componentsSeparatedByString("\n").count > 3 {
+		if proposedText.components(separatedBy: "\n").count > 3 {
 			return false
 		}
 
 		return true
 	}
 
-    func placeCursorAtEnd(growingTextView: HPGrowingTextView) {
+    func placeCursorAtEnd(_ growingTextView: HPGrowingTextView) {
         growingTextView.selectedRange = NSRange(location: growingTextView.text.characters.count, length: 0)
     }
 
@@ -105,7 +105,7 @@ class MessageToolbarView: UIView, HPGrowingTextViewDelegate {
 
         let prefillText = delegate.messageToolbarPrefillText()
 
-        UIView.transitionWithView(toolBar, duration: 0.4, options: .TransitionCrossDissolve, animations: { () -> Void in
+        UIView.transition(with: toolBar, duration: 0.4, options: .transitionCrossDissolve, animations: { () -> Void in
             self.toolBar.text = prefillText
         }, completion: nil)
 	}

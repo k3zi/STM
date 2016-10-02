@@ -16,7 +16,7 @@ class DashboardViewController: KZViewController, UIViewControllerPreviewingDeleg
 
     deinit {
         tableView.dg_removePullToRefresh()
-        NSNotificationCenter.defaultCenter().removeObserver(self)
+        NotificationCenter.default.removeObserver(self)
     }
 
     override func viewDidLoad() {
@@ -26,10 +26,10 @@ class DashboardViewController: KZViewController, UIViewControllerPreviewingDeleg
 
         tableView.delegate = self
         tableView.dataSource = self
-        tableView.registerReusableCell(DashboardItemCell)
-        tableView.registerReusableCell(UserCommentCell)
+        tableView.registerReusableCell(DashboardItemCell.self)
+        tableView.registerReusableCell(UserCommentCell.self)
 
-        self.registerForPreviewingWithDelegate(self, sourceView: tableView)
+        self.registerForPreviewing(with: self, sourceView: tableView)
         view.addSubview(tableView)
 
         let loadingView = DGElasticPullToRefreshLoadingViewCircle()
@@ -44,28 +44,28 @@ class DashboardViewController: KZViewController, UIViewControllerPreviewingDeleg
         }, loadingView: loadingView)
         tableView.dg_setPullToRefreshFillColor(RGB(250, g: 251, b: 252))
 
-        NSNotificationCenter.defaultCenter().addObserver(self, selector: #selector(fetchDataWithForce), name: Constants.Notification.DidLikeComment, object: nil)
-        NSNotificationCenter.defaultCenter().addObserver(self, selector: #selector(fetchDataWithForce), name: Constants.Notification.DidRepostComment, object: nil)
-        NSNotificationCenter.defaultCenter().addObserver(self, selector: #selector(fetchDataWithForce), name: Constants.Notification.DidPostComment, object: nil)
+        NotificationCenter.default.addObserver(self, selector: #selector(fetchDataWithForce), name: NSNotification.Name(rawValue: Constants.Notification.DidLikeComment), object: nil)
+        NotificationCenter.default.addObserver(self, selector: #selector(fetchDataWithForce), name: NSNotification.Name(rawValue: Constants.Notification.DidRepostComment), object: nil)
+        NotificationCenter.default.addObserver(self, selector: #selector(fetchDataWithForce), name: NSNotification.Name(rawValue: Constants.Notification.DidPostComment), object: nil)
         fetchData()
     }
 
     override func setupConstraints() {
         super.setupConstraints()
 
-        tableView.autoPinEdgesToSuperviewEdgesWithInsets(UIEdgeInsetsZero, excludingEdge: .Bottom)
-        tableView.autoPinToBottomLayoutGuideOfViewController(self, withInset: 0)
+        tableView.autoPinEdgesToSuperviewEdges(with: UIEdgeInsets.zero, excludingEdge: .bottom)
+        tableView.autoPin(toBottomLayoutGuideOf: self, withInset: 0)
     }
 
-    override func numberOfSectionsInTableView(tableView: UITableView) -> Int {
+    override func numberOfSections(in tableView: UITableView) -> Int {
         return 2
     }
 
-    override func tableViewNoDataText(tableView: UITableView) -> String {
+    override func tableViewNoDataText(_ tableView: UITableView) -> String {
         return "\n\nHmmm... Seems Empty\nSearch for streams/users in the search tab below to get started!"
     }
 
-    override func tableViewCellData(tableView: UITableView, section: Int) -> [Any] {
+    override func tableViewCellData(_ tableView: UITableView, section: Int) -> [Any] {
         if section == 0 {
             return dashboardItems
         } else {
@@ -73,7 +73,7 @@ class DashboardViewController: KZViewController, UIViewControllerPreviewingDeleg
         }
     }
 
-    override func tableViewCellClass(tableView: UITableView, indexPath: NSIndexPath?) -> KZTableViewCell.Type {
+    override func tableViewCellClass(_ tableView: UITableView, indexPath: IndexPath?) -> KZTableViewCell.Type {
         if indexPath?.section == 0 {
             return DashboardItemCell.self
         } else {
@@ -81,8 +81,8 @@ class DashboardViewController: KZViewController, UIViewControllerPreviewingDeleg
         }
     }
 
-    override func tableView(tableView: UITableView, didSelectRowAtIndexPath indexPath: NSIndexPath) {
-        super.tableView(tableView, didSelectRowAtIndexPath: indexPath)
+    override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        super.tableView(tableView, didSelectRowAt: indexPath)
 
         guard indexPath.section == 1 else {
             return
@@ -106,7 +106,7 @@ class DashboardViewController: KZViewController, UIViewControllerPreviewingDeleg
         fetchDataWithCompletion(true, completion: nil)
     }
 
-    func fetchDataWithCompletion(force: Bool = false, completion: (() -> Void)? = nil) {
+    func fetchDataWithCompletion(_ force: Bool = false, completion: (() -> Void)? = nil) {
         var count = 0
 
         func runCompletion() {
@@ -120,12 +120,12 @@ class DashboardViewController: KZViewController, UIViewControllerPreviewingDeleg
 
         count = count + 1
         Constants.Network.GET("/dashboard/items", parameters: nil) { (response, error) -> Void in
-            self.handleResponse(response, error: error, successCompletion: { (result) -> Void in
+            self.handleResponse(response as AnyObject?, error: error as NSError?, successCompletion: { (result) -> Void in
                 self.dashboardItems.removeAll()
                 if let result = result as? [JSON] {
                     let items = [STMDashboardItem].fromJSONArray(result)
-                    items.forEach({
-                        if $0.items?.count > 0 {
+                    items?.forEach({
+                        if ($0.items?.count)! > 0 {
                             self.dashboardItems.append($0)
                         }
                     })
@@ -139,7 +139,7 @@ class DashboardViewController: KZViewController, UIViewControllerPreviewingDeleg
 
         count = count + 1
         Constants.Network.GET("/dashboard/timeline", parameters: nil) { (response, error) -> Void in
-            self.handleResponse(response, error: error, successCompletion: { (result) -> Void in
+            self.handleResponse(response as AnyObject?, error: error as NSError?, successCompletion: { (result) -> Void in
                 guard let results = result as? [JSON] else {
                     return
                 }
@@ -147,13 +147,13 @@ class DashboardViewController: KZViewController, UIViewControllerPreviewingDeleg
                 let comments = [STMComment].fromJSONArray(results)
                 var didSwipeOut = false
                 if let oldComments = self.comments as? [STMComment] {
-                    if oldComments.count == comments.count {
+                    if oldComments.count == comments?.count {
                         for i in 0..<self.comments.count {
-                            self.comments[i] = comments[i]
+                            self.comments[i] = comments?[i]
                         }
 
                         if let indexPaths = self.tableView.indexPathsForVisibleRows {
-                            self.tableView.reloadRowsAtIndexPaths(indexPaths, withRowAnimation: .None)
+                            self.tableView.reloadRows(at: indexPaths, with: .none)
                             didSwipeOut = true
                         }
                     }
@@ -161,7 +161,7 @@ class DashboardViewController: KZViewController, UIViewControllerPreviewingDeleg
 
                 if !didSwipeOut {
                     self.comments.removeAll()
-                    comments.forEach({ self.comments.append($0) })
+                    comments?.forEach({ self.comments.append($0) })
                     self.tableView.reloadData()
                 }
 
@@ -176,8 +176,8 @@ class DashboardViewController: KZViewController, UIViewControllerPreviewingDeleg
 
     //MARK: UIViewController Previewing Delegate
 
-    func previewingContext(previewingContext: UIViewControllerPreviewing, viewControllerForLocation location: CGPoint) -> UIViewController? {
-        guard let indexPath = tableView.indexPathForRowAtPoint(location), cell = tableView.cellForRowAtIndexPath(indexPath) else {
+    func previewingContext(_ previewingContext: UIViewControllerPreviewing, viewControllerForLocation location: CGPoint) -> UIViewController? {
+        guard let indexPath = tableView.indexPathForRow(at: location), let cell = tableView.cellForRow(at: indexPath) else {
             return nil
         }
 
@@ -185,7 +185,7 @@ class DashboardViewController: KZViewController, UIViewControllerPreviewingDeleg
         previewingContext.sourceRect = cell.frame
 
         if indexPath.section == 0 {
-            if let itemView = cell.hitTest(cell.convertPoint(location, fromView: tableView), withEvent: nil) {
+            if let itemView = cell.hitTest(cell.convert(location, from: tableView), with: nil) {
                 if let innerCell = itemView.superview as? DashboardItemCollectionCell {
                     if let stream = innerCell.model as? STMStream {
                         guard AppDelegate.del().activeStreamController == nil else {
@@ -196,7 +196,7 @@ class DashboardViewController: KZViewController, UIViewControllerPreviewingDeleg
                         pVC.isPreviewing = true
                         pVC.start(stream, vc: self, showHUD: false)
                         vc = pVC
-                        previewingContext.sourceRect = view.convertRect(itemView.frame, fromView: innerCell)
+                        previewingContext.sourceRect = view.convert(itemView.frame, from: innerCell)
                     }
                 }
             }
@@ -215,7 +215,7 @@ class DashboardViewController: KZViewController, UIViewControllerPreviewingDeleg
         return vc
     }
 
-    func previewingContext(previewingContext: UIViewControllerPreviewing, commitViewController viewControllerToCommit: UIViewController) {
+    func previewingContext(_ previewingContext: UIViewControllerPreviewing, commit viewControllerToCommit: UIViewController) {
         if let vc = viewControllerToCommit as? PlayerViewController {
             vc.isPreviewing = false
             AppDelegate.del().presentStreamController(vc)

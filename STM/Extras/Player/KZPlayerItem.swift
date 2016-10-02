@@ -8,6 +8,26 @@
 
 import UIKit
 import MediaPlayer
+fileprivate func < <T : Comparable>(lhs: T?, rhs: T?) -> Bool {
+  switch (lhs, rhs) {
+  case let (l?, r?):
+    return l < r
+  case (nil, _?):
+    return true
+  default:
+    return false
+  }
+}
+
+fileprivate func > <T : Comparable>(lhs: T?, rhs: T?) -> Bool {
+  switch (lhs, rhs) {
+  case let (l?, r?):
+    return l > r
+  default:
+    return rhs < lhs
+  }
+}
+
 
 class KZPlayerItem {
     var title = "", artist = "", album = "", albumArtist = "", genre = "", composer = "", assetURL = "", systemID = ""
@@ -34,8 +54,8 @@ class KZPlayerItem {
         self.systemID = String(item.persistentID)
     }
 
-    func fileURL() -> NSURL {
-        return NSURL(string: assetURL)!
+    func fileURL() -> URL {
+        return URL(string: assetURL)!
     }
 
     func artwork() -> MPMediaItemArtwork? {
@@ -55,6 +75,6 @@ class KZPlayerItem {
     }
 
     func subTitle() -> String {
-        return [artist, album].filter({ $0.characters.count > 0 }).joinWithSeparator(" - ")
+        return [artist, album].filter({ $0.characters.count > 0 }).joined(separator: " - ")
     }
 }

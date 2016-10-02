@@ -9,7 +9,7 @@
 import UIKit
 
 class TriangleView: UIView {
-    var color = UIColor.whiteColor()
+    var color = UIColor.white
 
     convenience init() {
         self.init(frame: CGRect.zero)
@@ -17,35 +17,35 @@ class TriangleView: UIView {
 
     override init(frame: CGRect) {
         super.init(frame: frame)
-        self.backgroundColor = UIColor.clearColor()
+        self.backgroundColor = UIColor.clear
     }
 
     required init?(coder aDecoder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
 
-    override func drawRect(rect: CGRect) {
+    override func draw(_ rect: CGRect) {
         guard let superview = self.superview else {
             return
         }
 
         let trianglePath = UIBezierPath()
         if self.frame.origin.x < 0 {
-            trianglePath.moveToPoint(CGPoint(x: rect.width/2, y: rect.height))
+            trianglePath.move(to: CGPoint(x: rect.width/2, y: rect.height))
         } else {
-            trianglePath.moveToPoint(CGPoint(x: 0, y: rect.height))
+            trianglePath.move(to: CGPoint(x: 0, y: rect.height))
         }
 
         let distanceToRight = superview.frame.width - (self.frame.origin.x + self.frame.width)
 
         if distanceToRight < 20 {
-            trianglePath.addLineToPoint(CGPoint(x: rect.width/2, y: rect.height))
+            trianglePath.addLine(to: CGPoint(x: rect.width/2, y: rect.height))
         } else {
-            trianglePath.addLineToPoint(CGPoint(x: rect.width, y: rect.height))
+            trianglePath.addLine(to: CGPoint(x: rect.width, y: rect.height))
         }
 
-        trianglePath.addLineToPoint(CGPoint(x: rect.width/2, y: 0))
-        trianglePath.closePath()
+        trianglePath.addLine(to: CGPoint(x: rect.width/2, y: 0))
+        trianglePath.close()
 
         color.setFill()
         trianglePath.fill()

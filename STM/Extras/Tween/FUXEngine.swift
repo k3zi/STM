@@ -34,17 +34,17 @@ class FUXTweenStorage {
     }
 }
 
-public class FUXEngine: NSObject {
+open class FUXEngine: NSObject {
 
-    private var _displayLink: CADisplayLink!
-    private var _tweens = [FUXTweenStorage]()
-    private var _isRunning = false
+    fileprivate var _displayLink: CADisplayLink!
+    fileprivate var _tweens = [FUXTweenStorage]()
+    fileprivate var _isRunning = false
 
     override public init () {
         super.init()
     }
 
-    public func addTween(tween: FUXTween, name: String = "") -> FUXTween {
+    open func addTween(_ tween: FUXTween, name: String = "") -> FUXTween {
         let storedTween = FUXTweenStorage(tween, name)
         _tweens.append(storedTween)
 
@@ -54,11 +54,11 @@ public class FUXEngine: NSObject {
         return tween
     }
 
-    public func removeTweenByName(name: String) {
+    open func removeTweenByName(_ name: String) {
         var index = 0
         for tween in _tweens {
             if tween.name == name {
-                _tweens.removeAtIndex(index)
+                _tweens.remove(at: index)
                 break
             }
             index += 1
@@ -68,26 +68,26 @@ public class FUXEngine: NSObject {
         }
     }
 
-    public func pause() {
+    open func pause() {
         stopDisplayLink()
     }
 
-    public func resume() {
+    open func resume() {
         setupDisplayLink()
     }
 
-    private func setupDisplayLink() {
+    fileprivate func setupDisplayLink() {
         _displayLink = CADisplayLink(target: self, selector: #selector(FUXEngine.update(_:)))
-        _displayLink.addToRunLoop(NSRunLoop.mainRunLoop(), forMode: NSRunLoopCommonModes)
+        _displayLink.add(to: RunLoop.main, forMode: RunLoopMode.commonModes)
         _isRunning = true
     }
 
-    private func stopDisplayLink() {
+    fileprivate func stopDisplayLink() {
         _displayLink.invalidate()
         _isRunning = false
     }
 
-    func update(displayLink: CADisplayLink) {
+    func update(_ displayLink: CADisplayLink) {
 
         var index = 0
         for storedTween in _tweens {
@@ -97,7 +97,7 @@ public class FUXEngine: NSObject {
                 parseTween(storedTween.tween, storedTween)
                 index += 1
             } else {
-                _tweens.removeAtIndex(index)
+                _tweens.remove(at: index)
             }
         }
 
@@ -106,10 +106,10 @@ public class FUXEngine: NSObject {
         }
     }
 
-    private func parseTween(tween: FUXTween, _ storedTween: FUXTweenStorage) {
+    fileprivate func parseTween(_ tween: FUXTween, _ storedTween: FUXTweenStorage) {
 
         switch tween {
-            case .Tween(let duration, let value):
+            case .tween(let duration, let value):
                 parseValue(value, storedTween.currentTweenValue)
                 var runFinished = false
                 if storedTween.currentRelativeTime == 1 && storedTween.speed > 0 {
@@ -151,25 +151,25 @@ public class FUXEngine: NSObject {
                         }
                     }
                 }
-        case .Easing(let boxedTween, let easing):
+        case .easing(let boxedTween, let easing):
             storedTween.currentTweenValue = easing(storedTween.currentTweenValue)
             parseTween(boxedTween.unbox, storedTween)
-        case .Delay(let delay, let boxedTween):
+        case .delay(let delay, let boxedTween):
             if storedTween.totalRunningTime > delay {
                 parseTween(boxedTween.unbox, storedTween)
             }
-        case .OnComplete(let boxedTween, let onComplete):
+        case .onComplete(let boxedTween, let onComplete):
             if storedTween.currentRelativeTime == 1 {
                 onComplete()
             }
             parseTween(boxedTween.unbox, storedTween)
-        case .Repeat(let repeatTotal, let boxedTween):
+        case .repeat(let repeatTotal, let boxedTween):
             storedTween.repeatTotal = repeatTotal
             parseTween(boxedTween.unbox, storedTween)
-        case .YoYo(let boxedTween):
+        case .yoYo(let boxedTween):
             storedTween.yoyo = true
             parseTween(boxedTween.unbox, storedTween)
-        case .Speed(let speed, let boxedTween):
+        case .speed(let speed, let boxedTween):
             if !storedTween.speedSet {
                 storedTween.speedSet = true
                 storedTween.speed = speed
@@ -180,12 +180,12 @@ public class FUXEngine: NSObject {
         }
     }
 
-    private func parseValue(value: FUXValue, _ tweenValue: Float) {
+    fileprivate func parseValue(_ value: FUXValue, _ tweenValue: Float) {
 
         switch value {
-            case .Value(let valueFunc):
+            case .value(let valueFunc):
                 valueFunc(tweenValue)
-            case .Values(let values):
+            case .values(let values):
                 for boxedValue in values {
                     parseValue(boxedValue.unbox, tweenValue)
                 }

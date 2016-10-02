@@ -17,21 +17,21 @@ class UpNextSongCell: MCSwipeCell {
     required init(style: UITableViewCellStyle, reuseIdentifier: String?) {
         super.init(style: style, reuseIdentifier: reuseIdentifier)
         self.backgroundColor = RGB(255)
-        self.selectionStyle = .None
+        self.selectionStyle = .none
 
         poster.backgroundColor = Constants.UI.Color.imageViewDefault
         self.contentView.addSubview(poster)
 
         positionLabel.backgroundColor = RGB(204, a: 0.86)
         positionLabel.textColor = RGB(26, a: 1.0)
-        positionLabel.textAlignment = .Center
-        positionLabel.font = UIFont.systemFontOfSize(16)
+        positionLabel.textAlignment = .center
+        positionLabel.font = UIFont.systemFont(ofSize: 16)
         poster.addSubview(positionLabel)
 
-        songNameLabel.font = UIFont.systemFontOfSize(16)
+        songNameLabel.font = UIFont.systemFont(ofSize: 16)
         self.contentView.addSubview(songNameLabel)
 
-        songArtist.font = UIFont.systemFontOfSize(14)
+        songArtist.font = UIFont.systemFont(ofSize: 14)
         self.contentView.addSubview(songArtist)
     }
 
@@ -46,37 +46,37 @@ class UpNextSongCell: MCSwipeCell {
     override func updateConstraints() {
         super.updateConstraints()
         NSLayoutConstraint.autoSetPriority(999) { () -> Void in
-            self.poster.autoSetDimensionsToSize(CGSize(width: 65.0, height: 65.0))
+            self.poster.autoSetDimensions(to: CGSize(width: 65.0, height: 65.0))
         }
-        poster.autoPinEdgeToSuperviewEdge(.Top)
-        poster.autoPinEdgeToSuperviewEdge(.Bottom)
-        poster.autoPinEdgeToSuperviewEdge(.Left)
+        poster.autoPinEdge(toSuperviewEdge: .top)
+        poster.autoPinEdge(toSuperviewEdge: .bottom)
+        poster.autoPinEdge(toSuperviewEdge: .left)
 
         positionLabel.autoPinEdgesToSuperviewEdges()
 
-        songNameLabel.autoPinEdgeToSuperviewEdge(.Top, withInset: 10)
-        songNameLabel.autoPinEdge(.Left, toEdge: .Right, ofView: poster, withOffset: 10)
-        songNameLabel.autoPinEdgeToSuperviewEdge(.Right, withInset: 10)
+        songNameLabel.autoPinEdge(toSuperviewEdge: .top, withInset: 10)
+        songNameLabel.autoPinEdge(.left, to: .right, of: poster, withOffset: 10)
+        songNameLabel.autoPinEdge(toSuperviewEdge: .right, withInset: 10)
 
-        songArtist.autoPinEdge(.Top, toEdge: .Bottom, ofView: songNameLabel, withOffset: 2)
-        songArtist.autoPinEdge(.Left, toEdge: .Right, ofView: poster, withOffset: 10)
-        songArtist.autoPinEdgeToSuperviewEdge(.Right, withInset: 10)
-        songArtist.autoPinEdgeToSuperviewEdge(.Bottom, withInset: 10)
+        songArtist.autoPinEdge(.top, to: .bottom, of: songNameLabel, withOffset: 2)
+        songArtist.autoPinEdge(.left, to: .right, of: poster, withOffset: 10)
+        songArtist.autoPinEdge(toSuperviewEdge: .right, withInset: 10)
+        songArtist.autoPinEdge(toSuperviewEdge: .bottom, withInset: 10)
     }
 
-    override func setIndexPath(indexPath: NSIndexPath, last: Bool) {
+    override func setIndexPath(_ indexPath: IndexPath, last: Bool) {
         super.setIndexPath(indexPath, last: last)
 
         positionLabel.text = String(indexPath.row + 1)
     }
 
-    override func fillInCellData(shallow: Bool) {
+    override func fillInCellData(_ shallow: Bool) {
         if let song = model as? KZPlayerItem {
             songNameLabel.text = song.title
             songArtist.text = song.subTitle()
 
             if let artwork = song.artwork() {
-                poster.image = artwork.imageWithSize(CGSize(width: 65, height: 65))
+                poster.image = artwork.image(at: CGSize(width: 65, height: 65))
             }
         }
     }

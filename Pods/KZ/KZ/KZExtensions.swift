@@ -8,7 +8,8 @@
 
 import Foundation
 
-public typealias KZCompletionBlock = (String -> Void)
+public typealias KZCompletionBlock = ((String) -> Void)
+public typealias JSON = [String: Any]
 
 //MARK: UIKit Extensions
 
@@ -23,10 +24,10 @@ public extension UIView {
 
      - returns: The line
      */
-    class public func lineWithBGColor(color: UIColor, vertical: Bool = false, lineHeight: CGFloat = 1.0) -> UIView {
+    class public func lineWithBGColor(_ color: UIColor, vertical: Bool = false, lineHeight: CGFloat = 1.0) -> UIView {
         let view = UIView()
         NSLayoutConstraint.autoSetPriority(999) { () -> Void in
-            view.autoSetDimension(vertical ? .Width : .Height, toSize: (lineHeight / UIScreen.mainScreen().scale))
+            view.autoSetDimension(vertical ? .width : .height, toSize: (lineHeight / UIScreen.main.scale))
         }
         view.backgroundColor = color
         return view
@@ -36,8 +37,8 @@ public extension UIView {
 
 public extension UIButton {
 
-    override public func intrinsicContentSize() -> CGSize {
-        let intrinsicContentSize = super.intrinsicContentSize()
+    override open var intrinsicContentSize : CGSize {
+        let intrinsicContentSize = super.intrinsicContentSize
 
         let adjustedWidth = intrinsicContentSize.width + titleEdgeInsets.left + titleEdgeInsets.right
         let adjustedHeight = intrinsicContentSize.height + titleEdgeInsets.top + titleEdgeInsets.bottom
@@ -50,18 +51,18 @@ public extension UIButton {
      - parameter color:    The color to use for the specified state.
      - parameter forState: The state that uses the specified image.
      */
-    public func setBackgroundColor(color: UIColor?, forState: UIControlState) {
+    public func setBackgroundColor(_ color: UIColor?, forState: UIControlState) {
         guard let color = color else {
-            return self.setBackgroundImage(nil, forState: forState)
+            return self.setBackgroundImage(nil, for: forState)
         }
 
         UIGraphicsBeginImageContext(CGSize(width: 1, height: 1))
-        CGContextSetFillColorWithColor(UIGraphicsGetCurrentContext(), color.CGColor)
-        CGContextFillRect(UIGraphicsGetCurrentContext(), CGRect(x: 0, y: 0, width: 1, height: 1))
+        UIGraphicsGetCurrentContext()?.setFillColor(color.cgColor)
+        UIGraphicsGetCurrentContext()?.fill(CGRect(x: 0, y: 0, width: 1, height: 1))
         let colorImage = UIGraphicsGetImageFromCurrentImageContext()
         UIGraphicsEndImageContext()
 
-        self.setBackgroundImage(colorImage, forState: forState)
+        self.setBackgroundImage(colorImage, for: forState)
     }
 
 }
@@ -73,7 +74,7 @@ public extension UIViewController {
 
      - parameter message: The error message to display in the alert.
      */
-    public func showError(message: String) {
+    public func showError(_ message: String) {
         showAlert("Error", message: message)
     }
 
@@ -82,7 +83,7 @@ public extension UIViewController {
 
      - parameter message: The success message to display in the alert.
      */
-    public func showSuccess(message: String) {
+    public func showSuccess(_ message: String) {
         showAlert("Success", message: message)
     }
 
@@ -92,21 +93,10 @@ public extension UIViewController {
      - parameter title:   The title of the alert.
      - parameter message: The message to place in the alert.
      */
-    public func showAlert(title: String, message: String) {
-        let alert = UIAlertController(title: title, message: message, preferredStyle: UIAlertControllerStyle.Alert)
-        alert.addAction(UIAlertAction(title: "Ok", style: UIAlertActionStyle.Default, handler: nil))
-        self.view.window?.rootViewController?.presentViewController(alert, animated: true, completion: nil)
-    }
-
-    /**
-     Handles a network response object and executes a callback on success
-
-     - parameter response:          The unserialized response object
-     - parameter error:             Pass in an error to be displayed in a UIAlert
-     - parameter successCompletion: Called when response['success'] == true
-     */
-    public func handleResponse(response: AnyObject?, error: NSError?, successCompletion: AnyObject -> Void) {
-        handleResponse(response, error: error, successCompletion: successCompletion, errorCompletion: nil)
+    public func showAlert(_ title: String, message: String) {
+        let alert = UIAlertController(title: title, message: message, preferredStyle: UIAlertControllerStyle.alert)
+        alert.addAction(UIAlertAction(title: "Ok", style: UIAlertActionStyle.default, handler: nil))
+        self.view.window?.rootViewController?.present(alert, animated: true, completion: nil)
     }
 
     /**
@@ -117,8 +107,8 @@ public extension UIViewController {
      - parameter successCompletion: Called when response['success'] == true
      - parameter errorCompletion:   Called when response['success'] is a String or error != nil
      */
-    public func handleResponse(response: AnyObject?, error: NSError?, successCompletion: (AnyObject -> Void)? = nil, errorCompletion: (String -> Void)? = nil) {
-        dispatch_async(dispatch_get_main_queue(), { () -> Void in
+    public func handleResponse(_ response: Any?, error: NSError?, successCompletion: ((Any) -> Void)? = nil, errorCompletion: ((String) -> Void)? = nil) {
+        DispatchQueue.main.async(execute: { () -> Void in
             if let error = error {
                 print(error)
                 print(error.code)
@@ -129,7 +119,7 @@ public extension UIViewController {
                 if ![-1011, -1001, -1004, 9, 404, 500, -1005].contains(error.code) {
                     self.showError(error.localizedDescription)
                 }
-            } else if let response = response {
+            } else if let response = response as? JSON {
                 guard let success = response["success"] as? Bool else {
                     return
                 }
@@ -139,7 +129,7 @@ public extension UIViewController {
                         return
                     }
 
-                    if let result = result, successCompletion = successCompletion {
+                    if let successCompletion = successCompletion {
                         successCompletion(result)
                     }
                 } else if let error = response["error"] as? String {
@@ -164,9 +154,9 @@ public extension UIViewController {
      */
     public func goBack() {
         if let vc = self.presentingViewController {
-            vc.dismissViewControllerAnimated(true, completion: nil)
+            vc.dismiss(animated: true, completion: nil)
         } else if let nav = self.navigationController {
-            nav.popViewControllerAnimated(true)
+            nav.popViewController(animated: true)
         }
     }
 }
@@ -175,8 +165,8 @@ public extension UIViewController {
 
 public extension String {
     public func firstCharacterUpperCase() -> String {
-        let lowercaseString = self.lowercaseString
-
-        return lowercaseString.stringByReplacingCharactersInRange(lowercaseString.startIndex...lowercaseString.startIndex, withString: String(lowercaseString[lowercaseString.startIndex]).uppercaseString)
+        let first = String(characters.prefix(1)).capitalized
+        let other = String(characters.dropFirst())
+        return first + other
     }
 }

@@ -15,10 +15,10 @@ class NavigationController: UINavigationController, UINavigationControllerDelega
         self.delegate = self
 
         //Edit NavBar
-        self.navigationBar.translucent = false
-        self.navigationBar.tintColor = UIColor.whiteColor()
-        self.navigationBar.titleTextAttributes = [NSForegroundColorAttributeName: UIColor.whiteColor()]
-        self.navigationBar.setBackgroundImage(imageLayerForGradientBackground(), forBarMetrics: .Default)
+        self.navigationBar.isTranslucent = false
+        self.navigationBar.tintColor = UIColor.white
+        self.navigationBar.titleTextAttributes = [NSForegroundColorAttributeName: UIColor.white]
+        self.navigationBar.setBackgroundImage(imageLayerForGradientBackground(), for: .default)
         self.navigationBar.shadowImage = UIImage()
     }
 
@@ -28,19 +28,19 @@ class NavigationController: UINavigationController, UINavigationControllerDelega
         updatedFrame.size.height += 20
 
         let layer = CAGradientLayer()
-        layer.colors = [RGB(110, g: 74, b: 217, a: 255).CGColor, RGB(122, g: 86, b: 229, a: 255).CGColor]
+        layer.colors = [RGB(110, g: 74, b: 217, a: 255).cgColor, RGB(122, g: 86, b: 229, a: 255).cgColor]
         layer.frame = updatedFrame
 
         UIGraphicsBeginImageContext(CGSize(width: updatedFrame.width, height: updatedFrame.height))
-        layer.renderInContext(UIGraphicsGetCurrentContext()!)
+        layer.render(in: UIGraphicsGetCurrentContext()!)
 
         let image = UIGraphicsGetImageFromCurrentImageContext()
         UIGraphicsEndImageContext()
-        return image
+        return image!
     }
 
-    func navigationController(navigationController: UINavigationController, willShowViewController viewController: UIViewController, animated: Bool) {
-        let item = UIBarButtonItem(title: " ", style: .Plain, target: nil, action: nil)
+    func navigationController(_ navigationController: UINavigationController, willShow viewController: UIViewController, animated: Bool) {
+        let item = UIBarButtonItem(title: " ", style: .plain, target: nil, action: nil)
         viewController.navigationItem.backBarButtonItem = item
     }
 }

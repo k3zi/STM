@@ -12,25 +12,25 @@ extension UITextField {
 
     class func styledForLaunchScreen() -> UITextField {
         let textField = UITextField()
-        textField.font = UIFont.systemFontOfSize(15, weight: UIFontWeightMedium)
+        textField.font = UIFont.systemFont(ofSize: 15, weight: UIFontWeightMedium)
         textField.textColor = RGB(255)
         textField.backgroundColor = RGB(0, a: 0.2)
         textField.clipsToBounds = true
         textField.layer.cornerRadius = 10
-        textField.textAlignment = .Center
+        textField.textAlignment = .center
 
         return textField
     }
 
     func unstyleField() {
-        spellCheckingType = .No
-        autocorrectionType = .No
-        autocapitalizationType = .None
+        spellCheckingType = .no
+        autocorrectionType = .no
+        autocapitalizationType = .none
     }
 
     func protectField() {
         unstyleField()
-        secureTextEntry = true
+        isSecureTextEntry = true
     }
 
 }

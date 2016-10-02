@@ -40,8 +40,8 @@ class CommentViewController: KZViewController, UIViewControllerPreviewingDelegat
 
         tableView.delegate = self
         tableView.dataSource = self
-        tableView.registerReusableCell(ExtendedUserCommentCell)
-        tableView.registerReusableCell(UserCommentCell)
+        tableView.registerReusableCell(ExtendedUserCommentCell.self)
+        tableView.registerReusableCell(UserCommentCell.self)
         view.addSubview(tableView)
 
         commentToolbar.delegate = self
@@ -49,7 +49,7 @@ class CommentViewController: KZViewController, UIViewControllerPreviewingDelegat
         commentToolbar.toolBar.text = comment.replyPlaceholder()
         view.addSubview(commentToolbar)
 
-        registerForPreviewingWithDelegate(self, sourceView: tableView)
+        registerForPreviewing(with: self, sourceView: tableView)
 
         keynode.animationsHandler = { [weak self] show, rect in
             guard let me = self else {
@@ -81,7 +81,7 @@ class CommentViewController: KZViewController, UIViewControllerPreviewingDelegat
 
      - parameter text: the text that was posted
      */
-    func handlePost(text: String) {
+    func handlePost(_ text: String) {
         guard text.characters.count > 0 else {
             return
         }
@@ -90,14 +90,14 @@ class CommentViewController: KZViewController, UIViewControllerPreviewingDelegat
             return
         }
 
-        self.commentToolbar.sendBT.enabled = false
+        self.commentToolbar.sendBT.isEnabled = false
         self.commentToolbar.toolBar.text = comment.replyPlaceholder()
         Constants.Network.POST("/comment/\(comment.id)/reply", parameters: ["text": text, "streamID": streamID], completionHandler: { (response, error) -> Void in
-            self.commentToolbar.sendBT.enabled = true
-            self.handleResponse(response, error: error, successCompletion: { (result) -> Void in
+            self.commentToolbar.sendBT.isEnabled = true
+            self.handleResponse(response as AnyObject?, error: error as NSError?, successCompletion: { (result) -> Void in
                 self.fetchData()
-                Answers.logCustomEventWithName("Comment", customAttributes: [:])
-                NSNotificationCenter.defaultCenter().postNotificationName(Constants.Notification.DidPostComment, object: nil)
+                Answers.logCustomEvent(withName: "Comment", customAttributes: [:])
+                NotificationCenter.default.post(name: NSNotification.Name(rawValue: Constants.Notification.DidPostComment), object: nil)
             })
         })
 
@@ -114,19 +114,19 @@ class CommentViewController: KZViewController, UIViewControllerPreviewingDelegat
     override func setupConstraints() {
         super.setupConstraints()
 
-        tableView.autoPinEdgesToSuperviewEdgesWithInsets(UIEdgeInsetsZero, excludingEdge: .Bottom)
+        tableView.autoPinEdgesToSuperviewEdges(with: UIEdgeInsets.zero, excludingEdge: .bottom)
 
-        commentToolbar.autoPinEdge(.Top, toEdge: .Bottom, ofView: tableView)
-        commentToolbar.autoPinEdgeToSuperviewEdge(.Left)
-        commentToolbar.autoPinEdgeToSuperviewEdge(.Right)
-        toolbarBottomConstraint = commentToolbar.autoPinEdgeToSuperviewEdge(.Bottom)
+        commentToolbar.autoPinEdge(.top, to: .bottom, of: tableView)
+        commentToolbar.autoPinEdge(toSuperviewEdge: .left)
+        commentToolbar.autoPinEdge(toSuperviewEdge: .right)
+        toolbarBottomConstraint = commentToolbar.autoPinEdge(toSuperviewEdge: .bottom)
     }
 
-    override func numberOfSectionsInTableView(tableView: UITableView) -> Int {
+    override func numberOfSections(in tableView: UITableView) -> Int {
         return 2
     }
 
-    override func tableViewCellData(tableView: UITableView, section: Int) -> [Any] {
+    override func tableViewCellData(_ tableView: UITableView, section: Int) -> [Any] {
         if section == 0 {
             return [comment]
         }
@@ -134,11 +134,11 @@ class CommentViewController: KZViewController, UIViewControllerPreviewingDelegat
         return replys
     }
 
-    override func tableViewNoDataText(tableView: UITableView) -> String {
+    override func tableViewNoDataText(_ tableView: UITableView) -> String {
         return "No Replys"
     }
 
-    override func tableViewCellClass(tableView: UITableView, indexPath: NSIndexPath?) -> KZTableViewCell.Type {
+    override func tableViewCellClass(_ tableView: UITableView, indexPath: IndexPath?) -> KZTableViewCell.Type {
         if indexPath?.section == 0 {
             return ExtendedUserCommentCell.self
         }
@@ -146,8 +146,8 @@ class CommentViewController: KZViewController, UIViewControllerPreviewingDelegat
         return UserCommentCell.self
     }
 
-    override func tableView(tableView: UITableView, didSelectRowAtIndexPath indexPath: NSIndexPath) {
-        super.tableView(tableView, didSelectRowAtIndexPath: indexPath)
+    override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        super.tableView(tableView, didSelectRowAt: indexPath)
 
         guard indexPath.section == 1 else {
             return
@@ -163,11 +163,11 @@ class CommentViewController: KZViewController, UIViewControllerPreviewingDelegat
         }
     }
 
-    override func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
-        let cell = super.tableView(tableView, cellForRowAtIndexPath: indexPath)
+    override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+        let cell = super.tableView(tableView, cellForRowAt: indexPath)
 
         if let cell = cell as? UserCommentCell {
-            cell.streamView.hidden = true
+            cell.streamView.isHidden = true
         }
 
         return cell
@@ -177,7 +177,7 @@ class CommentViewController: KZViewController, UIViewControllerPreviewingDelegat
         fetchDataWithCompletion(nil)
     }
 
-    func fetchDataWithCompletion(completion: (() -> Void)?) {
+    func fetchDataWithCompletion(_ completion: (() -> Void)?) {
         var count = 0
 
         func runCompletion() {
@@ -191,7 +191,7 @@ class CommentViewController: KZViewController, UIViewControllerPreviewingDelegat
 
         count = count + 1
         Constants.Network.GET("/comment/\(comment.id)/replys", parameters: nil) { (response, error) -> Void in
-            self.handleResponse(response, error: error, successCompletion: { (result) -> Void in
+            self.handleResponse(response as AnyObject?, error: error as NSError?, successCompletion: { (result) -> Void in
                 self.replys.removeAll()
 
                 guard let results = result as? [JSON] else {
@@ -199,7 +199,7 @@ class CommentViewController: KZViewController, UIViewControllerPreviewingDelegat
                 }
 
                 let comments = [STMComment].fromJSONArray(results)
-                comments.forEach({ self.replys.append($0) })
+                comments?.forEach({ self.replys.append($0) })
 
                 self.tableView.reloadData()
             })
@@ -210,8 +210,8 @@ class CommentViewController: KZViewController, UIViewControllerPreviewingDelegat
 
     //MARK: UIViewController Previewing Delegate
 
-    func previewingContext(previewingContext: UIViewControllerPreviewing, viewControllerForLocation location: CGPoint) -> UIViewController? {
-        guard let indexPath = tableView.indexPathForRowAtPoint(location), cell = tableView.cellForRowAtIndexPath(indexPath) else {
+    func previewingContext(_ previewingContext: UIViewControllerPreviewing, viewControllerForLocation location: CGPoint) -> UIViewController? {
+        guard let indexPath = tableView.indexPathForRow(at: location), let cell = tableView.cellForRow(at: indexPath) else {
             return nil
         }
 
@@ -233,7 +233,7 @@ class CommentViewController: KZViewController, UIViewControllerPreviewingDelegat
         return vc
     }
 
-    func previewingContext(previewingContext: UIViewControllerPreviewing, commitViewController viewControllerToCommit: UIViewController) {
+    func previewingContext(_ previewingContext: UIViewControllerPreviewing, commit viewControllerToCommit: UIViewController) {
         if let vc = viewControllerToCommit as? PlayerViewController {
             vc.isPreviewing = false
             AppDelegate.del().presentStreamController(vc)

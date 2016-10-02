@@ -42,7 +42,7 @@ class STMConversation: Decodable {
             }
 
             let userDisplayNames = users.filter({ $0.id != AppDelegate.del().currentUser?.id }).flatMap({ $0.displayName })
-            return userDisplayNames.joinWithSeparator(", ")
+            return userDisplayNames.joined(separator: ", ")
         }
 
         return "Conversation"

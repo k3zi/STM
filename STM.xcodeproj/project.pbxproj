@@ -85,7 +85,6 @@
 		EA79C7A41CDBCC3700A5CA94 /* ProfileStatsListViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = EA79C7A31CDBCC3700A5CA94 /* ProfileStatsListViewController.swift */; };
 		EA79C7A61CDBEF2B00A5CA94 /* GradientSlider.swift in Sources */ = {isa = PBXBuildFile; fileRef = EA79C7A51CDBEF2B00A5CA94 /* GradientSlider.swift */; };
 		EA79C7A81CDD423E00A5CA94 /* FinishTwitterAccountViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = EA79C7A71CDD423E00A5CA94 /* FinishTwitterAccountViewController.swift */; };
-		EA86DCFC1CCC156A00064040 /* STMAuthzModule.swift in Sources */ = {isa = PBXBuildFile; fileRef = EA86DCFB1CCC156900064040 /* STMAuthzModule.swift */; };
 		EA86DD001CCC281600064040 /* TimelineItemCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = EA86DCFF1CCC281600064040 /* TimelineItemCell.swift */; };
 		EA86DD021CCC291D00064040 /* STMTimelineItem.swift in Sources */ = {isa = PBXBuildFile; fileRef = EA86DD011CCC291D00064040 /* STMTimelineItem.swift */; };
 		EA8D3DE11C7D75C3003ACCFC /* MessageToolbarView.swift in Sources */ = {isa = PBXBuildFile; fileRef = EA8D3DE01C7D75C3003ACCFC /* MessageToolbarView.swift */; };
@@ -233,7 +232,6 @@
 		EA79C7A31CDBCC3700A5CA94 /* ProfileStatsListViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ProfileStatsListViewController.swift; sourceTree = "<group>"; };
 		EA79C7A51CDBEF2B00A5CA94 /* GradientSlider.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = GradientSlider.swift; sourceTree = "<group>"; };
 		EA79C7A71CDD423E00A5CA94 /* FinishTwitterAccountViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FinishTwitterAccountViewController.swift; sourceTree = "<group>"; };
-		EA86DCFB1CCC156900064040 /* STMAuthzModule.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = STMAuthzModule.swift; sourceTree = "<group>"; };
 		EA86DCFF1CCC281600064040 /* TimelineItemCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TimelineItemCell.swift; sourceTree = "<group>"; };
 		EA86DD011CCC291D00064040 /* STMTimelineItem.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = STMTimelineItem.swift; sourceTree = "<group>"; };
 		EA8D3DE01C7D75C3003ACCFC /* MessageToolbarView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MessageToolbarView.swift; sourceTree = "<group>"; };
@@ -376,7 +374,6 @@
 				EA09CAC01C5C447E0067FF6A /* Controllers */,
 				EA09CAAC1C5C41510067FF6A /* AppDelegate.swift */,
 				EA09CAC71C5C5D170067FF6A /* Constants.swift */,
-				EA86DCFB1CCC156900064040 /* STMAuthzModule.swift */,
 				EA09CACA1C5C63A20067FF6A /* LaunchScreen.storyboard */,
 				EA09CAB31C5C41510067FF6A /* Assets.xcassets */,
 				EA09CAB81C5C41510067FF6A /* Info.plist */,
@@ -710,16 +707,18 @@
 			attributes = {
 				LastSwiftMigration = 0730;
 				LastSwiftUpdateCheck = 0730;
-				LastUpgradeCheck = 0730;
+				LastUpgradeCheck = 0800;
 				ORGANIZATIONNAME = "Storm Edge Apps LLC";
 				TargetAttributes = {
 					29DA0B221CFA031600E30ADE = {
 						CreatedOnToolsVersion = 7.3.1;
+						LastSwiftMigration = 0800;
 						TestTargetID = EA09CAA81C5C41510067FF6A;
 					};
 					EA09CAA81C5C41510067FF6A = {
 						CreatedOnToolsVersion = 7.3;
 						DevelopmentTeam = FYHEVSXTTV;
+						LastSwiftMigration = 0800;
 						SystemCapabilities = {
 							com.apple.BackgroundModes = {
 								enabled = 1;
@@ -889,7 +888,6 @@
 				EA4F495E1C5EBFA000103559 /* YBAudioComponent.m in Sources */,
 				EA54E5C21CC5D8210033135B /* UIToolbarStyles.swift in Sources */,
 				EA09CAD71C5C89A50067FF6A /* NavigationController.swift in Sources */,
-				EA86DCFC1CCC156A00064040 /* STMAuthzModule.swift in Sources */,
 				EA2898C21CD5CB390025F43B /* STMStreamMeta.swift in Sources */,
 				EA01AF931C5CBCA600F56792 /* STMUser.swift in Sources */,
 				EA4F49841C5EC05700103559 /* KZPlayerInner.m in Sources */,
@@ -980,6 +978,7 @@
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = com.stormedgeapps.STMTests;
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_VERSION = 3.0;
 				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/STM.app/STM";
 			};
 			name = Debug;
@@ -993,6 +992,7 @@
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = com.stormedgeapps.STMTests;
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_VERSION = 3.0;
 				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/STM.app/STM";
 			};
 			name = Release;
@@ -1010,8 +1010,10 @@
 				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
 				CLANG_WARN_EMPTY_BODY = YES;
 				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
 				CLANG_WARN_INT_CONVERSION = YES;
 				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
 				CLANG_WARN_UNREACHABLE_CODE = YES;
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
@@ -1055,8 +1057,10 @@
 				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
 				CLANG_WARN_EMPTY_BODY = YES;
 				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
 				CLANG_WARN_INT_CONVERSION = YES;
 				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
 				CLANG_WARN_UNREACHABLE_CODE = YES;
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
@@ -1075,6 +1079,7 @@
 				IPHONEOS_DEPLOYMENT_TARGET = 9.3;
 				MTL_ENABLE_DEBUG_INFO = NO;
 				SDKROOT = iphoneos;
+				SWIFT_OPTIMIZATION_LEVEL = "-Owholemodule";
 				TARGETED_DEVICE_FAMILY = "1,2";
 				VALIDATE_PRODUCT = YES;
 			};
@@ -1084,6 +1089,7 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = E089FBE7B08BC56B57936FF1 /* Pods-STM.debug.xcconfig */;
 			buildSettings = {
+				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_ENTITLEMENTS = STM/STM.entitlements;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
@@ -1099,6 +1105,7 @@
 				PROVISIONING_PROFILE = "";
 				RESOURCES_TARGETED_DEVICE_FAMILY = "";
 				SWIFT_OBJC_BRIDGING_HEADER = "STM/Extras/STM-Bridging-Header.h";
+				SWIFT_VERSION = 3.0;
 				TARGETED_DEVICE_FAMILY = 1;
 				VERSIONING_SYSTEM = "apple-generic";
 			};
@@ -1108,6 +1115,7 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = ACB77300A114E3FC1AE33834 /* Pods-STM.release.xcconfig */;
 			buildSettings = {
+				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_ENTITLEMENTS = STM/STM.entitlements;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
@@ -1122,6 +1130,7 @@
 				PROVISIONING_PROFILE = "";
 				RESOURCES_TARGETED_DEVICE_FAMILY = "";
 				SWIFT_OBJC_BRIDGING_HEADER = "STM/Extras/STM-Bridging-Header.h";
+				SWIFT_VERSION = 3.0;
 				TARGETED_DEVICE_FAMILY = 1;
 				VERSIONING_SYSTEM = "apple-generic";
 			};

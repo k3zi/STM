@@ -34,7 +34,7 @@ public extension Dictionary {
      provided delimiter to indicate a nested value.
      
      For example, a dictionary with [ "outer" : [ "inner" : "value" ] ]
-     could retrive 'value' via  path "outer.inner", given a
+     could retrieve 'value' via  path "outer.inner", given a
      delimiter of ''.
      
      - parameter keyPath:   Key path delimited by delimiter.
@@ -42,25 +42,25 @@ public extension Dictionary {
      
      - returns: Value retrieved from dic
      */
-    public func valueForKeyPath(keyPath: String, withDelimiter delimiter: String = GlossKeyPathDelimiter) -> AnyObject? {
-        let keys = keyPath.componentsSeparatedByString(delimiter)
+    public func value(forKeyPath keyPath: String, withDelimiter delimiter: String = GlossKeyPathDelimiter) -> AnyObject? {
+        let keys = keyPath.components(separatedBy: delimiter)
         
         guard let first = keys.first as? Key else {
             print("[Gloss] Unable to use keyPath '\(keyPath)' as key on type: \(Key.self)")
             return nil
         }
         
-        guard let value = self[first] as? AnyObject else {
+        guard let value = self[first] else {
             return nil
         }
         
         if keys.count > 1, let subDict = value as? JSON {
-            let rejoined = keys[1..<keys.endIndex].joinWithSeparator(delimiter)
+            let rejoined = keys[1..<keys.endIndex].joined(separator: delimiter)
         
-            return subDict.valueForKeyPath(rejoined, withDelimiter: delimiter)
+            return subDict.value(forKeyPath: rejoined, withDelimiter: delimiter)
         }
         
-        return value
+        return value as AnyObject
     }
     
     // MARK: - Internal functions
@@ -102,7 +102,7 @@ public extension Dictionary {
      - parameter other:     Dictionary to add entries from
      - parameter delimiter: Key path delimiter
      */
-    internal mutating func add(other: Dictionary, delimiter: String = GlossKeyPathDelimiter) -> () {
+    internal mutating func add(_ other: Dictionary, delimiter: String = GlossKeyPathDelimiter) -> () {
         for (key, value) in other {
             if let key = key as? String {
                 self.setValue(valueToSet: value, forKeyPath: key, withDelimiter: delimiter)
@@ -122,19 +122,19 @@ public extension Dictionary {
      - parameter withDelimiter: Delimiter for key path.
      */
     private mutating func setValue(valueToSet value: Any, forKeyPath keyPath: String, withDelimiter delimiter: String = GlossKeyPathDelimiter) {
-        var keys = keyPath.componentsSeparatedByString(delimiter)
+        var keys = keyPath.components(separatedBy: delimiter)
         
         guard let first = keys.first as? Key else {
             print("[Gloss] Unable to use string as key on type: \(Key.self)")
             return
         }
         
-        keys.removeAtIndex(0)
+        keys.remove(at: 0)
         
         if keys.isEmpty, let settable = value as? Value {
             self[first] = settable
         } else {
-            let rejoined = keys.joinWithSeparator(delimiter)
+            let rejoined = keys.joined(separator: delimiter)
             var subdict: JSON = [ : ]
             
             if let sub = self[first] as? JSON {
@@ -146,7 +146,7 @@ public extension Dictionary {
             if let settable = subdict as? Value {
                 self[first] = settable
             } else {
-                print("[Gloss] Unable to set value: \(subdict) to dictionary of type: \(self.dynamicType)")
+                print("[Gloss] Unable to set value: \(subdict) to dictionary of type: \(type(of: self))")
             }
         }
         

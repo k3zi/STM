@@ -58,8 +58,8 @@ Copyright (C) 2009 Apple Inc. All Rights Reserved.
 	float	*mTable;
 }
 
-+ (id)sharedTable;
-- (float)ValueAt: (float)inDecibels;
++ (instancetype) sharedTable;
+- (float) ValueAt:(float)inDecibels;
 
 @end
 

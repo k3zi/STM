@@ -9,8 +9,8 @@
 import Foundation
 
 enum ProfileStatsType {
-    case Followers
-    case Following
+    case followers
+    case following
 }
 
 class ProfileStatsListViewController: KZViewController {
@@ -38,25 +38,25 @@ class ProfileStatsListViewController: KZViewController {
 
         tableView.delegate = self
         tableView.dataSource = self
-        tableView.registerReusableCell(SearchUserCell)
-        tableView.backgroundColor = UIColor.whiteColor()
+        tableView.registerReusableCell(SearchUserCell.self)
+        tableView.backgroundColor = UIColor.white
         view.addSubview(tableView)
     }
 
     func navigationItemTitle() -> String {
         switch self.type {
-            case .Followers:
+            case .followers:
                 return "Followers"
-            case .Following:
+            case .following:
                 return "Following"
         }
     }
 
     func apiMethod() -> String {
         switch self.type {
-        case .Followers:
+        case .followers:
             return "followers"
-        case .Following:
+        case .following:
             return "following"
         }
     }
@@ -64,20 +64,20 @@ class ProfileStatsListViewController: KZViewController {
     override func setupConstraints() {
         super.setupConstraints()
 
-        tableView.autoPinEdgesToSuperviewEdgesWithInsets(UIEdgeInsetsZero, excludingEdge: .Bottom)
-        tableView.autoPinToBottomLayoutGuideOfViewController(self, withInset: 0)
+        tableView.autoPinEdgesToSuperviewEdges(with: UIEdgeInsets.zero, excludingEdge: .bottom)
+        tableView.autoPin(toBottomLayoutGuideOf: self, withInset: 0)
     }
 
-    override func tableViewCellData(tableView: UITableView, section: Int) -> [Any] {
+    override func tableViewCellData(_ tableView: UITableView, section: Int) -> [Any] {
         return users
     }
 
-    override func tableViewCellClass(tableView: UITableView, indexPath: NSIndexPath? = nil) -> KZTableViewCell.Type {
+    override func tableViewCellClass(_ tableView: UITableView, indexPath: IndexPath? = nil) -> KZTableViewCell.Type {
         return SearchUserCell.self
     }
 
-    override func tableView(tableView: UITableView, didSelectRowAtIndexPath indexPath: NSIndexPath) {
-        super.tableView(tableView, didSelectRowAtIndexPath: indexPath)
+    override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        super.tableView(tableView, didSelectRowAt: indexPath)
 
         guard tableViewCellData(tableView, section: indexPath.section).count > 0 else {
             return
@@ -93,7 +93,7 @@ class ProfileStatsListViewController: KZViewController {
         fetchDataWithCompletion(nil)
     }
 
-    func fetchDataWithCompletion(completion: (() -> Void)?) {
+    func fetchDataWithCompletion(_ completion: (() -> Void)?) {
         var count = 0
 
         func runCompletion() {
@@ -107,11 +107,11 @@ class ProfileStatsListViewController: KZViewController {
 
         count = count + 1
         Constants.Network.GET("/user/\(user.id)/\(apiMethod())", parameters: nil) { (response, error) -> Void in
-            self.handleResponse(response, error: error, successCompletion: { (result) -> Void in
+            self.handleResponse(response as AnyObject?, error: error as NSError?, successCompletion: { (result) -> Void in
                 self.users.removeAll()
                 if let result = result as? [JSON] {
                     let users = [STMUser].fromJSONArray(result)
-                    users.forEach({ self.users.append($0) })
+                    users?.forEach({ self.users.append($0) })
                     self.tableView.reloadData()
                 }
             })

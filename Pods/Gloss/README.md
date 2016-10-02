@@ -187,8 +187,6 @@ struct Repo: Decodable {
 
 Despite being more complex, this model is just as simple to compose - common types such as an `NSURL`, an `enum` value, and another Gloss model, `RepoOwner`, are handled without extra overhead! :tada:
 
-(Note: If nested models are present in JSON but not desired in your Gloss models, see [Retrieving Nested Model Values without Creating Extra Models](#retrieving-nested-model-values-without-creating-extra-models).)
-
 ### Serialization
 
 Next, how would we allow models to be translated _to_ JSON? Let's take a look again at the `RepoOwner` model:
@@ -294,41 +292,6 @@ An array of JSON from an array of `Encodable` models is retrieved via `toJSONArr
 ``` swift
 repoOwners.toJSONArray()
 ```
-
-### Retrieving Nested Model Values without Creating Extra Models
-
-We saw in earlier examples that `Repo` has a nested model `RepoOwner` - and that nested Gloss models are handled automatically. But what if the nested models represented in our JSON really don't need to be their own models? 
-
-Gloss provides a way to indicate nested model values with simple `.` syntax - let's revisit the `owner` values for `Repo` and see what changes:
-
-``` swift
-import Gloss
-
-struct Repo: Glossy {
-
-    let ownerId: Int?
-    let ownerUsername: String?
-
-    // MARK: - Deserialization
-
-    init?(json: JSON) {
-        self.ownerId = "owner.id" <~~ json
-        self.ownerUsername = "owner.login" <~~ json
-    }
-
-    // MARK: - Serialization
-
-        func toJSON() -> JSON? {
-        return jsonify([
-            "owner.id" ~~> self.ownerId,
-            "owner.login" ~~> self.ownerUsername
-            ])
-
-}
-
-```
-
-Now, instead of declaring a nested model `owner` of type `RepoOwner` with its own `id` and `username` properties, the desired values from `owner` are retrieved by specifying the key names in a string delimited by periods (i.e. `owner.id` and `owner.login`).
 
 ## Additonal Topics
 
@@ -534,6 +497,7 @@ Check out Gloss in these cool places!
 #### Libraries
 
 * [Alamofire-Gloss](https://github.com/spxrogers/Alamofire-Gloss)
+* [CRUD](https://github.com/MetalheadSanya/CRUD)
 * [Moya-Gloss](https://github.com/spxrogers/Moya-Gloss)
 * [Restofire-Gloss](https://github.com/Restofire/Restofire-Gloss)
 
@@ -543,6 +507,10 @@ Check out Gloss in these cool places!
 * [Drift](http://www.drift.com) ([iOS SDK](https://github.com/Driftt/drift-sdk-ios))
 * [Phillips Hue](http://www2.meethue.com/en-US) ([iOS SDK](https://github.com/Spriter/SwiftyHue))
 * [Skiplagged](http://skiplagged.com) ([iOS SDK] (https://github.com/bulusoy/Skiplagged))
+
+#### Apps
+
+* [Ether Tracker](https://itunes.apple.com/us/app/ether-tracker/id1118248702?mt=8)
 
 #### Tools
 

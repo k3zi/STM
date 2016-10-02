@@ -8,14 +8,14 @@
 
 import UIKit
 
-public class KZIntrinsicCollectionView: UICollectionView {
+open class KZIntrinsicCollectionView: UICollectionView {
 
-    override public func intrinsicContentSize() -> CGSize {
+    override open var intrinsicContentSize : CGSize {
         self.layoutIfNeeded()
-        return CGSize(width: UIViewNoIntrinsicMetric, height: self.collectionViewLayout.collectionViewContentSize().height + 12)
+        return CGSize(width: UIViewNoIntrinsicMetric, height: self.collectionViewLayout.collectionViewContentSize.height + 12)
     }
     
-    override public func reloadData() {
+    override open func reloadData() {
         super.reloadData()
         self.invalidateIntrinsicContentSize()
     }

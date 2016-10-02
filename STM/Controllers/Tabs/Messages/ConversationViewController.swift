@@ -39,14 +39,14 @@ class ConversationViewController: KZViewController, MessageToolbarDelegate {
         self.title = convo.listNames()
         self.automaticallyAdjustsScrollViewInsets = false
         if convo.users?.count == 2 {
-            navigationItem.rightBarButtonItem = UIBarButtonItem(image: UIImage(named: "navBarUserBT"), style: .Plain, target: self, action: #selector(self.goToProfile))
+            navigationItem.rightBarButtonItem = UIBarButtonItem(image: UIImage(named: "navBarUserBT"), style: .plain, target: self, action: #selector(self.goToProfile))
         }
 
         tableView.delegate = self
         tableView.dataSource = self
-        tableView.separatorStyle = .None
-        tableView.registerReusableCell(STMMessageYouCell)
-        tableView.registerReusableCell(STMMessageOtherCell)
+        tableView.separatorStyle = .none
+        tableView.registerReusableCell(STMMessageYouCell.self)
+        tableView.registerReusableCell(STMMessageOtherCell.self)
         view.addSubview(tableView)
 
         commentToolbar.delegate = self
@@ -93,17 +93,17 @@ class ConversationViewController: KZViewController, MessageToolbarDelegate {
 
      - parameter text: the text that was posted
      */
-    func handlePost(text: String) {
+    func handlePost(_ text: String) {
         guard text.characters.count > 0 else {
             return
         }
 
-        self.commentToolbar.sendBT.enabled = false
+        self.commentToolbar.sendBT.isEnabled = false
         Constants.Network.POST("/conversation/\(convo.id)/send", parameters: ["text": text], completionHandler: { (response, error) -> Void in
-            self.commentToolbar.sendBT.enabled = true
-            self.handleResponse(response, error: error, successCompletion: { (result) -> Void in
-                Answers.logCustomEventWithName("Message", customAttributes: [:])
-                NSNotificationCenter.defaultCenter().postNotificationName(Constants.Notification.DidPostMessage, object: nil)
+            self.commentToolbar.sendBT.isEnabled = true
+            self.handleResponse(response as AnyObject?, error: error as NSError?, successCompletion: { (result) -> Void in
+                Answers.logCustomEvent(withName: "Message", customAttributes: [:])
+                NotificationCenter.default.post(name: NSNotification.Name(rawValue: Constants.Notification.DidPostMessage), object: nil)
             })
         })
 
@@ -121,19 +121,19 @@ class ConversationViewController: KZViewController, MessageToolbarDelegate {
     override func setupConstraints() {
         super.setupConstraints()
 
-        tableView.autoPinEdgesToSuperviewEdgesWithInsets(UIEdgeInsetsZero, excludingEdge: .Bottom)
+        tableView.autoPinEdgesToSuperviewEdges(with: UIEdgeInsets.zero, excludingEdge: .bottom)
 
-        commentToolbar.autoPinEdge(.Top, toEdge: .Bottom, ofView: tableView)
-        commentToolbar.autoPinEdgeToSuperviewEdge(.Left)
-        commentToolbar.autoPinEdgeToSuperviewEdge(.Right)
-        toolbarBottomConstraint = commentToolbar.autoPinEdgeToSuperviewEdge(.Bottom)
+        commentToolbar.autoPinEdge(.top, to: .bottom, of: tableView)
+        commentToolbar.autoPinEdge(toSuperviewEdge: .left)
+        commentToolbar.autoPinEdge(toSuperviewEdge: .right)
+        toolbarBottomConstraint = commentToolbar.autoPinEdge(toSuperviewEdge: .bottom)
     }
 
-    override func tableViewCellData(tableView: UITableView, section: Int) -> [Any] {
+    override func tableViewCellData(_ tableView: UITableView, section: Int) -> [Any] {
         return messages
     }
 
-    override func tableViewCellClass(tableView: UITableView, indexPath: NSIndexPath?) -> KZTableViewCell.Type {
+    override func tableViewCellClass(_ tableView: UITableView, indexPath: IndexPath?) -> KZTableViewCell.Type {
         if let message = tableViewCellData(tableView, section: indexPath!.section)[indexPath!.row] as? STMMessage {
             if let user = message.user {
                 return user.id == AppDelegate.del().currentUser?.id ? STMMessageYouCell.self : STMMessageOtherCell.self
@@ -143,7 +143,7 @@ class ConversationViewController: KZViewController, MessageToolbarDelegate {
         return STMMessageYouCell.self
     }
 
-    override func tableViewNoDataText(tableView: UITableView) -> String {
+    override func tableViewNoDataText(_ tableView: UITableView) -> String {
         return "No Messages"
     }
 
@@ -151,7 +151,7 @@ class ConversationViewController: KZViewController, MessageToolbarDelegate {
         fetchDataWithCompletion(nil)
     }
 
-    func fetchDataWithCompletion(completion: (() -> Void)?) {
+    func fetchDataWithCompletion(_ completion: (() -> Void)?) {
         var count = 0
 
         func runCompletion() {
@@ -165,7 +165,7 @@ class ConversationViewController: KZViewController, MessageToolbarDelegate {
 
         count = count + 1
         Constants.Network.GET("/conversation/\(convo.id)/list", parameters: nil) { (response, error) -> Void in
-            self.handleResponse(response, error: error, successCompletion: { (result) -> Void in
+            self.handleResponse(response as AnyObject?, error: error as NSError?, successCompletion: { (result) -> Void in
                 self.messages.removeAll()
 
                 guard let results = result as? [JSON] else {
@@ -173,10 +173,10 @@ class ConversationViewController: KZViewController, MessageToolbarDelegate {
                 }
 
                 let messages = [STMMessage].fromJSONArray(results)
-                messages.forEach({ self.messages.append($0) })
+                messages?.forEach({ self.messages.append($0) })
 
                 self.tableView.reloadData()
-                if self.tableView.layer.animationForKey("bounds") == nil {
+                if self.tableView.layer.animation(forKey: "bounds") == nil {
                     self.tableView.scrollToBottom(false)
                 }
                 runCompletion()

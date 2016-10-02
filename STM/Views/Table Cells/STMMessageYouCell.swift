@@ -15,31 +15,31 @@ class STMMessageYouCell: KZTableViewCell {
     let timeLabel = UILabel()
     let messageLabel = Label()
 
-    var timer: NSTimer?
+    var timer: Timer?
 
     required init(style: UITableViewCellStyle, reuseIdentifier: String?) {
         super.init(style: style, reuseIdentifier: reuseIdentifier)
-        self.selectionStyle = .None
+        self.selectionStyle = .none
 
-        timeLabel.font = UIFont.systemFontOfSize(14)
+        timeLabel.font = UIFont.systemFont(ofSize: 14)
         timeLabel.numberOfLines = 1
         timeLabel.text = "Today"
         timeLabel.textColor = RGB(108, g: 108, b: 108)
-        timeLabel.textAlignment = .Left
+        timeLabel.textAlignment = .left
         self.contentView.addSubview(timeLabel)
 
-        messageLabel.font = UIFont.systemFontOfSize(14)
+        messageLabel.font = UIFont.systemFont(ofSize: 14)
         messageLabel.numberOfLines = 0
         messageLabel.textColor = RGB(255)
-        messageLabel.textAlignment = .Left
-        messageLabel.backgroundColor = Constants.UI.Color.tint.colorWithAlphaComponent(0.8)
+        messageLabel.textAlignment = .left
+        messageLabel.backgroundColor = Constants.UI.Color.tint.withAlphaComponent(0.8)
         messageLabel.setContentEdgeInsets(UIEdgeInsets(top: 10, left: 10, bottom: 10, right: 10))
         self.contentView.addSubview(messageLabel)
 
-        topSeperator.hidden = true
-        bottomSeperator.hidden = true
+        topSeperator.isHidden = true
+        bottomSeperator.isHidden = true
 
-        timer = NSTimer.scheduledTimerWithTimeInterval(1.0, target: self, selector: #selector(CommentCell.updateTime), userInfo: nil, repeats: true)
+        timer = Timer.scheduledTimer(timeInterval: 1.0, target: self, selector: #selector(CommentCell.updateTime), userInfo: nil, repeats: true)
     }
 
     required init?(coder aDecoder: NSCoder) {
@@ -49,13 +49,13 @@ class STMMessageYouCell: KZTableViewCell {
     override func updateConstraints() {
         super.updateConstraints()
 
-        messageLabel.autoPinEdgeToSuperviewEdge(.Right, withInset: 12)
-        messageLabel.autoPinEdgeToSuperviewEdge(.Top, withInset: 12)
-        messageLabel.autoMatchDimension(.Width, toDimension: .Width, ofView: contentView, withMultiplier: 0.7, relation: .LessThanOrEqual)
-        messageLabel.autoPinEdgeToSuperviewEdge(.Bottom, withInset: 12)
+        messageLabel.autoPinEdge(toSuperviewEdge: .right, withInset: 12)
+        messageLabel.autoPinEdge(toSuperviewEdge: .top, withInset: 12)
+        messageLabel.autoMatch(.width, to: .width, of: contentView, withMultiplier: 0.7, relation: .lessThanOrEqual)
+        messageLabel.autoPinEdge(toSuperviewEdge: .bottom, withInset: 12)
 
-        timeLabel.autoPinEdge(.Right, toEdge: .Left, ofView: messageLabel, withOffset: -12.0)
-        timeLabel.autoAlignAxis(.Horizontal, toSameAxisOfView: messageLabel)
+        timeLabel.autoPinEdge(.right, to: .left, of: messageLabel, withOffset: -12.0)
+        timeLabel.autoAlignAxis(.horizontal, toSameAxisOf: messageLabel)
     }
 
     override func estimatedHeight() -> CGFloat {
@@ -72,7 +72,7 @@ class STMMessageYouCell: KZTableViewCell {
         super.layoutSubviews()
     }
 
-    override func fillInCellData(shallow: Bool) {
+    override func fillInCellData(_ shallow: Bool) {
         if let message = model as? STMMessage {
             if let messageText = message.text {
                 messageLabel.text = messageText

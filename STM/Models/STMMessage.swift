@@ -14,7 +14,7 @@ class STMMessage: Decodable {
     let id: Int
     let user: STMUser?
     let text: String?
-    let date: NSDate?
+    let date: Date?
 
     // MARK: - Deserialization
 
@@ -26,6 +26,6 @@ class STMMessage: Decodable {
         self.id = id
         self.user = "user" <~~ json
         self.text = "text" <~~ json
-        self.date = Decoder.decodeUnixTimestamp("date", json: json)
+        self.date = Decoder.decodeUnixTimestamp("date", json: json) as Date?
     }
 }

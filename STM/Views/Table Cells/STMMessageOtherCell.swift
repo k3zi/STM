@@ -15,36 +15,36 @@ class STMMessageOtherCell: KZTableViewCell {
     let timeLabel = UILabel()
     let messageLabel = Label()
 
-    var timer: NSTimer?
+    var timer: Timer?
 
     required init(style: UITableViewCellStyle, reuseIdentifier: String?) {
         super.init(style: style, reuseIdentifier: reuseIdentifier)
-        self.selectionStyle = .None
+        self.selectionStyle = .none
 
         avatar.layer.cornerRadius = 40.0 / 9.0
         avatar.backgroundColor = Constants.UI.Color.imageViewDefault
         avatar.clipsToBounds = true
-        avatar.userInteractionEnabled = true
+        avatar.isUserInteractionEnabled = true
         avatar.addGestureRecognizer(UITapGestureRecognizer(target: self, action: #selector(goToUser)))
         self.contentView.addSubview(avatar)
 
-        timeLabel.font = UIFont.systemFontOfSize(14)
+        timeLabel.font = UIFont.systemFont(ofSize: 14)
         timeLabel.numberOfLines = 1
         timeLabel.text = "Today"
         timeLabel.textColor = RGB(108, g: 108, b: 108)
-        timeLabel.textAlignment = .Right
+        timeLabel.textAlignment = .right
         self.contentView.addSubview(timeLabel)
 
-        messageLabel.font = UIFont.systemFontOfSize(14)
+        messageLabel.font = UIFont.systemFont(ofSize: 14)
         messageLabel.numberOfLines = 0
-        messageLabel.textColor = UIColor.blackColor()
+        messageLabel.textColor = UIColor.black
         messageLabel.backgroundColor = RGB(235, g: 236, b: 237)
         messageLabel.setContentEdgeInsets(UIEdgeInsets(top: 10, left: 10, bottom: 10, right: 10))
         self.contentView.addSubview(messageLabel)
 
-        bottomSeperator.hidden = true
-        topSeperator.hidden = true
-        timer = NSTimer.scheduledTimerWithTimeInterval(1.0, target: self, selector: #selector(CommentCell.updateTime), userInfo: nil, repeats: true)
+        bottomSeperator.isHidden = true
+        topSeperator.isHidden = true
+        timer = Timer.scheduledTimer(timeInterval: 1.0, target: self, selector: #selector(CommentCell.updateTime), userInfo: nil, repeats: true)
     }
 
     func goToUser() {
@@ -62,8 +62,8 @@ class STMMessageOtherCell: KZTableViewCell {
                 navVC.pushViewController(vc, animated: true)
             } else {
                 let nav = NavigationController(rootViewController: vc)
-                vc.navigationItem.leftBarButtonItem = UIBarButtonItem(image: UIImage(named: "navBarDismissBT"), style: .Plain, target: topVC, action: #selector(topVC.dismissPopup))
-                topVC.presentViewController(nav, animated: true, completion: nil)
+                vc.navigationItem.leftBarButtonItem = UIBarButtonItem(image: UIImage(named: "navBarDismissBT"), style: .plain, target: topVC, action: #selector(topVC.dismissPopup))
+                topVC.present(nav, animated: true, completion: nil)
             }
         }
     }
@@ -72,27 +72,27 @@ class STMMessageOtherCell: KZTableViewCell {
         super.updateConstraints()
 
         NSLayoutConstraint.autoSetPriority(999) { () -> Void in
-            self.avatar.autoSetDimensionsToSize(CGSize(width: 40, height: 40))
+            self.avatar.autoSetDimensions(to: CGSize(width: 40, height: 40))
         }
-        avatar.autoPinEdgeToSuperviewEdge(.Top, withInset: 12)
-        avatar.autoPinEdgeToSuperviewEdge(.Bottom, withInset: 12, relation: .GreaterThanOrEqual)
-        avatar.autoPinEdgeToSuperviewEdge(.Left, withInset: 12)
+        avatar.autoPinEdge(toSuperviewEdge: .top, withInset: 12)
+        avatar.autoPinEdge(toSuperviewEdge: .bottom, withInset: 12, relation: .greaterThanOrEqual)
+        avatar.autoPinEdge(toSuperviewEdge: .left, withInset: 12)
 
-        messageLabel.autoPinEdge(.Left, toEdge: .Right, ofView: avatar, withOffset: 12)
-        messageLabel.autoPinEdgeToSuperviewEdge(.Top, withInset: 12)
-        messageLabel.autoPinEdgeToSuperviewEdge(.Bottom, withInset: 12)
+        messageLabel.autoPinEdge(.left, to: .right, of: avatar, withOffset: 12)
+        messageLabel.autoPinEdge(toSuperviewEdge: .top, withInset: 12)
+        messageLabel.autoPinEdge(toSuperviewEdge: .bottom, withInset: 12)
         messageLabel.translatesAutoresizingMaskIntoConstraints = false
 
         NSLayoutConstraint.autoSetPriority(999) { () -> Void in
-            self.messageLabel.autoSetDimension(.Height, toSize: 40, relation: .GreaterThanOrEqual)
+            self.messageLabel.autoSetDimension(.height, toSize: 40, relation: .greaterThanOrEqual)
         }
-        let layoutAttribute = NSLayoutConstraint.al_layoutAttributeForAttribute(.Width)
-        let toLayoutAttribute = NSLayoutConstraint.al_layoutAttributeForAttribute(.Width)
-        let constraint = NSLayoutConstraint(item: messageLabel, attribute: layoutAttribute, relatedBy: .LessThanOrEqual, toItem: contentView, attribute: toLayoutAttribute, multiplier: 0.7, constant: -(40 + 12 + 12))
+        let layoutAttribute = NSLayoutConstraint.al_layoutAttribute(for: .width)
+        let toLayoutAttribute = NSLayoutConstraint.al_layoutAttribute(for: .width)
+        let constraint = NSLayoutConstraint(item: messageLabel, attribute: layoutAttribute, relatedBy: .lessThanOrEqual, toItem: contentView, attribute: toLayoutAttribute, multiplier: 0.7, constant: -(40 + 12 + 12))
         constraint.autoInstall()
 
-        timeLabel.autoPinEdge(.Left, toEdge: .Right, ofView: messageLabel, withOffset: 12)
-        timeLabel.autoAlignAxis(.Horizontal, toSameAxisOfView: messageLabel)
+        timeLabel.autoPinEdge(.left, to: .right, of: messageLabel, withOffset: 12)
+        timeLabel.autoAlignAxis(.horizontal, toSameAxisOf: messageLabel)
     }
 
     override func estimatedHeight() -> CGFloat {
@@ -109,12 +109,12 @@ class STMMessageOtherCell: KZTableViewCell {
         super.layoutSubviews()
     }
 
-    override func setIndexPath(indexPath: NSIndexPath, last: Bool) {
+    override func setIndexPath(_ indexPath: IndexPath, last: Bool) {
         topSeperator.alpha = 0.0
         bottomSeperator.alpha = 0.0
     }
 
-    override func fillInCellData(shallow: Bool) {
+    override func fillInCellData(_ shallow: Bool) {
         guard let message = model as? STMMessage else {
             return
         }
@@ -123,7 +123,7 @@ class STMMessageOtherCell: KZTableViewCell {
 
         if !shallow {
             if let sender = message.user {
-                avatar.kf_setImageWithURL(sender.profilePictureURL(), placeholderImage: UIImage(named: "defaultProfilePicture"))
+                avatar.kf.setImage(with: sender.profilePictureURL(), placeholder: UIImage(named: "defaultProfilePicture"))
             }
         }
 
@@ -142,7 +142,7 @@ class STMMessageOtherCell: KZTableViewCell {
         timeLabel.text = ""
         messageLabel.text = ""
 
-        avatar.kf_cancelDownloadTask()
+        avatar.kf.cancelDownloadTask()
         avatar.image = nil
     }
 

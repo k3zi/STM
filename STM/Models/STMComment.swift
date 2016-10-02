@@ -15,7 +15,7 @@ class STMComment: Decodable, Equatable {
     let user: STMUser?
     var stream: STMStream?
     let text: String?
-    let date: NSDate?
+    let date: Date?
 
     var likes: Int
     var didLike: Bool
@@ -34,14 +34,14 @@ class STMComment: Decodable, Equatable {
         self.user = "user" <~~ json
         self.stream = "stream" <~~ json
         self.text = "text" <~~ json
-        self.date = Decoder.decodeUnixTimestamp("date", json: json)
+        self.date = Decoder.decodeUnixTimestamp("date", json: json) as Date?
         self.likes = ("likes" <~~ json) ?? 0
         self.didLike = ("didLike" <~~ json) ?? false
         self.reposts = ("reposts" <~~ json) ?? 0
         self.didRepost = ("didRepost" <~~ json) ?? false
     }
 
-    func isEqualTo(other: STMComment) -> Bool {
+    func isEqualTo(_ other: STMComment) -> Bool {
         return id == other.id && didRepost == other.didRepost && didLike == other.didLike && likes == other.likes && reposts == other.reposts
     }
 
@@ -60,9 +60,9 @@ class STMComment: Decodable, Equatable {
         let nsString = text as NSString
 
         do {
-            let matches = try NSRegularExpression(pattern: reg, options: NSRegularExpressionOptions()).matchesInString(text, options: NSMatchingOptions(), range: NSRange(location: 0, length: text.characters.count))
+            let matches = try NSRegularExpression(pattern: reg, options: NSRegularExpression.Options()).matches(in: text, options: NSRegularExpression.MatchingOptions(), range: NSRange(location: 0, length: text.characters.count))
 
-            var stringMatches = matches.map({ nsString.substringWithRange($0.range) })
+            var stringMatches = matches.map({ nsString.substring(with: $0.range) })
             if !stringMatches.contains(username) {
                 stringMatches.append(username)
             }
@@ -71,7 +71,7 @@ class STMComment: Decodable, Equatable {
                 stringMatches.removeObject("@" + currentUsername)
             }
 
-            return stringMatches.joinWithSeparator(" ") + " "
+            return stringMatches.joined(separator: " ") + " "
         } catch {
             return username + " "
         }
@@ -84,10 +84,10 @@ func == (rhs: STMComment, lhs: STMComment) -> Bool {
 }
 
 extension Decoder {
-    static func decodeUnixTimestamp(key: String, json: JSON) -> NSDate? {
+    static func decodeUnixTimestamp(_ key: String, json: JSON) -> NSDate? {
 
-        if let dateInt = json.valueForKeyPath(key) as? Int {
-            return NSDate(timeIntervalSince1970: NSTimeInterval(dateInt))
+        if let dateInt = json.value(forKeyPath: key) as? Int {
+            return NSDate(timeIntervalSince1970: TimeInterval(dateInt))
         }
 
         return nil

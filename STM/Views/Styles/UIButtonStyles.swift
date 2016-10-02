@@ -14,40 +14,40 @@ extension UIButton {
 
     class func styleForBackButton() -> UIButton {
         let button = ExtendedButton()
-        button.setImage(UIImage(named: "navBarBackBT"), forState: .Normal)
+        button.setImage(UIImage(named: "navBarBackBT"), for: .normal)
         return button
     }
 
     class func styleForDismissButton() -> UIButton {
         let button = ExtendedButton()
-        button.setImage(UIImage(named: "navBarDismissBT"), forState: .Normal)
-        button.setImage(UIImage(named: "navBarMaximizeBT"), forState: .Selected)
+        button.setImage(UIImage(named: "navBarDismissBT"), for: .normal)
+        button.setImage(UIImage(named: "navBarMaximizeBT"), for: .selected)
         return button
     }
 
     class func styleForCloseButton() -> UIButton {
         let button = ExtendedButton()
-        button.setImage(UIImage(named: "navBarCloseBT"), forState: .Normal)
+        button.setImage(UIImage(named: "navBarCloseBT"), for: .normal)
         return button
     }
 
     class func styleForMiscButton() -> UIButton {
         let button = ExtendedButton()
-        button.setImage(UIImage(named: "navBarMiscBT"), forState: .Normal)
-        button.setImage(UIImage(named: "navBarMiscHighlightedBT"), forState: .Highlighted)
+        button.setImage(UIImage(named: "navBarMiscBT"), for: .normal)
+        button.setImage(UIImage(named: "navBarMiscHighlightedBT"), for: .highlighted)
         return button
     }
 
     class func styledForLaunchScreen() -> UIButton {
         let button = UIButton()
-        button.titleLabel?.font = UIFont.systemFontOfSize(17, weight: UIFontWeightMedium)
-        button.setTitleColor(RGB(255), forState: .Normal)
-        button.setBackgroundColor(UIColor.clearColor(), forState: .Normal)
-        button.setTitleColor(Constants.UI.Color.tint, forState: .Highlighted)
-        button.setBackgroundColor(RGB(255), forState: .Highlighted)
+        button.titleLabel?.font = UIFont.systemFont(ofSize: 17, weight: UIFontWeightMedium)
+        button.setTitleColor(RGB(255), for: .normal)
+        button.setBackgroundColor(UIColor.clear, forState: .normal)
+        button.setTitleColor(Constants.UI.Color.tint, for: .highlighted)
+        button.setBackgroundColor(RGB(255), forState: .highlighted)
         button.clipsToBounds = true
         button.layer.cornerRadius = 10
-        button.layer.borderColor = RGB(255).CGColor
+        button.layer.borderColor = RGB(255).cgColor
         button.layer.borderWidth = 2
 
         return button
@@ -55,31 +55,31 @@ extension UIButton {
 
     class func styledForStreamInfoView() -> UIButton {
         let button = UIButton()
-        button.autoSetDimension(.Height, toSize: 50)
-        button.titleLabel?.font = UIFont.systemFontOfSize(17, weight: UIFontWeightMedium)
-        button.setTitleColor(RGB(255), forState: .Normal)
-        button.setBackgroundColor(Constants.UI.Color.tint, forState: .Normal)
-        button.setBackgroundColor(Constants.UI.Color.off, forState: .Disabled)
-        button.enabled = false
+        button.autoSetDimension(.height, toSize: 50)
+        button.titleLabel?.font = UIFont.systemFont(ofSize: 17, weight: UIFontWeightMedium)
+        button.setTitleColor(RGB(255), for: .normal)
+        button.setBackgroundColor(Constants.UI.Color.tint, forState: .normal)
+        button.setBackgroundColor(Constants.UI.Color.off, forState: .disabled)
+        button.isEnabled = false
         button.clipsToBounds = true
 
         return button
     }
 
-    class func styledForCellButton(normalTitle: String, selectedTitle: String? = nil) -> UIButton {
+    class func styledForCellButton(_ normalTitle: String, selectedTitle: String? = nil) -> UIButton {
         let button = UIButton()
-        button.setBackgroundColor(UIColor.clearColor(), forState: .Normal)
-        button.setBackgroundColor(Constants.UI.Color.tint, forState: .Selected)
-        button.setTitleColor(Constants.UI.Color.tint, forState: .Normal)
-        button.setTitleColor(RGB(255), forState: .Selected)
-        button.setTitle(normalTitle, forState: .Normal)
-        button.setTitle(selectedTitle, forState: .Selected)
+        button.setBackgroundColor(UIColor.clear, forState: .normal)
+        button.setBackgroundColor(Constants.UI.Color.tint, forState: .selected)
+        button.setTitleColor(Constants.UI.Color.tint, for: .normal)
+        button.setTitleColor(RGB(255), for: .selected)
+        button.setTitle(normalTitle, for: UIControlState())
+        button.setTitle(selectedTitle, for: .selected)
 
-        button.titleLabel?.font = UIFont.systemFontOfSize(14, weight: UIFontWeightMedium)
+        button.titleLabel?.font = UIFont.systemFont(ofSize: 14, weight: UIFontWeightMedium)
         button.contentEdgeInsets = UIEdgeInsets(top: 5, left: 15, bottom: 5, right: 15)
         button.clipsToBounds = true
         button.layer.cornerRadius = 10
-        button.layer.borderColor = Constants.UI.Color.tint.CGColor
+        button.layer.borderColor = Constants.UI.Color.tint.cgColor
         button.layer.borderWidth = 1
 
         return button
@@ -87,7 +87,7 @@ extension UIButton {
 
     func showIndicator() {
         hideIndicator()
-        self.enabled = false
+        self.isEnabled = false
 
         let indicatorView = UIView()
         indicatorView.alpha = 0.0
@@ -95,25 +95,25 @@ extension UIButton {
         indicatorView.tag = indicatorViewTag
         self.addSubview(indicatorView)
 
-        let indicator = UIActivityIndicatorView(activityIndicatorStyle: .Gray)
+        let indicator = UIActivityIndicatorView(activityIndicatorStyle: .gray)
         indicator.color = Constants.UI.Color.tint
         indicatorView.addSubview(indicator)
         indicator.startAnimating()
 
         indicatorView.autoPinEdgesToSuperviewEdges()
-        indicator.autoAlignAxisToSuperviewAxis(.Horizontal)
-        indicator.autoAlignAxisToSuperviewAxis(.Vertical)
+        indicator.autoAlignAxis(toSuperviewAxis: .horizontal)
+        indicator.autoAlignAxis(toSuperviewAxis: .vertical)
         self.layoutIfNeeded()
 
-        UIView.animateWithDuration(0.4) {
+        UIView.animate(withDuration: 0.4, animations: {
             indicatorView.alpha = 1.0
-        }
+        }) 
     }
 
     func hideIndicator() {
-        self.enabled = true
+        self.isEnabled = true
         if let view = self.viewWithTag(indicatorViewTag) {
-            UIView.animateWithDuration(0.4, animations: {
+            UIView.animate(withDuration: 0.4, animations: {
                 view.alpha = 0.0
                 }, completion: { (finished) in
                     view.removeFromSuperview()

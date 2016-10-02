@@ -36,8 +36,8 @@ struct STMUser: Decodable {
         self.photoSignature = ("photoSignature" <~~ json) ?? ""
     }
 
-    func profilePictureURL() -> NSURL {
-        return NSURL(string: Constants.Config.apiBaseURL + "/user/\(id)/profilePicture?sig=\(photoSignature)") ?? NSURL()
+    func profilePictureURL() -> URL? {
+        return URL(string: Constants.Config.apiBaseURL + "/user/\(id)/profilePicture?sig=\(photoSignature)")
     }
 
 }

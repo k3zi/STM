@@ -12,13 +12,13 @@ import Gloss
 struct STMTimelineItem: Decodable {
     var message: String?
     var user: STMUser?
-    var date: NSDate
+    var date: Date
 
     // MARK: - Deserialization
 
     init?(json: JSON) {
         self.message = "message" <~~ json
         self.user = "user" <~~ json
-        self.date = NSDate()
+        self.date = NSDate() as Date
     }
 }

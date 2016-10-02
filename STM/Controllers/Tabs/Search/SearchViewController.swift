@@ -28,11 +28,11 @@ class SearchViewController: KZViewController, UISearchBarDelegate, UIViewControl
 
         tableView.delegate = self
         tableView.dataSource = self
-        tableView.registerReusableCell(SearchUserCell)
+        tableView.registerReusableCell(SearchUserCell.self)
         tableView.registerReusableCell(SearchStreamCell)
         view.addSubview(tableView)
 
-        registerForPreviewingWithDelegate(self, sourceView: tableView)
+        registerForPreviewing(with: self, sourceView: tableView)
 
         keynode.animationsHandler = { [weak self] show, rect in
             guard let me = self else {
@@ -46,7 +46,7 @@ class SearchViewController: KZViewController, UISearchBarDelegate, UIViewControl
         }
     }
 
-    override func viewDidDisappear(animated: Bool) {
+    override func viewDidDisappear(_ animated: Bool) {
         super.viewDidDisappear(animated)
 
         self.view.endEditing(true)
@@ -55,19 +55,19 @@ class SearchViewController: KZViewController, UISearchBarDelegate, UIViewControl
     override func setupConstraints() {
         super.setupConstraints()
 
-        searchBar.autoPinEdgesToSuperviewEdgesWithInsets(UIEdgeInsetsZero, excludingEdge: .Bottom)
+        searchBar.autoPinEdgesToSuperviewEdges(with: UIEdgeInsets.zero, excludingEdge: .bottom)
 
-        tableView.autoPinEdge(.Top, toEdge: .Bottom, ofView: searchBar)
-        tableView.autoPinEdgeToSuperviewEdge(.Left)
-        tableView.autoPinEdgeToSuperviewEdge(.Right)
-        tableViewBottomConstraint = tableView.autoPinToBottomLayoutGuideOfViewController(self, withInset: 0)
+        tableView.autoPinEdge(.top, to: .bottom, of: searchBar)
+        tableView.autoPinEdge(toSuperviewEdge: .left)
+        tableView.autoPinEdge(toSuperviewEdge: .right)
+        tableViewBottomConstraint = tableView.autoPin(toBottomLayoutGuideOf: self, withInset: 0)
     }
 
-    override func tableViewCellData(tableView: UITableView, section: Int) -> [Any] {
+    override func tableViewCellData(_ tableView: UITableView, section: Int) -> [Any] {
         return searchResults
     }
 
-    override func tableViewCellClass(tableView: UITableView, indexPath: NSIndexPath?) -> KZTableViewCell.Type {
+    override func tableViewCellClass(_ tableView: UITableView, indexPath: IndexPath?) -> KZTableViewCell.Type {
         if searchResults[indexPath?.row ?? 0] is STMUser {
             return SearchUserCell.self
         } else if searchResults[indexPath?.row ?? 0] is STMStream {
@@ -77,7 +77,7 @@ class SearchViewController: KZViewController, UISearchBarDelegate, UIViewControl
         return SearchUserCell.self
     }
 
-    override func tableViewNoDataText(tableView: UITableView) -> String {
+    override func tableViewNoDataText(_ tableView: UITableView) -> String {
         if let text = searchBar.text {
             if text.characters.count == 0 {
                 return "Search for a user or stream using the field above"
@@ -89,8 +89,8 @@ class SearchViewController: KZViewController, UISearchBarDelegate, UIViewControl
         return super.tableViewNoDataText(tableView)
     }
 
-    override func tableView(tableView: UITableView, didSelectRowAtIndexPath indexPath: NSIndexPath) {
-        super.tableView(tableView, didSelectRowAtIndexPath: indexPath)
+    override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        super.tableView(tableView, didSelectRowAt: indexPath)
 
         guard tableViewCellData(tableView, section: indexPath.section).count > 0 else {
             return
@@ -118,11 +118,11 @@ class SearchViewController: KZViewController, UISearchBarDelegate, UIViewControl
 
     // MARK: UISearchBar Delegate
 
-    func searchBarTextDidBeginEditing(searchBar: UISearchBar) {
+    func searchBarTextDidBeginEditing(_ searchBar: UISearchBar) {
         searchBar.setShowsCancelButton(true, animated: true)
     }
 
-    func searchBar(searchBar: UISearchBar, textDidChange searchText: String) {
+    func searchBar(_ searchBar: UISearchBar, textDidChange searchText: String) {
         searchResults = [Any]()
         tableView.reloadData()
 
@@ -138,7 +138,7 @@ class SearchViewController: KZViewController, UISearchBarDelegate, UIViewControl
         searchAttempt = attempt
 
         Constants.Network.POST("/search", parameters: ["q": text]) { (response, error) in
-            self.handleResponse(response, error: error, successCompletion: { (result) in
+            self.handleResponse(response as AnyObject?, error: error as NSError?, successCompletion: { (result) in
                 if attempt == self.searchAttempt {
                     guard let results = result as? [[String: AnyObject]] else {
                         return
@@ -164,7 +164,7 @@ class SearchViewController: KZViewController, UISearchBarDelegate, UIViewControl
         }
     }
 
-    func searchBarCancelButtonClicked(searchBar: UISearchBar) {
+    func searchBarCancelButtonClicked(_ searchBar: UISearchBar) {
         searchResults = [Any]()
         searchBar.text = ""
         searchBar.resignFirstResponder()
@@ -172,14 +172,14 @@ class SearchViewController: KZViewController, UISearchBarDelegate, UIViewControl
         tableView.reloadData()
     }
 
-    func searchBarSearchButtonClicked(searchBar: UISearchBar) {
+    func searchBarSearchButtonClicked(_ searchBar: UISearchBar) {
         searchBar.resignFirstResponder()
     }
 
     //MARK: UIViewController Previewing Delegate
 
-    func previewingContext(previewingContext: UIViewControllerPreviewing, viewControllerForLocation location: CGPoint) -> UIViewController? {
-        guard let indexPath = tableView.indexPathForRowAtPoint(location), cell = tableView.cellForRowAtIndexPath(indexPath) else {
+    func previewingContext(_ previewingContext: UIViewControllerPreviewing, viewControllerForLocation location: CGPoint) -> UIViewController? {
+        guard let indexPath = tableView.indexPathForRow(at: location), let cell = tableView.cellForRow(at: indexPath) else {
             return nil
         }
 
@@ -210,7 +210,7 @@ class SearchViewController: KZViewController, UISearchBarDelegate, UIViewControl
         return vc
     }
 
-    func previewingContext(previewingContext: UIViewControllerPreviewing, commitViewController viewControllerToCommit: UIViewController) {
+    func previewingContext(_ previewingContext: UIViewControllerPreviewing, commit viewControllerToCommit: UIViewController) {
         if let vc = viewControllerToCommit as? PlayerViewController {
             vc.isPreviewing = false
             AppDelegate.del().presentStreamController(vc)

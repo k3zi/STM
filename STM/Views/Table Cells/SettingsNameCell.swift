@@ -16,7 +16,7 @@ class SettingsNameCell: KZTableViewCell {
     required init(style: UITableViewCellStyle, reuseIdentifier: String?) {
         super.init(style: style, reuseIdentifier: reuseIdentifier)
         self.backgroundColor = RGB(255)
-        self.accessoryType = .DisclosureIndicator
+        self.accessoryType = .disclosureIndicator
 
         nameLabel.numberOfLines = 1
         nameLabel.text = ""
@@ -27,14 +27,14 @@ class SettingsNameCell: KZTableViewCell {
     override func updateConstraints() {
         super.updateConstraints()
 
-        nameLabel.autoPinEdgesToSuperviewEdgesWithInsets(UIEdgeInsets(top: 20, left: 20, bottom: 20, right: 20))
+        nameLabel.autoPinEdgesToSuperviewEdges(with: UIEdgeInsets(top: 20, left: 20, bottom: 20, right: 20))
     }
 
-    override func setIndexPath(indexPath: NSIndexPath, last: Bool) {
+    override func setIndexPath(_ indexPath: IndexPath, last: Bool) {
         topSeperator.alpha = 1.0
     }
 
-    override func fillInCellData(shallow: Bool) {
+    override func fillInCellData(_ shallow: Bool) {
         if let setting = model as? STMSetting {
             nameLabel.text = setting.name
         }

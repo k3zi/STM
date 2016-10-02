@@ -35,7 +35,7 @@ class NewMessageViewController: KZViewController, UISearchBarDelegate {
 
         self.title = "New Conversation"
         self.automaticallyAdjustsScrollViewInsets = false
-        navigationItem.rightBarButtonItem = UIBarButtonItem(title: "Next", style: .Plain, target: self, action: #selector(self.next))
+        navigationItem.rightBarButtonItem = UIBarButtonItem(title: "Next", style: .plain, target: self, action: #selector(getter: self.next))
 
         searchBar.delegate = self
         view.addSubview(searchBar)
@@ -43,7 +43,7 @@ class NewMessageViewController: KZViewController, UISearchBarDelegate {
         tableView.delegate = self
         tableView.dataSource = self
         tableView.allowsMultipleSelection = true
-        tableView.registerReusableCell(UserSelectionCell)
+        tableView.registerReusableCell(UserSelectionCell.self)
         view.addSubview(tableView)
 
         keynode.animationsHandler = { [weak self] show, rect in
@@ -59,7 +59,7 @@ class NewMessageViewController: KZViewController, UISearchBarDelegate {
         }
     }
 
-    override func viewDidDisappear(animated: Bool) {
+    override func viewDidDisappear(_ animated: Bool) {
         super.viewDidDisappear(animated)
 
         self.view.endEditing(true)
@@ -68,23 +68,23 @@ class NewMessageViewController: KZViewController, UISearchBarDelegate {
     override func setupConstraints() {
         super.setupConstraints()
 
-        searchBar.autoPinEdgesToSuperviewEdgesWithInsets(UIEdgeInsetsZero, excludingEdge: .Bottom)
+        searchBar.autoPinEdgesToSuperviewEdges(with: UIEdgeInsets.zero, excludingEdge: .bottom)
 
-        tableView.autoPinEdge(.Top, toEdge: .Bottom, ofView: searchBar)
-        tableView.autoPinEdgeToSuperviewEdge(.Left)
-        tableView.autoPinEdgeToSuperviewEdge(.Right)
-        tableViewBottomConstraint = tableView.autoPinEdgeToSuperviewEdge(.Bottom)
+        tableView.autoPinEdge(.top, to: .bottom, of: searchBar)
+        tableView.autoPinEdge(toSuperviewEdge: .left)
+        tableView.autoPinEdge(toSuperviewEdge: .right)
+        tableViewBottomConstraint = tableView.autoPinEdge(toSuperviewEdge: .bottom)
     }
 
-    override func tableViewCellData(tableView: UITableView, section: Int) -> [Any] {
+    override func tableViewCellData(_ tableView: UITableView, section: Int) -> [Any] {
         return searchResults
     }
 
-    override func tableViewCellClass(tableView: UITableView, indexPath: NSIndexPath?) -> KZTableViewCell.Type {
+    override func tableViewCellClass(_ tableView: UITableView, indexPath: IndexPath?) -> KZTableViewCell.Type {
         return UserSelectionCell.self
     }
 
-    override func tableViewNoDataText(tableView: UITableView) -> String {
+    override func tableViewNoDataText(_ tableView: UITableView) -> String {
         if let text = searchBar.text {
             if text.characters.count == 0 {
                 return "Search for a user using the field above"
@@ -96,33 +96,33 @@ class NewMessageViewController: KZViewController, UISearchBarDelegate {
         return super.tableViewNoDataText(tableView)
     }
 
-    override func tableView(tableView: UITableView, didSelectRowAtIndexPath indexPath: NSIndexPath) {
+    override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         guard tableViewCellData(tableView, section: indexPath.section).count > 0 else {
             return
         }
 
         if let user = tableViewCellData(tableView, section: indexPath.section)[indexPath.row] as? STMUser {
             selectedUsers.append(user.id)
-            tableView.cellForRowAtIndexPath(indexPath)?.accessoryType = .Checkmark
+            tableView.cellForRow(at: indexPath)?.accessoryType = .checkmark
         }
     }
 
-    func tableView(tableView: UITableView, didDeselectRowAtIndexPath indexPath: NSIndexPath) {
+    func tableView(_ tableView: UITableView, didDeselectRowAtIndexPath indexPath: IndexPath) {
         guard tableViewCellData(tableView, section: indexPath.section).count > 0 else {
             return
         }
 
         if let user = searchResults[indexPath.row] as? STMUser {
             selectedUsers.removeObject(user.id)
-            tableView.cellForRowAtIndexPath(indexPath)?.accessoryType = .None
+            tableView.cellForRow(at: indexPath)?.accessoryType = .none
         }
     }
 
-    override func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
-        let cell = super.tableView(tableView, cellForRowAtIndexPath: indexPath)
+    override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+        let cell = super.tableView(tableView, cellForRowAt: indexPath)
 
         if let cell = cell as? UserSelectionCell, let user = searchResults[indexPath.row] as? STMUser {
-            cell.accessoryType = selectedUsers.contains(user.id) ? .Checkmark : .None
+            cell.accessoryType = selectedUsers.contains(user.id) ? .checkmark : .none
         }
 
         return cell
@@ -130,11 +130,11 @@ class NewMessageViewController: KZViewController, UISearchBarDelegate {
 
     // MARK: UISearchBar Delegate
 
-    func searchBarTextDidBeginEditing(searchBar: UISearchBar) {
+    func searchBarTextDidBeginEditing(_ searchBar: UISearchBar) {
         searchBar.setShowsCancelButton(true, animated: true)
     }
 
-    func searchBar(searchBar: UISearchBar, textDidChange searchText: String) {
+    func searchBar(_ searchBar: UISearchBar, textDidChange searchText: String) {
         searchResults = [Any]()
         tableView.reloadData()
 
@@ -150,7 +150,7 @@ class NewMessageViewController: KZViewController, UISearchBarDelegate {
         searchAttempt = attempt
 
         Constants.Network.POST("/search/followers", parameters: ["q": text]) { (response, error) in
-            self.handleResponse(response, error: error, successCompletion: { (result) in
+            self.handleResponse(response as AnyObject?, error: error as NSError?, successCompletion: { (result) in
                 if attempt == self.searchAttempt {
                     guard let results = result as? [[String: AnyObject]] else {
                         return
@@ -168,7 +168,7 @@ class NewMessageViewController: KZViewController, UISearchBarDelegate {
         }
     }
 
-    func searchBarCancelButtonClicked(searchBar: UISearchBar) {
+    func searchBarCancelButtonClicked(_ searchBar: UISearchBar) {
         searchResults = [Any]()
         searchBar.text = ""
         searchBar.resignFirstResponder()
@@ -176,7 +176,7 @@ class NewMessageViewController: KZViewController, UISearchBarDelegate {
         tableView.reloadData()
     }
 
-    func searchBarSearchButtonClicked(searchBar: UISearchBar) {
+    func searchBarSearchButtonClicked(_ searchBar: UISearchBar) {
         searchBar.resignFirstResponder()
     }
 
@@ -188,19 +188,19 @@ class NewMessageViewController: KZViewController, UISearchBarDelegate {
 
         let hud = M13ProgressHUD(progressView: progressView)
         if let window = AppDelegate.del().window {
-            hud.frame = window.bounds
-            window.addSubview(hud)
+            hud?.frame = window.bounds
+            window.addSubview(hud!)
         }
-        hud.progressViewSize = CGSize(width: 60, height: 60)
-        hud.animationPoint = CGPoint(x: hud.frame.size.width / 2, y: hud.frame.size.height / 2)
-        hud.applyBlurToBackground = true
-        hud.maskType = M13ProgressHUDMaskTypeIOS7Blur
-        hud.show(true)
+        hud?.progressViewSize = CGSize(width: 60, height: 60)
+        hud?.animationPoint = CGPoint(x: (hud?.frame.size.width)! / 2, y: (hud?.frame.size.height)! / 2)
+        hud?.applyBlurToBackground = true
+        hud?.maskType = M13ProgressHUDMaskTypeIOS7Blur
+        hud?.show(true)
 
         let nav = self.navigationController
-        nav?.popViewControllerAnimated(false)
+        nav?.popViewController(animated: false)
         Constants.Network.POST("/conversation/create", parameters: ["users": selectedUsers], completionHandler: { (response, error) -> Void in
-            self.handleResponse(response, error: error, successCompletion: { (result) in
+            self.handleResponse(response as AnyObject?, error: error as NSError?, successCompletion: { (result) in
                 guard let result = result as? JSON else {
                     return
                 }
@@ -212,9 +212,9 @@ class NewMessageViewController: KZViewController, UISearchBarDelegate {
                 let vc = ConversationViewController(convo: convo)
                 nav?.pushViewController(vc, animated: false)
 
-                hud.hide(true)
+                hud?.hide(true)
                 }, errorCompletion: { (errorString) in
-                    hud.hide(true)
+                    hud?.hide(true)
             })
         })
     }

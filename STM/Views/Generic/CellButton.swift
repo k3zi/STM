@@ -17,7 +17,7 @@ class CellButton: UIView {
     var selected = false {
         didSet {
             if !shallow {
-                actionButton.selected = selected
+                actionButton.isSelected = selected
                 countLabel.textColor = selected ? selectedColor : RGB(172)
             }
         }
@@ -35,11 +35,11 @@ class CellButton: UIView {
         super.init(frame: CGRect.zero)
         self.translatesAutoresizingMaskIntoConstraints = false
 
-        actionButton.setImage(UIImage(named: imageName), forState: .Normal)
-        actionButton.setImage(UIImage(named: selectedImageName), forState: .Selected)
+        actionButton.setImage(UIImage(named: imageName), for: .normal)
+        actionButton.setImage(UIImage(named: selectedImageName), for: .selected)
         addSubview(actionButton)
 
-        countLabel.font = UIFont.systemFontOfSize(12.0)
+        countLabel.font = UIFont.systemFont(ofSize: 12.0)
         countLabel.textColor = RGB(172)
         countLabel.text = count.formatUsingAbbrevation()
         addSubview(countLabel)
@@ -52,14 +52,14 @@ class CellButton: UIView {
     }
 
     func setupConstraints() {
-        actionButton.autoPinEdgesToSuperviewEdgesWithInsets(UIEdgeInsets(top: 2, left: 10, bottom: 2, right: 0), excludingEdge: .Right)
+        actionButton.autoPinEdgesToSuperviewEdges(with: UIEdgeInsets(top: 2, left: 10, bottom: 2, right: 0), excludingEdge: .right)
 
-        countLabel.autoPinEdge(.Left, toEdge: .Right, ofView: actionButton, withOffset: 10)
-        countLabel.autoPinEdgeToSuperviewEdge(.Right, withInset: 10)
-        countLabel.autoAlignAxis(.Horizontal, toSameAxisOfView: actionButton)
+        countLabel.autoPinEdge(.left, to: .right, of: actionButton, withOffset: 10)
+        countLabel.autoPinEdge(toSuperviewEdge: .right, withInset: 10)
+        countLabel.autoAlignAxis(.horizontal, toSameAxisOf: actionButton)
     }
 
-    override func estimatedHeight(maxWidth: CGFloat) -> CGFloat {
+    override func estimatedHeight(_ maxWidth: CGFloat) -> CGFloat {
         var height = CGFloat(2)
         height = height + actionButton.estimatedHeight(maxWidth)
         height = height + 2

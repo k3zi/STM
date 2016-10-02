@@ -23,18 +23,18 @@ class CreateAccountViewController: KZViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
 
-        crowdBGGradient.colors = [RGB(0, a: 0.63).CGColor, RGB(255, a: 0).CGColor, RGB(255, a: 0).CGColor, RGB(0, a: 0.63).CGColor]
-        crowdBGGradient.locations = [NSNumber(float: 0.0), NSNumber(float: 0.315), NSNumber(float: 0.685), NSNumber(float: 1.0)]
+        crowdBGGradient.colors = [RGB(0, a: 0.63).cgColor, RGB(255, a: 0).cgColor, RGB(255, a: 0).cgColor, RGB(0, a: 0.63).cgColor]
+        crowdBGGradient.locations = [NSNumber(value: 0.0 as Float), NSNumber(value: 0.315 as Float), NSNumber(value: 0.685 as Float), NSNumber(value: 1.0 as Float)]
         crowdBG.layer.addSublayer(crowdBGGradient)
 
         crowdBGGOverlay.opacity = 0.66
-        crowdBGGOverlay.backgroundColor = Constants.UI.Color.tint.CGColor
+        crowdBGGOverlay.backgroundColor = Constants.UI.Color.tint.cgColor
         crowdBG.layer.addSublayer(crowdBGGOverlay)
 
-        crowdBG.contentMode = .ScaleAspectFill
+        crowdBG.contentMode = .scaleAspectFill
         view.addSubview(crowdBG)
 
-        backBT.addTarget(self, action: #selector(CreateAccountViewController.dismiss), forControlEvents: .TouchUpInside)
+        backBT.addTarget(self, action: #selector(self.popVC), for: .touchUpInside)
         view.addSubview(backBT)
 
         //Fields
@@ -51,12 +51,12 @@ class CreateAccountViewController: KZViewController {
         view.addSubview(passwordTextField)
 
         emailTextField.placeholder = "Email"
-        emailTextField.keyboardType = .EmailAddress
+        emailTextField.keyboardType = .emailAddress
         emailTextField.unstyleField()
         view.addSubview(emailTextField)
 
-        createAccountBT.setTitle("Create Account", forState: .Normal)
-        createAccountBT.addTarget(self, action: #selector(CreateAccountViewController.createAccount), forControlEvents: .TouchUpInside)
+        createAccountBT.setTitle("Create Account", for: UIControlState())
+        createAccountBT.addTarget(self, action: #selector(CreateAccountViewController.createAccount), for: .touchUpInside)
         view.addSubview(createAccountBT)
     }
 
@@ -64,21 +64,21 @@ class CreateAccountViewController: KZViewController {
         crowdBG.autoPinEdgesToSuperviewEdges()
 
         for view in [displayNameTextField, usernameTextField, passwordTextField, emailTextField, createAccountBT] {
-            view.autoPinEdgeToSuperviewEdge(.Left, withInset: 45)
-            view.autoPinEdgeToSuperviewEdge(.Right, withInset: 45)
-            view.autoSetDimension(.Height, toSize: 50)
+            view.autoPinEdge(toSuperviewEdge: .left, withInset: 45)
+            view.autoPinEdge(toSuperviewEdge: .right, withInset: 45)
+            view.autoSetDimension(.height, toSize: 50)
         }
 
-        backBT.autoPinToTopLayoutGuideOfViewController(self, withInset: 20)
-        backBT.autoPinEdgeToSuperviewEdge(.Left, withInset: 25)
-        displayNameTextField.autoPinEdge(.Top, toEdge: .Bottom, ofView: backBT, withOffset: 30)
-        usernameTextField.autoPinEdge(.Top, toEdge: .Bottom, ofView: displayNameTextField, withOffset: 15)
-        passwordTextField.autoPinEdge(.Top, toEdge: .Bottom, ofView: usernameTextField, withOffset: 15)
-        emailTextField.autoPinEdge(.Top, toEdge: .Bottom, ofView: passwordTextField, withOffset: 15)
-        createAccountBT.autoPinEdge(.Top, toEdge: .Bottom, ofView: emailTextField, withOffset: 15)
+        backBT.autoPin(toTopLayoutGuideOf: self, withInset: 20)
+        backBT.autoPinEdge(toSuperviewEdge: .left, withInset: 25)
+        displayNameTextField.autoPinEdge(.top, to: .bottom, of: backBT, withOffset: 30)
+        usernameTextField.autoPinEdge(.top, to: .bottom, of: displayNameTextField, withOffset: 15)
+        passwordTextField.autoPinEdge(.top, to: .bottom, of: usernameTextField, withOffset: 15)
+        emailTextField.autoPinEdge(.top, to: .bottom, of: passwordTextField, withOffset: 15)
+        createAccountBT.autoPinEdge(.top, to: .bottom, of: emailTextField, withOffset: 15)
     }
 
-    override func viewWillAppear(animated: Bool) {
+    override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
 
         displayNameTextField.becomeFirstResponder()
@@ -91,9 +91,9 @@ class CreateAccountViewController: KZViewController {
         crowdBGGOverlay.frame = crowdBG.bounds
     }
 
-    func dismiss() {
+    func popVC() {
         if let vc = self.navigationController {
-            vc.popViewControllerAnimated(true)
+            vc.popViewController(animated: true)
         }
     }
 
@@ -137,30 +137,30 @@ class CreateAccountViewController: KZViewController {
         let params = ["displayName" : displayName, "username": username, "password": password, "email": email]
 
         createAccountBT.showIndicator()
-        backBT.enabled = false
+        backBT.isEnabled = false
         Constants.Network.POST("/user/create", parameters: params, completionHandler: { (response, error) -> Void in
             print(response)
             self.createAccountBT.hideIndicator()
-            self.backBT.enabled = true
-            self.handleResponse(response, error: error, successCompletion: { (result) -> Void in
-                Answers.logSignUpWithMethod("Email", success: true, customAttributes: [:])
+            self.backBT.isEnabled = true
+            self.handleResponse(response as AnyObject?, error: error as NSError?, successCompletion: { (result) -> Void in
+                Answers.logSignUp(withMethod: "Email", success: true, customAttributes: [:])
 
                 Constants.Settings.setSecretObject(result, forKey: "user")
 
-                guard let result = result as? JSON, user = STMUser(json: result) else {
+                guard let result = result as? JSON, let user = STMUser(json: result) else {
                     return
                 }
 
                 AppDelegate.del().loginUser(user)
-                Answers.logLoginWithMethod("Password", success: true, customAttributes: nil)
+                Answers.logLogin(withMethod: "Password", success: true, customAttributes: nil)
             })
         })
     }
 
-    func isValidEmail(testStr: String) -> Bool {
+    func isValidEmail(_ testStr: String) -> Bool {
         let emailRegEx = "^(?:(?:(?:(?: )*(?:(?:(?:\\t| )*\\r\\n)?(?:\\t| )+))+(?: )*)|(?: )+)?(?:(?:(?:[-A-Za-z0-9!#$%&’*+/=?^_'{|}~]+(?:\\.[-A-Za-z0-9!#$%&’*+/=?^_'{|}~]+)*)|(?:\"(?:(?:(?:(?: )*(?:(?:[!#-Z^-~]|\\[|\\])|(?:\\\\(?:\\t|[ -~]))))+(?: )*)|(?: )+)\"))(?:@)(?:(?:(?:[A-Za-z0-9](?:[-A-Za-z0-9]{0,61}[A-Za-z0-9])?)(?:\\.[A-Za-z0-9](?:[-A-Za-z0-9]{0,61}[A-Za-z0-9])?)*)|(?:\\[(?:(?:(?:(?:(?:[0-9]|(?:[1-9][0-9])|(?:1[0-9][0-9])|(?:2[0-4][0-9])|(?:25[0-5]))\\.){3}(?:[0-9]|(?:[1-9][0-9])|(?:1[0-9][0-9])|(?:2[0-4][0-9])|(?:25[0-5]))))|(?:(?:(?: )*[!-Z^-~])*(?: )*)|(?:[Vv][0-9A-Fa-f]+\\.[-A-Za-z0-9._~!$&'()*+,;=:]+))\\])))(?:(?:(?:(?: )*(?:(?:(?:\\t| )*\\r\\n)?(?:\\t| )+))+(?: )*)|(?: )+)?$"
         let emailTest = NSPredicate(format:"SELF MATCHES %@", emailRegEx)
-        let result = emailTest.evaluateWithObject(testStr)
+        let result = emailTest.evaluate(with: testStr)
         return result
     }
 

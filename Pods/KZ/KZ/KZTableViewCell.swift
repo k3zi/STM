@@ -10,17 +10,17 @@ import UIKit
 import PureLayout
 import Reusable
 
-public class KZTableViewCell: UITableViewCell, Reusable {
-    public let topSeperator = UIView()
-    public let bottomSeperator = UIView()
+open class KZTableViewCell: UITableViewCell, Reusable {
+    open let topSeperator = UIView()
+    open let bottomSeperator = UIView()
 
     var didSetupConstraints = false
     var trailingDetailConstraint = NSLayoutConstraint()
-    public var model: Any?
+    open var model: Any?
 
     override required public init(style: UITableViewCellStyle, reuseIdentifier: String?) {
         super.init(style: style, reuseIdentifier: reuseIdentifier)
-        self.backgroundColor = UIColor.clearColor()
+        self.backgroundColor = UIColor.clear
 
         self.contentView.addSubview(topSeperator)
         self.contentView.addSubview(bottomSeperator)
@@ -29,32 +29,32 @@ public class KZTableViewCell: UITableViewCell, Reusable {
     }
 
     //MARK: Setup Constraints
-    override public func updateConstraints() {
+    override open func updateConstraints() {
         super.updateConstraints()
         if didSetupConstraints {
             return
         }
 
-        bottomSeperator.autoSetDimension(.Height, toSize: (1.0/UIScreen.mainScreen().scale))
-        bottomSeperator.autoPinEdgeToSuperviewEdge(.Bottom)
-        bottomSeperator.autoPinEdgeToSuperviewEdge(.Left)
-        bottomSeperator.autoPinEdgeToSuperviewEdge(.Right)
+        bottomSeperator.autoSetDimension(.height, toSize: (1.0/UIScreen.main.scale))
+        bottomSeperator.autoPinEdge(toSuperviewEdge: .bottom)
+        bottomSeperator.autoPinEdge(toSuperviewEdge: .left)
+        bottomSeperator.autoPinEdge(toSuperviewEdge: .right)
 
-        topSeperator.autoSetDimension(.Height, toSize: (1.0/UIScreen.mainScreen().scale))
-        topSeperator.autoPinEdgeToSuperviewEdge(.Top)
-        topSeperator.autoPinEdgeToSuperviewEdge(.Left)
-        topSeperator.autoPinEdgeToSuperviewEdge(.Right)
+        topSeperator.autoSetDimension(.height, toSize: (1.0/UIScreen.main.scale))
+        topSeperator.autoPinEdge(toSuperviewEdge: .top)
+        topSeperator.autoPinEdge(toSuperviewEdge: .left)
+        topSeperator.autoPinEdge(toSuperviewEdge: .right)
 
         didSetupConstraints = true
     }
 
-    public func usesEstimatedHeight() -> Bool {
+    open func usesEstimatedHeight() -> Bool {
         return true
     }
 
-    public func estimatedHeight() -> CGFloat {
+    open func estimatedHeight() -> CGFloat {
         if usesEstimatedHeight() {
-            print("AutoLayout: \"\(self.dynamicType)\" estimatedHeight isn't implemented")
+            print("AutoLayout: \"\(type(of: self))\" estimatedHeight isn't implemented")
         }
 
         return UITableViewAutomaticDimension
@@ -68,44 +68,44 @@ public class KZTableViewCell: UITableViewCell, Reusable {
         }
     }
 
-    public func getHeight() -> CGFloat {
+    open func getHeight() -> CGFloat {
         self.contentView.bounds.size.height = 99999
         self.setNeedsUpdateConstraints()
         self.updateConstraints()
 
-        self.bounds.size.width = UIScreen.mainScreen().bounds.size.width
+        self.bounds.size.width = UIScreen.main.bounds.size.width
 
         self.setNeedsLayout()
         self.layoutIfNeeded()
 
-        let height = self.contentView.systemLayoutSizeFittingSize(UILayoutFittingCompressedSize).height
+        let height = self.contentView.systemLayoutSizeFitting(UILayoutFittingCompressedSize).height
         return height + CGFloat(1.0)
     }
 
-    public override func layoutSubviews() {
+    open override func layoutSubviews() {
         super.layoutSubviews()
         self.contentView.layoutIfNeeded()
     }
 
-    public func setIndexPath(indexPath: NSIndexPath, last: Bool) {
-        if indexPath.row == 0 {
+    open func setIndexPath(_ indexPath: IndexPath, last: Bool) {
+        if (indexPath as NSIndexPath).row == 0 {
             topSeperator.alpha = 0.0
         } else {
             topSeperator.alpha = 1.0
         }
     }
 
-    public func setContent(content: Any, shallow: Bool) {
+    open func setContent(_ content: Any, shallow: Bool) {
         model = content
 
         fillInCellData(shallow)
     }
 
-    public func fillInCellData(shallow: Bool) {
+    open func fillInCellData(_ shallow: Bool) {
 
     }
 
-    override public func prepareForReuse() {
+    override open func prepareForReuse() {
         super.prepareForReuse()
 
         model = nil

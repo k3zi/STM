@@ -8,12 +8,12 @@
 
 import UIKit
 
-public class KZScrollViewController: KZViewController {
-    public var scrollView = UIScrollView()
-    public var contentView = UIView()
+open class KZScrollViewController: KZViewController {
+    open var scrollView = UIScrollView()
+    open var contentView = UIView()
 
 
-    override public func viewDidLoad() {
+    override open func viewDidLoad() {
         super.viewDidLoad()
 
         scrollView.showsVerticalScrollIndicator = false
@@ -21,11 +21,11 @@ public class KZScrollViewController: KZViewController {
         view.addSubview(scrollView)
     }
 
-    public override func setupConstraints() {
+    open override func setupConstraints() {
         super.setupConstraints()
 
-        scrollView.autoPinEdgesToSuperviewEdgesWithInsets(UIEdgeInsetsZero)
-        contentView.autoPinEdgesToSuperviewEdgesWithInsets(UIEdgeInsetsZero)
-        contentView.autoMatchDimension(.Width, toDimension: .Width, ofView: view)
+        scrollView.autoPinEdgesToSuperviewEdges(with: UIEdgeInsets.zero)
+        contentView.autoPinEdgesToSuperviewEdges(with: UIEdgeInsets.zero)
+        contentView.autoMatch(.width, to: .width, of: view)
     }
 }

@@ -19,19 +19,19 @@ class UserSelectionCell: KZTableViewCell {
 	required init(style: UITableViewCellStyle, reuseIdentifier: String?) {
 		super.init(style: style, reuseIdentifier: reuseIdentifier)
 		self.backgroundColor = RGB(255)
-        self.selectionStyle = .None
+        self.selectionStyle = .none
 
 		avatar.layer.cornerRadius = 45.0 / 9.0
 		avatar.backgroundColor = Constants.UI.Color.imageViewDefault
 		avatar.clipsToBounds = true
 		self.contentView.addSubview(avatar)
 
-		nameLabel.font = UIFont.boldSystemFontOfSize(14)
+		nameLabel.font = UIFont.boldSystemFont(ofSize: 14)
         nameLabel.textColor = Constants.UI.Color.tint
 		self.contentView.addSubview(nameLabel)
 
         messageLabel.numberOfLines = 0
-		messageLabel.font = UIFont.systemFontOfSize(14)
+		messageLabel.font = UIFont.systemFont(ofSize: 14)
         messageLabel.tintColor = Constants.UI.Color.tint
 		self.contentView.addSubview(messageLabel)
 	}
@@ -39,30 +39,30 @@ class UserSelectionCell: KZTableViewCell {
 	override func updateConstraints() {
 		super.updateConstraints()
 		NSLayoutConstraint.autoSetPriority(999) { () -> Void in
-			self.avatar.autoSetDimensionsToSize(CGSize(width: 45.0, height: 45.0))
+			self.avatar.autoSetDimensions(to: CGSize(width: 45.0, height: 45.0))
 		}
 
-		avatar.autoPinEdgeToSuperviewEdge(.Top, withInset: 10)
-		avatar.autoPinEdgeToSuperviewEdge(.Bottom, withInset: 10, relation: .GreaterThanOrEqual)
-		avatar.autoPinEdgeToSuperviewEdge(.Left, withInset: 10)
+		avatar.autoPinEdge(toSuperviewEdge: .top, withInset: 10)
+		avatar.autoPinEdge(toSuperviewEdge: .bottom, withInset: 10, relation: .greaterThanOrEqual)
+		avatar.autoPinEdge(toSuperviewEdge: .left, withInset: 10)
 
-		nameLabel.autoPinEdgeToSuperviewEdge(.Top, withInset: 13)
-		nameLabel.autoPinEdge(.Left, toEdge: .Right, ofView: avatar, withOffset: 10)
-        nameLabel.autoPinEdgeToSuperviewEdge(.Right, withInset: 10)
+		nameLabel.autoPinEdge(toSuperviewEdge: .top, withInset: 13)
+		nameLabel.autoPinEdge(.left, to: .right, of: avatar, withOffset: 10)
+        nameLabel.autoPinEdge(toSuperviewEdge: .right, withInset: 10)
 
-		messageLabel.autoPinEdge(.Top, toEdge: .Bottom, ofView: nameLabel, withOffset: 2)
-		messageLabel.autoPinEdge(.Left, toEdge: .Right, ofView: avatar, withOffset: 10)
-        messageLabel.autoMatchDimension(.Width, toDimension: .Width, ofView: nameLabel)
-		messageLabel.autoPinEdgeToSuperviewEdge(.Bottom, withInset: 10, relation: .GreaterThanOrEqual)
+		messageLabel.autoPinEdge(.top, to: .bottom, of: nameLabel, withOffset: 2)
+		messageLabel.autoPinEdge(.left, to: .right, of: avatar, withOffset: 10)
+        messageLabel.autoMatch(.width, to: .width, of: nameLabel)
+		messageLabel.autoPinEdge(toSuperviewEdge: .bottom, withInset: 10, relation: .greaterThanOrEqual)
 	}
 
-	override func fillInCellData(shallow: Bool) {
+	override func fillInCellData(_ shallow: Bool) {
         guard let user = model as? STMUser else {
             return
         }
 
         if !shallow {
-            avatar.kf_setImageWithURL(user.profilePictureURL(), placeholderImage: UIImage(named: "defaultProfilePicture"))
+            avatar.kf.setImage(with: user.profilePictureURL(), placeholder: UIImage(named: "defaultProfilePicture"))
         }
 
         nameLabel.text = user.displayName
@@ -75,11 +75,11 @@ class UserSelectionCell: KZTableViewCell {
 		nameLabel.text = ""
 		messageLabel.text = ""
 
-        avatar.kf_cancelDownloadTask()
+        avatar.kf.cancelDownloadTask()
         avatar.image = nil
 	}
 
-    override func setIndexPath(indexPath: NSIndexPath, last: Bool) {
+    override func setIndexPath(_ indexPath: IndexPath, last: Bool) {
         topSeperator.alpha = 0.0
         bottomSeperator.alpha = 0.0
     }

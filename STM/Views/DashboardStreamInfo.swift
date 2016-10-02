@@ -9,7 +9,7 @@
 import UIKit
 
 class DashboardStreamInfoView: UIView {
-    var color = UIColor.whiteColor()
+    var color = UIColor.white
     let triangleIndicator = TriangleView()
     let infoViewHolder = UIView()
     let startBT = UIButton.styledForStreamInfoView()
@@ -24,7 +24,7 @@ class DashboardStreamInfoView: UIView {
         self.stream = stream
         super.init(frame: CGRect.zero)
 
-        self.backgroundColor = UIColor.clearColor()
+        self.backgroundColor = UIColor.clear
 
         addSubview(triangleIndicator)
 
@@ -37,19 +37,19 @@ class DashboardStreamInfoView: UIView {
         infoViewHolder.addSubview(statusView)
 
         streamNameLabel.textColor = Constants.UI.Color.tint
-        streamNameLabel.font = UIFont.systemFontOfSize(17, weight: UIFontWeightMedium)
+        streamNameLabel.font = UIFont.systemFont(ofSize: 17, weight: UIFontWeightMedium)
         streamNameLabel.text = stream.name
         infoViewHolder.addSubview(streamNameLabel)
 
         streamDescriptionLabel.textColor = RGB(91)
-        streamDescriptionLabel.font = UIFont.systemFontOfSize(14)
+        streamDescriptionLabel.font = UIFont.systemFont(ofSize: 14)
         streamDescriptionLabel.text = stream.description
         streamDescriptionLabel.numberOfLines = 0
         infoViewHolder.addSubview(streamDescriptionLabel)
 
-        startBT.setTitle("Tune In", forState: .Normal)
-        startBT.setTitle("Tune In (Offline)", forState: .Disabled)
-        startBT.enabled = true
+        startBT.setTitle("Tune In", for: UIControlState())
+        startBT.setTitle("Tune In (Offline)", for: .disabled)
+        startBT.isEnabled = true
         infoViewHolder.addSubview(startBT)
 
         setUpConstraints()
@@ -60,29 +60,29 @@ class DashboardStreamInfoView: UIView {
     }
 
     func setUpConstraints() {
-        triangleIndicator.autoPinEdgeToSuperviewEdge(.Top)
-        triangleIndicator.autoSetDimensionsToSize(CGSize(width: 62, height: 31))
+        triangleIndicator.autoPinEdge(toSuperviewEdge: .top)
+        triangleIndicator.autoSetDimensions(to: CGSize(width: 62, height: 31))
 
-        infoViewHolder.autoPinEdgeToSuperviewEdge(.Top, withInset: 31)
-        infoViewHolder.autoPinEdgeToSuperviewEdge(.Left)
-        infoViewHolder.autoPinEdgeToSuperviewEdge(.Right)
-        infoViewHolder.autoPinEdgeToSuperviewEdge(.Bottom)
+        infoViewHolder.autoPinEdge(toSuperviewEdge: .top, withInset: 31)
+        infoViewHolder.autoPinEdge(toSuperviewEdge: .left)
+        infoViewHolder.autoPinEdge(toSuperviewEdge: .right)
+        infoViewHolder.autoPinEdge(toSuperviewEdge: .bottom)
 
-        statusView.autoPinEdgeToSuperviewEdge(.Left, withInset: 15)
-        statusView.autoAlignAxis(.Horizontal, toSameAxisOfView: streamNameLabel)
+        statusView.autoPinEdge(toSuperviewEdge: .left, withInset: 15)
+        statusView.autoAlignAxis(.horizontal, toSameAxisOf: streamNameLabel)
 
-        streamNameLabel.autoPinEdgeToSuperviewEdge(.Top, withInset: 15)
-        streamNameLabel.autoPinEdge(.Left, toEdge: .Right, ofView: statusView, withOffset: 10)
-        streamNameLabel.autoPinEdgeToSuperviewEdge(.Right, withInset: 15)
+        streamNameLabel.autoPinEdge(toSuperviewEdge: .top, withInset: 15)
+        streamNameLabel.autoPinEdge(.left, to: .right, of: statusView, withOffset: 10)
+        streamNameLabel.autoPinEdge(toSuperviewEdge: .right, withInset: 15)
 
-        streamDescriptionLabel.autoPinEdge(.Top, toEdge: .Bottom, ofView: streamNameLabel, withOffset: 15)
-        streamDescriptionLabel.autoPinEdgeToSuperviewEdge(.Left, withInset: 15)
-        streamDescriptionLabel.autoPinEdgeToSuperviewEdge(.Right, withInset: 15)
+        streamDescriptionLabel.autoPinEdge(.top, to: .bottom, of: streamNameLabel, withOffset: 15)
+        streamDescriptionLabel.autoPinEdge(toSuperviewEdge: .left, withInset: 15)
+        streamDescriptionLabel.autoPinEdge(toSuperviewEdge: .right, withInset: 15)
 
-        startBT.autoPinEdge(.Top, toEdge: .Bottom, ofView: streamDescriptionLabel, withOffset: 15)
-        startBT.autoPinEdgeToSuperviewEdge(.Left)
-        startBT.autoPinEdgeToSuperviewEdge(.Right)
-        startBT.autoPinEdgeToSuperviewEdge(.Bottom)
+        startBT.autoPinEdge(.top, to: .bottom, of: streamDescriptionLabel, withOffset: 15)
+        startBT.autoPinEdge(toSuperviewEdge: .left)
+        startBT.autoPinEdge(toSuperviewEdge: .right)
+        startBT.autoPinEdge(toSuperviewEdge: .bottom)
     }
 
     override func layoutSubviews() {
