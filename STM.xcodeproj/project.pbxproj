@@ -7,7 +7,10 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		290F8C4B1DA8A350007237AE /* TabBarController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 290F8C4A1DA8A350007237AE /* TabBarController.swift */; };
+		290F8C4D1DA8A728007237AE /* UIVisualViewEffect.swift in Sources */ = {isa = PBXBuildFile; fileRef = 290F8C4C1DA8A728007237AE /* UIVisualViewEffect.swift */; };
 		29DA0B261CFA031600E30ADE /* STMTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 29DA0B251CFA031600E30ADE /* STMTests.swift */; };
+		29E6E3231DA1364700E2D2CD /* WalkthroughViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 29E6E3221DA1364700E2D2CD /* WalkthroughViewController.swift */; };
 		EA01AF8A1C5CB3C500F56792 /* SignInViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = EA01AF891C5CB3C500F56792 /* SignInViewController.swift */; };
 		EA01AF911C5CB8DC00F56792 /* DashboardViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = EA01AF901C5CB8DC00F56792 /* DashboardViewController.swift */; };
 		EA01AF931C5CBCA600F56792 /* STMUser.swift in Sources */ = {isa = PBXBuildFile; fileRef = EA01AF921C5CBCA600F56792 /* STMUser.swift */; };
@@ -122,9 +125,12 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		290F8C4A1DA8A350007237AE /* TabBarController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TabBarController.swift; sourceTree = "<group>"; };
+		290F8C4C1DA8A728007237AE /* UIVisualViewEffect.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = UIVisualViewEffect.swift; sourceTree = "<group>"; };
 		29DA0B231CFA031600E30ADE /* STMTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = STMTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		29DA0B251CFA031600E30ADE /* STMTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = STMTests.swift; sourceTree = "<group>"; };
 		29DA0B271CFA031600E30ADE /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		29E6E3221DA1364700E2D2CD /* WalkthroughViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = WalkthroughViewController.swift; sourceTree = "<group>"; };
 		3B4177B55191B175F8A0C4B8 /* Pods.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		899F5F08440FB63B4BC74A8F /* Pods_STM.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_STM.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		ACB77300A114E3FC1AE33834 /* Pods-STM.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-STM.release.xcconfig"; path = "Pods/Target Support Files/Pods-STM/Pods-STM.release.xcconfig"; sourceTree = "<group>"; };
@@ -423,6 +429,7 @@
 				EA09CAD51C5C89430067FF6A /* Launch */,
 				EA01AF8B1C5CB6FA00F56792 /* Tabs */,
 				EA09CAD61C5C89A50067FF6A /* NavigationController.swift */,
+				290F8C4A1DA8A350007237AE /* TabBarController.swift */,
 			);
 			path = Controllers;
 			sourceTree = "<group>";
@@ -436,6 +443,7 @@
 				EA09CAC21C5C5C680067FF6A /* STM-Bridging-Header.h */,
 				EAFFCB131C87E59300258C16 /* ObjectiveCProcessing.h */,
 				EAFFCB141C87E59300258C16 /* ObjectiveCProcessing.m */,
+				290F8C4C1DA8A728007237AE /* UIVisualViewEffect.swift */,
 			);
 			path = Extras;
 			sourceTree = "<group>";
@@ -444,6 +452,7 @@
 			isa = PBXGroup;
 			children = (
 				EA09CAC31C5C5CD30067FF6A /* InitialViewController.swift */,
+				29E6E3221DA1364700E2D2CD /* WalkthroughViewController.swift */,
 				EA09CAD11C5C85AF0067FF6A /* CreateAccountViewController.swift */,
 				EA79C7A71CDD423E00A5CA94 /* FinishTwitterAccountViewController.swift */,
 				EA01AF891C5CB3C500F56792 /* SignInViewController.swift */,
@@ -869,6 +878,7 @@
 				EAE545061C76BA9200180241 /* STMVisualizer.swift in Sources */,
 				EA4F496A1C5EBFA000103559 /* YBReverb.m in Sources */,
 				EA4F49871C5EC05700103559 /* EZAudioFile.m in Sources */,
+				29E6E3231DA1364700E2D2CD /* WalkthroughViewController.swift in Sources */,
 				EA8D3DE11C7D75C3003ACCFC /* MessageToolbarView.swift in Sources */,
 				EA2898C01CD5AF150025F43B /* StreamStatusView.swift in Sources */,
 				EA9216B11C856DBB00EA499B /* TriangleView.swift in Sources */,
@@ -928,6 +938,7 @@
 				EA6F5B8D1CD224A400C9638D /* UserCommentCell.swift in Sources */,
 				EA79C7A81CDD423E00A5CA94 /* FinishTwitterAccountViewController.swift in Sources */,
 				EA4F49621C5EBFA000103559 /* YBAudioUnitNode.m in Sources */,
+				290F8C4D1DA8A728007237AE /* UIVisualViewEffect.swift in Sources */,
 				EA2898A21CD328520025F43B /* CellButton.swift in Sources */,
 				EAE545041C76978F00180241 /* MeterTable.m in Sources */,
 				EA09CAD01C5C84B00067FF6A /* UIButtonStyles.swift in Sources */,
@@ -951,6 +962,7 @@
 				EA2898B71CD4D7430025F43B /* STMMessageOtherCell.swift in Sources */,
 				EA27B2031C5D3312006F269D /* KZPlayerItem.swift in Sources */,
 				EA3EF7D61CCF014C009E4524 /* SearchUserCell.swift in Sources */,
+				290F8C4B1DA8A350007237AE /* TabBarController.swift in Sources */,
 				EA09CAC81C5C5D170067FF6A /* Constants.swift in Sources */,
 				EA6F5B811CD1392A00C9638D /* ProfileViewController.swift in Sources */,
 				EA24C0631C683F8300FE4DD0 /* MCSwipeCell.swift in Sources */,

@@ -65,7 +65,7 @@ class ProfileViewController: KZViewController, UIViewControllerPreviewingDelegat
 
         headerView.backgroundColor = RGB(122, g: 86, b: 229, a: 255)
 
-        self.automaticallyAdjustsScrollViewInsets = false
+        self.automaticallyAdjustsScrollViewInsets = true
 
         avatarImageView.layer.cornerRadius = 140.0 / 9.0
         avatarImageView.backgroundColor = Constants.UI.Color.imageViewDefault

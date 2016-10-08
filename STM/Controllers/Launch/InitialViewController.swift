@@ -10,25 +10,15 @@ import UIKit
 import TwitterKit
 
 class InitialViewController: KZViewController {
-    let crowdBG = UIImageView(image: UIImage(named: "crowdBG"))
-    let crowdBGGradient = CAGradientLayer()
-    let crowdBGGOverlay = CALayer()
+    let crowdBG = UIImageView(image: UIImage(named: "loginBackground"))
 
     let signInBT = UIButton.styledForLaunchScreen()
-    let createAccountBT = UIButton.styledForLaunchScreen()
+    let createAccountBT = UIButton.styleForCreateAccountButton()
     var twitterSignInBT = TWTRLogInButton()
     let launchLogoWithText = UIImageView(image: UIImage(named: "launchLogoWithText"))
 
     override func viewDidLoad() {
         super.viewDidLoad()
-
-        crowdBGGradient.colors = [RGB(0, a: 0.63).cgColor, RGB(255, a: 0).cgColor, RGB(255, a: 0).cgColor, RGB(0, a: 0.63).cgColor]
-        crowdBGGradient.locations = [NSNumber(value: 0.0 as Float), NSNumber(value: 0.315 as Float), NSNumber(value: 0.685 as Float), NSNumber(value: 1.0 as Float)]
-        crowdBG.layer.addSublayer(crowdBGGradient)
-
-        crowdBGGOverlay.opacity = 0.66
-        crowdBGGOverlay.backgroundColor = Constants.UI.Color.tint.cgColor
-        crowdBG.layer.addSublayer(crowdBGGOverlay)
 
         crowdBG.contentMode = .scaleAspectFill
         view.addSubview(crowdBG)
@@ -41,7 +31,6 @@ class InitialViewController: KZViewController {
         signInBT.addTarget(self, action: #selector(InitialViewController.signIn), for: .touchUpInside)
         view.addSubview(signInBT)
 
-        createAccountBT.setTitle("Create An Account", for: UIControlState())
         createAccountBT.addTarget(self, action: #selector(InitialViewController.createAccount), for: .touchUpInside)
         view.addSubview(createAccountBT)
 
@@ -87,9 +76,10 @@ class InitialViewController: KZViewController {
     override func setupConstraints() {
         crowdBG.autoPinEdgesToSuperviewEdges()
 
+        launchLogoWithText.autoAlignAxis(toSuperviewAxis: .horizontal)
         launchLogoWithText.autoAlignAxis(toSuperviewAxis: .vertical)
 
-        twitterSignInBT.autoPinEdge(.top, to: .bottom, of: launchLogoWithText, withOffset: 90)
+        //twitterSignInBT.autoPinEdge(.top, to: .bottom, of: launchLogoWithText, withOffset: 90)
         twitterSignInBT.autoPinEdge(toSuperviewEdge: .left, withInset: 45)
         twitterSignInBT.autoPinEdge(toSuperviewEdge: .right, withInset: 45)
         twitterSignInBT.autoSetDimension(.height, toSize: 50)
@@ -102,15 +92,7 @@ class InitialViewController: KZViewController {
         createAccountBT.autoPinEdge(.top, to: .bottom, of: signInBT, withOffset: 15)
         createAccountBT.autoPinEdge(toSuperviewEdge: .left, withInset: 45)
         createAccountBT.autoPinEdge(toSuperviewEdge: .right, withInset: 45)
-        createAccountBT.autoMatch(.height, to: .height, of: signInBT)
-        createAccountBT.autoPin(toBottomLayoutGuideOf: self, withInset: 90)
-    }
-
-    override func viewDidLayoutSubviews() {
-        super.viewDidLayoutSubviews()
-
-        crowdBGGradient.frame = crowdBG.bounds
-        crowdBGGOverlay.frame = crowdBG.bounds
+        createAccountBT.autoPin(toBottomLayoutGuideOf: self, withInset: 15)
     }
 
     func createAccount() {
@@ -129,6 +111,7 @@ class InitialViewController: KZViewController {
 
     func handleTwitterSession(_ session: TWTRSession) {
         self.twitterSignInBT.showIndicator()
+
         let params = ["twitterAuthToken": session.authToken, "username": session.userName]
         Constants.Network.POST("/user/twitter/authenticate", parameters: params, completionHandler: { (response, error) -> Void in
             self.twitterSignInBT.hideIndicator()

@@ -77,7 +77,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         }
         NSSetUncaughtExceptionHandler(exceptionHandler)
 
-        UITabBar.appearance().tintColor = Constants.UI.Color.tint
+        UITabBar.appearance().tintColor = Constants.UI.Color.tint2
 
         setUpAudioSession(false)
     }
@@ -254,16 +254,16 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     //MARK: Login User
 
 	func createTabSet() -> UITabBarController {
-		let tabVC = UITabBarController()
+		let tabVC = TabBarController()
 
         guard let user = currentUser else {
             return tabVC
         }
 
 		let tab1 = NavigationController(rootViewController: DashboardViewController())
-		let tab2 = NavigationController(rootViewController: CreateStreamViewController())
-		let tab3 = NavigationController(rootViewController: MessagesViewController())
-		let tab4 = NavigationController(rootViewController: SearchViewController())
+		let tab2 = NavigationController(rootViewController: SearchViewController())
+        let tab3 = NavigationController(rootViewController: CreateStreamViewController())
+		let tab4 = NavigationController(rootViewController: MessagesViewController())
 		let tab5 = NavigationController(rootViewController: ProfileViewController(user: user, isOwner: true))
 		tabVC.setViewControllers([tab1, tab2, tab3, tab4, tab5], animated: false)
 
@@ -271,9 +271,9 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 		self.window?.makeKeyAndVisible()
 
 		tab1.tabBarItem = UITabBarItem(title: "Dashboard", image: UIImage(named: "tabDashboard"), tag: 1)
-		tab2.tabBarItem = UITabBarItem(title: "Host", image: UIImage(named: "tabCreateStream"), tag: 2)
-		tab3.tabBarItem = UITabBarItem(title: "Messages", image: UIImage(named: "tabMessages"), tag: 3)
-		tab4.tabBarItem = UITabBarItem(title: "Search", image: UIImage(named: "tabSearch"), tag: 4)
+        tab2.tabBarItem = UITabBarItem(title: "Search", image: UIImage(named: "tabSearch"), tag: 2)
+		tab3.tabBarItem = UITabBarItem(title: "      ", image: UIImage(named: ""), tag: 3)
+		tab4.tabBarItem = UITabBarItem(title: "Messages", image: UIImage(named: "tabMessages"), tag: 4)
 		tab5.tabBarItem = UITabBarItem(title: "Profile", image: UIImage(named: "tabProfile"), tag: 5)
 		tabVC.selectedViewController = tab1
 
@@ -288,6 +288,8 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 				}
 			}
 		}
+
+        tabVC.present(WalkthroughViewController(), animated: false, completion: nil)
 
 		return tabVC
 	}

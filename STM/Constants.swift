@@ -187,6 +187,8 @@ struct Constants {
 
         struct Color {
             static let tint = RGB(92, g: 38, b: 254)
+            static let tint2 = RGB(122, g: 86, b: 229)
+            static let gray = RGB(172)
             static let disabled = RGB(234, g: 234, b: 234)
             static let off = RGB(150, g: 150, b: 150)
             static let imageViewDefault = RGB(197, g: 198, b: 199)

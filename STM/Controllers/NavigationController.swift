@@ -15,11 +15,20 @@ class NavigationController: UINavigationController, UINavigationControllerDelega
         self.delegate = self
 
         //Edit NavBar
-        self.navigationBar.isTranslucent = false
         self.navigationBar.tintColor = UIColor.white
         self.navigationBar.titleTextAttributes = [NSForegroundColorAttributeName: UIColor.white]
-        self.navigationBar.setBackgroundImage(imageLayerForGradientBackground(), for: .default)
         self.navigationBar.shadowImage = UIImage()
+        self.navigationBar.setBackgroundImage(imageLayerForGradientBackground(), for: .default)
+        self.navigationBar.isTranslucent = true
+        self.navigationBar.backgroundColor = UIColor.clear
+
+        let visualEffectView = UIVisualEffectView(effect: UIBlurEffect(style: .dark))
+        visualEffectView.frame = self.navigationBar.bounds
+        visualEffectView.frame = view.bounds
+        
+        self.navigationBar.addSubview(visualEffectView)
+        visualEffectView.autoPinEdgesToSuperviewEdges(with: .zero, excludingEdge: .top)
+        visualEffectView.autoPinEdge(toSuperviewEdge: .top, withInset: -20)
     }
 
     //MARK: Styling
@@ -28,7 +37,7 @@ class NavigationController: UINavigationController, UINavigationControllerDelega
         updatedFrame.size.height += 20
 
         let layer = CAGradientLayer()
-        layer.colors = [RGB(110, g: 74, b: 217, a: 255).cgColor, RGB(122, g: 86, b: 229, a: 255).cgColor]
+        layer.colors = [RGB(172, g: 193, b: 255).withAlphaComponent(0.5).cgColor, RGB(172, g: 193, b: 255).withAlphaComponent(0.5).cgColor]
         layer.frame = updatedFrame
 
         UIGraphicsBeginImageContext(CGSize(width: updatedFrame.width, height: updatedFrame.height))

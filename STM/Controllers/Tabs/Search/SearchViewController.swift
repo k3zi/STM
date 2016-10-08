@@ -29,7 +29,7 @@ class SearchViewController: KZViewController, UISearchBarDelegate, UIViewControl
         tableView.delegate = self
         tableView.dataSource = self
         tableView.registerReusableCell(SearchUserCell.self)
-        tableView.registerReusableCell(SearchStreamCell)
+        tableView.registerReusableCell(SearchStreamCell.self)
         view.addSubview(tableView)
 
         registerForPreviewing(with: self, sourceView: tableView)

@@ -143,6 +143,7 @@ class CreateStreamViewController: KZViewController {
         }
 
         self.title = "Host Stream"
+        self.navigationController?.tabBarItem.title = "      "
         fetchData()
     }
 

@@ -23,6 +23,7 @@ class DashboardViewController: KZViewController, UIViewControllerPreviewingDeleg
         super.viewDidLoad()
 
         self.title = "Dashboard"
+        self.automaticallyAdjustsScrollViewInsets = true
 
         tableView.delegate = self
         tableView.dataSource = self
@@ -53,7 +54,9 @@ class DashboardViewController: KZViewController, UIViewControllerPreviewingDeleg
     override func setupConstraints() {
         super.setupConstraints()
 
-        tableView.autoPinEdgesToSuperviewEdges(with: UIEdgeInsets.zero, excludingEdge: .bottom)
+        tableView.autoPinEdge(toSuperviewEdge: .left)
+        tableView.autoPinEdge(toSuperviewEdge: .right)
+        tableView.autoPinEdge(toSuperviewEdge: .top)
         tableView.autoPin(toBottomLayoutGuideOf: self, withInset: 0)
     }
 

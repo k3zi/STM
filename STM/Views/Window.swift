@@ -30,7 +30,7 @@ class Window: UIWindow {
         let imageView = UIImageView(image: UIImage(named: "launchLogo"))
 
         self.backgroundColor = RGB(255)
-        self.splashView.backgroundColor = RGB(89, g: 68, b: 205)
+        self.splashView.backgroundColor = Constants.UI.Color.tint2
 
         self.splashView.addSubview(imageView)
         imageView.autoCenterInSuperview()
