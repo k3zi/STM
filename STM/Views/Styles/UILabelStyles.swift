@@ -23,9 +23,9 @@ extension UILabel {
 
     class func styledForDashboardHeader(_ text: String = "{HEADER TEXT}") -> UILabel {
         let label = UILabel()
-        label.textColor = Constants.UI.Color.tint
-        label.text = text
-        label.font = UIFont.systemFont(ofSize: 15, weight: UIFontWeightMedium)
+        label.textColor = Constants.UI.Color.tint3
+        label.text = text.uppercased()
+        label.font = UIFont.systemFont(ofSize: 13, weight: UIFontWeightBold)
         label.backgroundColor = UIColor.clear
         label.autoSetDimension(.height, toSize: 20)
         return label

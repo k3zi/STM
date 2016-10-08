@@ -97,7 +97,7 @@ class ProfileStatsListViewController: KZViewController {
         var count = 0
 
         func runCompletion() {
-            count = count - count
+            count = count - 1
             if count == 0 {
                 if let completion = completion {
                     completion()

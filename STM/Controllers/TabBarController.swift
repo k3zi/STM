@@ -31,7 +31,7 @@ class TabBarController: UITabBarController, UITabBarControllerDelegate {
         buttonBlur.clipsToBounds = true
         self.tabBar.addSubview(buttonBlur)
         buttonBlur.autoAlignAxis(toSuperviewAxis: .vertical)
-        buttonBlur.autoPinEdge(toSuperviewEdge: .bottom, withInset: 4)
+        buttonBlur.autoPinEdge(toSuperviewEdge: .bottom)
         buttonBlur.autoMatch(.height, to: .height, of: self.tabBar, withMultiplier: 1.224)
         buttonBlur.autoMatch(.width, to: .height, of: buttonBlur)
 

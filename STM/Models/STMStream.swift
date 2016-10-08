@@ -49,11 +49,11 @@ struct STMStream: Decodable {
 
     func color() -> UIColor {
         guard let colorHex = colorHex else {
-            return Constants.UI.Color.tint
+            return Constants.UI.Color.tint5
         }
 
         guard colorHex.characters.count == 6 else {
-            return Constants.UI.Color.tint
+            return Constants.UI.Color.tint5
         }
 
         return HEX(colorHex)

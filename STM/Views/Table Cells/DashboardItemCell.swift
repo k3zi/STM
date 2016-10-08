@@ -14,7 +14,7 @@ class DashboardItemCell: KZTableViewCell, UICollectionViewDelegate, UICollection
 
     required init(style: UITableViewCellStyle, reuseIdentifier: String?) {
         super.init(style: style, reuseIdentifier: reuseIdentifier)
-        self.backgroundColor = RGB(255)
+        self.backgroundColor = UIColor.clear
 
         self.contentView.addSubview(headerLabel)
 
@@ -179,7 +179,7 @@ class DashboardItemCell: KZTableViewCell, UICollectionViewDelegate, UICollection
 
     override func fillInCellData(_ shallow: Bool) {
         if let item = model as? STMDashboardItem {
-            headerLabel.text = item.name
+            headerLabel.text = item.name?.uppercased()
             self.collectionView?.reloadData()
         }
     }
@@ -217,4 +217,5 @@ class DashboardItemCell: KZTableViewCell, UICollectionViewDelegate, UICollection
             change()
         }
     }
+    
 }

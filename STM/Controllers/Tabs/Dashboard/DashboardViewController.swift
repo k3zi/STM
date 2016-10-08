@@ -10,7 +10,7 @@ import UIKit
 import DGElasticPullToRefresh
 
 class DashboardViewController: KZViewController, UIViewControllerPreviewingDelegate {
-    let tableView = UITableView()
+    let tableView = UITableView(frame: .zero, style: .grouped)
     var dashboardItems = [Any]()
     var comments = [Any]()
 
@@ -24,17 +24,24 @@ class DashboardViewController: KZViewController, UIViewControllerPreviewingDeleg
 
         self.title = "Dashboard"
         self.automaticallyAdjustsScrollViewInsets = true
+        self.view.backgroundColor = Constants.UI.Color.tint4
+
+        let titleView = UIImageView(image: #imageLiteral(resourceName: "navBarLogo"))
+        self.navigationItem.titleView = titleView
 
         tableView.delegate = self
         tableView.dataSource = self
-        tableView.registerReusableCell(DashboardItemCell.self)
+        tableView.registerReusableCell(FeaturedStreamCell.self)
         tableView.registerReusableCell(UserCommentCell.self)
-
-        self.registerForPreviewing(with: self, sourceView: tableView)
+        tableView.backgroundColor = UIColor.clear
+        tableView.separatorInset = UIEdgeInsets(top: 2, left: 0, bottom: 2, right: 0)
+        tableView.separatorColor = UIColor.clear
         view.addSubview(tableView)
 
+        self.registerForPreviewing(with: self, sourceView: tableView)
+
         let loadingView = DGElasticPullToRefreshLoadingViewCircle()
-        loadingView.tintColor = Constants.UI.Color.tint
+        loadingView.tintColor = Constants.UI.Color.tint2
 
         tableView.dg_addPullToRefreshWithActionHandler({ [weak self] () -> Void in
             if let me = self {
@@ -54,14 +61,11 @@ class DashboardViewController: KZViewController, UIViewControllerPreviewingDeleg
     override func setupConstraints() {
         super.setupConstraints()
 
-        tableView.autoPinEdge(toSuperviewEdge: .left)
-        tableView.autoPinEdge(toSuperviewEdge: .right)
-        tableView.autoPinEdge(toSuperviewEdge: .top)
-        tableView.autoPin(toBottomLayoutGuideOf: self, withInset: 0)
+        tableView.autoPinEdgesToSuperviewEdges(with: UIEdgeInsets(top: 0, left: 0, bottom: 2, right: 0))
     }
 
     override func numberOfSections(in tableView: UITableView) -> Int {
-        return 2
+        return dashboardItems.count
     }
 
     override func tableViewNoDataText(_ tableView: UITableView) -> String {
@@ -69,19 +73,11 @@ class DashboardViewController: KZViewController, UIViewControllerPreviewingDeleg
     }
 
     override func tableViewCellData(_ tableView: UITableView, section: Int) -> [Any] {
-        if section == 0 {
-            return dashboardItems
-        } else {
-            return comments
-        }
+        return (dashboardItems[section] as? STMDashboardItem)?.items ?? []
     }
 
     override func tableViewCellClass(_ tableView: UITableView, indexPath: IndexPath?) -> KZTableViewCell.Type {
-        if indexPath?.section == 0 {
-            return DashboardItemCell.self
-        } else {
-            return UserCommentCell.self
-        }
+        return FeaturedStreamCell.self
     }
 
     override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
@@ -101,6 +97,23 @@ class DashboardViewController: KZViewController, UIViewControllerPreviewingDeleg
         }
     }
 
+    override func tableView(_ tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {
+        let item = (dashboardItems[section] as? STMDashboardItem)
+        let view = UIView()
+        let headerLabel = UILabel.styledForDashboardHeader(item?.name ?? "")
+
+        view.addSubview(headerLabel)
+
+        headerLabel.autoPinEdgesToSuperviewEdges(with: UIEdgeInsets(top: 10, left: 12, bottom: 8, right: 12))
+
+        return view
+    }
+
+    override func tableView(_ tableView: UITableView, heightForHeaderInSection section: Int) -> CGFloat {
+        let view = self.tableView(tableView, viewForHeaderInSection: section)
+        return view?.systemLayoutSizeFitting(UILayoutFittingCompressedSize).height ?? 52
+    }
+
     override func fetchData() {
         fetchDataWithCompletion()
     }
@@ -113,10 +126,14 @@ class DashboardViewController: KZViewController, UIViewControllerPreviewingDeleg
         var count = 0
 
         func runCompletion() {
-            count = count - count
+            count = count - 1
             if count == 0 {
                 if let completion = completion {
                     completion()
+                }
+
+                if let window = AppDelegate.del().window as? Window {
+                    window.screenIsReady = true
                 }
             }
         }
@@ -134,42 +151,6 @@ class DashboardViewController: KZViewController, UIViewControllerPreviewingDeleg
                     })
 
                     self.tableView.reloadData()
-                }
-            })
-
-            runCompletion()
-        }
-
-        count = count + 1
-        Constants.Network.GET("/dashboard/timeline", parameters: nil) { (response, error) -> Void in
-            self.handleResponse(response as AnyObject?, error: error as NSError?, successCompletion: { (result) -> Void in
-                guard let results = result as? [JSON] else {
-                    return
-                }
-
-                let comments = [STMComment].fromJSONArray(results)
-                var didSwipeOut = false
-                if let oldComments = self.comments as? [STMComment] {
-                    if oldComments.count == comments?.count {
-                        for i in 0..<self.comments.count {
-                            self.comments[i] = comments?[i]
-                        }
-
-                        if let indexPaths = self.tableView.indexPathsForVisibleRows {
-                            self.tableView.reloadRows(at: indexPaths, with: .none)
-                            didSwipeOut = true
-                        }
-                    }
-                }
-
-                if !didSwipeOut {
-                    self.comments.removeAll()
-                    comments?.forEach({ self.comments.append($0) })
-                    self.tableView.reloadData()
-                }
-
-                if let window = AppDelegate.del().window as? Window {
-                    window.screenIsReady = true
                 }
             })
 

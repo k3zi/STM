@@ -78,6 +78,8 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         NSSetUncaughtExceptionHandler(exceptionHandler)
 
         UITabBar.appearance().tintColor = Constants.UI.Color.tint2
+        UITabBarItem.appearance().setTitleTextAttributes([NSForegroundColorAttributeName: UIColor.white], for: .normal)
+        UITabBarItem.appearance().setTitleTextAttributes([NSForegroundColorAttributeName: Constants.UI.Color.tint2], for: .selected)
 
         setUpAudioSession(false)
     }
@@ -270,11 +272,15 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 		self.window?.rootViewController = tabVC
 		self.window?.makeKeyAndVisible()
 
-		tab1.tabBarItem = UITabBarItem(title: "Dashboard", image: UIImage(named: "tabDashboard"), tag: 1)
-        tab2.tabBarItem = UITabBarItem(title: "Search", image: UIImage(named: "tabSearch"), tag: 2)
+		tab1.tabBarItem = UITabBarItem(title: "Dashboard", image: UIImage(named: "tabDashboard")?.withRenderingMode(.alwaysOriginal), tag: 1)
+        tab1.tabBarItem.selectedImage = UIImage(named: "tabDashboard")
+        tab2.tabBarItem = UITabBarItem(title: "Search", image: UIImage(named: "tabSearch")?.withRenderingMode(.alwaysOriginal), tag: 2)
+        tab2.tabBarItem.selectedImage = UIImage(named: "tabSearch")
 		tab3.tabBarItem = UITabBarItem(title: "      ", image: UIImage(named: ""), tag: 3)
-		tab4.tabBarItem = UITabBarItem(title: "Messages", image: UIImage(named: "tabMessages"), tag: 4)
-		tab5.tabBarItem = UITabBarItem(title: "Profile", image: UIImage(named: "tabProfile"), tag: 5)
+		tab4.tabBarItem = UITabBarItem(title: "Messages", image: UIImage(named: "tabMessages")?.withRenderingMode(.alwaysOriginal), tag: 4)
+        tab4.tabBarItem.selectedImage = UIImage(named: "tabMessages")
+		tab5.tabBarItem = UITabBarItem(title: "Profile", image: UIImage(named: "tabProfile")?.withRenderingMode(.alwaysOriginal), tag: 5)
+        tab5.tabBarItem.selectedImage = UIImage(named: "tabProfile")
 		tabVC.selectedViewController = tab1
 
 		if let item = shortcutItem {

@@ -9,6 +9,7 @@
 /* Begin PBXBuildFile section */
 		290F8C4B1DA8A350007237AE /* TabBarController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 290F8C4A1DA8A350007237AE /* TabBarController.swift */; };
 		290F8C4D1DA8A728007237AE /* UIVisualViewEffect.swift in Sources */ = {isa = PBXBuildFile; fileRef = 290F8C4C1DA8A728007237AE /* UIVisualViewEffect.swift */; };
+		290F8C4F1DA9318A007237AE /* FeaturedStreamCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 290F8C4E1DA9318A007237AE /* FeaturedStreamCell.swift */; };
 		29DA0B261CFA031600E30ADE /* STMTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 29DA0B251CFA031600E30ADE /* STMTests.swift */; };
 		29E6E3231DA1364700E2D2CD /* WalkthroughViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 29E6E3221DA1364700E2D2CD /* WalkthroughViewController.swift */; };
 		EA01AF8A1C5CB3C500F56792 /* SignInViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = EA01AF891C5CB3C500F56792 /* SignInViewController.swift */; };
@@ -127,6 +128,7 @@
 /* Begin PBXFileReference section */
 		290F8C4A1DA8A350007237AE /* TabBarController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TabBarController.swift; sourceTree = "<group>"; };
 		290F8C4C1DA8A728007237AE /* UIVisualViewEffect.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = UIVisualViewEffect.swift; sourceTree = "<group>"; };
+		290F8C4E1DA9318A007237AE /* FeaturedStreamCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FeaturedStreamCell.swift; sourceTree = "<group>"; };
 		29DA0B231CFA031600E30ADE /* STMTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = STMTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		29DA0B251CFA031600E30ADE /* STMTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = STMTests.swift; sourceTree = "<group>"; };
 		29DA0B271CFA031600E30ADE /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
@@ -508,6 +510,7 @@
 				EA24C0621C683F8300FE4DD0 /* MCSwipeCell.swift */,
 				EA4E49471C613F7C00CB40D7 /* HostStreamCell.swift */,
 				EA209DA91C8292A800A22BC4 /* DashboardItemCell.swift */,
+				290F8C4E1DA9318A007237AE /* FeaturedStreamCell.swift */,
 				EA86DCFF1CCC281600064040 /* TimelineItemCell.swift */,
 				EAE063111C7E94D000C86823 /* CommentCell.swift */,
 				EA6F5B8C1CD224A400C9638D /* UserCommentCell.swift */,
@@ -914,6 +917,7 @@
 				EA2898BA1CD4DD8F0025F43B /* ConvoCell.swift in Sources */,
 				EA209DAA1C8292A800A22BC4 /* DashboardItemCell.swift in Sources */,
 				EA4F49601C5EBFA000103559 /* YBAudioFilePlayer.m in Sources */,
+				290F8C4F1DA9318A007237AE /* FeaturedStreamCell.swift in Sources */,
 				EA09CAD21C5C85AF0067FF6A /* CreateAccountViewController.swift in Sources */,
 				EA09CAAD1C5C41510067FF6A /* AppDelegate.swift in Sources */,
 				EA4F495F1C5EBFA000103559 /* YBAudioException.m in Sources */,

@@ -186,8 +186,12 @@ struct Constants {
         }
 
         struct Color {
-            static let tint = RGB(92, g: 38, b: 254)
+            static let tint = RGB(122, g: 86, b: 229) //RGB(92, g: 38, b: 254)
             static let tint2 = RGB(122, g: 86, b: 229)
+            static let tint3 = RGB(82, g: 87, b: 114) // blue
+            static let tint4 = RGB(214, g: 214, b: 220) // light gray
+            static let tint5 = RGB(34, g: 38, b: 51) // dark blue
+
             static let gray = RGB(172)
             static let disabled = RGB(234, g: 234, b: 234)
             static let off = RGB(150, g: 150, b: 150)
