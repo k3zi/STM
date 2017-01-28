@@ -731,6 +731,7 @@
 						CreatedOnToolsVersion = 7.3;
 						DevelopmentTeam = FYHEVSXTTV;
 						LastSwiftMigration = 0800;
+						ProvisioningStyle = Manual;
 						SystemCapabilities = {
 							com.apple.BackgroundModes = {
 								enabled = 1;
@@ -1109,16 +1110,18 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_ENTITLEMENTS = STM/STM.entitlements;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
-				CURRENT_PROJECT_VERSION = 2140;
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Distribution";
+				CURRENT_PROJECT_VERSION = 2141;
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				DEVELOPMENT_TEAM = FYHEVSXTTV;
 				INFOPLIST_FILE = STM/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 9.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				OTHER_SWIFT_FLAGS = "$(inherited) \"-D\" \"COCOAPODS\" -DDEBUG";
 				PRODUCT_BUNDLE_IDENTIFIER = com.stormedgeapps.streamtome;
 				PRODUCT_NAME = STM;
-				PROVISIONING_PROFILE = "";
+				PROVISIONING_PROFILE = "98802545-0e48-4587-8319-f298ff9f778c";
+				PROVISIONING_PROFILE_SPECIFIER = "match AppStore com.stormedgeapps.streamtome";
 				RESOURCES_TARGETED_DEVICE_FAMILY = "";
 				SWIFT_OBJC_BRIDGING_HEADER = "STM/Extras/STM-Bridging-Header.h";
 				SWIFT_VERSION = 3.0;
@@ -1135,15 +1138,17 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_ENTITLEMENTS = STM/STM.entitlements;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
-				CURRENT_PROJECT_VERSION = 2140;
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Distribution";
+				CURRENT_PROJECT_VERSION = 2141;
+				DEVELOPMENT_TEAM = FYHEVSXTTV;
 				INFOPLIST_FILE = STM/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 9.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				OTHER_SWIFT_FLAGS = "$(inherited) \"-D\" \"COCOAPODS\"";
 				PRODUCT_BUNDLE_IDENTIFIER = com.stormedgeapps.streamtome;
 				PRODUCT_NAME = STM;
-				PROVISIONING_PROFILE = "";
+				PROVISIONING_PROFILE = "98802545-0e48-4587-8319-f298ff9f778c";
+				PROVISIONING_PROFILE_SPECIFIER = "match AppStore com.stormedgeapps.streamtome";
 				RESOURCES_TARGETED_DEVICE_FAMILY = "";
 				SWIFT_OBJC_BRIDGING_HEADER = "STM/Extras/STM-Bridging-Header.h";
 				SWIFT_VERSION = 3.0;
