@@ -10,7 +10,7 @@ import Foundation
 import CoreLocation
 import CryptoSwift
 
-//MARK: Constants
+// MARK: Constants
 //swiftlint:disable nesting
 //swiftlint:disable type_name
 
@@ -39,7 +39,7 @@ struct Constants {
 	static let Settings = UserDefaults.standard
 
 	struct Config {
-        static let apiVersion = "1"
+        static let apiVersion = "2"
 
         static let siteBaseURL = "https://stm.io"
         /*#if DEBUG
@@ -111,8 +111,8 @@ struct Constants {
                 }
             }
 
-            if let parameters = parameters {
-                request.httpBody = try! JSONSerialization.data(withJSONObject: parameters)
+            if let parameters = parameters, let body = try? JSONSerialization.data(withJSONObject: parameters) {
+                request.httpBody = body
             }
 
             Alamofire.request(request)
@@ -143,8 +143,8 @@ struct Constants {
                 }
             }
 
-            if let parameters = parameters {
-                request.httpBody = try! JSONSerialization.data(withJSONObject: parameters)
+            if let parameters = parameters, let body = try? JSONSerialization.data(withJSONObject: parameters) {
+                request.httpBody = body
             }
 
             Alamofire.request(request)

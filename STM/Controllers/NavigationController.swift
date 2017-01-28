@@ -31,7 +31,7 @@ class NavigationController: UINavigationController, UINavigationControllerDelega
         visualEffectView.autoPinEdge(toSuperviewEdge: .top, withInset: -20)
     }
 
-    //MARK: Styling
+    // MARK: Styling
     func imageLayerForGradientBackground() -> UIImage {
         var updatedFrame = self.navigationBar.bounds
         updatedFrame.size.height += 20

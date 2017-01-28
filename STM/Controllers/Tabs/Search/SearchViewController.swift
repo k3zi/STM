@@ -55,7 +55,9 @@ class SearchViewController: KZViewController, UISearchBarDelegate, UIViewControl
     override func setupConstraints() {
         super.setupConstraints()
 
-        searchBar.autoPinEdgesToSuperviewEdges(with: UIEdgeInsets.zero, excludingEdge: .bottom)
+        searchBar.autoPin(toTopLayoutGuideOf: self, withInset: 0)
+        searchBar.autoPinEdge(toSuperviewEdge: .left)
+        searchBar.autoPinEdge(toSuperviewEdge: .right)
 
         tableView.autoPinEdge(.top, to: .bottom, of: searchBar)
         tableView.autoPinEdge(toSuperviewEdge: .left)
@@ -176,7 +178,7 @@ class SearchViewController: KZViewController, UISearchBarDelegate, UIViewControl
         searchBar.resignFirstResponder()
     }
 
-    //MARK: UIViewController Previewing Delegate
+    // MARK: UIViewController Previewing Delegate
 
     func previewingContext(_ previewingContext: UIViewControllerPreviewing, viewControllerForLocation location: CGPoint) -> UIViewController? {
         guard let indexPath = tableView.indexPathForRow(at: location), let cell = tableView.cellForRow(at: indexPath) else {

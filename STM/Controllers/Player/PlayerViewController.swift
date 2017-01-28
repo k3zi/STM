@@ -13,7 +13,7 @@ import MediaPlayer
 import StreamingKit
 import MessageUI
 
-//MARK: Variables
+// MARK: Variables
 class PlayerViewController: KZViewController, UISearchBarDelegate, UIViewControllerPreviewingDelegate, MFMailComposeViewControllerDelegate {
     var streamType: StreamType?
     var stream: STMStream?
@@ -572,7 +572,7 @@ class PlayerViewController: KZViewController, UISearchBarDelegate, UIViewControl
         return super.tableViewNoDataText(tableView)
     }
 
-    //MARK: UIViewController Previewing Delegate
+    // MARK: UIViewController Previewing Delegate
 
     func previewingContext(_ previewingContext: UIViewControllerPreviewing, viewControllerForLocation location: CGPoint) -> UIViewController? {
         guard let indexPath = commentsTableView.indexPathForRow(at: location), let cell = commentsTableView.cellForRow(at: indexPath) else {
@@ -619,7 +619,7 @@ class PlayerViewController: KZViewController, UISearchBarDelegate, UIViewControl
 //**********************************************************************
 //**********************************************************************
 
-//MARK: Comment Updates
+// MARK: Comment Updates
 extension PlayerViewController: MessageToolbarDelegate {
 
     /**
@@ -789,7 +789,7 @@ extension PlayerViewController: MessageToolbarDelegate {
 //**********************************************************************
 //**********************************************************************
 
-//MARK: Initialize Stream
+// MARK: Initialize Stream
 extension PlayerViewController: STKAudioPlayerDelegate {
 
     /**
@@ -983,7 +983,7 @@ extension PlayerViewController: STKAudioPlayerDelegate {
         }
     }
 
-    //MARK: Audio Player Delegate
+    // MARK: Audio Player Delegate
 
     func audioPlayer(_ audioPlayer: STKAudioPlayer, stateChanged state: STKAudioPlayerState, previousState: STKAudioPlayerState) {
         let active = state == .playing || state == .buffering
@@ -1018,7 +1018,7 @@ extension PlayerViewController: STKAudioPlayerDelegate {
 //**********************************************************************
 //**********************************************************************
 
-//MARK: Audio Playback
+// MARK: Audio Playback
 extension PlayerViewController {
     func play() {
         self.connectGlobalStream()

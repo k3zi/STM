@@ -68,7 +68,7 @@ class DashboardItemCell: KZTableViewCell, UICollectionViewDelegate, UICollection
         }
     }
 
-    //MARK: UICollectionView
+    // MARK: UICollectionView
 
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
         if let item = model as? STMDashboardItem {

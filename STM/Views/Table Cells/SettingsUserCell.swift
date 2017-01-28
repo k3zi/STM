@@ -97,7 +97,7 @@ class SettingsUserCell: KZTableViewCell, UITextFieldDelegate, UITextViewDelegate
         self.endEditing(true)
     }
 
-    //MARK: UITextView Delegate
+    // MARK: UITextView Delegate
     func textViewDidEndEditing(_ textView: UITextView) {
         guard let text = textView.text else {
             return
@@ -126,7 +126,7 @@ class SettingsUserCell: KZTableViewCell, UITextFieldDelegate, UITextViewDelegate
         }
     }
 
-    //MARK: UITextField Delegate
+    // MARK: UITextField Delegate
 
     func textFieldDidEndEditing(_ textField: UITextField) {
         textFieldShouldReturn(textField)

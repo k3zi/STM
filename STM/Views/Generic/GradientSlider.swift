@@ -13,7 +13,7 @@ import UIKit
     static var defaultThickness: CGFloat = 2.0
     static var defaultThumbSize: CGFloat = 28.0
 
-    //MARK: Properties
+    // MARK: Properties
     @IBInspectable var hasRainbow: Bool = false {
         //Uses saturation & lightness from minColor
         didSet {
@@ -151,7 +151,7 @@ import UIKit
         }
     }
 
-    //MARK: - Convienience Colors
+    // MARK: - Convienience Colors
 
     func setGradientForHueWithSaturation(_ saturation: CGFloat, brightness: CGFloat) {
         minColor = UIColor(hue: 0.0, saturation: saturation, brightness: brightness, alpha: 1.0)
@@ -195,7 +195,7 @@ import UIKit
     }
 
 
-    //MARK: - Private Properties
+    // MARK: - Private Properties
 
     fileprivate var _value: CGFloat = 0.0 // default 0.0. this value will be pinned to min/max
 
@@ -236,7 +236,7 @@ import UIKit
         return iconLayer
     }()
 
-    //MARK: - Init
+    // MARK: - Init
 
     override init(frame: CGRect) {
         super.init(frame: frame)
@@ -289,7 +289,7 @@ import UIKit
         _thumbLayer.addSublayer(_thumbIconLayer)
     }
 
-    //MARK: - Layout
+    // MARK: - Layout
 
     override var intrinsicContentSize : CGSize {
         return CGSize(width: UIViewNoIntrinsicMetric, height: thumbSize)
@@ -341,7 +341,7 @@ import UIKit
 
 
 
-    //MARK: - Touch Tracking
+    // MARK: - Touch Tracking
 
     override func beginTracking(_ touch: UITouch, with event: UIEvent?) -> Bool {
         let pt = touch.location(in: self)
@@ -377,7 +377,7 @@ import UIKit
 
     }
 
-    //MARK: - Private Functions
+    // MARK: - Private Functions
 
     fileprivate func updateThumbPosition(_ animated: Bool) {
         let diff = maximumValue - minimumValue

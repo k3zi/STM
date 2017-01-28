@@ -114,7 +114,11 @@ class ProfileViewController: KZViewController, UIViewControllerPreviewingDelegat
         followingStatView.addGestureRecognizer(tap1)
         let tap2 = UITapGestureRecognizer(target: self, action: #selector(viewUserFollowers))
         followersStatView.addGestureRecognizer(tap2)
-        [commentsStatView, followersStatView, followingStatView, segmentControl].forEach({ headerView.addSubview($0 as! UIView) })
+        [commentsStatView, followersStatView, followingStatView, segmentControl].forEach({
+            if let x = $0 {
+                headerView.addSubview(x)
+            }
+        })
 
         tableView.delegate = self
         tableView.dataSource = self
@@ -264,7 +268,7 @@ class ProfileViewController: KZViewController, UIViewControllerPreviewingDelegat
         self.tableView.reloadData()
     }
 
-    //MARK: Table View Delegate
+    // MARK: Table View Delegate
 
     override func tableViewCellClass(_ tableView: UITableView, indexPath: IndexPath?) -> KZTableViewCell.Type {
         let value = Int(segmentControl?.selectedSegmentIndex ?? 27)
@@ -355,7 +359,7 @@ class ProfileViewController: KZViewController, UIViewControllerPreviewingDelegat
         self.navigationController?.navigationBar.layer.shadowOpacity = shadowOffset == 0.0 ? 0.0 : 0.6
     }
 
-    //MARK: UIViewController Previewing Delegate
+    // MARK: UIViewController Previewing Delegate
 
     func previewingContext(_ previewingContext: UIViewControllerPreviewing, viewControllerForLocation location: CGPoint) -> UIViewController? {
         guard let indexPath = tableView.indexPathForRow(at: location), let cell = tableView.cellForRow(at: indexPath) else {
@@ -400,7 +404,7 @@ class ProfileViewController: KZViewController, UIViewControllerPreviewingDelegat
         }
     }
 
-    //MARK: Handdle Data
+    // MARK: Handdle Data
 
     func fillUserData() {
         self.navigationItem.title = isOwner ? "My Profile (@\(user.username))" : "@\(user.username)'s Profile"
@@ -519,7 +523,7 @@ class ProfileViewController: KZViewController, UIViewControllerPreviewingDelegat
         }
     }
 
-    //MARK: Handle Actions
+    // MARK: Handle Actions
 
     func editProfile() {
         let vc = ProfileSettingsViewController()

@@ -15,18 +15,28 @@ struct STMStreamMeta: Decodable {
     let title: String
     let album: String?
     let image: UIImage?
+    let imageFile: String?
 
     // MARK: - Deserialization
 
     init?(json: JSON) {
-        guard let title: String = "title" <~~ json else {
+        guard let title: String = ("title" <~~ json ?? "meta_title" <~~ json) else {
             return nil
         }
 
-        self.artist = "artist" <~~ json
+        self.artist = "artist" <~~ json ?? "meta_artist" <~~ json
         self.title = title
-        self.album = "album" <~~ json
+        self.album = "album" <~~ json ?? "meta_album" <~~ json
+        self.imageFile = "meta_image_file" <~~ json
         self.image = Decoder.decodeImageFromBase64("image", json: json)
+    }
+
+    func imageURL() -> URL? {
+        if let imageFile = imageFile {
+            return URL(string: Constants.Config.apiBaseURL + "/resource/" + imageFile)
+        }
+
+        return nil
     }
 
 }

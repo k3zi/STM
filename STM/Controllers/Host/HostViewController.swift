@@ -15,7 +15,7 @@ struct HostSettings {
 	var crossfadeDuration = Float(5.0)
 }
 
-//MARK: Variables
+// MARK: Variables
 class HostViewController: KZViewController, UISearchBarDelegate, UIViewControllerPreviewingDelegate, UITextFieldDelegate, UITextViewDelegate {
 	var streamType: StreamType?
 	var stream: STMStream?
@@ -1214,7 +1214,7 @@ class HostViewController: KZViewController, UISearchBarDelegate, UIViewControlle
 		searchBar.resignFirstResponder()
 	}
 
-    //MARK: UITextView Delegate
+    // MARK: UITextView Delegate
     func textViewDidEndEditing(_ textView: UITextView) {
         guard let text = textView.text else {
             return
@@ -1229,7 +1229,7 @@ class HostViewController: KZViewController, UISearchBarDelegate, UIViewControlle
         }
     }
 
-    //MARK: UITextField Delegate
+    // MARK: UITextField Delegate
 
     func textFieldDidEndEditing(_ textField: UITextField) {
         textFieldShouldReturn(textField)
@@ -1252,7 +1252,7 @@ class HostViewController: KZViewController, UISearchBarDelegate, UIViewControlle
         return false
     }
 
-    //MARK: UIViewController Previewing Delegate
+    // MARK: UIViewController Previewing Delegate
 
     func previewingContext(_ previewingContext: UIViewControllerPreviewing, viewControllerForLocation location: CGPoint) -> UIViewController? {
         guard let indexPath = commentsTableView.indexPathForRow(at: location), let cell = commentsTableView.cellForRow(at: indexPath) else {
@@ -1345,7 +1345,7 @@ class HostViewController: KZViewController, UISearchBarDelegate, UIViewControlle
 //**********************************************************************
 //**********************************************************************
 
-//MARK: Comment Updates
+// MARK: Comment Updates
 extension HostViewController: MessageToolbarDelegate {
 
 	/**
@@ -1454,7 +1454,7 @@ extension HostViewController: MessageToolbarDelegate {
 //**********************************************************************
 //**********************************************************************
 
-//MARK: Initialize Stream
+// MARK: Initialize Stream
 extension HostViewController {
 
     /**
@@ -1568,7 +1568,7 @@ extension HostViewController {
 //**********************************************************************
 //**********************************************************************
 
-//MARK: Audio Data
+// MARK: Audio Data
 extension HostViewController: EZOutputDataSource {
 
     /**
@@ -1633,25 +1633,52 @@ extension HostViewController: EZOutputDataSource {
 		EZOutput.shared().aacEncode = true
         AppDelegate.del().setUpAudioSession(true)
 
-        DispatchQueue.global(priority: DispatchQueue.GlobalQueuePriority.low).async {
-            self.songs.removeAll()
-            let predicate1 = MPMediaPropertyPredicate(value: MPMediaType.anyAudio.rawValue, forProperty: MPMediaItemPropertyMediaType)
-            let predicate12 = MPMediaPropertyPredicate(value: 0, forProperty: MPMediaItemPropertyIsCloudItem)
-            let query = MPMediaQuery(filterPredicates: [predicate1, predicate12])
-            var songs = [Any]()
-            if let items = query.items {
-                for item in items {
-                    let newItem = KZPlayerItem(item: item)
-                    if newItem.assetURL.characters.count > 0 {
-                        songs.append(newItem)
+        if #available(iOS 9.3, *) {
+            MPMediaLibrary.requestAuthorization { (status) in
+                if status == .authorized {
+                    DispatchQueue.global(priority: DispatchQueue.GlobalQueuePriority.low).async {
+                        self.songs.removeAll()
+                        let predicate1 = MPMediaPropertyPredicate(value: MPMediaType.anyAudio.rawValue, forProperty: MPMediaItemPropertyMediaType)
+                        let predicate12 = MPMediaPropertyPredicate(value: 0, forProperty: MPMediaItemPropertyIsCloudItem)
+                        let query = MPMediaQuery(filterPredicates: [predicate1, predicate12])
+                        var songs = [Any]()
+                        if let items = query.items {
+                            for item in items {
+                                let newItem = KZPlayerItem(item: item)
+                                if newItem.assetURL.characters.count > 0 {
+                                    songs.append(newItem)
+                                }
+                            }
+                        }
+                        
+                        DispatchQueue.main.async(execute: {
+                            self.songs = songs
+                            self.songsTableView.reloadData()
+                        })
                     }
                 }
             }
+        } else {
+            DispatchQueue.global(priority: DispatchQueue.GlobalQueuePriority.low).async {
+                self.songs.removeAll()
+                let predicate1 = MPMediaPropertyPredicate(value: MPMediaType.anyAudio.rawValue, forProperty: MPMediaItemPropertyMediaType)
+                let predicate12 = MPMediaPropertyPredicate(value: 0, forProperty: MPMediaItemPropertyIsCloudItem)
+                let query = MPMediaQuery(filterPredicates: [predicate1, predicate12])
+                var songs = [Any]()
+                if let items = query.items {
+                    for item in items {
+                        let newItem = KZPlayerItem(item: item)
+                        if newItem.assetURL.characters.count > 0 {
+                            songs.append(newItem)
+                        }
+                    }
+                }
 
-            DispatchQueue.main.async(execute: {
-                self.songs = songs
-                self.songsTableView.reloadData()
-            })
+                DispatchQueue.main.async(execute: {
+                    self.songs = songs
+                    self.songsTableView.reloadData()
+                })
+            }
         }
 
 		EZOutput.shared().outputDataSource = self
@@ -1774,7 +1801,7 @@ extension HostViewController: EZOutputDataSource {
 //**********************************************************************
 //**********************************************************************
 
-//MARK: Audio Playback
+// MARK: Audio Playback
 extension HostViewController: EZAudioFileDelegate {
 	func play() {
         EZOutput.shared().startPlayback()

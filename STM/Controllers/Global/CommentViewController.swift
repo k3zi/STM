@@ -208,7 +208,7 @@ class CommentViewController: KZViewController, UIViewControllerPreviewingDelegat
         }
     }
 
-    //MARK: UIViewController Previewing Delegate
+    // MARK: UIViewController Previewing Delegate
 
     func previewingContext(_ previewingContext: UIViewControllerPreviewing, viewControllerForLocation location: CGPoint) -> UIViewController? {
         guard let indexPath = tableView.indexPathForRow(at: location), let cell = tableView.cellForRow(at: indexPath) else {

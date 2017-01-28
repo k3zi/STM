@@ -2,6 +2,10 @@
 <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
 <plist version="1.0">
 <dict>
+	<key>NSAppleMusicUsageDescription</key>
+	<string>STM allows playback of music during your stream. Playback however is not required.</string>
+	<key>NSMicrophoneUsageDescription</key>
+	<string>STM allows you to speak over your stream whether to host a podcast or speak to your listeners.</string>
 	<key>AudioComponents</key>
 	<array>
 		<dict>

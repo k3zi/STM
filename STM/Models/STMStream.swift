@@ -19,6 +19,9 @@ struct STMStream: Decodable {
     let securityHash: String?
     var colorHex: String?
 
+    let meta: STMStreamMeta?
+    let user: STMUser?
+
     // MARK: - Deserialization
 
     init?(json: JSON) {
@@ -33,6 +36,8 @@ struct STMStream: Decodable {
         self.passcode = "passcode" <~~ json
         self.securityHash = "securityHash" <~~ json
         self.colorHex = "colorHex" <~~ json
+        self.meta = "meta" <~~ json
+        self.user = "user" <~~ json
     }
 
     func alphaID() -> String {

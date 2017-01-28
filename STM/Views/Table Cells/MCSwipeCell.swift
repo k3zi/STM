@@ -82,9 +82,9 @@ class MCSwipeCell: KZTableViewCell {
         _panGestureRecognizer.delegate = self
     }
 
-    //MARK: Init
+    // MARK: Init
 
-    //MARK: Prepare For Reuse
+    // MARK: Prepare For Reuse
 
     override func prepareForReuse() {
         super.prepareForReuse()
@@ -113,7 +113,7 @@ class MCSwipeCell: KZTableViewCell {
         completionBlock4 = nil
     }
 
-    //MARK: View Manipulation
+    // MARK: View Manipulation
 
     func setupSwipingView() {
         if _contentScreenshotView != nil {
@@ -163,7 +163,7 @@ class MCSwipeCell: KZTableViewCell {
         }
     }
 
-    //MARK: Swipe Config
+    // MARK: Swipe Config
 
     func setSwipeGestureWith(_ view: UIView, color: UIColor, mode: MCSwipeTableViewCellMode = .none, state: MCSwipeTableViewCellState = .state1, completionBlock: @escaping MCSwipeCompletionBlock) {
         if state == .state1 {
@@ -195,7 +195,7 @@ class MCSwipeCell: KZTableViewCell {
         }
     }
 
-    //MARK: Gestures
+    // MARK: Gestures
 
     func handlePanGestureRecognizer(_ gesture: UIPanGestureRecognizer) {
         if _isExited {
@@ -266,7 +266,7 @@ class MCSwipeCell: KZTableViewCell {
         return false
     }
 
-    //MARK: Movement
+    // MARK: Movement
 
     func animateWithOffset(_ offset: CGFloat) {
         let percentage = percentageWithOffset(offset, relativeToWidth: (self.bounds).width)
@@ -407,7 +407,7 @@ class MCSwipeCell: KZTableViewCell {
         return true
     }
 
-    //MARK: Percentage
+    // MARK: Percentage
 
     func offsetWithPercentage(_ percentage: CGFloat, relativeToWidth width: CGFloat) -> CGFloat {
         var offset = percentage * width

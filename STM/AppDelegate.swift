@@ -12,6 +12,7 @@ import Fabric
 import TwitterKit
 import Crashlytics
 import KILabel
+
 fileprivate func < <T : Comparable>(lhs: T?, rhs: T?) -> Bool {
   switch (lhs, rhs) {
   case let (l?, r?):
@@ -60,7 +61,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 		return true
 	}
 
-    //MARK: Configure App
+    // MARK: Configure App
 
     func configureApp() {
         UserDefaults.standard.setSecret(Constants.Config.userDefaultsSecret)
@@ -116,8 +117,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         updateBadgeCount()
     }
 
-    //MARK: Handle Open Requests
-
+    // MARK: Handle Open Requests
 
     func application(_ application: UIApplication, open url: URL, sourceApplication: String?, annotation: Any) -> Bool {
         return self.application(application, handleOpen: url)
@@ -185,7 +185,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         return true
     }
 
-    //MARK: APNS Notifications
+    // MARK: APNS Notifications
 
     func updateBadgeCount(_ completionHandler: (() -> Void)? = nil) {
         guard let tabs = self.window?.rootViewController as? UITabBarController else {
@@ -253,7 +253,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         return count
     }
 
-    //MARK: Login User
+    // MARK: Login User
 
 	func createTabSet() -> UITabBarController {
 		let tabVC = TabBarController()
@@ -320,7 +320,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 		}
 	}
 
-    //MARK: Handle Stream Popups
+    // MARK: Handle Stream Popups
 
     func presentStreamController(_ vc: UIViewController) {
         self.close()
@@ -344,14 +344,14 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         return false
     }
 
-    //MARK: Handle Label Clicks
+    // MARK: Handle Label Clicks
 
     var userHandleLinkTapHandler: KILinkTapHandler = { (label: KILabel, string: String, range: NSRange) -> Void in
         let username = (string as NSString).substring(with: range) as String
         print(username)
     }
 
-    //MARK: Audio
+    // MARK: Audio
 
     /**
      Start the AVAudioSession
@@ -418,7 +418,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         }
     }
 
-    //MARK: Window Effects
+    // MARK: Window Effects
 
     func topViewController(_ base: UIViewController? = UIApplication.shared.keyWindow?.rootViewController) -> UIViewController? {
         if let nav = base as? UINavigationController {

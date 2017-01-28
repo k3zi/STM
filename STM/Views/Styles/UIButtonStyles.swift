@@ -29,8 +29,8 @@ extension UIButton {
 
     class func styleForDismissButton() -> UIButton {
         let button = ExtendedButton()
-        button.setImage(UIImage(named: "navBarDismissBT"), for: .normal)
-        button.setImage(UIImage(named: "navBarMaximizeBT"), for: .selected)
+        button.setImage(#imageLiteral(resourceName: "miniPlayerDismissBT"), for: .normal)
+        button.setImage(#imageLiteral(resourceName: "miniPlayerMaximizeBT"), for: .selected)
         return button
     }
 

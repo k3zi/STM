@@ -83,17 +83,29 @@ class DashboardViewController: KZViewController, UIViewControllerPreviewingDeleg
     override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         super.tableView(tableView, didSelectRowAt: indexPath)
 
-        guard indexPath.section == 1 else {
-            return
-        }
-
         guard tableViewCellData(tableView, section: indexPath.section).count > 0 else {
             return
         }
 
-        if let comment = tableViewCellData(tableView, section: indexPath.section)[indexPath.row] as? STMComment {
+        let model = tableViewCellData(tableView, section: indexPath.section)[indexPath.row]
+
+        if let comment = model as? STMComment {
             let vc = CommentViewController(comment: comment)
             self.navigationController?.pushViewController(vc, animated: true)
+        } else if let stream = model as? STMStream {
+            guard let topVC = view.window?.rootViewController else {
+                return
+            }
+
+            let vc = PlayerViewController()
+            let activeVC = AppDelegate.del().activeStreamController
+            vc.start(stream, vc: topVC) { (nothing, error) -> Void in
+                if let error = error {
+                    (activeVC ?? topVC).showError(error)
+                } else {
+                    AppDelegate.del().presentStreamController(vc)
+                }
+            }
         }
     }
 
@@ -158,38 +170,27 @@ class DashboardViewController: KZViewController, UIViewControllerPreviewingDeleg
         }
     }
 
-    //MARK: UIViewController Previewing Delegate
+    // MARK: UIViewController Previewing Delegate
 
     func previewingContext(_ previewingContext: UIViewControllerPreviewing, viewControllerForLocation location: CGPoint) -> UIViewController? {
-        guard let indexPath = tableView.indexPathForRow(at: location), let cell = tableView.cellForRow(at: indexPath) else {
+        guard let indexPath = tableView.indexPathForRow(at: location), let cell = tableView.cellForRow(at: indexPath) as? KZTableViewCell else {
             return nil
         }
 
+        let model = cell.model
         var vc: UIViewController?
         previewingContext.sourceRect = cell.frame
 
-        if indexPath.section == 0 {
-            if let itemView = cell.hitTest(cell.convert(location, from: tableView), with: nil) {
-                if let innerCell = itemView.superview as? DashboardItemCollectionCell {
-                    if let stream = innerCell.model as? STMStream {
-                        guard AppDelegate.del().activeStreamController == nil else {
-                            return nil
-                        }
+        if let stream = model as? STMStream {
+            guard AppDelegate.del().activeStreamController == nil else {
+                return nil
+            }
 
-                        let pVC = PlayerViewController()
-                        pVC.isPreviewing = true
-                        pVC.start(stream, vc: self, showHUD: false)
-                        vc = pVC
-                        previewingContext.sourceRect = view.convert(itemView.frame, from: innerCell)
-                    }
-                }
-            }
-        } else if indexPath.section == 1 {
-            if comments.count > indexPath.row {
-                if let comment = comments[indexPath.row] as? STMComment {
-                    vc = CommentViewController(comment: comment)
-                }
-            }
+            let pVC = PlayerViewController()
+            pVC.isPreviewing = true
+            pVC.start(stream, vc: self, showHUD: false)
+            vc = pVC
+            previewingContext.sourceRect = tableView.rectForRow(at: indexPath)
         }
 
         if let vc = vc {

@@ -266,7 +266,7 @@ class CreateStreamViewController: KZViewController {
         }
     }
 
-    //MARK: Table View Delegate
+    // MARK: Table View Delegate
 
     override func tableViewNoDataText(_ tableView: UITableView) -> String {
         return "You haven't created a stream yet"
@@ -301,7 +301,7 @@ class CreateStreamViewController: KZViewController {
         }
     }
 
-    //MARK: Cell Deletion
+    // MARK: Cell Deletion
 
     func tableView(_ tableView: UITableView, canEditRowAtIndexPath indexPath: IndexPath) -> Bool {
         return true
@@ -323,7 +323,7 @@ class CreateStreamViewController: KZViewController {
         }
     }
 
-    //MARK: Data Functions
+    // MARK: Data Functions
 
     override func fetchData() {
         guard let user = AppDelegate.del().currentUser else {

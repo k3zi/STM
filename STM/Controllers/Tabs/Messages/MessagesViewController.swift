@@ -58,7 +58,9 @@ class MessagesViewController: KZViewController, UIViewControllerPreviewingDelega
     override func setupConstraints() {
         super.setupConstraints()
 
-        tableView.autoPinEdgesToSuperviewEdges(with: UIEdgeInsets.zero, excludingEdge: .bottom)
+        tableView.autoPin(toTopLayoutGuideOf: self, withInset: 0)
+        tableView.autoPinEdge(toSuperviewEdge: .left)
+        tableView.autoPinEdge(toSuperviewEdge: .right)
         tableView.autoPin(toBottomLayoutGuideOf: self, withInset: 0)
     }
 
@@ -133,7 +135,7 @@ class MessagesViewController: KZViewController, UIViewControllerPreviewingDelega
         }
     }
 
-    //MARK: UIViewController Previewing Delegate
+    // MARK: UIViewController Previewing Delegate
 
     func previewingContext(_ previewingContext: UIViewControllerPreviewing, viewControllerForLocation location: CGPoint) -> UIViewController? {
         guard let indexPath = tableView.indexPathForRow(at: location), let cell = tableView.cellForRow(at: indexPath) else {
