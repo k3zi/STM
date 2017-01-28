@@ -47,7 +47,6 @@ extension UIVisualEffectView {
         }
     }
 
-
     open override class func initialize() {
         swizzle_setBounds()
     }
@@ -112,11 +111,11 @@ private var before_setBounds: ObjcRawUIVisualEffectViewSelCGRect = { _ in
 
 private let after_setBounds: ObjcRawUIVisualEffectViewSelCGRect = {
     (aSelf, selector, bounds) -> Void in
-    
+
     let oldBounds = aSelf.bounds
-    
+
     before_setBounds(aSelf, selector, bounds)
-    
+
     if oldBounds.size != bounds.size {
         aSelf.setNeedsUpdateMaskLayer()
     }

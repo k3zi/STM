@@ -30,7 +30,6 @@ public func easeInOutCubic(_ tween: FUXTween) -> FUXTween {
     }
 }
 
-
 public func easeInCircular(_ tween: FUXTween) -> FUXTween {
     return FUXTween.easing(Box(tween)) { time in -(sqrtf(1 - time * time) - 1) }
 }
@@ -53,7 +52,6 @@ public func easeInOutCircular(_ tween: FUXTween) -> FUXTween {
     }
 }
 
-
 public func easeInSine(_ tween: FUXTween) -> FUXTween {
     return FUXTween.easing(Box(tween)) { time in 1 - cosf(time * Float(M_PI_2)) }
 }
@@ -65,7 +63,6 @@ public func easeOutSine(_ tween: FUXTween) -> FUXTween {
 public func easeInOutSine(_ tween: FUXTween) -> FUXTween {
     return FUXTween.easing(Box(tween)) { time in -0.5 * (cosf(Float(M_PI) * time) - 1) }
 }
-
 
 public func easeInQuadratic(_ tween: FUXTween) -> FUXTween {
     return FUXTween.easing(Box(tween)) { time in time * time }
@@ -87,7 +84,6 @@ public func easeInOutQuadratic(_ tween: FUXTween) -> FUXTween {
         return -0.5 * (t * (t - 2) - 1)
     }
 }
-
 
 public func easeInQuartic(_ tween: FUXTween) -> FUXTween {
     return FUXTween.easing(Box(tween)) { time in time * time * time * time }
@@ -111,7 +107,6 @@ public func easeInOutQuartic(_ tween: FUXTween) -> FUXTween {
     }
 }
 
-
 public func easeInQuintic(_ tween: FUXTween) -> FUXTween {
     return FUXTween.easing(Box(tween)) { time in time * time * time * time * time }
 }
@@ -133,7 +128,6 @@ public func easeInOutQuintic(_ tween: FUXTween) -> FUXTween {
         return -0.5 * (t * t * t * t * t - 2)
     }
 }
-
 
 public func easeInExpo(_ tween: FUXTween) -> FUXTween {
     return FUXTween.easing(Box(tween)) { time in time == 0 ? 0 : powf(2, 10 * (time - 1)) }
@@ -160,7 +154,6 @@ public func easeInOutExpo(_ tween: FUXTween) -> FUXTween {
     }
 }
 
-
 let easeBackSValue: Float = 1.70158
 
 public func easeInBack(_ tween: FUXTween) -> FUXTween {
@@ -185,7 +178,6 @@ public func easeInOutBack(_ tween: FUXTween) -> FUXTween {
         return 0.5 * (t * t * ((s + 1) * t + s) + 2)
     }
 }
-
 
 public func easeInBounce(_ tween: FUXTween) -> FUXTween {
     return FUXTween.easing(Box(tween)) { time in
@@ -249,7 +241,6 @@ func easeOutBounceWithTime(_ time: Float, duration: Float) -> Float {
         return Float(7.5625 * t * t + 0.984375)
     }
 }
-
 
 var easeElasticPValue: Float = 0.3
 var easeElasticSValue: Float = 0.3 / 4

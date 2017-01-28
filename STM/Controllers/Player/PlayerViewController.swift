@@ -381,7 +381,7 @@ class PlayerViewController: KZViewController, UISearchBarDelegate, UIViewControl
         }
 
         let streamURL = stream.shareURL()
-        let vc = UIActivityViewController(activityItems: [streamURL], applicationActivities: nil)
+        let vc = UIActivityViewController(activityItems: [streamURL as Any], applicationActivities: nil)
         self.present(vc, animated: true, completion: nil)
     }
 
@@ -806,7 +806,7 @@ extension PlayerViewController: STKAudioPlayerDelegate {
 
         func innerStart() {
             hud = M13ProgressHUD(progressView: progressView)
-            if let hud = hud , showHUD {
+            if let hud = hud, showHUD {
                 hud.frame = (AppDelegate.del().window?.bounds)!
                 hud.progressViewSize = CGSize(width: 60, height: 60)
                 hud.animationPoint = CGPoint(x: UIScreen.main.bounds.size.width / 2, y: UIScreen.main.bounds.size.height / 2)
@@ -993,7 +993,7 @@ extension PlayerViewController: STKAudioPlayerDelegate {
             } else {
                 self.gradientColorView.backgroundColor = Constants.UI.Color.off.withAlphaComponent(0.66)
             }
-        }) 
+        })
     }
 
     func audioPlayer(_ audioPlayer: STKAudioPlayer, didStartPlayingQueueItemId queueItemId: NSObject) {

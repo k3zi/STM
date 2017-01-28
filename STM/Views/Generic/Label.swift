@@ -24,7 +24,7 @@ class Label: UILabel {
         super.drawText(in: UIEdgeInsetsInsetRect(rect, insets))
     }
 
-    override var intrinsicContentSize : CGSize {
+    override var intrinsicContentSize: CGSize {
         var intrinsicSuperViewContentSize = super.intrinsicContentSize
         intrinsicSuperViewContentSize.height += topInset + bottomInset
         intrinsicSuperViewContentSize.width += leftInset + rightInset

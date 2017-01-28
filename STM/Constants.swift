@@ -33,7 +33,6 @@ extension Initializer {
 // Enable all NSObjects to have "with"
 extension NSObject: Initializer {}
 
-
 struct Constants {
 
 	static let Settings = UserDefaults.standard

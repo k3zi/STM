@@ -77,13 +77,15 @@ class ConversationViewController: KZViewController, MessageToolbarDelegate {
     }
 
     func goToProfile() {
-        if let users = convo.users {
-            for user in users {
-                if user.id != AppDelegate.del().currentUser?.id {
-                    let vc = ProfileViewController(user: user)
-                    self.navigationController?.pushViewController(vc, animated: true)
-                    return
-                }
+        guard let users = convo.users else {
+            return
+        }
+
+        for user in users {
+            if user.id != AppDelegate.del().currentUser?.id {
+                let vc = ProfileViewController(user: user)
+                self.navigationController?.pushViewController(vc, animated: true)
+                return
             }
         }
     }
@@ -115,13 +117,15 @@ class ConversationViewController: KZViewController, MessageToolbarDelegate {
     }
 
     func didBeginEditing() {
-        //tableView.scrollToBottom()
+        tableView.scrollToBottom()
     }
 
     override func setupConstraints() {
         super.setupConstraints()
 
-        tableView.autoPinEdgesToSuperviewEdges(with: UIEdgeInsets.zero, excludingEdge: .bottom)
+        tableView.autoPin(toTopLayoutGuideOf: self, withInset: 0)
+        tableView.autoPinEdge(toSuperviewEdge: .left)
+        tableView.autoPinEdge(toSuperviewEdge: .right)
 
         commentToolbar.autoPinEdge(.top, to: .bottom, of: tableView)
         commentToolbar.autoPinEdge(toSuperviewEdge: .left)

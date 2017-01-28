@@ -848,7 +848,7 @@ class HostViewController: KZViewController, UISearchBarDelegate, UIViewControlle
 	func didChangeSegmentIndex() {
 		UIView.animate(withDuration: 0.4, animations: { () -> Void in
 			self.switcherScrollView.contentOffset = CGPoint(x: CGFloat(self.switcherControl.selectedSegmentIndex) * self.switcherScrollView.frame.width, y: 0)
-		}) 
+		})
 
 		view.endEditing(true)
 	}
@@ -963,8 +963,6 @@ class HostViewController: KZViewController, UISearchBarDelegate, UIViewControlle
 		} else {
 			songInfoHolderViewTopPadding?.constant = 10
 		}
-
-
 
 		songInfoHolderView.layoutIfNeeded()
 	}
@@ -1650,7 +1648,7 @@ extension HostViewController: EZOutputDataSource {
                                 }
                             }
                         }
-                        
+
                         DispatchQueue.main.async(execute: {
                             self.songs = songs
                             self.songsTableView.reloadData()
@@ -1696,7 +1694,6 @@ extension HostViewController: EZOutputDataSource {
             MPRemoteCommandCenter.shared().pauseCommand.addTarget(self, action: #selector(HostViewController.stop))
             MPRemoteCommandCenter.shared().nextTrackCommand.addTarget(self, action: #selector(getter: HostViewController.next))
         }
-
 
 		MPRemoteCommandCenter.shared().pauseCommand.isEnabled = enabled
 		MPRemoteCommandCenter.shared().nextTrackCommand.isEnabled = enabled

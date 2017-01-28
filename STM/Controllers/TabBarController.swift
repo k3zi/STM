@@ -60,11 +60,13 @@ class TabBarController: UITabBarController, UITabBarControllerDelegate {
         return image!
     }
 
-    override func viewWillAppear(_ animated: Bool) {
-        super.viewWillAppear(animated)
+    override func viewWillLayoutSubviews() {
+        super.viewWillLayoutSubviews()
 
-        buttonBlur.cornerRadius = buttonBlur.frame.width / 2
-        buttonBlur.layer.cornerRadius = buttonBlur.frame.width / 2
+        buttonBlur.cornerRadius = (tabBar.frame.height*1.224) / 2
+        buttonBlur.layer.cornerRadius = (tabBar.frame.height*1.224) / 2
+
+        middleLogo.layer.cornerRadius = (tabBar.frame.height*1.224) / 2
     }
 
     override func tabBar(_ tabBar: UITabBar, didSelect item: UITabBarItem) {

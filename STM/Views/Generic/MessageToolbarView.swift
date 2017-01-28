@@ -30,14 +30,14 @@ class MessageToolbarView: UIView, HPGrowingTextViewDelegate {
 		self.addSubview(toolBarContainer)
 
 		toolBar.isScrollable = false
-		toolBar.contentInset = UIEdgeInsetsMake(0, 5, 0, 5)
+		toolBar.contentInset = UIEdgeInsets(top: 0, left: 5, bottom: 0, right: 5)
 		toolBar.minNumberOfLines = 1
 		toolBar.maxNumberOfLines = 3
 		toolBar.returnKeyType = .default
 		toolBar.delegate = self
 		toolBar.font = UIFont.systemFont(ofSize: 15)
 		toolBar.textColor = RGB(255)
-		toolBar.internalTextView.scrollIndicatorInsets = UIEdgeInsetsMake(5, 0, 5, 0)
+		toolBar.internalTextView.scrollIndicatorInsets = UIEdgeInsets(top: 5, left: 0, bottom: 5, right: 0)
 		toolBar.backgroundColor = UIColor.clear
 		toolBar.placeholder = "Type a new comment..."
 		heightTextContConstraint = toolBar.autoSetDimension(.height, toSize: 30)
@@ -71,7 +71,7 @@ class MessageToolbarView: UIView, HPGrowingTextViewDelegate {
 		UIView.animate(withDuration: 0.4, animations: { () -> Void in
 			self.heightTextContConstraint?.constant = CGFloat(height)
 			self.layoutIfNeeded()
-		}) 
+		})
 	}
 
 	func growingTextView(_ growingTextView: HPGrowingTextView!, shouldChangeTextIn range: NSRange, replacementText text: String!) -> Bool {

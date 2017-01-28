@@ -23,9 +23,10 @@ class NavigationController: UINavigationController, UINavigationControllerDelega
         self.navigationBar.backgroundColor = UIColor.clear
 
         let visualEffectView = UIVisualEffectView(effect: UIBlurEffect(style: .dark))
+        visualEffectView.isUserInteractionEnabled = false
         visualEffectView.frame = self.navigationBar.bounds
         visualEffectView.frame = view.bounds
-        
+
         self.navigationBar.addSubview(visualEffectView)
         visualEffectView.autoPinEdgesToSuperviewEdges(with: .zero, excludingEdge: .top)
         visualEffectView.autoPinEdge(toSuperviewEdge: .top, withInset: -20)
@@ -45,11 +46,6 @@ class NavigationController: UINavigationController, UINavigationControllerDelega
 
         let image = UIGraphicsGetImageFromCurrentImageContext()
         UIGraphicsEndImageContext()
-        return image!
-    }
-
-    func navigationController(_ navigationController: UINavigationController, willShow viewController: UIViewController, animated: Bool) {
-        let item = UIBarButtonItem(title: " ", style: .plain, target: nil, action: nil)
-        viewController.navigationItem.backBarButtonItem = item
+        return image ?? UIImage()
     }
 }

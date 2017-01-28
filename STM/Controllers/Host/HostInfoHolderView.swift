@@ -16,7 +16,7 @@ class HostInfoHolderView: UIView {
                 UIView.animate(withDuration: 0.5, animations: { () -> Void in
                     self.commentCount.text = String(self.comments)
                     self.layoutIfNeeded()
-                }) 
+                })
             }
         }
     }
@@ -27,7 +27,7 @@ class HostInfoHolderView: UIView {
                 UIView.animate(withDuration: 0.5, animations: { () -> Void in
                     self.listenerCount.text = String(self.listeners)
                     self.layoutIfNeeded()
-                }) 
+                })
             }
         }
     }
@@ -38,7 +38,7 @@ class HostInfoHolderView: UIView {
                 UIView.animate(withDuration: 0.5, animations: { () -> Void in
                     self.bandwidthCount.text = String(self.bytesToSize(self.bandwidth))
                     self.layoutIfNeeded()
-                }) 
+                })
             }
         }
     }

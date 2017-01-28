@@ -34,7 +34,6 @@ public func >>| (left: FUXTween, right: @escaping () -> ()) -> FUXTween {
     return createOnComplete(left, onComplete: right)
 }
 
-
 public func tween(_ duration: Float, value: FUXValue) -> FUXTween {
     return FUXTween.tween(duration, value)
 }

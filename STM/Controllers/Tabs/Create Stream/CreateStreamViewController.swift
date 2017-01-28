@@ -104,7 +104,7 @@ class CreateStreamViewController: KZViewController {
         streamDescriptionTextView.clipsToBounds = true
         streamDescriptionTextView.placeholder = "Stream Description..."
         streamDescriptionTextView.backgroundColor = RGB(255)
-        streamDescriptionTextView.textContainerInset = UIEdgeInsetsMake(formPadding, formPadding, formPadding, formPadding)
+        streamDescriptionTextView.textContainerInset = UIEdgeInsets(top: formPadding, left: formPadding, bottom: formPadding, right: formPadding)
         streamDescriptionTextView.translatesAutoresizingMaskIntoConstraints = false
         streamDescriptionTextView.inputAccessoryView = UIToolbar.styleWithButtons(self)
         contentView.addSubview(streamDescriptionTextView)
@@ -229,7 +229,7 @@ class CreateStreamViewController: KZViewController {
             self.passcodeHeightConstraint?.constant = enabled ? 50.0 : 0.0
             self.passcodePaddingConstraint?.constant = enabled ? 14.0 : 0.0
             self.view.layoutIfNeeded()
-        }) 
+        })
     }
 
     func host() {

@@ -23,7 +23,7 @@ class DashboardItemCell: KZTableViewCell, UICollectionViewDelegate, UICollection
         layout.itemSize = CGSize(width: 62, height: 62)
         layout.minimumInteritemSpacing = 0.0
         layout.minimumLineSpacing = 10.0
-        layout.sectionInset = UIEdgeInsetsMake(0, 0, 0, 0)
+        layout.sectionInset = UIEdgeInsets(top: 0, left: 0, bottom: 0, right: 0)
 
         collectionView = UICollectionView(frame: self.contentView.bounds, collectionViewLayout: layout)
         if let collectionView = collectionView {
@@ -35,7 +35,7 @@ class DashboardItemCell: KZTableViewCell, UICollectionViewDelegate, UICollection
             collectionView.alwaysBounceVertical = false
             collectionView.alwaysBounceHorizontal = true
             collectionView.backgroundColor = UIColor.darkGray
-            collectionView.contentInset = UIEdgeInsetsMake(10, 10, 10, 10)
+            collectionView.contentInset = UIEdgeInsets(top: 10, left: 10, bottom: 10, right: 10)
             collectionView.transform = CGAffineTransform(a: 1, b: 0, c: 0, d: -1, tx: 0, ty: 0)
             collectionView.registerReusableCell(DashboardItemCollectionCell.self)
             self.contentView.addSubview(collectionView)
@@ -138,7 +138,7 @@ class DashboardItemCell: KZTableViewCell, UICollectionViewDelegate, UICollection
             infoHolderView.alpha = 1.0
             let effect = UIBlurEffect(style: .dark)
             lightBlurView.effect = effect
-        }) 
+        })
     }
 
     func startStreamClicked(_ startBT: UIButton) {
@@ -217,5 +217,5 @@ class DashboardItemCell: KZTableViewCell, UICollectionViewDelegate, UICollection
             change()
         }
     }
-    
+
 }

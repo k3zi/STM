@@ -16,7 +16,7 @@ class PlayerInfoHolderView: UIView {
                 UIView.animate(withDuration: 0.5, animations: { () -> Void in
                     self.commentCount.text = String(self.comments)
                     self.layoutIfNeeded()
-                }) 
+                })
             }
         }
     }
@@ -27,7 +27,7 @@ class PlayerInfoHolderView: UIView {
                 UIView.animate(withDuration: 0.5, animations: { () -> Void in
                     self.listenerCount.text = String(self.listeners)
                     self.layoutIfNeeded()
-                }) 
+                })
             }
         }
     }

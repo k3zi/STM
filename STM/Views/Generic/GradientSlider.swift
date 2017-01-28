@@ -194,7 +194,6 @@ import UIKit
         maxColor = UIColor.white
     }
 
-
     // MARK: - Private Properties
 
     fileprivate var _value: CGFloat = 0.0 // default 0.0. this value will be pinned to min/max
@@ -291,12 +290,12 @@ import UIKit
 
     // MARK: - Layout
 
-    override var intrinsicContentSize : CGSize {
+    override var intrinsicContentSize: CGSize {
         return CGSize(width: UIViewNoIntrinsicMetric, height: thumbSize)
     }
 
-    override var alignmentRectInsets : UIEdgeInsets {
-        return UIEdgeInsetsMake(4.0, 2.0, 4.0, 2.0)
+    override var alignmentRectInsets: UIEdgeInsets {
+        return UIEdgeInsets(top: 4.0, left: 2.0, bottom: 4.0, right: 2.0)
     }
 
     override func layoutSublayers(of layer: CALayer) {
@@ -338,8 +337,6 @@ import UIKit
 
         updateThumbPosition(false)
     }
-
-
 
     // MARK: - Touch Tracking
 

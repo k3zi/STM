@@ -2,14 +2,6 @@
 <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
 <plist version="1.0">
 <dict>
-	<key>NSCameraUsageDescription</key>
-	<string>STM allows users to take profile and stream pictures.</string>
-	<key>NSPhotoLibraryUsageDescription</key>
-	<string>STM allows users to upload profile and stream pictures.</string>
-	<key>NSAppleMusicUsageDescription</key>
-	<string>STM allows playback of music during your stream. Playback however is not required.</string>
-	<key>NSMicrophoneUsageDescription</key>
-	<string>STM allows you to speak over your stream whether to host a podcast or speak to your listeners.</string>
 	<key>AudioComponents</key>
 	<array>
 		<dict>
@@ -69,7 +61,7 @@
 	<key>Fabric</key>
 	<dict>
 		<key>APIKey</key>
-		<string>737db71c91f71e0d6b1a52e31ce9bba96c59218e</string>
+		<string>0cff9cc7927135c3d29059393dd56ba7f01dc186</string>
 		<key>Kits</key>
 		<array>
 			<dict>
@@ -93,6 +85,14 @@
 	</dict>
 	<key>LSRequiresIPhoneOS</key>
 	<true/>
+	<key>NSAppleMusicUsageDescription</key>
+	<string>STM allows playback of music during your stream. Playback however is not required.</string>
+	<key>NSCameraUsageDescription</key>
+	<string>STM allows users to take profile and stream pictures.</string>
+	<key>NSMicrophoneUsageDescription</key>
+	<string>STM allows you to speak over your stream whether to host a podcast or speak to your listeners.</string>
+	<key>NSPhotoLibraryUsageDescription</key>
+	<string>STM allows users to upload profile and stream pictures.</string>
 	<key>UIBackgroundModes</key>
 	<array>
 		<string>audio</string>

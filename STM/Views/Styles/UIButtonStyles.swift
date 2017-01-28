@@ -116,7 +116,7 @@ extension UIButton {
 
         UIView.animate(withDuration: 0.4, animations: {
             indicatorView.alpha = 1.0
-        }) 
+        })
     }
 
     func hideIndicator() {

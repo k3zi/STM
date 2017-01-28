@@ -55,8 +55,8 @@ class Window: UIWindow {
                             }, completion: { (complete) -> Void in
                                 self.splashView.removeFromSuperview()
                                 self.hasHidden = true
-                        }) 
-                }) 
+                        })
+                })
             }
         }
     }

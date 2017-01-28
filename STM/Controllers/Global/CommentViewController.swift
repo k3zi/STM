@@ -242,5 +242,4 @@ class CommentViewController: KZViewController, UIViewControllerPreviewingDelegat
         }
     }
 
-
 }
