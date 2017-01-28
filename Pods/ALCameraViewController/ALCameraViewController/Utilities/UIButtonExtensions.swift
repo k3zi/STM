@@ -12,11 +12,11 @@ typealias ButtonAction = () -> Void
 
 extension UIButton {
     
-    fileprivate struct AssociatedKeys {
+    private struct AssociatedKeys {
         static var ActionKey = "ActionKey"
     }
     
-    fileprivate class ActionWrapper {
+    private class ActionWrapper {
         let action: ButtonAction
         init(action: @escaping ButtonAction) {
             self.action = action

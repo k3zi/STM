@@ -334,7 +334,7 @@ class CreateStreamViewController: KZViewController {
             self.handleResponse(response as AnyObject?, error: error as NSError?, successCompletion: { (result) -> Void in
                 self.items.removeAll()
                 if let result = result as? [JSON] {
-                    let streams = [STMStream].fromJSONArray(result)
+                    let streams = [STMStream].from(jsonArray:result)
                     streams?.forEach({ self.items.append($0) })
                     self.tableView.reloadData()
                 }

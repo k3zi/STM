@@ -9,7 +9,6 @@
 import Foundation
 
 public typealias KZCompletionBlock = ((String) -> Void)
-public typealias JSON = [String: Any]
 
 //MARK: UIKit Extensions
 
@@ -107,7 +106,7 @@ public extension UIViewController {
      - parameter successCompletion: Called when response['success'] == true
      - parameter errorCompletion:   Called when response['success'] is a String or error != nil
      */
-    public func handleResponse(_ response: Any?, error: NSError?, successCompletion: ((Any) -> Void)? = nil, errorCompletion: ((String) -> Void)? = nil) {
+    public func handleResponse(_ response: AnyObject?, error: NSError?, successCompletion: ((AnyObject) -> Void)? = nil, errorCompletion: ((String) -> Void)? = nil) {
         DispatchQueue.main.async(execute: { () -> Void in
             if let error = error {
                 print(error)
@@ -119,7 +118,7 @@ public extension UIViewController {
                 if ![-1011, -1001, -1004, 9, 404, 500, -1005].contains(error.code) {
                     self.showError(error.localizedDescription)
                 }
-            } else if let response = response as? JSON {
+            } else if let response = response {
                 guard let success = response["success"] as? Bool else {
                     return
                 }
@@ -129,8 +128,8 @@ public extension UIViewController {
                         return
                     }
 
-                    if let successCompletion = successCompletion {
-                        successCompletion(result)
+                    if let result = result, let successCompletion = successCompletion {
+                        successCompletion(result as AnyObject)
                     }
                 } else if let error = response["error"] as? String {
                     if let suppress = response["suppress"] as? Bool {

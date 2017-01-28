@@ -44,7 +44,7 @@ struct STMStreamMeta: Decodable {
 extension Decoder {
 
     static func decodeImageFromBase64(_ key: String, json: JSON) -> UIImage? {
-        if let imageEncodedString = json.value(forKeyPath: key) as? String {
+        if let imageEncodedString = json.valueForKeyPath(keyPath: key) as? String {
             if let data = NSData(base64Encoded: imageEncodedString, options: NSData.Base64DecodingOptions(rawValue: 0)) {
                 return UIImage(data: data as Data)
             }

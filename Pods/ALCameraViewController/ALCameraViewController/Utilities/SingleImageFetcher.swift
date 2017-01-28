@@ -12,44 +12,44 @@ import Photos
 public typealias SingleImageFetcherSuccess = (UIImage) -> Void
 public typealias SingleImageFetcherFailure = (NSError) -> Void
 
-open class SingleImageFetcher {
-    fileprivate let errorDomain = "com.zero.singleImageSaver"
+public class SingleImageFetcher {
+    private let errorDomain = "com.zero.singleImageSaver"
     
-    fileprivate var success: SingleImageFetcherSuccess?
-    fileprivate var failure: SingleImageFetcherFailure?
+    private var success: SingleImageFetcherSuccess?
+    private var failure: SingleImageFetcherFailure?
     
-    fileprivate var asset: PHAsset?
-    fileprivate var targetSize = PHImageManagerMaximumSize
-    fileprivate var cropRect: CGRect?
+    private var asset: PHAsset?
+    private var targetSize = PHImageManagerMaximumSize
+    private var cropRect: CGRect?
     
     public init() { }
     
-    open func onSuccess(_ success: @escaping SingleImageFetcherSuccess) -> Self {
+    public func onSuccess(_ success: @escaping SingleImageFetcherSuccess) -> Self {
         self.success = success
         return self
     }
     
-    open func onFailure(_ failure: @escaping SingleImageFetcherFailure) -> Self {
+    public func onFailure(_ failure: @escaping SingleImageFetcherFailure) -> Self {
         self.failure = failure
         return self
     }
     
-    open func setAsset(_ asset: PHAsset) -> Self {
+    public func setAsset(_ asset: PHAsset) -> Self {
         self.asset = asset
         return self
     }
     
-    open func setTargetSize(_ targetSize: CGSize) -> Self {
+    public func setTargetSize(_ targetSize: CGSize) -> Self {
         self.targetSize = targetSize
         return self
     }
     
-    open func setCropRect(_ cropRect: CGRect) -> Self {
+    public func setCropRect(_ cropRect: CGRect) -> Self {
         self.cropRect = cropRect
         return self
     }
     
-    open func fetch() -> Self {
+    public func fetch() -> Self {
         _ = PhotoLibraryAuthorizer { error in
             if error == nil {
                 self._fetch()
@@ -60,7 +60,7 @@ open class SingleImageFetcher {
         return self
     }
     
-    fileprivate func _fetch() {
+    private func _fetch() {
     
         guard let asset = asset else {
             let error = errorWithKey("error.cant-fetch-photo", domain: errorDomain)

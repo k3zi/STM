@@ -19,16 +19,16 @@
 - [Download Gloss](https://github.com/hkellaway/Gloss/archive/master.zip) and do a `pod install` on the included `GlossExample` app to see Gloss in action
 - Check out the [documentation](http://cocoadocs.org/docsets/Gloss/) for a more comprehensive look at the classes available in Gloss
 
-### Swift 2.3 and Swift 3.0
+### Swift 2.x
 
-Use the `swift_2.3` and `swift_3.0` branches for compatible versions of Gloss plus Example project that are compatible with Swift 2.3 and Swift 3.0 respectively.
+Use the `swift_2.3` branch for a compatible version of Gloss plus Example project.
 
-The Gloss source currently available on CocoaPods and Carthage is compatible with Swift 2.3.
+The Gloss source currently available via CocoaPods and Carthage is compatible with Swift 3.0.
 
 ### Installation with CocoaPods
 
 ```ruby
-pod 'Gloss', '~> 0.7'
+pod 'Gloss', '~> 1.2'
 ```
 
 ### Installation with Carthage
@@ -39,15 +39,13 @@ github "hkellaway/Gloss"
 
 ### Installation with Swift Package Manager
 
-To use Gloss as a [Swift Package Manager](https://swift.org/package-manager/) package just add the following in your Package.swift file.
-
 ``` swift
 import PackageDescription
 
 let package = Package(
     name: "HelloWorld",
     dependencies: [
-        .Package(url: "https://github.com/hkellaway/Gloss.git", majorVersion: 0)
+        .Package(url: "https://github.com/hkellaway/Gloss.git", majorVersion: 1, minorVersion: 2)
     ]
 )
 ```
@@ -114,8 +112,9 @@ struct RepoOwner: Decodable {
     // MARK: - Deserialization
 
     init?(json: JSON) {
-        guard let ownerId: Int = "id" <~~ json
-            else { return nil }
+        guard let ownerId: Int = "id" <~~ json else { 
+            return nil 
+        }
 
         self.ownerId = ownerId
         self.username = "login" <~~ json
@@ -187,6 +186,8 @@ struct Repo: Decodable {
 
 Despite being more complex, this model is just as simple to compose - common types such as an `NSURL`, an `enum` value, and another Gloss model, `RepoOwner`, are handled without extra overhead! :tada:
 
+-(Note: If nested models are present in JSON but not desired in your Gloss models, see [Retrieving Nested Model Values without Creating Extra Models](#retrieving-nested-model-values-without-creating-extra-models).)
+
 ### Serialization
 
 Next, how would we allow models to be translated _to_ JSON? Let's take a look again at the `RepoOwner` model:
@@ -234,8 +235,9 @@ let repoOwnerJSON = [
         "name": "hkellaway"
 ]
 
-guard let repoOwner = RepoOwner(json: repoOwnerJSON)
-    else { /* handle nil object here */ }
+guard let repoOwner = RepoOwner(json: repoOwnerJSON) else { 
+    // handle decoding failure here
+}
 
 print(repoOwner.repoId)
 print(repoOwner.name)
@@ -253,7 +255,7 @@ if let repoOwner = RepoOwner(json: repoOwnerJSON) {
 
 #### Model Objects from JSON Arrays
 
-Gloss also supports creating models from JSON arrays. The `fromJSONArray(_:)` function can be called on a Gloss model array type to produce an array of objects of that type from a JSON array passed in.
+Gloss also supports creating models from JSON arrays. The `from(jsonArray:)` function can be called on a Gloss model array type to produce an array of objects of that type from a JSON array passed in.
 
 For example, let's consider the following array of JSON representing repo owners:
 
@@ -272,9 +274,23 @@ let repoOwnersJSON = [
 An array of `RepoOwner` objects could be obtained via the following:
 
 ``` swift
-let repoOwners = [RepoOwner].fromJSONArray(repoOwnersJSON)
+guard let repoOwners = [RepoOwner].from(jsonArray: repoOwnersJSON) else {
+    // handle decoding failure here
+}
 
 print(repoOwners)
+```
+
+#### Model Objects from Data
+
+Model objects can also be initialized directly from `Data` for convenience:
+
+``` swift
+let repoOwner: RepoOwner? = RepoOwner(data: repoOwnerData)
+```
+
+``` swift
+let repoOwners: [RepoOwner]? = [RepoOwner].from(data: repoOwnerDAta)
 ```
 
 ### Translating Model Objects to JSON
@@ -290,8 +306,47 @@ repoOwner.toJSON()
 An array of JSON from an array of `Encodable` models is retrieved via `toJSONArray()`:
 
 ``` swift
-repoOwners.toJSONArray()
+guard let jsonArray = repoOwners.toJSONArray() else {
+    // handle encoding failure here
+}
+
+print(jsonArray)
 ```
+
+### Retrieving Nested Model Values without Creating Extra Models
+
+We saw in earlier examples that `Repo` has a nested model `RepoOwner` - and that nested Gloss models are handled automatically. But what if the nested models represented in our JSON really don't need to be their own models? 
+
+Gloss provides a way to indicate nested model values with simple `.` syntax - let's revisit the `owner` values for `Repo` and see what changes:
+
+``` swift
+import Gloss
+
+struct Repo: Glossy {
+
+    let ownerId: Int?
+    let ownerUsername: String?
+
+    // MARK: - Deserialization
+
+    init?(json: JSON) {
+        self.ownerId = "owner.id" <~~ json
+        self.ownerUsername = "owner.login" <~~ json
+    }
+
+    // MARK: - Serialization
+
+        func toJSON() -> JSON? {
+        return jsonify([
+            "owner.id" ~~> self.ownerId,
+            "owner.login" ~~> self.ownerUsername
+            ])
+
+}
+
+```
+
+Now, instead of declaring a nested model `owner` of type `RepoOwner` with its own `id` and `username` properties, the desired values from `owner` are retrieved by specifying the key names in a string delimited by periods (i.e. `owner.id` and `owner.login`).
 
 ## Additonal Topics
 
@@ -305,9 +360,9 @@ Gloss comes with a number of transformations built in for convenience (See: [Glo
 
 Translating from and to JSON is handled via:
 
-`Decoder.decodeDate(key:, dateFormatter:)` and `Decode.decodeDateArray(key:, dateFormatter:)` where `key` is the JSON key and `dateFormatter` is the `NSDateFormatter` used to translate the date(s). e.g. `self.date = Decoder.decodateDate("dateKey", dateFormatter: myDateFormatter)(json)`
+`Decoder.decode(dateForKey:, dateFormatter:)` and `Decode.decode(dateArrayFromKey:, dateFormatter:)` where `key` is the JSON key and `dateFormatter` is the `DateFormatter` used to translate the date(s). e.g. `self.date = Decoder.decode(dateForKey: "dateKey", dateFormatter: myDateFormatter)(json)`
 
-`Encoder.encodeDate(key:, dateFormatter:)` and `Encode.encodeDate(key:, dateFormatter:)` where `key` is the JSON key and `dateFormatter` is the `NSDateFormatter` used to translate the date(s). e.g. `Encoder.encodeDate("dateKey", dateFormatter: myDateFormatter)(self.date)`
+`Encoder.encode(dateForKey:, dateFormatter:)` and `Encode.encode(dateForKey:, dateFormatter:)` where `key` is the JSON key and `dateFormatter` is the `DateFormatter` used to translate the date(s). e.g. `Encoder.encode(dateForKey: "dateKey", dateFormatter: myDateFormatter)(self.date)`
 
 #### Custom Transformations
 
@@ -329,7 +384,7 @@ struct RepoOwner: Decodable {
 
     init?(json: JSON) {
         self.ownerId = "id" <~~ json
-        self.username = Decoder.decodeStringUppercase("login", json: json)
+        self.username = Decoder.decodeStringUppercase(key: "login", json: json)
     }
 
 }
@@ -338,7 +393,7 @@ extension Decoder {
 
     static func decodeStringUppercase(key: String, json: JSON) -> String? {
             
-        if let string = json.valueForKeyPath(key) as? String {
+        if let string = json.valueForKeypath(key) as? String {
             return string.uppercaseString
         }
 
@@ -350,7 +405,7 @@ extension Decoder {
 
 We've created an extension on `Decoder` and written our own decode function, `decodeStringUppercase`.
 
-What's important to note is that the return type for `decodeStringUppercase` is the desired type -- in this case, `String?`. The value you're working with will be accessible via `json.valueForKeyPath(_:)` and will need to be cast to the desired type using `as?`. Then, manipulation can be done - for example, uppercasing. The transformed value should be returned; in the case that the cast failed, `nil` should be returned.
+What's important to note is that the return type for `decodeStringUppercase` is the desired type -- in this case, `String?`. The value you're working with will be accessible via `json.valueForKeypath(_:)` and will need to be cast to the desired type using `as?`. Then, manipulation can be done - for example, uppercasing. The transformed value should be returned; in the case that the cast failed, `nil` should be returned.
 
 Though depicted here as being in the same file,  the `Decoder` extension is not required to be. Additionally, representing the custom decoding function as a member of `Decoder` is not required, but simply stays true to the semantics of Gloss.
 
@@ -376,7 +431,7 @@ struct RepoOwner: Glossy {
     func toJSON() -> JSON? {
         return jsonify([
             "id" ~~> self.ownerId,
-            Encoder.encodeStringLowercase("login", value: self.username)
+            Encoder.encodeStringLowercase(key: "login", value: self.username)
         ])
     }
 
@@ -425,44 +480,51 @@ and
 
 The `<~~` operator is simply syntactic sugar for a set of `Decoder.decode` functions:
 
-* Simple types (`Decoder.decode`)
-* `Decodable` models (`Decoder.decodeDecodable`)
-* Simple arrays (`Decoder.decode`)
-* Arrays of `Decodable` models (`Decoder.decodeDecodableArray`)
-* Dictionaries of `Decodable` models (`Decoder.decodeDecodableDictionary`)
-* Enum types (`Decoder.decodeEnum`)
-* Enum arrays (`Decoder.decodeEnumArray`)
-* Int32 types (`Decoder.decodeInt32`)
-* Int32 arrays (`Decoder.decodeInt32Array`)
-* UInt32 types (`Decoder.decodeUInt32`)
-* UInt32 arrays (`Decoder.decodeUInt32Array`)
-* Int64 types (`Decoder.decodeInt64`)
-* Int64 array (`Decoder.decodeInt64Array`)
-* UInt64 types (`Decoder.decodeUInt64`)
-* UInt64 array (`Decoder.decodeUInt64Array`)
-* NSURL types (`Decoder.decodeURL`)
-* NSURL arrays (`Decode.decodeURLArray`)
+* Simple types (`Decoder.decode(key:)`)
+* `Decodable` models (`Decoder.decode(decodableForKey:)`)
+* Simple arrays (`Decoder.decode(key:)`)
+* Arrays of `Decodable` models (`Decoder.decode(decodableArrayForKey:)`)
+* Dictionaries of `Decodable` models (`Decoder.decode(decodableDictionaryForKey:)`)
+* Enum types (`Decoder.decode(enumForKey:)`)
+* Enum arrays (`Decoder.decode(enumArrayForKey:)`)
+* Int32 types (`Decoder.decode(int32ForKey:)`)
+* Int32 arrays (`Decoder.decode(int32ArrayForKey:)`)
+* UInt32 types (`Decoder.decode(uint32ForKey:)`)
+* UInt32 arrays (`Decoder.decode(uint32ArrayForKey:)`)
+* Int64 types (`Decoder.decode(int64ForKey:)`)
+* Int64 array (`Decoder.decode(int64ArrayForKey:)`)
+* UInt64 types (`Decoder.decode(uint64ForKey:)`)
+* UInt64 array (`Decoder.decode(uint64ArrayForKey:)`)
+* NSURL types (`Decoder.decode(urlForKey:)`)
+* NSURL arrays (`Decode.decode(urlArrayForKey:)`)
+* UUID types (`Decoder.decode(uuidForKey:)`)
+* UUID arrays (`Decoder.decode(uuidArrayForKey:)`)
+* Decimal types `(Decoder.decode(dedimalForKey:)`)
+* Decimal arrays (`Decoder.decode(decimalArrayForKey:)`)
 
 ##### The Encode Operator: `~~>`
 
 The `~~>` operator is simply syntactic sugar for a set of `Encoder.encode` functions:
 
-* Simple types (`Encoder.encode`)
-* `Encodable` models (`Encoder.encodeEncodable`)
-* Simple arrays (`Encoder.encodeArray`)
-* Arrays of `Encodable` models (`Encoder.encodeEncodableArray`)
-* Dictionaries of `Encodable` models (`Encoder.encodeEncodableDictionary`)
-* Enum types (`Encoder.encodeEnum`)
-* Enum arrays (`Encoder.encodeEnumArray`)
-* Int32 types (`Encoder.encodeInt32`)
-* Int32 arrays (`Encoder.encodeInt32Array`)
-* UInt32 types (`Encoder.encodeUInt32`)
-* UInt32 arrays (`Encoder.encodeUInt32Array`)
-* Int64 types (`Encoder.encodeInt64`)
-* Int64 arrays (`Encoder.encodeInt64Array`)
-* UInt64 types (`Encoder.encodeUInt64`)
-* UInt64 arrays (`Encoder.encodeUInt64Array`)
-* NSURL types (`Encoder.encodeURL`)
+* Simple types (`Encoder.encode(key:)`)
+* `Encodable` models (`Encoder.encode(encodableForKey:)`)
+* Simple arrays (`Encoder.encode(arrayForKey:)`)
+* Arrays of `Encodable` models (`Encoder.encode(encodableArrayForKey:)`)
+* Dictionaries of `Encodable` models (`Encoder.encode(encodableDictionaryForKey:)`)
+* Enum types (`Encoder.encode(enumForKey:)`)
+* Enum arrays (`Encoder.encode(enumArrayForKey:)`)
+* Int32 types (`Encoder.encode(int32ForKey:)`)
+* Int32 arrays (`Encoder.encode(int32ArrayForKey:)`)
+* UInt32 types (`Encoder.encode(uint32ForKey:)`)
+* UInt32 arrays (`Encoder.encode(uint32ArrayForKey:)`)
+* Int64 types (`Encoder.encode(int64ForKey:)`)
+* Int64 arrays (`Encoder.encode(int64ArrayForKey:)`)
+* UInt64 types (`Encoder.encode(uint64ForKey:)`)
+* UInt64 arrays (`Encoder.encode(uint64ArrayForKey:)`)
+* NSURL types (`Encoder.encode(urlForKey:)`)
+* UUID types (`Encoder.encode(uuidForKey:)`)
+* Decimal types (`Encoder.encode(decimalForKey:)`)
+* Decimal array (`Encoder.encode(decimalArrayForKey:)`)
 
 ### Gloss Protocols
 
@@ -499,14 +561,15 @@ Check out Gloss in these cool places!
 * [Alamofire-Gloss](https://github.com/spxrogers/Alamofire-Gloss)
 * [CRUD](https://github.com/MetalheadSanya/CRUD)
 * [Moya-Gloss](https://github.com/spxrogers/Moya-Gloss)
+* [OctoAPI](http://github.com/ferusinfo/OctoAPI)
 * [Restofire-Gloss](https://github.com/Restofire/Restofire-Gloss)
 
 #### SDKs/Products
 
-* [AniList](http://anilist.co) ([iOS SDK](https://github.com/CodeEagle/AniList))
+* [AniList](http://anilist.co) ([Unofficial iOS SDK](https://github.com/CodeEagle/AniList))
 * [Drift](http://www.drift.com) ([iOS SDK](https://github.com/Driftt/drift-sdk-ios))
-* [Phillips Hue](http://www2.meethue.com/en-US) ([iOS SDK](https://github.com/Spriter/SwiftyHue))
-* [Skiplagged](http://skiplagged.com) ([iOS SDK] (https://github.com/bulusoy/Skiplagged))
+* [Phillips Hue](http://www2.meethue.com/en-US) ([Unofficial iOS SDK](https://github.com/Spriter/SwiftyHue))
+* [Skiplagged](http://skiplagged.com) ([Unofficial iOS SDK] (https://github.com/bulusoy/Skiplagged))
 
 #### Apps
 
@@ -522,7 +585,7 @@ Check out Gloss in these cool places!
 * [Swift Sandbox](http://swiftsandbox.io/issues/3#b1RJwo2)
 * [iOS Goodies](http://ios-goodies.com/post/127166753231/week-93)
 
-Using Gloss in your app? [Let me know.](mailto:hello@harlankellaway.com?subject=Using Gloss in my app)
+Using Gloss in your app? [Let me know.](mailto:hello@harlankellaway.com?subject=Using Gloss in my project)
 
 ## License
 

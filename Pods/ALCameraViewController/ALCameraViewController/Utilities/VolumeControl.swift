@@ -11,7 +11,7 @@ import MediaPlayer
 
 typealias VolumeChangeAction = (Float) -> Void
 
-open class VolumeControl {
+public class VolumeControl {
     
     let changeKey = "AVSystemController_SystemVolumeDidChangeNotification"
     

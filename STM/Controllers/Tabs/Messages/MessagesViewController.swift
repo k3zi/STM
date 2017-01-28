@@ -97,7 +97,7 @@ class MessagesViewController: KZViewController, UIViewControllerPreviewingDelega
                     return
                 }
 
-                let convos = [STMConversation].fromJSONArray(results)
+                let convos = [STMConversation].from(jsonArray:results)
                 var unreadCount = 0
                 convos?.forEach({
                     unreadCount = unreadCount + $0.unreadCount

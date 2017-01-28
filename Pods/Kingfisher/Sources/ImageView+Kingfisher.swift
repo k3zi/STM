@@ -4,7 +4,7 @@
 //
 //  Created by Wei Wang on 15/4/6.
 //
-//  Copyright (c) 2016 Wei Wang <onevcat@gmail.com>
+//  Copyright (c) 2017 Wei Wang <onevcat@gmail.com>
 //
 //  Permission is hereby granted, free of charge, to any person obtaining a copy
 //  of this software and associated documentation files (the "Software"), to deal
@@ -57,20 +57,24 @@ extension Kingfisher where Base: ImageView {
                          progressBlock: DownloadProgressBlock? = nil,
                          completionHandler: CompletionHandler? = nil) -> RetrieveImageTask
     {
-        base.image = placeholder
-        
         guard let resource = resource else {
+            base.image = placeholder
             completionHandler?(nil, nil, .none, nil)
             return .empty
         }
         
+        var options = options ?? KingfisherEmptyOptionsInfo
+        
+        if !options.keepCurrentImageWhileLoading {
+            base.image = placeholder
+        }
+
         let maybeIndicator = indicator
         maybeIndicator?.startAnimatingView()
         
         setWebURL(resource.downloadURL)
-        
-        var options = options ?? KingfisherEmptyOptionsInfo
-        if shouldPreloadAllGIF() {
+
+        if base.shouldPreloadAllGIF() {
             options.append(.preloadAllGIFData)
         }
         
@@ -133,10 +137,6 @@ extension Kingfisher where Base: ImageView {
      */
     public func cancelDownloadTask() {
         imageTask?.downloadTask?.cancel()
-    }
-    
-    func shouldPreloadAllGIF() -> Bool {
-        return true
     }
 }
 
@@ -263,10 +263,7 @@ extension ImageView {
     @available(*, deprecated, message: "Extensions directly on image views are deprecated. Use `imageView.kf.indicatorType` instead.", renamed: "kf.indicatorType")
     public var kf_indicatorType: IndicatorType {
         get { return kf.indicatorType }
-        set {
-            var holder = kf
-            holder.indicatorType = newValue
-        }
+        set { kf.indicatorType = newValue }
     }
     
     @available(*, deprecated, message: "Extensions directly on image views are deprecated. Use `imageView.kf.indicator` instead.", renamed: "kf.indicator")
@@ -275,10 +272,7 @@ extension ImageView {
     /// It will be `nil` if `kf_indicatorType` is `.none`.
     public private(set) var kf_indicator: Indicator? {
         get { return kf.indicator }
-        set {
-            var holder = kf
-            holder.indicator = newValue
-        }
+        set { kf.indicator = newValue }
     }
     
     @available(*, deprecated, message: "Extensions directly on image views are deprecated.", renamed: "kf.imageTask")
@@ -287,6 +281,8 @@ extension ImageView {
     fileprivate func kf_setImageTask(_ task: RetrieveImageTask?) { kf.setImageTask(task) }
     @available(*, deprecated, message: "Extensions directly on image views are deprecated.", renamed: "kf.setWebURL")
     fileprivate func kf_setWebURL(_ url: URL) { kf.setWebURL(url) }
-    @available(*, deprecated, message: "Extensions directly on image views are deprecated.", renamed: "kf.shouldPreloadAllGIF")
-    func shouldPreloadAllGIF() -> Bool { return kf.shouldPreloadAllGIF() }
+}
+
+extension ImageView {
+    func shouldPreloadAllGIF() -> Bool { return true }
 }

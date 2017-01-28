@@ -198,7 +198,7 @@ class CommentViewController: KZViewController, UIViewControllerPreviewingDelegat
                     return
                 }
 
-                let comments = [STMComment].fromJSONArray(results)
+                let comments = [STMComment].from(jsonArray: results)
                 comments?.forEach({ self.replys.append($0) })
 
                 self.tableView.reloadData()

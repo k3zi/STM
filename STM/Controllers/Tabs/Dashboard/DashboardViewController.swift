@@ -155,7 +155,7 @@ class DashboardViewController: KZViewController, UIViewControllerPreviewingDeleg
             self.handleResponse(response as AnyObject?, error: error as NSError?, successCompletion: { (result) -> Void in
                 self.dashboardItems.removeAll()
                 if let result = result as? [JSON] {
-                    let items = [STMDashboardItem].fromJSONArray(result)
+                    let items = [STMDashboardItem].from(jsonArray:result)
                     items?.forEach({
                         if ($0.items?.count)! > 0 {
                             self.dashboardItems.append($0)

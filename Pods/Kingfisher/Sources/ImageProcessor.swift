@@ -4,7 +4,7 @@
 //
 //  Created by Wei Wang on 2016/08/26.
 //
-//  Copyright (c) 2016 Wei Wang <onevcat@gmail.com>
+//  Copyright (c) 2017 Wei Wang <onevcat@gmail.com>
 //
 //  Permission is hereby granted, free of charge, to any person obtaining a copy
 //  of this software and associated documentation files (the "Software"), to deal
@@ -69,7 +69,7 @@ typealias ProcessorImp = ((ImageProcessItem, KingfisherOptionsInfo) -> Image?)
 public extension ImageProcessor {
     
     /// Append an `ImageProcessor` to another. The identifier of the new `ImageProcessor` 
-    /// will be "\(self.identifier)|>\(another.identifier)>".
+    /// will be "\(self.identifier)|>\(another.identifier)".
     ///
     /// - parameter another: An `ImageProcessor` you want to append to `self`.
     ///
@@ -154,9 +154,9 @@ public struct RoundCornerImageProcessor: ImageProcessor {
         switch item {
         case .image(let image):
             let size = targetSize ?? image.kf.size
-            return image.kf.image(withRoundRadius: cornerRadius, fit: size, scale: options.scaleFactor)
+            return image.kf.image(withRoundRadius: cornerRadius, fit: size)
         case .data(_):
-            return (DefaultImageProcessor() >> self).process(item: item, options: options)
+            return (DefaultImageProcessor.default >> self).process(item: item, options: options)
         }
     }
 }
@@ -183,7 +183,7 @@ public struct ResizingImageProcessor: ImageProcessor {
         case .image(let image):
             return image.kf.resize(to: targetSize)
         case .data(_):
-            return (DefaultImageProcessor() >> self).process(item: item, options: options)
+            return (DefaultImageProcessor.default >> self).process(item: item, options: options)
         }
     }
 }
@@ -212,7 +212,7 @@ public struct BlurImageProcessor: ImageProcessor {
             let radius = blurRadius * options.scaleFactor
             return image.kf.blurred(withRadius: radius)
         case .data(_):
-            return (DefaultImageProcessor() >> self).process(item: item, options: options)
+            return (DefaultImageProcessor.default >> self).process(item: item, options: options)
         }
     }
 }
@@ -246,7 +246,7 @@ public struct OverlayImageProcessor: ImageProcessor {
         case .image(let image):
             return image.kf.overlaying(with: overlay, fraction: fraction)
         case .data(_):
-            return (DefaultImageProcessor() >> self).process(item: item, options: options)
+            return (DefaultImageProcessor.default >> self).process(item: item, options: options)
         }
     }
 }
@@ -274,7 +274,7 @@ public struct TintImageProcessor: ImageProcessor {
         case .image(let image):
             return image.kf.tinted(with: tint)
         case .data(_):
-            return (DefaultImageProcessor() >> self).process(item: item, options: options)
+            return (DefaultImageProcessor.default >> self).process(item: item, options: options)
         }
     }
 }
@@ -318,7 +318,7 @@ public struct ColorControlsProcessor: ImageProcessor {
         case .image(let image):
             return image.kf.adjusted(brightness: brightness, contrast: contrast, saturation: saturation, inputEV: inputEV)
         case .data(_):
-            return (DefaultImageProcessor() >> self).process(item: item, options: options)
+            return (DefaultImageProcessor.default >> self).process(item: item, options: options)
         }
     }
 }
@@ -358,7 +358,12 @@ fileprivate extension Color {
         
         getRed(&r, green: &g, blue: &b, alpha: &a)
         
-        let rgba = Int(r * 255) << 24 | Int(g * 255) << 16 | Int(b * 255) << 8 | Int(a * 255)
+        let rInt = Int(r * 255) << 24
+        let gInt = Int(g * 255) << 16
+        let bInt = Int(b * 255) << 8
+        let aInt = Int(a * 255)
+        
+        let rgba = rInt | gInt | bInt | aInt
         
         return String(format:"#%08x", rgba)
     }

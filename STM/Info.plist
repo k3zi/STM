@@ -2,6 +2,10 @@
 <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
 <plist version="1.0">
 <dict>
+	<key>NSCameraUsageDescription</key>
+	<string>STM allows users to take profile and stream pictures.</string>
+	<key>NSPhotoLibraryUsageDescription</key>
+	<string>STM allows users to upload profile and stream pictures.</string>
 	<key>NSAppleMusicUsageDescription</key>
 	<string>STM allows playback of music during your stream. Playback however is not required.</string>
 	<key>NSMicrophoneUsageDescription</key>

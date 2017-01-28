@@ -39,7 +39,7 @@ public extension Array where Element: Decodable {
      
      - returns: Array of objects created from JSON.
      */
-    static func fromJSONArray(_ jsonArray: [JSON]) -> [Element]? {
+    static func from(jsonArray: [JSON]) -> [Element]? {
         var models: [Element] = []
         
         for json in jsonArray {
@@ -50,6 +50,34 @@ public extension Array where Element: Decodable {
             } else {
                 return nil
             }
+        }
+        
+        return models
+    }
+    
+    /**
+     Initializes array of model objects from provided data.
+     
+     - parameter data: Raw JSON array data.
+     
+     - returns: Array with model objects when decoding is successful, empty otherwise.
+     */
+    
+    /**
+     Returns array of new objects created from provided data.
+     If creation of JSON or any decodings fail, nil is returned.
+     
+     - parameter data:       Raw JSON data.
+     - parameter serializer: Serializer to use when creating JSON from data.
+     - parameter ooptions:   Options for reading the JSON data.
+     
+     - returns: Object or nil.
+     */
+    static func from(data: Data, serializer: JSONSerializer = GlossJSONSerializer(), options: JSONSerialization.ReadingOptions = .mutableContainers) -> [Element]? {
+        guard
+            let jsonArray = (try? JSONSerialization.jsonObject(with: data, options: .mutableContainers)) as? [JSON],
+            let models = [Element].from(jsonArray: jsonArray) else {
+                return nil
         }
         
         return models

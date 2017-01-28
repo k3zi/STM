@@ -4,7 +4,7 @@
 //
 //  Created by Wei Wang on 15/4/6.
 //
-//  Copyright (c) 2016 Wei Wang <onevcat@gmail.com>
+//  Copyright (c) 2017 Wei Wang <onevcat@gmail.com>
 //
 //  Permission is hereby granted, free of charge, to any person obtaining a copy
 //  of this software and associated documentation files (the "Software"), to deal
@@ -90,7 +90,7 @@ public enum KingfisherError: Int {
     case invalidURL = 20000
     
     /// The downloading task is cancelled before started.
-    case downloadCanelledBeforeStarting = 30000
+    case downloadCancelledBeforeStarting = 30000
 }
 
 /// Key will be used in the `userInfo` of `.invalidStatusCode`
@@ -166,7 +166,7 @@ extension AuthenticationChallengeResponsable {
 }
 
 /// `ImageDownloader` represents a downloading manager for requesting the image with a URL from server.
-open class ImageDownloader: NSObject {
+open class ImageDownloader {
     
     class ImageFetchLoad {
         var contents = [(callback: CallbackPair, options: KingfisherOptionsInfo)]()
@@ -177,11 +177,6 @@ open class ImageDownloader: NSObject {
     }
     
     // MARK: - Public property
-    /// This closure will be applied to the image download request before it being sent. 
-    /// You can modify the request for some customizing purpose, like adding auth token to the header, do basic HTTP auth or something like url mapping.
-    @available(*, unavailable, message: "`requestModifier` is removed. Use 'urlRequest(for:byModifying:)' from the 'ImageDownloaderDelegate' instead")
-    open var requestModifier: ((inout URLRequest) -> Void)?
-
     /// The duration before the download is timeout. Default is 15 seconds.
     open var downloadTimeout: TimeInterval = 15.0
     
@@ -239,9 +234,7 @@ open class ImageDownloader: NSObject {
         processQueue = DispatchQueue(label: "com.onevcat.Kingfisher.ImageDownloader.Process.\(name)", attributes: .concurrent)
         
         sessionHandler = ImageDownloaderSessionHandler()
-        
-        super.init()
-        
+
         // Provide a default implement for challenge responder.
         authenticationChallengeResponder = sessionHandler
         session = URLSession(configuration: sessionConfiguration, delegate: sessionHandler, delegateQueue: .main)
@@ -252,33 +245,33 @@ open class ImageDownloader: NSObject {
         barrierQueue.sync { fetchLoad = fetchLoads[url] }
         return fetchLoad
     }
+    
+    /**
+     Download an image with a URL and option.
+     
+     - parameter url:               Target URL.
+     - parameter options:           The options could control download behavior. See `KingfisherOptionsInfo`.
+     - parameter progressBlock:     Called when the download progress updated.
+     - parameter completionHandler: Called when the download progress finishes.
+     
+     - returns: A downloading task. You could call `cancel` on it to stop the downloading process.
+     */
+    @discardableResult
+    open func downloadImage(with url: URL,
+                            options: KingfisherOptionsInfo? = nil,
+                            progressBlock: ImageDownloaderProgressBlock? = nil,
+                            completionHandler: ImageDownloaderCompletionHandler? = nil) -> RetrieveImageDownloadTask?
+    {
+        return downloadImage(with: url,
+                             retrieveImageTask: nil,
+                             options: options,
+                             progressBlock: progressBlock,
+                             completionHandler: completionHandler)
+    }
 }
 
 // MARK: - Download method
 extension ImageDownloader {
-    /**
-    Download an image with a URL and option.
-    
-    - parameter url:               Target URL.
-    - parameter options:           The options could control download behavior. See `KingfisherOptionsInfo`.
-    - parameter progressBlock:     Called when the download progress updated.
-    - parameter completionHandler: Called when the download progress finishes.
-
-    - returns: A downloading task. You could call `cancel` on it to stop the downloading process.
-    */
-    @discardableResult
-    open func downloadImage(with url: URL,
-                             options: KingfisherOptionsInfo? = nil,
-                       progressBlock: ImageDownloaderProgressBlock? = nil,
-                   completionHandler: ImageDownloaderCompletionHandler? = nil) -> RetrieveImageDownloadTask?
-    {
-        return downloadImage(with: url,
-                retrieveImageTask: nil,
-                          options: options,
-                    progressBlock: progressBlock,
-                completionHandler: completionHandler)
-    }
-    
     func downloadImage(with url: URL,
               retrieveImageTask: RetrieveImageTask?,
                         options: KingfisherOptionsInfo?,
@@ -297,7 +290,7 @@ extension ImageDownloader {
 
         if let modifier = options?.modifier {
             guard let r = modifier.modified(for: request) else {
-                completionHandler?(nil, NSError(domain: KingfisherErrorDomain, code: KingfisherError.downloadCanelledBeforeStarting.rawValue, userInfo: nil), nil, nil)
+                completionHandler?(nil, NSError(domain: KingfisherErrorDomain, code: KingfisherError.downloadCancelledBeforeStarting.rawValue, userInfo: nil), nil, nil)
                 return nil
             }
             request = r
@@ -497,15 +490,15 @@ class ImageDownloaderSessionHandler: NSObject, URLSessionDataDelegate, Authentic
                 let completionHandler = content.callback.completionHandler
                 let callbackQueue = options.callbackDispatchQueue
                 
-                let processoor = options.processor
+                let processor = options.processor
                 
-                var image = imageCache[processoor.identifier]
+                var image = imageCache[processor.identifier]
                 if image == nil {
-                    image = processoor.process(item: .data(data), options: options)
+                    image = processor.process(item: .data(data), options: options)
                     
                     // Add the processed image to cache. 
                     // If `image` is nil, nothing will happen (since the key is not existing before).
-                    imageCache[processoor.identifier] = image
+                    imageCache[processor.identifier] = image
                 }
                 
                 if let image = image {

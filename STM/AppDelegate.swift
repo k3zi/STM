@@ -295,7 +295,9 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 			}
 		}
 
-        tabVC.present(WalkthroughViewController(), animated: false, completion: nil)
+        if !UserDefaults.standard.bool(forKey: "hasSeenWalkthrough") {
+            tabVC.present(WalkthroughViewController(), animated: false, completion: nil)
+        }
 
 		return tabVC
 	}

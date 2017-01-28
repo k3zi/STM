@@ -3,7 +3,7 @@ use_frameworks!
 
 target 'STM' do
     pod 'DateTools', :git => 'https://github.com/MatthewYork/DateTools.git', :branch => 'swift', :commit => '8fe563153128b57d2ee5f4742e778d39effb4375'
-    pod 'Gloss', :git => 'https://github.com/hkellaway/Gloss.git', :branch => 'swift_3.0'
+    pod 'Gloss'
     pod 'Hashids-Swift', :git => 'https://github.com/malczak/hashids', :branch => 'master'
     pod 'HPGrowingTextView'
     pod 'CryptoSwift'

@@ -4,7 +4,7 @@
 //
 //  Created by Wei Wang on 16/1/6.
 //
-//  Copyright (c) 2016 Wei Wang <onevcat@gmail.com>
+//  Copyright (c) 2017 Wei Wang <onevcat@gmail.com>
 //
 //  Permission is hereby granted, free of charge, to any person obtaining a copy
 //  of this software and associated documentation files (the "Software"), to deal
@@ -173,7 +173,7 @@ extension Kingfisher where Base: Image {
 // MARK: - Image Representation
 extension Kingfisher where Base: Image {
     // MARK: - PNG
-    func pngRepresentation() -> Data? {
+    public func pngRepresentation() -> Data? {
         #if os(macOS)
             guard let cgimage = cgImage else {
                 return nil
@@ -186,7 +186,7 @@ extension Kingfisher where Base: Image {
     }
     
     // MARK: - JPEG
-    func jpegRepresentation(compressionQuality: CGFloat) -> Data? {
+    public func jpegRepresentation(compressionQuality: CGFloat) -> Data? {
         #if os(macOS)
             guard let cgImage = cgImage else {
                 return nil
@@ -199,7 +199,7 @@ extension Kingfisher where Base: Image {
     }
     
     // MARK: - GIF
-    func gifRepresentation() -> Data? {
+    public func gifRepresentation() -> Data? {
         #if os(macOS)
             return gifRepresentation(duration: 0.0, repeatCount: 0)
         #else
@@ -292,7 +292,7 @@ extension Kingfisher where Base: Image {
             guard let (images, gifDuration) = decode(from: imageSource, for: options) else {
                 return nil
             }
-            var image = Image(data: data)
+            let image = Image(data: data)
             image?.kf.images = images
             image?.kf.duration = gifDuration
             
@@ -303,11 +303,11 @@ extension Kingfisher where Base: Image {
                 guard let (images, gifDuration) = decode(from: imageSource, for: options) else {
                     return nil
                 }
-                var image = Kingfisher<Image>.animated(with: images, forDuration: duration <= 0.0 ? gifDuration : duration)
+                let image = Kingfisher<Image>.animated(with: images, forDuration: duration <= 0.0 ? gifDuration : duration)
                 image?.kf.animatedImageData = data
                 return image
             } else {
-                var image = Image(data: data)
+                let image = Image(data: data)
                 image?.kf.animatedImageData = data
                 image?.kf.imageSource = ImageSource(ref: imageSource)
                 return image
@@ -340,17 +340,17 @@ extension Kingfisher where Base: Image {
 
 // MARK: - Image Transforming
 extension Kingfisher where Base: Image {
+
     // MARK: - Round Corner
     /// Create a round corner image based on `self`.
     ///
     /// - parameter radius: The round corner radius of creating image.
     /// - parameter size:   The target size of creating image.
-    /// - parameter scale:  The image scale of creating image.
     ///
     /// - returns: An image with round corner of `self`.
     ///
     /// - Note: This method only works for CG-based image.
-    public func image(withRoundRadius radius: CGFloat, fit size: CGSize, scale: CGFloat) -> Image {
+    public func image(withRoundRadius radius: CGFloat, fit size: CGSize) -> Image {
         
         guard let cgImage = cgImage else {
             assertionFailure("[Kingfisher] Round corder image only works for CG-based image.")
@@ -460,61 +460,41 @@ extension Kingfisher where Base: Image {
             let h = Int(size.height)
             let rowBytes = Int(CGFloat(cgImage.bytesPerRow))
             
-            let inDataPointer = UnsafeMutablePointer<UInt8>.allocate(capacity: rowBytes * Int(h))
-            inDataPointer.initialize(to: 0)
-            defer {
-                inDataPointer.deinitialize()
-                inDataPointer.deallocate(capacity: rowBytes * Int(h))
-        }
-            
-            let bitmapInfo = cgImage.bitmapInfo.fixed
-            guard let context = CGContext(data: inDataPointer,
-                                          width: w,
-                                          height: h,
-                                          bitsPerComponent: cgImage.bitsPerComponent,
-                                          bytesPerRow: rowBytes,
-                                          space: cgImage.colorSpace ?? CGColorSpaceCreateDeviceRGB(),
-                                          bitmapInfo: bitmapInfo.rawValue) else
-            {
+            func createEffectBuffer(_ context: CGContext) -> vImage_Buffer {
+                let data = context.data
+                let width = vImagePixelCount(context.width)
+                let height = vImagePixelCount(context.height)
+                let rowBytes = context.bytesPerRow
+                
+                return vImage_Buffer(data: data, height: height, width: width, rowBytes: rowBytes)
+            }
+
+            guard let context = beginContext() else {
                 assertionFailure("[Kingfisher] Failed to create CG context for blurring image.")
                 return base
             }
-            
+            defer { endContext() }
+
             context.draw(cgImage, in: CGRect(x: 0, y: 0, width: w, height: h))
             
+            var inBuffer = createEffectBuffer(context)
             
-            var inBuffer = vImage_Buffer(data: inDataPointer, height: vImagePixelCount(h), width: vImagePixelCount(w), rowBytes: rowBytes)
-            
-            let outDataPointer = UnsafeMutablePointer<UInt8>.allocate(capacity: rowBytes * Int(h))
-            outDataPointer.initialize(to: 0)
-            defer {
-                outDataPointer.deinitialize()
-                outDataPointer.deallocate(capacity: rowBytes * Int(h))
-        }
-            
-            var outBuffer = vImage_Buffer(data: outDataPointer, height: vImagePixelCount(h), width: vImagePixelCount(w), rowBytes: rowBytes)
+            guard let outContext = beginContext() else {
+                assertionFailure("[Kingfisher] Failed to create CG context for blurring image.")
+                return base
+            }
+            defer { endContext() }
+            var outBuffer = createEffectBuffer(outContext)
             
             for _ in 0 ..< iterations {
                 vImageBoxConvolve_ARGB8888(&inBuffer, &outBuffer, nil, 0, 0, UInt32(targetRadius), UInt32(targetRadius), nil, vImage_Flags(kvImageEdgeExtend))
                 (inBuffer, outBuffer) = (outBuffer, inBuffer)
             }
             
-            guard let outContext = CGContext(data: inDataPointer,
-                                             width: w,
-                                             height: h,
-                                             bitsPerComponent: cgImage.bitsPerComponent,
-                                             bytesPerRow: rowBytes,
-                                             space: cgImage.colorSpace ?? CGColorSpaceCreateDeviceRGB(),
-                                             bitmapInfo: bitmapInfo.rawValue) else
-            {
-                assertionFailure("[Kingfisher] Failed to create CG context for blurring image.")
-                return base
-            }
-            
             #if os(macOS)
                 let result = outContext.makeImage().flatMap { fixedForRetinaPixel(cgImage: $0, to: size) }
             #else
-                let result = outContext.makeImage().flatMap { Image(cgImage: $0) }
+                let result = outContext.makeImage().flatMap { Image(cgImage: $0, scale: base.scale, orientation: base.imageOrientation) }
             #endif
             guard let blurredImage = result else {
                 assertionFailure("[Kingfisher] Can not make an blurred image within this context.")
@@ -615,12 +595,12 @@ extension Kingfisher where Base: Image {
             return base
         }
         let colorSpace = CGColorSpaceCreateDeviceRGB()
-        let bitmapInfo = imageRef.bitmapInfo.fixed
-        
-        guard let context = CGContext(data: nil, width: imageRef.width, height: imageRef.height, bitsPerComponent: 8, bytesPerRow: 0, space: colorSpace, bitmapInfo: bitmapInfo.rawValue) else {
+        guard let context = beginContext() else {
             assertionFailure("[Kingfisher] Decoding fails to create a valid context.")
             return base
         }
+        
+        defer { endContext() }
         
         let rect = CGRect(x: 0, y: 0, width: imageRef.width, height: imageRef.height)
         context.draw(imageRef, in: rect)
@@ -721,23 +701,50 @@ extension CGSizeProxy {
     }
 }
 
-extension CGBitmapInfo {
-    var fixed: CGBitmapInfo {
-        var fixed = self
-        let alpha = (rawValue & CGBitmapInfo.alphaInfoMask.rawValue)
-        if alpha == CGImageAlphaInfo.none.rawValue {
-            fixed.remove(.alphaInfoMask)
-            fixed = CGBitmapInfo(rawValue: fixed.rawValue | CGImageAlphaInfo.noneSkipFirst.rawValue)
-        } else if !(alpha == CGImageAlphaInfo.noneSkipFirst.rawValue) || !(alpha == CGImageAlphaInfo.noneSkipLast.rawValue) {
-            fixed.remove(.alphaInfoMask)
-            fixed = CGBitmapInfo(rawValue: fixed.rawValue | CGImageAlphaInfo.premultipliedFirst.rawValue)
-        }
-        return fixed
-    }
-}
-
-
 extension Kingfisher where Base: Image {
+    
+    func beginContext() -> CGContext? {
+        #if os(macOS)
+            guard let rep = NSBitmapImageRep(
+                bitmapDataPlanes: nil,
+                pixelsWide: Int(size.width),
+                pixelsHigh: Int(size.height),
+                bitsPerSample: cgImage?.bitsPerComponent ?? 8,
+                samplesPerPixel: 4,
+                hasAlpha: true,
+                isPlanar: false,
+                colorSpaceName: NSCalibratedRGBColorSpace,
+                bytesPerRow: 0,
+                bitsPerPixel: 0) else
+            {
+                assertionFailure("[Kingfisher] Image representation cannot be created.")
+                return nil
+            }
+            rep.size = size
+            NSGraphicsContext.saveGraphicsState()
+            guard let context = NSGraphicsContext(bitmapImageRep: rep) else {
+                assertionFailure("[Kingfisher] Image contenxt cannot be created.")
+                return nil
+            }
+            
+            NSGraphicsContext.setCurrent(context)
+            return context.cgContext
+        #else
+            UIGraphicsBeginImageContextWithOptions(size, false, scale)
+            let context = UIGraphicsGetCurrentContext()
+            context?.scaleBy(x: 1.0, y: -1.0)
+            context?.translateBy(x: 0, y: -size.height)
+            return context
+        #endif
+    }
+    
+    func endContext() {
+        #if os(macOS)
+            NSGraphicsContext.restoreGraphicsState()
+        #else
+            UIGraphicsEndImageContext()
+        #endif
+    }
     
     func draw(cgImage: CGImage?, to size: CGSize, draw: ()->()) -> Image {
         #if os(macOS)
@@ -791,36 +798,6 @@ extension Kingfisher where Base: Image {
     #endif
 }
 
-
-extension CGContext {
-    static func createARGBContext(from imageRef: CGImage) -> CGContext? {
-        
-        let w = imageRef.width
-        let h = imageRef.height
-        let bytesPerRow = w * 4
-        let colorSpace = CGColorSpaceCreateDeviceRGB()
-        
-        let data = malloc(bytesPerRow * h)
-        defer {
-            free(data)
-        }
-        
-        let bitmapInfo = imageRef.bitmapInfo.fixed
-        
-        // Create the bitmap context. We want pre-multiplied ARGB, 8-bits
-        // per component. Regardless of what the source image format is
-        // (CMYK, Grayscale, and so on) it will be converted over to the format
-        // specified here.
-        return CGContext(data: data,
-                         width: w,
-                         height: h,
-                         bitsPerComponent: imageRef.bitsPerComponent,
-                         bytesPerRow: bytesPerRow,
-                         space: colorSpace,
-                         bitmapInfo: bitmapInfo.rawValue)
-    }
-}
-
 extension Double {
     var isEven: Bool {
         return truncatingRemainder(dividingBy: 2.0) == 0
@@ -856,7 +833,7 @@ extension Image {
     message: "Extensions directly on Image are deprecated. Use `kf.image(withRoundRadius:fit:scale:)` instead.",
     renamed: "kf.image")
     public func kf_image(withRoundRadius radius: CGFloat, fit size: CGSize, scale: CGFloat) -> Image {
-        return kf.image(withRoundRadius: radius, fit: size, scale: scale)
+        return kf.image(withRoundRadius: radius, fit: size)
     }
     
     // MARK: - Resize
@@ -934,5 +911,13 @@ extension Image {
     renamed: "kf.adjusted")
     public func kf_adjusted(brightness: CGFloat, contrast: CGFloat, saturation: CGFloat, inputEV: CGFloat) -> Image {
         return kf.adjusted(brightness: brightness, contrast: contrast, saturation: saturation, inputEV: inputEV)
+    }
+}
+
+extension Kingfisher where Base: Image {
+    @available(*, deprecated,
+    message: "`scale` is not used. Use the version without scale instead. (Remove the `scale` argument)")
+    public func image(withRoundRadius radius: CGFloat, fit size: CGSize, scale: CGFloat) -> Image {
+        return image(withRoundRadius: radius, fit: size)
     }
 }

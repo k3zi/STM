@@ -12,32 +12,32 @@ import Photos
 public typealias SingleImageSaverSuccess = (PHAsset) -> Void
 public typealias SingleImageSaverFailure = (NSError) -> Void
 
-open class SingleImageSaver {
-    fileprivate let errorDomain = "com.zero.singleImageSaver"
+public class SingleImageSaver {
+    private let errorDomain = "com.zero.singleImageSaver"
     
-    fileprivate var success: SingleImageSaverSuccess?
-    fileprivate var failure: SingleImageSaverFailure?
+    private var success: SingleImageSaverSuccess?
+    private var failure: SingleImageSaverFailure?
     
-    fileprivate var image: UIImage?
+    private var image: UIImage?
     
     public init() { }
     
-    open func onSuccess(_ success: @escaping SingleImageSaverSuccess) -> Self {
+    public func onSuccess(_ success: @escaping SingleImageSaverSuccess) -> Self {
         self.success = success
         return self
     }
     
-    open func onFailure(_ failure: @escaping SingleImageSaverFailure) -> Self {
+    public func onFailure(_ failure: @escaping SingleImageSaverFailure) -> Self {
         self.failure = failure
         return self
     }
     
-    open func setImage(_ image: UIImage) -> Self {
+    public func setImage(_ image: UIImage) -> Self {
         self.image = image
         return self
     }
     
-    open func save() -> Self {
+    public func save() -> Self {
         
         _ = PhotoLibraryAuthorizer { error in
             if error == nil {
@@ -50,7 +50,7 @@ open class SingleImageSaver {
         return self
     }
     
-    fileprivate func _save() {
+    private func _save() {
         guard let image = image else {
             self.invokeFailure()
             return
@@ -73,7 +73,7 @@ open class SingleImageSaver {
         }
     }
     
-    fileprivate func fetch(_ assetIdentifier: PHObjectPlaceholder) {
+    private func fetch(_ assetIdentifier: PHObjectPlaceholder) {
         
         let assets = PHAsset.fetchAssets(withLocalIdentifiers: [assetIdentifier.localIdentifier], options: nil)
         
@@ -87,7 +87,7 @@ open class SingleImageSaver {
         }
     }
     
-    fileprivate func invokeFailure() {
+    private func invokeFailure() {
         let error = errorWithKey("error.cant-fetch-photo", domain: errorDomain)
         failure?(error)
     }

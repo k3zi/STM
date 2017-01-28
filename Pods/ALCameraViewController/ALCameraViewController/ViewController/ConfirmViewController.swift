@@ -9,7 +9,7 @@
 import UIKit
 import Photos
 
-open class ConfirmViewController: UIViewController, UIScrollViewDelegate {
+public class ConfirmViewController: UIViewController, UIScrollViewDelegate {
     
     let imageView = UIImageView()
     @IBOutlet weak var scrollView: UIScrollView!
@@ -22,7 +22,7 @@ open class ConfirmViewController: UIViewController, UIScrollViewDelegate {
     var verticalPadding: CGFloat = 30
     var horizontalPadding: CGFloat = 30
     
-    open var onComplete: CameraViewCompletion?
+    public var onComplete: CameraViewCompletion?
     
     var asset: PHAsset!
     
@@ -36,15 +36,15 @@ open class ConfirmViewController: UIViewController, UIScrollViewDelegate {
         super.init(coder: aDecoder)
     }
     
-    open override var prefersStatusBarHidden: Bool {
+    public override var prefersStatusBarHidden: Bool {
         return true
     }
     
-    open override var preferredStatusBarUpdateAnimation: UIStatusBarAnimation {
+    public override var preferredStatusBarUpdateAnimation: UIStatusBarAnimation {
         return UIStatusBarAnimation.slide
     }
     
-    open override func viewDidLoad() {
+    public override func viewDidLoad() {
         super.viewDidLoad()
 
         view.backgroundColor = UIColor.black
@@ -77,7 +77,7 @@ open class ConfirmViewController: UIViewController, UIScrollViewDelegate {
             .fetch()
     }
     
-    open override func viewWillLayoutSubviews() {
+    public override func viewWillLayoutSubviews() {
         super.viewWillLayoutSubviews()
         let scale = calculateMinimumScale(view.frame.size)
         let frame = allowsCropping ? cropOverlay.frame : view.bounds
@@ -89,7 +89,7 @@ open class ConfirmViewController: UIViewController, UIScrollViewDelegate {
         centerImageViewOnRotate()
     }
     
-    open override func viewWillTransition(to size: CGSize, with coordinator: UIViewControllerTransitionCoordinator) {
+    public override func viewWillTransition(to size: CGSize, with coordinator: UIViewControllerTransitionCoordinator) {
         super.viewWillTransition(to: size, with: coordinator)
         
         let scale = calculateMinimumScale(size)
@@ -123,7 +123,7 @@ open class ConfirmViewController: UIViewController, UIScrollViewDelegate {
             }, completion: nil)
     }
     
-    fileprivate func configureWithImage(_ image: UIImage) {
+    private func configureWithImage(_ image: UIImage) {
         if allowsCropping {
             cropOverlay.isHidden = false
         } else {
@@ -137,7 +137,7 @@ open class ConfirmViewController: UIViewController, UIScrollViewDelegate {
         view.setNeedsLayout()
     }
     
-    fileprivate func calculateMinimumScale(_ size: CGSize) -> CGFloat {
+    private func calculateMinimumScale(_ size: CGSize) -> CGFloat {
         var _size = size
         
         if allowsCropping {
@@ -162,14 +162,14 @@ open class ConfirmViewController: UIViewController, UIScrollViewDelegate {
         return scale
     }
     
-    fileprivate func calculateScrollViewInsets(_ frame: CGRect) -> UIEdgeInsets {
+    private func calculateScrollViewInsets(_ frame: CGRect) -> UIEdgeInsets {
         let bottom = view.frame.height - (frame.origin.y + frame.height)
         let right = view.frame.width - (frame.origin.x + frame.width)
         let insets = UIEdgeInsets(top: frame.origin.y, left: frame.origin.x, bottom: bottom, right: right)
         return insets
     }
     
-    fileprivate func centerImageViewOnRotate() {
+    private func centerImageViewOnRotate() {
         if allowsCropping {
             let size = allowsCropping ? cropOverlay.frame.size : scrollView.frame.size
             let scrollInsets = scrollView.contentInset
@@ -181,7 +181,7 @@ open class ConfirmViewController: UIViewController, UIScrollViewDelegate {
         }
     }
     
-    fileprivate func centerScrollViewContents() {
+    private func centerScrollViewContents() {
         let size = allowsCropping ? cropOverlay.frame.size : scrollView.frame.size
         let imageSize = imageView.frame.size
         var imageOrigin = CGPoint.zero
@@ -197,7 +197,7 @@ open class ConfirmViewController: UIViewController, UIScrollViewDelegate {
         imageView.frame.origin = imageOrigin
     }
     
-    fileprivate func buttonActions() {
+    private func buttonActions() {
         confirmButton.action = { [weak self] in self?.confirmPhoto() }
         cancelButton.action = { [weak self] in self?.cancel() }
     }
@@ -246,11 +246,11 @@ open class ConfirmViewController: UIViewController, UIScrollViewDelegate {
         fetcher = fetcher.fetch()
     }
     
-    open func viewForZooming(in scrollView: UIScrollView) -> UIView? {
+    public func viewForZooming(in scrollView: UIScrollView) -> UIView? {
         return imageView
     }
     
-    open func scrollViewDidZoom(_ scrollView: UIScrollView) {
+    public func scrollViewDidZoom(_ scrollView: UIScrollView) {
         centerScrollViewContents()
     }
     

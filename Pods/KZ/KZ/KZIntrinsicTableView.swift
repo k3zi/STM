@@ -11,15 +11,8 @@ import UIKit
 open class KZIntrinsicTableView: UITableView {
 
     override open var intrinsicContentSize : CGSize {
-        return self.contentSize
-    }
-
-    open override func layoutSubviews() {
-        super.layoutSubviews()
-
-        if !self.bounds.size.equalTo(self.intrinsicContentSize) {
-            self.invalidateIntrinsicContentSize()
-        }
+        self.layoutIfNeeded()
+        return CGSize(width: UIViewNoIntrinsicMetric, height: self.contentSize.height)
     }
 
     override open func endUpdates() {

@@ -1,4 +1,6 @@
+#ifdef __OBJC__
 #import <UIKit/UIKit.h>
+#endif
 
 #import "HPGrowingTextView.h"
 #import "HPTextViewInternal.h"

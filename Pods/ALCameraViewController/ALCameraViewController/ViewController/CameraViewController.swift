@@ -13,7 +13,7 @@ import Photos
 public typealias CameraViewCompletion = (UIImage?, PHAsset?) -> Void
 
 public extension CameraViewController {
-    public class func imagePickerViewController(_ croppingEnabled: Bool, completion: @escaping CameraViewCompletion) -> UINavigationController {
+    public class func imagePickerViewController(croppingEnabled: Bool, completion: @escaping CameraViewCompletion) -> UINavigationController {
         let imagePicker = PhotoLibraryViewController()
         let navigationController = UINavigationController(rootViewController: imagePicker)
         
@@ -42,7 +42,7 @@ public extension CameraViewController {
     }
 }
 
-open class CameraViewController: UIViewController {
+public class CameraViewController: UIViewController {
     
     var didUpdateViews = false
     var allowCropping = false
@@ -172,11 +172,11 @@ open class CameraViewController: UIViewController {
         NotificationCenter.default.removeObserver(self)
     }
     
-    open override var prefersStatusBarHidden: Bool {
+    public override var prefersStatusBarHidden: Bool {
         return true
     }
     
-    open override var preferredStatusBarUpdateAnimation: UIStatusBarAnimation {
+    public override var preferredStatusBarUpdateAnimation: UIStatusBarAnimation {
         return UIStatusBarAnimation.slide
     }
     
@@ -185,7 +185,7 @@ open class CameraViewController: UIViewController {
      * and add the views on this superview. Then, request
      * the update of constraints for this superview.
      */
-    open override func loadView() {
+    public override func loadView() {
         super.loadView()
         view.backgroundColor = UIColor.black
         [cameraView,
@@ -206,7 +206,7 @@ open class CameraViewController: UIViewController {
      * Any other dynamic constraint are configurable when the
      * device is rotating, based on the device orientation.
      */
-    override open func updateViewConstraints() {
+    override public func updateViewConstraints() {
 
         if !didUpdateViews {
             configCameraViewConstraints()
@@ -259,7 +259,7 @@ open class CameraViewController: UIViewController {
      * Configure the camera focus when the application
      * start, to avoid any bluried image.
      */
-    open override func viewDidLoad() {
+    public override func viewDidLoad() {
         super.viewDidLoad()
         addCameraObserver()
         addRotateObserver()
@@ -272,7 +272,7 @@ open class CameraViewController: UIViewController {
     /**
      * Start the session of the camera.
      */
-    open override func viewWillAppear(_ animated: Bool) {
+    public override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
         cameraView.startSession()
     }
@@ -281,7 +281,7 @@ open class CameraViewController: UIViewController {
      * Enable the button to take the picture when the
      * camera is ready.
      */
-    open override func viewDidAppear(_ animated: Bool) {
+    public override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
         if cameraView.session?.isRunning == true {
             notifyCameraReady()
@@ -291,7 +291,7 @@ open class CameraViewController: UIViewController {
     /**
      * This method will disable the rotation of the
      */
-    override open func viewWillTransition(to size: CGSize, with coordinator: UIViewControllerTransitionCoordinator) {
+    override public func viewWillTransition(to size: CGSize, with coordinator: UIViewControllerTransitionCoordinator) {
         super.viewWillTransition(to: size, with: coordinator)
          lastInterfaceOrientation = UIApplication.shared.statusBarOrientation
         if animationRunning {
@@ -311,7 +311,7 @@ open class CameraViewController: UIViewController {
      * it calls the method cameraReady to enable the
      * button to take the picture.
      */
-    fileprivate func addCameraObserver() {
+    private func addCameraObserver() {
         NotificationCenter.default.addObserver(
             self,
             selector: #selector(notifyCameraReady),
@@ -502,9 +502,12 @@ open class CameraViewController: UIViewController {
     }
     
     internal func showLibrary() {
-        let imagePicker = CameraViewController.imagePickerViewController(allowCropping) { image, asset in
-            self.dismiss(animated: true, completion: nil)
-            
+        let imagePicker = CameraViewController.imagePickerViewController(croppingEnabled: allowCropping) { image, asset in
+
+            defer {
+                self.dismiss(animated: true, completion: nil)
+            }
+
             guard let image = image, let asset = asset else {
                 return
             }

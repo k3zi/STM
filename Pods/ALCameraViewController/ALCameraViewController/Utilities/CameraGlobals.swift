@@ -14,11 +14,11 @@ internal let columns: CGFloat = 4
 internal let thumbnailDimension = (UIScreen.main.bounds.width - ((columns * itemSpacing) - itemSpacing))/columns
 internal let scale = UIScreen.main.scale
 
-open class CameraGlobals {
-    open static let shared = CameraGlobals()
+public class CameraGlobals {
+    public static let shared = CameraGlobals()
     
-    open var bundle = Bundle(for: CameraViewController.self)
-    open var stringsTable = "CameraView"
-    open var photoLibraryThumbnailSize = CGSize(width: thumbnailDimension, height: thumbnailDimension)
-    open var defaultCameraPosition = AVCaptureDevicePosition.back
+    public var bundle = Bundle(for: CameraViewController.self)
+    public var stringsTable = "CameraView"
+    public var photoLibraryThumbnailSize = CGSize(width: thumbnailDimension, height: thumbnailDimension)
+    public var defaultCameraPosition = AVCaptureDevicePosition.back
 }

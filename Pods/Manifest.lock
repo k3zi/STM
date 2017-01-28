@@ -1,24 +1,24 @@
 PODS:
-  - Alamofire (4.0.1)
-  - ALCameraViewController (1.2.5)
+  - Alamofire (4.3.0)
+  - ALCameraViewController (1.2.7)
   - CocoaSecurity (1.2.4)
-  - Crashlytics (3.8.2):
+  - Crashlytics (3.8.3):
     - Fabric (~> 1.6.3)
-  - CryptoSwift (0.6.0)
-  - DateTools (2.0.0-beta.1)
+  - CryptoSwift (0.6.7)
+  - DateTools (2.0.0-beta.3)
   - DGElasticPullToRefresh (1.1)
-  - Fabric (1.6.9)
-  - Gloss (0.7.4)
+  - Fabric (1.6.11)
+  - Gloss (1.2.0)
   - Hashids-Swift (0.3.1)
   - HPGrowingTextView (1.1)
   - Keynode (1.6.0)
   - KILabel (1.0.1)
-  - Kingfisher (3.1.1)
+  - Kingfisher (3.3.2)
   - KMPlaceholderTextView (1.3.0)
   - KZ (2.2.3):
     - PureLayout
     - Reusable
-  - M13ProgressSuite (1.2.8)
+  - M13ProgressSuite (1.2.9)
   - NYSegmentedControl (1.0.7)
   - PRTween (0.1.0)
   - PureLayout (3.0.2)
@@ -30,13 +30,13 @@ PODS:
   - SAConfettiView (0.1.8)
   - SecureNSUserDefaults (1.0.1):
     - CocoaSecurity (~> 1.2.4)
-  - Socket.IO-Client-Swift (8.0.2)
+  - Socket.IO-Client-Swift (8.2.0)
   - SpinKit (1.2.0)
   - StreamingKit (0.1.29)
-  - TwitterCore (2.5.0):
+  - TwitterCore (2.8.0):
     - Fabric
-  - TwitterKit (2.5.0):
-    - TwitterCore (= 2.5.0)
+  - TwitterKit (2.8.0):
+    - TwitterCore (= 2.8.0)
 
 DEPENDENCIES:
   - Alamofire (~> 4.0)
@@ -46,7 +46,7 @@ DEPENDENCIES:
   - DateTools (from `https://github.com/MatthewYork/DateTools.git`, commit `8fe563153128b57d2ee5f4742e778d39effb4375`, branch `swift`)
   - DGElasticPullToRefresh
   - Fabric
-  - Gloss (from `https://github.com/hkellaway/Gloss.git`, branch `swift_3.0`)
+  - Gloss
   - Hashids-Swift (from `https://github.com/malczak/hashids`, branch `master`)
   - HPGrowingTextView
   - Keynode
@@ -72,9 +72,6 @@ EXTERNAL SOURCES:
     :branch: swift
     :commit: 8fe563153128b57d2ee5f4742e778d39effb4375
     :git: https://github.com/MatthewYork/DateTools.git
-  Gloss:
-    :branch: swift_3.0
-    :git: https://github.com/hkellaway/Gloss.git
   Hashids-Swift:
     :branch: master
     :git: https://github.com/malczak/hashids
@@ -90,54 +87,51 @@ EXTERNAL SOURCES:
 
 CHECKOUT OPTIONS:
   DateTools:
-    :commit: 67a47a609e38ab6a303393349d73a25d326aceb1
+    :commit: b763d05a9bfa9d18235e5520a40d3bd4751fcc83
     :git: https://github.com/MatthewYork/DateTools.git
-  Gloss:
-    :commit: 145c78888ccca678bf146b5b0b58882016a4d9aa
-    :git: https://github.com/hkellaway/Gloss.git
   Hashids-Swift:
-    :commit: 173c567d959ae9327b0e63a4e463cdbdab916b7b
+    :commit: 34170e1b73787e89a7802831be8cf06bb82d648e
     :git: https://github.com/malczak/hashids
   KZ:
     :commit: 7c29ca1c4fb76118dabb45d8f711d17e1fef9061
     :git: https://github.com/k3zi/KZ.git
   Reusable:
-    :commit: 453992f6c4704062516395e5c95a07e38c4f67ec
+    :commit: 4edd5add3b22e61cbd51eaf609dcdbff99ea295b
     :git: https://github.com/phatblat/Reusable.git
   SAConfettiView:
     :commit: ad562197a289cd2ce231effabe705fb6e00fadec
     :git: https://github.com/gokhanakkurt/SAConfettiView.git
 
 SPEC CHECKSUMS:
-  Alamofire: 7682d43245de14874acd142ec137b144aa1dd335
-  ALCameraViewController: 3ce731eed0b58f2791ce7404f9d039d10f2235c3
+  Alamofire: 856a113053a7bc9cbe5d6367a555d773fc5cfef7
+  ALCameraViewController: 4a513b8d5ecfdb3f34c50b1d469c373aae1ec7b4
   CocoaSecurity: d288a6f87e0f363823d2cb83e753814a6944f71a
-  Crashlytics: 27acca95a01b042a8294291dd6dff27f8f6af6d7
-  CryptoSwift: 4a599b7241b8d3b857d6e2c28867d0bd5d1aae24
-  DateTools: c64695216d1851bf290e851217aebffd4a2afc54
+  Crashlytics: 2b6dbe138a42395577cfa73dfa1aa7248cadf39e
+  CryptoSwift: 685ae257941e5447474348a2b545583e1a16b573
+  DateTools: fe8ad1e2e77ebb9cf1db6becf077772dd83fdb63
   DGElasticPullToRefresh: 28f11a6026302a90f8ffebbc6e24748e584dddd3
-  Fabric: bc5bec42cef4bcf1ee3ce0e218fc518e4b44dfbb
-  Gloss: d86009ef4d12c221d889c4e3f9e1eb547ee6251d
+  Fabric: 5911403591946b8228ab1c51d98f1d7137e863c6
+  Gloss: ec49584b2e8144e39810b6db6285433316e0c1c7
   Hashids-Swift: b327671abc1ac721e6cc9691ffd668525224b64a
   HPGrowingTextView: 88a716d97fb853bcb08a4a08e4727da17efc9b19
   Keynode: e632595cd36332b3f58a541cca917d353c6a8173
   KILabel: 4797807cdc0b4992dad8bf91175ddc973c3b569b
-  Kingfisher: 12b755ae697cc9f0fd3e550db8417fa1233e09ab
+  Kingfisher: 8e60094454aeb4746eb588eb57f794d891c6ea88
   KMPlaceholderTextView: 2bbcd19a273648a80a61e1e48f9743a24d8930e3
   KZ: bedfdcea546f4f4ecc014355d025559f74dcefb6
-  M13ProgressSuite: c357c8c163a59a7405e5a9ad7e9c63a19e5e5d20
+  M13ProgressSuite: ea9f7263e73e9215e6849dfa54e29ee0ad6a145c
   NYSegmentedControl: 55b4f9eb652767cae9799623ec3e49e50029ef47
   PRTween: 6c58c7e32ebcf31e33e6a6e6bc727ebef3b668ef
   PureLayout: 4d550abe49a94f24c2808b9b95db9131685fe4cd
   Reusable: 1775ede04719c488bb04e809d923cbb7214168b8
   SAConfettiView: c87031a2280659261b730fce3669fb10e73636ee
   SecureNSUserDefaults: 8a07fc6a6fde31c7f8fa6ead73d3c9c3706a6364
-  Socket.IO-Client-Swift: 136598e4a81a42b0e6855e7f94a0e5a6efdc5ff8
+  Socket.IO-Client-Swift: 900cf511777045c80d1ce1f11f71261e87765dd1
   SpinKit: 65906a8b534a4e14cbfd3f8b0b6c329131faef4a
   StreamingKit: c329785aaef3ac142d4ae388345bfe1ed23cfd45
-  TwitterCore: 95c46af93112768a7983bd370d66023553601d01
-  TwitterKit: dd8042698b0ff5bd3066fa919b3b2b50d8eed829
+  TwitterCore: e959987be23c767004d29eb7fab8d85d8585a2e5
+  TwitterKit: f7b0a1adcb800f6446ff0ef70164797376522ff3
 
-PODFILE CHECKSUM: 241211766027f2a1b72f5b271717700cfc4174d6
+PODFILE CHECKSUM: 448234af8dc7ec3d2e0a1af506d0439ccd8a6a38
 
-COCOAPODS: 1.1.0.rc.2
+COCOAPODS: 1.1.1

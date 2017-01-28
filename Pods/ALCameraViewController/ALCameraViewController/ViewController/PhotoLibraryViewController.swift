@@ -15,13 +15,13 @@ internal let defaultItemSpacing: CGFloat = 1
 
 public typealias PhotoLibraryViewSelectionComplete = (PHAsset?) -> Void
 
-open class PhotoLibraryViewController: UIViewController {
+public class PhotoLibraryViewController: UIViewController {
     
     internal var assets: PHFetchResult<PHAsset>? = nil
     
-    open var onSelectionComplete: PhotoLibraryViewSelectionComplete?
+    public var onSelectionComplete: PhotoLibraryViewSelectionComplete?
     
-    fileprivate lazy var collectionView: UICollectionView = {
+    private lazy var collectionView: UICollectionView = {
         let layout = UICollectionViewFlowLayout()
         
         layout.itemSize = CameraGlobals.shared.photoLibraryThumbnailSize
@@ -35,7 +35,7 @@ open class PhotoLibraryViewController: UIViewController {
         return collectionView
     }()
     
-    open override func viewDidLoad() {
+    public override func viewDidLoad() {
         super.viewDidLoad()
         
         setNeedsStatusBarAppearanceUpdate()
@@ -56,32 +56,32 @@ open class PhotoLibraryViewController: UIViewController {
             .fetch()
     }
     
-    open override func viewWillLayoutSubviews() {
+    public override func viewWillLayoutSubviews() {
         super.viewWillLayoutSubviews()
         collectionView.frame = view.bounds
     }
     
-    open override var preferredStatusBarStyle: UIStatusBarStyle {
+    public override var preferredStatusBarStyle: UIStatusBarStyle {
         return UIStatusBarStyle.lightContent
     }
     
-    open func present(_ inViewController: UIViewController, animated: Bool) {
+    public func present(_ inViewController: UIViewController, animated: Bool) {
         let navigationController = UINavigationController(rootViewController: self)
         navigationController.navigationBar.barTintColor = UIColor.black
         navigationController.navigationBar.barStyle = UIBarStyle.black
         inViewController.present(navigationController, animated: animated, completion: nil)
     }
     
-    open func dismissLibrary() {
+    public func dismissLibrary() {
         onSelectionComplete?(nil)
     }
     
-    fileprivate func onSuccess(_ photos: PHFetchResult<PHAsset>) {
+    private func onSuccess(_ photos: PHFetchResult<PHAsset>) {
         assets = photos
         configureCollectionView()
     }
     
-    fileprivate func onFailure(_ error: NSError) {
+    private func onFailure(_ error: NSError) {
         let permissionsView = PermissionsView(frame: view.bounds)
         permissionsView.titleLabel.text = localizedString("permissions.library.title")
         permissionsView.descriptionLabel.text = localizedString("permissions.library.description")
@@ -89,7 +89,7 @@ open class PhotoLibraryViewController: UIViewController {
         view.addSubview(permissionsView)
     }
     
-    fileprivate func configureCollectionView() {
+    private func configureCollectionView() {
         collectionView.register(ImageCell.self, forCellWithReuseIdentifier: ImageCellIdentifier)
         collectionView.delegate = self
         collectionView.dataSource = self

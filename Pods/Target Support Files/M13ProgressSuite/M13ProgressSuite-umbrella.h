@@ -1,4 +1,6 @@
+#ifdef __OBJC__
 #import <UIKit/UIKit.h>
+#endif
 
 #import "UIApplication+M13ProgressSuite.h"
 #import "M13ProgressConsole.h"

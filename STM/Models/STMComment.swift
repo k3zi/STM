@@ -86,7 +86,7 @@ func == (rhs: STMComment, lhs: STMComment) -> Bool {
 extension Decoder {
     static func decodeUnixTimestamp(_ key: String, json: JSON) -> NSDate? {
 
-        if let dateInt = json.value(forKeyPath: key) as? Int {
+        if let dateInt = json.valueForKeyPath(keyPath: key) as? Int {
             return NSDate(timeIntervalSince1970: TimeInterval(dateInt))
         }
 

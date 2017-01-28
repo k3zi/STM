@@ -921,9 +921,9 @@ class HostViewController: KZViewController, UISearchBarDelegate, UIViewControlle
                 }
             }
 
-            socket.emitWithAck("updateMeta", params)(0) { data in
+            socket.emitWithAck("updateMeta", params).timingOut(after: 15, callback: { (data) in
                 print("Socket: Sent Meta")
-            }
+            })
         }
     }
 
@@ -1030,9 +1030,9 @@ class HostViewController: KZViewController, UISearchBarDelegate, UIViewControlle
             var params = [String: AnyObject]()
             params["hexString"] = hexString as AnyObject?
 
-            socket.emitWithAck("updateHex", params)(0) { data in
+            socket.emitWithAck("updateHex", params).timingOut(after: 15, callback: { (data) in
                 print("Socket: Sent Color")
-            }
+            })
         }
     }
 
@@ -1333,7 +1333,7 @@ class HostViewController: KZViewController, UISearchBarDelegate, UIViewControlle
                 hud?.setProgress(CGFloat(progress), animated: true)
                 }, completionHandler: { (response, error) in
                     hud?.hide(true)
-                    self.handleResponse(response, error: error as NSError?)
+                    self.handleResponse(response as AnyObject?, error: error as NSError?)
             })
         }
 
@@ -1370,10 +1370,10 @@ extension HostViewController: MessageToolbarDelegate {
             self.didPostComment = true
             var params = [String: AnyObject]()
             params["text"] = text as AnyObject?
-            socket.emitWithAck("addComment", params)(0) { data in
+            socket.emitWithAck("addComment", params).timingOut(after: 15, callback: { (data) in
                 Answers.logCustomEvent(withName: "Comment", customAttributes: [:])
                 NotificationCenter.default.post(name: NSNotification.Name(rawValue: Constants.Notification.DidPostComment), object: nil)
-            }
+            })
         }
 
         view.endEditing(true)
@@ -1434,7 +1434,7 @@ extension HostViewController: MessageToolbarDelegate {
             self.handleResponse(response as AnyObject?, error: error as NSError?, successCompletion: { (result) -> Void in
                 self.comments.removeAll()
                 if let result = result as? [JSON] {
-                    let comments = [STMComment].fromJSONArray(result)
+                    let comments = [STMComment].from(jsonArray:result)
                     comments?.forEach({
                         $0.stream = self.stream
                         self.comments.insert($0, at: 0)
@@ -1764,7 +1764,7 @@ extension HostViewController: EZOutputDataSource {
 			var params = [String: AnyObject]()
 			params["data"] = data.base64EncodedString(options: NSData.Base64EncodingOptions()) as AnyObject?
 			params["time"] = Date().timeIntervalSince1970 as AnyObject?
-			socket.emitWithAck("dataForStream", params)(0) { data in
+			socket.emitWithAck("dataForStream", params).timingOut(after: 15, callback: { (data) in
 
 				guard let response = data[0] as? [String: AnyObject] else {
                     return
@@ -1777,7 +1777,7 @@ extension HostViewController: EZOutputDataSource {
                 if let listeners = response["listeners"] as? Int {
                     self.statsNumberOfListeners = listeners
                 }
-			}
+			})
 		}
 	}
 

@@ -438,7 +438,7 @@ class ProfileViewController: KZViewController, UIViewControllerPreviewingDelegat
 
         count = count + 1
         Constants.Network.GET("/user/\(user.id)/stats", parameters: nil) { (response, error) -> Void in
-            self.handleResponse(response, error: error as NSError?, successCompletion: { (result) -> Void in
+            self.handleResponse(response as AnyObject?, error: error as NSError?, successCompletion: { (result) -> Void in
                 guard let result = result as? JSON else {
                     return
                 }
@@ -477,7 +477,7 @@ class ProfileViewController: KZViewController, UIViewControllerPreviewingDelegat
                     return
                 }
 
-                let comments = [STMComment].fromJSONArray(results)
+                let comments = [STMComment].from(jsonArray:results)
                 comments?.forEach({ self.comments.append($0) })
 
                 if self.segmentControl?.selectedSegmentIndex == 0 {
@@ -493,7 +493,7 @@ class ProfileViewController: KZViewController, UIViewControllerPreviewingDelegat
             self.handleResponse(response as AnyObject?, error: error as NSError?, successCompletion: { (result) -> Void in
                 self.streams.removeAll()
                 if let result = result as? [JSON] {
-                    let streams = [STMStream].fromJSONArray(result)
+                    let streams = [STMStream].from(jsonArray:result)
                     streams?.forEach({ self.streams.append($0) })
 
                     if self.segmentControl?.selectedSegmentIndex == 1 {
@@ -510,7 +510,7 @@ class ProfileViewController: KZViewController, UIViewControllerPreviewingDelegat
             self.handleResponse(response as AnyObject?, error: error as NSError?, successCompletion: { (result) -> Void in
                 self.likes.removeAll()
                 if let result = result as? [JSON] {
-                    let likes = [STMComment].fromJSONArray(result)
+                    let likes = [STMComment].from(jsonArray:result)
                     likes?.forEach({ self.likes.append($0) })
 
                     if self.segmentControl?.selectedSegmentIndex == 2 {

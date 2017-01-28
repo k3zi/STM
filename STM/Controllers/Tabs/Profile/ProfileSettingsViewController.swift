@@ -125,7 +125,7 @@ class ProfileSettingsViewController: KZViewController {
                 hud?.setProgress(CGFloat(progress), animated: true)
                 }, completionHandler: { (response, error) in
                     hud?.hide(true)
-                    self.handleResponse(response, error: error as NSError?, successCompletion: { (result) in
+                    self.handleResponse(response as AnyObject?, error: error as NSError?, successCompletion: { (result) in
                         guard let result = result as? JSON, let user = STMUser(json: result) else {
                             return
                         }

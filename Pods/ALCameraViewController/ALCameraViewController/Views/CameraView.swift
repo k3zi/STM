@@ -9,7 +9,7 @@
 import UIKit
 import AVFoundation
 
-open class CameraView: UIView {
+public class CameraView: UIView {
     
     var session: AVCaptureSession!
     var input: AVCaptureDeviceInput!
@@ -17,20 +17,55 @@ open class CameraView: UIView {
     var imageOutput: AVCaptureStillImageOutput!
     var preview: AVCaptureVideoPreviewLayer!
     
-    let cameraQueue = DispatchQueue(label: "com.zero.ALCameraViewController.Queue", attributes: .concurrent)
+    let cameraQueue = DispatchQueue(label: "com.zero.ALCameraViewController.Queue")
     
     let focusView = CropOverlay(frame: CGRect(x: 0, y: 0, width: 80, height: 80))
     
-    open var currentPosition = CameraGlobals.shared.defaultCameraPosition
+    public var currentPosition = CameraGlobals.shared.defaultCameraPosition
     
-    open func startSession() {
+    public func startSession() {
+        session = AVCaptureSession()
+        session.sessionPreset = AVCaptureSessionPresetPhoto
+
+        device = cameraWithPosition(position: currentPosition)
+        if let device = device , device.hasFlash {
+            do {
+                try device.lockForConfiguration()
+                device.flashMode = .auto
+                device.unlockForConfiguration()
+            } catch _ {}
+        }
+
+        let outputSettings = [AVVideoCodecKey: AVVideoCodecJPEG]
+
+        do {
+            input = try AVCaptureDeviceInput(device: device)
+        } catch let error as NSError {
+            input = nil
+            print("Error: \(error.localizedDescription)")
+            return
+        }
+
+        if session.canAddInput(input) {
+            session.addInput(input)
+        }
+
+        imageOutput = AVCaptureStillImageOutput()
+        imageOutput.outputSettings = outputSettings
+
+        session.addOutput(imageOutput)
+
         cameraQueue.sync {
-            self.createSession()
-            self.session?.startRunning()
+
+            self.session.startRunning()
+
+            DispatchQueue.main.async() {
+                self.createPreview()
+            }
         }
     }
     
-    open func stopSession() {
+    public func stopSession() {
         cameraQueue.sync {
             self.session?.stopRunning()
             self.preview?.removeFromSuperlayer()
@@ -43,18 +78,18 @@ open class CameraView: UIView {
         }
     }
     
-    open override func layoutSubviews() {
+    public override func layoutSubviews() {
         super.layoutSubviews()
         preview?.frame = bounds
     }
     
-    open func configureFocus() {
+    public func configureFocus() {
         
         if let gestureRecognizers = gestureRecognizers {
             gestureRecognizers.forEach({ removeGestureRecognizer($0) })
         }
         
-        let tapGesture = UITapGestureRecognizer(target: self, action: #selector(self.focus(_:)))
+        let tapGesture = UITapGestureRecognizer(target: self, action: #selector(focus(gesture:)))
         addGestureRecognizer(tapGesture)
         isUserInteractionEnabled = true
         addSubview(focusView)
@@ -68,10 +103,10 @@ open class CameraView: UIView {
         }
     }
     
-    internal func focus(_ gesture: UITapGestureRecognizer) {
+    internal func focus(gesture: UITapGestureRecognizer) {
         let point = gesture.location(in: self)
         
-        guard focusCamera(point) else {
+        guard focusCamera(toPoint: point) else {
             return
         }
         
@@ -102,42 +137,7 @@ open class CameraView: UIView {
         })
     }
     
-    fileprivate func createSession() {
-        session = AVCaptureSession()
-        session.sessionPreset = AVCaptureSessionPresetPhoto
-        DispatchQueue.main.async() {
-            self.createPreview()
-        }
-    }
-    
-    fileprivate func createPreview() {
-        device = cameraWithPosition(currentPosition)
-        if let device = device , device.hasFlash {
-            do {
-                try device.lockForConfiguration()
-                device.flashMode = .auto
-                device.unlockForConfiguration()
-            } catch _ {}
-        }
-        
-        let outputSettings = [AVVideoCodecKey: AVVideoCodecJPEG]
-        
-        do {
-            input = try AVCaptureDeviceInput(device: device)
-        } catch let error as NSError {
-            input = nil
-            print("Error: \(error.localizedDescription)")
-            return
-        }
-        
-        if session.canAddInput(input) {
-            session.addInput(input)
-        }
-        
-        imageOutput = AVCaptureStillImageOutput()
-        imageOutput.outputSettings = outputSettings
-        
-        session.addOutput(imageOutput)
+    private func createPreview() {
         
         preview = AVCaptureVideoPreviewLayer(session: session)
         preview.videoGravity = AVLayerVideoGravityResizeAspectFill
@@ -146,14 +146,14 @@ open class CameraView: UIView {
         layer.addSublayer(preview)
     }
     
-    fileprivate func cameraWithPosition(_ position: AVCaptureDevicePosition) -> AVCaptureDevice? {
+    private func cameraWithPosition(position: AVCaptureDevicePosition) -> AVCaptureDevice? {
         guard let devices = AVCaptureDevice.devices(withMediaType: AVMediaTypeVideo) as? [AVCaptureDevice] else {
             return nil
         }
         return devices.filter { $0.position == position }.first
     }
     
-    open func capturePhoto(_ completion: @escaping CameraShotCompletion) {
+    public func capturePhoto(completion: @escaping CameraShotCompletion) {
         isUserInteractionEnabled = false
         cameraQueue.sync {
             let orientation = AVCaptureVideoOrientation(rawValue: UIDevice.current.orientation.rawValue)!
@@ -166,7 +166,7 @@ open class CameraView: UIView {
         }
     }
     
-    open func focusCamera(_ toPoint: CGPoint) -> Bool {
+    public func focusCamera(toPoint: CGPoint) -> Bool {
         
         guard let device = device, device.isFocusModeSupported(.continuousAutoFocus) else {
             return false
@@ -187,7 +187,7 @@ open class CameraView: UIView {
         return true
     }
     
-    open func cycleFlash() {
+    public func cycleFlash() {
         guard let device = device, device.hasFlash else {
             return
         }
@@ -205,7 +205,7 @@ open class CameraView: UIView {
         } catch _ { }
     }
 
-    open func swapCameraInput() {
+    public func swapCameraInput() {
         
         guard let session = session, let input = input else {
             return
@@ -216,10 +216,10 @@ open class CameraView: UIView {
         
         if input.device.position == AVCaptureDevicePosition.back {
             currentPosition = AVCaptureDevicePosition.front
-            device = cameraWithPosition(currentPosition)
+            device = cameraWithPosition(position: currentPosition)
         } else {
             currentPosition = AVCaptureDevicePosition.back
-            device = cameraWithPosition(currentPosition)
+            device = cameraWithPosition(position: currentPosition)
         }
         
         guard let i = try? AVCaptureDeviceInput(device: device) else {
@@ -232,7 +232,7 @@ open class CameraView: UIView {
         session.commitConfiguration()
     }
   
-    open func rotatePreview() {
+    public func rotatePreview() {
       
         guard preview != nil else {
             return

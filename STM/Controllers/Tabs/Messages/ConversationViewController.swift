@@ -172,7 +172,7 @@ class ConversationViewController: KZViewController, MessageToolbarDelegate {
                     return
                 }
 
-                let messages = [STMMessage].fromJSONArray(results)
+                let messages = [STMMessage].from(jsonArray:results)
                 messages?.forEach({ self.messages.append($0) })
 
                 self.tableView.reloadData()

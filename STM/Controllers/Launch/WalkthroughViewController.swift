@@ -41,7 +41,7 @@ class WalkthroughViewController: KZViewController {
         scrollView.isPagingEnabled = true
         scrollView.showsHorizontalScrollIndicator = false
 
-        getStartedButton.addTarget(self, action: #selector(self.goBack), for: UIControlEvents.touchUpInside)
+        getStartedButton.addTarget(self, action: #selector(goBackAndCheck), for: UIControlEvents.touchUpInside)
 
         [getStartedButton, pageControl, walkthoughBackgroundView, scrollView].forEach(view.addSubview)
 
@@ -97,6 +97,11 @@ class WalkthroughViewController: KZViewController {
     func scrollViewDidScroll(_ scrollView: UIScrollView) {
         let currentPage = Int(scrollView.contentOffset.x / scrollView.bounds.size.width)
         pageControl.currentPage = currentPage
+    }
+
+    func goBackAndCheck() {
+        UserDefaults.standard.set(true, forKey: "hasSeenWalkthrough")
+        goBack()
     }
 
 }

@@ -6,7 +6,7 @@
 //  Copyright (c) 2014 Marcin Krzyzanowski. All rights reserved.
 //
 
-#if os(Linux)
+#if os(Linux) || os(Android) || os(FreeBSD)
     import Glibc
 #else
     import Darwin
@@ -24,15 +24,16 @@ public protocol Cryptors: class {
     func makeDecryptor() -> DecryptorType
 
     /// Generate array of random bytes. Helper function.
-    @available(*, deprecated: 0.6.0, message: "Use system random generator")
-    static func randomIV(_ blockSize:Int) -> Array<UInt8>
+    static func randomIV(_ blockSize: Int) -> Array<UInt8>
 }
 
 extension Cryptors {
-    static public func randomIV(_ blockSize:Int) -> Array<UInt8> {
-        var randomIV:Array<UInt8> = Array<UInt8>();
-        for _ in 0..<blockSize {
-            randomIV.append(UInt8(truncatingBitPattern: cs_arc4random_uniform(256)));
+
+    public static func randomIV(_ blockSize: Int) -> Array<UInt8> {
+        var randomIV: Array<UInt8> = Array<UInt8>()
+        randomIV.reserveCapacity(blockSize)
+        for randomByte in RandomBytesSequence(size: blockSize) {
+            randomIV.append(randomByte)
         }
         return randomIV
     }
