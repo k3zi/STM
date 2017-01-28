@@ -53,7 +53,7 @@ lane :post_store do
   increment_build_number
   new_version = get_version_string
 
-  match(type: "appstore")
+  #match(type: "appstore")
   gym(scheme: "STM", configuration: "Release", export_method: "app-store", include_symbols: true, include_bitcode: true)
   deliver(force: true, skip_screenshots: true, skip_metadata: true)
 
