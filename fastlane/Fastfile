@@ -1,74 +1,67 @@
-# Customise this file, documentation can be found here:
-# https://github.com/fastlane/fastlane/tree/master/fastlane/docs
-# All available actions: https://github.com/fastlane/fastlane/blob/master/fastlane/docs/Actions.md
-# can also be listed using the `fastlane actions` command
+ENV["CRASHLYTICS_API_TOKEN"] = "0cff9cc7927135c3d29059393dd56ba7f01dc186"
+ENV["CRASHLYTICS_BUILD_SECRET"] = "ea76c94efc96484ce0d6c8eb39079ad1423a836489e4ca6ddedb17806ba14b3d"
+ENV["CRASHLYTICS_FRAMEWORK_PATH"] = "./Pods/Crashlytics/"
 
-# Change the syntax highlighting to Ruby
-# All lines starting with a # are ignored when running `fastlane`
-
-# If you want to automatically update fastlane if a new version is available:
 update_fastlane
-
-# This is the minimum version number required.
-# Update this, if you use features of a newer version
-fastlane_version "1.91.0"
-
 default_platform :ios
 
-# Create a string of the app version & build number suitable for badging
-# Must be invoked w/in fastlane
 def get_badge_version_string
   "#{get_version_number}-#{get_build_number}-blue"
 end
 
-# Create a string of the app version & build number
-# Must be invoked w/in fastlane
 def get_version_string
   "#{get_version_number}.#{get_build_number}"
 end
 
-# Create a string of the build number for release
-# This adds a .1 to differentiate from the beta build number
-# Its a bit of a hack, but we cant use "b" to denote a beta (Testflight hates that)
-# Also test flight won't allow us to upload more than 1 build with the same build number
-# Must be invoked w/in fastlane
 def get_release_build_number
   number = "#{get_build_number}.1"
   number
 end
 
-lane :post_beta do
-  ensure_git_branch(branch: 'master')
+lane :post_beta do |options|
+  changelog = changelog_from_git_commits(pretty: '- (%ae) %s')
+
   increment_build_number
   new_version = get_version_string
   commit_version_bump(message: "bump version to: #{get_build_number}")
-  push_to_git_remote(local_branch: 'master', remote_branch: 'master')
+
+  badge(shield: "#{get_version_number}-#{get_build_number}-blue", shield_no_resize: false)
+  match(type: 'adhoc', force_for_new_devices: true)
+  gym(scheme: "STM", configuration: "Release", export_method: "ad-hoc", include_symbols: true)
+  dsym_zip
+
+  crashlytics(
+      notes: changelog
+  )
+
+  if options[:testflight]
+      match
+      gym(scheme: "STM", configuration: "Release", include_symbols: true, include_bitcode: true)
+      pilot(team_id: "117924857", skip_waiting_for_build_processing: true)
+  end
+
+  reset_git_repo(force: true)
 
   tag_name = "beta-#{new_version}"
   add_git_tag(tag: tag_name)
+  push_to_git_remote()
   sh "git push origin --tags"
-
-  badge(shield: "#{get_version_number}-#{get_build_number}-blue", shield_no_resize: true, dark: true)
-  sigh(output_path: '/Library/Developer/XcodeServer/ProvisioningProfiles', skip_install: true)
-  gym(scheme: "STM", configuration: "Release", export_method: "app-store", include_symbols: true, include_bitcode: true)
-  pilot(team_id: "2276103", skip_waiting_for_build_processing: true)
-  `git checkout -- .`
 end
 
 lane :post_store do
   ensure_git_branch(branch: 'master')
   increment_build_number
   new_version = get_version_string
-  commit_version_bump(message: "bump version: #{get_build_number}")
-  push_to_git_remote(local_branch: 'master', remote_branch: 'master')
 
+  match(type: "appstore")
+  gym(scheme: "STM", configuration: "Release", export_method: "app-store", include_symbols: true, include_bitcode: true)
+  deliver(force: true, skip_screenshots: true, skip_metadata: true)
+
+  commit_version_bump(message: "bump version: #{get_build_number}")
   tag_name = "release-#{new_version}"
   add_git_tag(tag: tag_name)
+  push_to_git_remote()
   sh "git push origin --tags"
-
-  sigh(output_path: '/Library/Developer/XcodeServer/ProvisioningProfiles', skip_install: true)
-  gym(scheme: "STM", configuration: "Release", export_method: "app-store", include_symbols: true, include_bitcode: true)
-  deliver(force: true, skip_screenshots: true, skip_screenshots: true)
 end
 
 lane :pre_dev do
