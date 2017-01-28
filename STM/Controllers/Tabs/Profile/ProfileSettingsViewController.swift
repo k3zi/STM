@@ -58,7 +58,9 @@ class ProfileSettingsViewController: KZViewController {
     override func setupConstraints() {
         super.setupConstraints()
 
-        tableView.autoPinEdgesToSuperviewEdges(with: UIEdgeInsets.zero, excludingEdge: .bottom)
+        tableView.autoPin(toTopLayoutGuideOf: self, withInset: 0)
+        tableView.autoPinEdge(toSuperviewEdge: .left)
+        tableView.autoPinEdge(toSuperviewEdge: .right)
         tableView.autoPin(toBottomLayoutGuideOf: self, withInset: 0)
     }
 

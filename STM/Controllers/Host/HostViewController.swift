@@ -992,23 +992,19 @@ class HostViewController: KZViewController, UISearchBarDelegate, UIViewControlle
 	}
 
     func updateThemeColor(_ color: UIColor) {
-        switcherControl.tintColor = color
-        if isOnAir() {
-            gradientColorView.backgroundColor = color.withAlphaComponent(0.66)
-        } else {
-            gradientColorView.backgroundColor = Constants.UI.Color.off.withAlphaComponent(0.66)
+        DispatchQueue.main.async {
+            self.switcherControl.tintColor = color
+            if self.isOnAir() {
+                self.gradientColorView.backgroundColor = color.withAlphaComponent(0.66)
+            } else {
+                self.gradientColorView.backgroundColor = Constants.UI.Color.off.withAlphaComponent(0.66)
+            }
+
+            [self.settingsHeaderMeta, self.settingsHeaderStatus, self.settingsHeaderPlayback, self.settingsHeaderMicrophone].forEach({ $0.backgroundColor = color })
+
+            NSObject.cancelPreviousPerformRequests(withTarget: self)
+            self.perform(#selector(self.didChangeThemeColor), with: color, afterDelay: 1.0)
         }
-
-        [settingsHeaderMeta, settingsHeaderStatus, settingsHeaderPlayback, settingsHeaderMicrophone].forEach({ $0.backgroundColor = color })
-
-        NSObject.cancelPreviousPerformRequests(withTarget: self)
-        perform(#selector(didChangeThemeColor), with: color, afterDelay: 1.0)
-
-        var hue: CGFloat = 0
-        var saturation: CGFloat = 0
-        var brightness: CGFloat = 0
-        var alpha: CGFloat = 0
-        color.getHue(&hue, saturation: &saturation, brightness: &brightness, alpha: &alpha)
     }
 
     func didChangeThemeColor(_ color: UIColor) {

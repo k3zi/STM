@@ -114,8 +114,10 @@ class CommentViewController: KZViewController, UIViewControllerPreviewingDelegat
     override func setupConstraints() {
         super.setupConstraints()
 
-        tableView.autoPinEdgesToSuperviewEdges(with: UIEdgeInsets.zero, excludingEdge: .bottom)
-
+        tableView.autoPin(toTopLayoutGuideOf: self, withInset: 0)
+        tableView.autoPinEdge(toSuperviewEdge: .left)
+        tableView.autoPinEdge(toSuperviewEdge: .right)
+        
         commentToolbar.autoPinEdge(.top, to: .bottom, of: tableView)
         commentToolbar.autoPinEdge(toSuperviewEdge: .left)
         commentToolbar.autoPinEdge(toSuperviewEdge: .right)
