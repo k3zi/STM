@@ -898,7 +898,7 @@ class HostViewController: KZViewController, UISearchBarDelegate, UIViewControlle
 	}
 
     func updateMetadata(_ song: KZPlayerItem?) {
-        guard let socket = self.socket else {
+        guard let socket = self.socket, let song = song else {
             return
         }
 
@@ -908,11 +908,11 @@ class HostViewController: KZViewController, UISearchBarDelegate, UIViewControlle
             }
 
             var params = JSON()
-            params["artist"] = song?.artist as AnyObject?
-            params["title"] = song?.title as AnyObject?
-            params["album"] = song?.album as AnyObject?
+            params["artist"] = song.artist as AnyObject?
+            params["title"] = song.title as AnyObject?
+            params["album"] = song.album as AnyObject?
 
-            if let artwork = song?.artwork() {
+            if let artwork = song.artwork() {
                 if let image = artwork.image(at: CGSize(width: self.view.frame.size.width, height: self.view.frame.size.width)) {
                     let data = UIImageJPEGRepresentation(image, 0.2)
                     if let data = data {
@@ -1585,6 +1585,14 @@ extension HostViewController: EZOutputDataSource {
             return
         }
 
+        if let socket = socket {
+            socket.disconnect()
+        }
+
+        if let socket = commentSocket {
+            socket.disconnect()
+        }
+
         let oForcePolling = SocketIOClientOption.forcePolling(true)
         let oHost = SocketIOClientOption.nsp("/host")
         let streamQueue = SocketIOClientOption.handleQueue(backgroundQueue)
@@ -1758,7 +1766,6 @@ extension HostViewController: EZOutputDataSource {
 			params["data"] = data.base64EncodedString(options: NSData.Base64EncodingOptions()) as AnyObject?
 			params["time"] = Date().timeIntervalSince1970 as AnyObject?
 			socket.emitWithAck("dataForStream", params).timingOut(after: 15, callback: { (data) in
-
 				guard let response = data[0] as? [String: AnyObject] else {
                     return
                 }
