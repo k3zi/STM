@@ -1131,7 +1131,7 @@
 				CODE_SIGN_ENTITLEMENTS = STM/STM.entitlements;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
-				CURRENT_PROJECT_VERSION = 2149;
+				CURRENT_PROJECT_VERSION = 2150;
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
 				DEVELOPMENT_TEAM = FYHEVSXTTV;
 				INFOPLIST_FILE = STM/Info.plist;
@@ -1159,7 +1159,7 @@
 				CODE_SIGN_ENTITLEMENTS = STM/STM.entitlements;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Distribution";
-				CURRENT_PROJECT_VERSION = 2149;
+				CURRENT_PROJECT_VERSION = 2150;
 				DEVELOPMENT_TEAM = FYHEVSXTTV;
 				INFOPLIST_FILE = STM/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 9.0;
