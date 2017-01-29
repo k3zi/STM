@@ -103,8 +103,9 @@
 		EAB0E6A71C78EEB0008945FF /* UILabelStyles.swift in Sources */ = {isa = PBXBuildFile; fileRef = EAB0E6A61C78EEB0008945FF /* UILabelStyles.swift */; };
 		EAB0E6A91C78F8E9008945FF /* SettingJoinedView.swift in Sources */ = {isa = PBXBuildFile; fileRef = EAB0E6A81C78F8E9008945FF /* SettingJoinedView.swift */; };
 		EAB0E6AC1C7966E5008945FF /* AudioToolbox.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = EAB0E6AB1C7966E5008945FF /* AudioToolbox.framework */; };
-		EAB39D411C7B149600D8C70F /* Localizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = EAB39D401C7B149600D8C70F /* Localizable.strings */; };
 		EACD2B401C75996600A6CFD6 /* HostInfoHolderView.swift in Sources */ = {isa = PBXBuildFile; fileRef = EACD2B3F1C75996600A6CFD6 /* HostInfoHolderView.swift */; };
+		EACE4E9D1E3D26F400E23527 /* Localizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = EACE4E9F1E3D26F400E23527 /* Localizable.strings */; };
+		EACE4EA21E3D2A0800E23527 /* Strings+Localized.swift in Sources */ = {isa = PBXBuildFile; fileRef = EACE4EA11E3D2A0800E23527 /* Strings+Localized.swift */; };
 		EAE063101C7E7A0900C86823 /* STMComment.swift in Sources */ = {isa = PBXBuildFile; fileRef = EAE0630F1C7E7A0900C86823 /* STMComment.swift */; };
 		EAE063121C7E94D000C86823 /* CommentCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = EAE063111C7E94D000C86823 /* CommentCell.swift */; };
 		EAE545041C76978F00180241 /* MeterTable.m in Sources */ = {isa = PBXBuildFile; fileRef = EAE545021C76978F00180241 /* MeterTable.m */; };
@@ -256,8 +257,10 @@
 		EAB0E6A81C78F8E9008945FF /* SettingJoinedView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SettingJoinedView.swift; sourceTree = "<group>"; };
 		EAB0E6AA1C7966E4008945FF /* STM.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.xml; path = STM.entitlements; sourceTree = "<group>"; };
 		EAB0E6AB1C7966E5008945FF /* AudioToolbox.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AudioToolbox.framework; path = System/Library/Frameworks/AudioToolbox.framework; sourceTree = SDKROOT; };
-		EAB39D401C7B149600D8C70F /* Localizable.strings */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.strings; path = Localizable.strings; sourceTree = "<group>"; };
 		EACD2B3F1C75996600A6CFD6 /* HostInfoHolderView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = HostInfoHolderView.swift; sourceTree = "<group>"; };
+		EACE4E9E1E3D26F400E23527 /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/Localizable.strings; sourceTree = "<group>"; };
+		EACE4EA01E3D274E00E23527 /* ja */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = ja; path = ja.lproj/Localizable.strings; sourceTree = "<group>"; };
+		EACE4EA11E3D2A0800E23527 /* Strings+Localized.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "Strings+Localized.swift"; sourceTree = "<group>"; };
 		EAE0630F1C7E7A0900C86823 /* STMComment.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = STMComment.swift; sourceTree = "<group>"; };
 		EAE063111C7E94D000C86823 /* CommentCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CommentCell.swift; sourceTree = "<group>"; };
 		EAE545021C76978F00180241 /* MeterTable.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MeterTable.m; sourceTree = "<group>"; };
@@ -385,8 +388,9 @@
 				EA09CACA1C5C63A20067FF6A /* LaunchScreen.storyboard */,
 				EA09CAB31C5C41510067FF6A /* Assets.xcassets */,
 				EA09CAB81C5C41510067FF6A /* Info.plist */,
-				EAB39D401C7B149600D8C70F /* Localizable.strings */,
+				EACE4E9F1E3D26F400E23527 /* Localizable.strings */,
 				EAB0E6AA1C7966E4008945FF /* STM.entitlements */,
+				EACE4EA11E3D2A0800E23527 /* Strings+Localized.swift */,
 			);
 			path = STM;
 			sourceTree = "<group>";
@@ -753,6 +757,7 @@
 			knownRegions = (
 				en,
 				Base,
+				ja,
 			);
 			mainGroup = EA09CAA01C5C41510067FF6A;
 			productRefGroup = EA09CAAA1C5C41510067FF6A /* Products */;
@@ -778,7 +783,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				EAB0E6A31C78146C008945FF /* LICENSE in Resources */,
-				EAB39D411C7B149600D8C70F /* Localizable.strings in Resources */,
+				EACE4E9D1E3D26F400E23527 /* Localizable.strings in Resources */,
 				EA09CACB1C5C63A20067FF6A /* LaunchScreen.storyboard in Resources */,
 				EA09CAB41C5C41510067FF6A /* Assets.xcassets in Resources */,
 			);
@@ -903,6 +908,7 @@
 				EA54E5C21CC5D8210033135B /* UIToolbarStyles.swift in Sources */,
 				EA09CAD71C5C89A50067FF6A /* NavigationController.swift in Sources */,
 				EA2898C21CD5CB390025F43B /* STMStreamMeta.swift in Sources */,
+				EACE4EA21E3D2A0800E23527 /* Strings+Localized.swift in Sources */,
 				EA01AF931C5CBCA600F56792 /* STMUser.swift in Sources */,
 				EA4F49841C5EC05700103559 /* KZPlayerInner.m in Sources */,
 				EA86DD001CCC281600064040 /* TimelineItemCell.swift in Sources */,
@@ -985,6 +991,18 @@
 		};
 /* End PBXTargetDependency section */
 
+/* Begin PBXVariantGroup section */
+		EACE4E9F1E3D26F400E23527 /* Localizable.strings */ = {
+			isa = PBXVariantGroup;
+			children = (
+				EACE4E9E1E3D26F400E23527 /* en */,
+				EACE4EA01E3D274E00E23527 /* ja */,
+			);
+			name = Localizable.strings;
+			sourceTree = "<group>";
+		};
+/* End PBXVariantGroup section */
+
 /* Begin XCBuildConfiguration section */
 		29DA0B2B1CFA031600E30ADE /* Debug */ = {
 			isa = XCBuildConfiguration;
@@ -1018,6 +1036,7 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ANALYZER_LOCALIZABILITY_NONLOCALIZED = YES;
 				CLANG_CXX_LANGUAGE_STANDARD = "gnu++0x";
 				CLANG_CXX_LIBRARY = "libc++";
 				CLANG_ENABLE_MODULES = YES;
@@ -1065,6 +1084,7 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ANALYZER_LOCALIZABILITY_NONLOCALIZED = YES;
 				CLANG_CXX_LANGUAGE_STANDARD = "gnu++0x";
 				CLANG_CXX_LIBRARY = "libc++";
 				CLANG_ENABLE_MODULES = YES;
@@ -1120,7 +1140,7 @@
 				OTHER_SWIFT_FLAGS = "$(inherited) \"-D\" \"COCOAPODS\" -DDEBUG";
 				PRODUCT_BUNDLE_IDENTIFIER = com.stormedgeapps.streamtome;
 				PRODUCT_NAME = STM;
-				PROVISIONING_PROFILE = "29d19036-9732-462d-9929-051153378762";
+				PROVISIONING_PROFILE = "d8790b7e-2af9-491f-afa8-6573c27b54c4";
 				PROVISIONING_PROFILE_SPECIFIER = "match Development com.stormedgeapps.streamtome";
 				RESOURCES_TARGETED_DEVICE_FAMILY = "";
 				SWIFT_OBJC_BRIDGING_HEADER = "STM/Extras/STM-Bridging-Header.h";

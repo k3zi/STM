@@ -150,7 +150,9 @@ class CreateStreamViewController: KZViewController {
     override func setupConstraints() {
         super.setupConstraints()
 
-        scrollView.autoPinEdgesToSuperviewEdges(with: UIEdgeInsets.zero, excludingEdge: .bottom)
+        scrollView.autoPin(toTopLayoutGuideOf: self, withInset: 0)
+        scrollView.autoPinEdge(toSuperviewEdge: .left)
+        scrollView.autoPinEdge(toSuperviewEdge: .right)
         scrollViewBottomConstraint = scrollView.autoPin(toBottomLayoutGuideOf: self, withInset: 0)
 
         contentView.autoPinEdgesToSuperviewEdges(with: UIEdgeInsets.zero)

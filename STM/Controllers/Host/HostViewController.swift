@@ -478,7 +478,7 @@ class HostViewController: KZViewController, UISearchBarDelegate, UIViewControlle
 
 		musicVolumeSlider.value = 1.0
         musicVolumeSlider.addTarget(self, action: #selector(HostViewController.didChangeMusicVolume(_:)), for: .valueChanged)
-		let musicVolumeSettingView = SettingJoinedView(text: NSLocalizedString("Settings_HostMusicVolume", comment: "Music Volume"), detailText: NSLocalizedString("Settings_HostMusicVolumeDescription", comment: ""), control: musicVolumeSlider)
+		let musicVolumeSettingView = SettingJoinedView(text: String.Settings.HostMusicVolume, detailText: String.Settings.HostMusicVolumeDescription, control: musicVolumeSlider)
 		self.musicVolumeSettingView = musicVolumeSettingView
 		settingsContentView.addSubview(musicVolumeSettingView)
 
@@ -487,13 +487,13 @@ class HostViewController: KZViewController, UISearchBarDelegate, UIViewControlle
 
 		micVolumeSlider.value = 1.0
         micVolumeSlider.addTarget(self, action: #selector(HostViewController.didChangeMicVolume(_:)), for: .valueChanged)
-		let micVolumeSettingView = SettingJoinedView(text: NSLocalizedString("Settings_HostMicrophoneVolume", comment: "Microphone Volume"), detailText: NSLocalizedString("Settings_HostMicrophoneVolumeDescription", comment: ""), control: micVolumeSlider)
+		let micVolumeSettingView = SettingJoinedView(text: String.Settings.HostMicrophoneVolume, detailText: String.Settings.HostMicrophoneVolumeDescription, control: micVolumeSlider)
 		self.micVolumeSettingView = micVolumeSettingView
 		settingsContentView.addSubview(micVolumeSettingView)
 
 		micActiveMusicVolumeSlider.value = 0.2
         micActiveMusicVolumeSlider.addTarget(self, action: #selector(HostViewController.didChangeMusicVolumeMicActive(_:)), for: .valueChanged)
-		let micActiveMusicVolumeSettingView = SettingJoinedView(text: NSLocalizedString("Settings_HostMusicVolumeWhenMicActive", comment: "Music Volume When Mic Active"), detailText: NSLocalizedString("Settings_HostMusicVolumeWhenMicActiveDescription", comment: ""), control: micActiveMusicVolumeSlider)
+		let micActiveMusicVolumeSettingView = SettingJoinedView(text: String.Settings.HostMusicVolumeWhenMicActive, detailText: String.Settings.HostMusicVolumeWhenMicActiveDescription, control: micActiveMusicVolumeSlider)
 		self.micActiveMusicVolumeSettingView = micActiveMusicVolumeSettingView
 		settingsContentView.addSubview(micActiveMusicVolumeSettingView)
 		micActiveMusicVolumeSettingView.setPrevChain(micVolumeSettingView)
@@ -501,12 +501,12 @@ class HostViewController: KZViewController, UISearchBarDelegate, UIViewControlle
 		micFadeTimeSlider.minimumValue = 0.0
 		micFadeTimeSlider.maximumValue = 10.0
 		micFadeTimeSlider.value = 2.0
-		let micFadeTimeSettingView = SettingJoinedView(text: NSLocalizedString("Settings_HostMicFadeTime", comment: "Microphone Fade Time"), detailText: NSLocalizedString("Settings_HostMicFadeTimeDescription", comment: ""), control: micFadeTimeSlider)
+		let micFadeTimeSettingView = SettingJoinedView(text: String.Settings.HostMicFadeTime, detailText: String.Settings.HostMicFadeTimeDescription, control: micFadeTimeSlider)
 		self.micFadeTimeSettingView = micFadeTimeSettingView
 		settingsContentView.addSubview(micFadeTimeSettingView)
 		micFadeTimeSettingView.setPrevChain(micActiveMusicVolumeSettingView)
 
-        let monitoringSettingView = SettingJoinedView(text: NSLocalizedString("Settings_HostMonitoring", comment: "Mic Monitoring"), detailText: NSLocalizedString("Settings_HostMonitoringDescription", comment: ""), control: monitoringSwitch)
+        let monitoringSettingView = SettingJoinedView(text: String.Settings.HostMonitoring, detailText: String.Settings.HostMonitoringDescription, control: monitoringSwitch)
         self.monitoringSettingView = monitoringSettingView
         settingsContentView.addSubview(monitoringSettingView)
         monitoringSettingView.setPrevChain(micFadeTimeSettingView)
@@ -522,7 +522,7 @@ class HostViewController: KZViewController, UISearchBarDelegate, UIViewControlle
         metaNameField.textAlignment = .center
         metaNameField.text = stream?.name
         metaNameField.font = UIFont.systemFont(ofSize: 14)
-        let metaNameSettingView = SettingJoinedView(text: NSLocalizedString("Settings_StreamName", comment: "Stream Name"), detailText: NSLocalizedString("Settings_StreamNameDescription", comment: ""), control: metaNameField)
+        let metaNameSettingView = SettingJoinedView(text: String.Settings.StreamName, detailText: String.Settings.StreamNameDescription, control: metaNameField)
         self.metaNameSettingView = metaNameSettingView
         settingsContentView.addSubview(metaNameSettingView)
 
@@ -534,7 +534,7 @@ class HostViewController: KZViewController, UISearchBarDelegate, UIViewControlle
         metaDescriptionField.text = stream?.description
         metaDescriptionField.font = UIFont.systemFont(ofSize: 14)
         metaDescriptionField.autoSetDimension(.height, toSize: 150)
-        let metaDescriptionSettingView = SettingJoinedView(text: NSLocalizedString("Settings_StreamDescription", comment: "Stream Desscription"), detailText: NSLocalizedString("Settings_StreamDescriptionDescription", comment: ""), control: metaDescriptionField)
+        let metaDescriptionSettingView = SettingJoinedView(text: String.Settings.StreamDescription, detailText: String.Settings.StreamDescriptionDescription, control: metaDescriptionField)
         self.metaDescriptionSettingView = metaDescriptionSettingView
         settingsContentView.addSubview(metaDescriptionSettingView)
         metaDescriptionSettingView.setPrevChain(metaNameSettingView)
@@ -556,7 +556,7 @@ class HostViewController: KZViewController, UISearchBarDelegate, UIViewControlle
         tap.numberOfTapsRequired = 1
         tap.numberOfTouchesRequired = 1
         metaPictureButton.addGestureRecognizer(tap)
-        let metaPictureSettingView = SettingJoinedView(text: NSLocalizedString("Settings_StreamPhoto", comment: "Stream Photo"), detailText: NSLocalizedString("Settings_StreamPhotoDescription", comment: ""), control: metaPictureButtonHolder)
+        let metaPictureSettingView = SettingJoinedView(text: String.Settings.StreamPhoto, detailText: String.Settings.StreamPhotoDescription, control: metaPictureButtonHolder)
         self.metaPictureSettingView = metaPictureSettingView
         settingsContentView.addSubview(metaPictureSettingView)
         metaPictureSettingView.setPrevChain(metaDescriptionSettingView)
@@ -570,7 +570,7 @@ class HostViewController: KZViewController, UISearchBarDelegate, UIViewControlle
             self.updateThemeColor(color)
             CATransaction.commit()
         }
-        let metaColorSettingsView = SettingJoinedView(text: NSLocalizedString("Settings_StreamThemeColor", comment: "Stream Theme Color"), detailText: NSLocalizedString("Settings_StreamThemeColorDescription", comment: ""), control: metaColorSlider)
+        let metaColorSettingsView = SettingJoinedView(text: String.Settings.StreamThemeColor, detailText: String.Settings.StreamThemeColorDescription, control: metaColorSlider)
         self.metaColorSettingsView = metaColorSettingsView
         settingsContentView.addSubview(metaColorSettingsView)
         metaColorSettingsView.setPrevChain(metaPictureSettingView)

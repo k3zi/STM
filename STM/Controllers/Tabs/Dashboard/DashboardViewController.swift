@@ -22,7 +22,7 @@ class DashboardViewController: KZViewController, UIViewControllerPreviewingDeleg
     override func viewDidLoad() {
         super.viewDidLoad()
 
-        self.title = "Dashboard"
+        self.title = String.Navigation.Dashboard
         self.automaticallyAdjustsScrollViewInsets = true
         self.view.backgroundColor = Constants.UI.Color.tint4
 
