@@ -259,7 +259,9 @@ class CreateStreamViewController: KZViewController {
         //let streamType = streamTypeSegmentControl.selectedSegmentIndex == 0 ? StreamType.Global : StreamType.Local
         let passcodeString = privacySwitch.isOn ? (passcodeTextField.text ?? "") : ""
         vc.start(selectedCategory, name: name, passcode: passcodeString, description: description) { (nothing, error) -> Void in
-            if error == nil {
+            if let error = error {
+                self.showError(error)
+            } else {
                 self.streamNameTextField.text = nil
                 self.selectedType(self.categoryRadioBT)
                 self.streamDescriptionTextView.text = nil
