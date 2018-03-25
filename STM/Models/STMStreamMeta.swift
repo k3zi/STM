@@ -9,7 +9,7 @@
 import Foundation
 import Gloss
 
-struct STMStreamMeta: Decodable {
+struct STMStreamMeta: JSONDecodable {
 
     let artist: String?
     let title: String
@@ -28,7 +28,7 @@ struct STMStreamMeta: Decodable {
         self.title = title
         self.album = "album" <~~ json ?? "meta_album" <~~ json
         self.imageFile = "meta_image_file" <~~ json
-        self.image = Decoder.decodeImageFromBase64("image", json: json)
+        self.image = JSONDecoder.decodeImageFromBase64("image", json: json)
     }
 
     func imageURL() -> URL? {
@@ -41,7 +41,7 @@ struct STMStreamMeta: Decodable {
 
 }
 
-extension Decoder {
+extension JSONDecoder {
 
     static func decodeImageFromBase64(_ key: String, json: JSON) -> UIImage? {
         if let imageEncodedString = json.valueForKeyPath(keyPath: key) as? String {

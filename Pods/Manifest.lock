@@ -1,49 +1,50 @@
 PODS:
-  - Alamofire (4.3.0)
-  - ALCameraViewController (1.2.7)
+  - Alamofire (4.7.0)
+  - ALCameraViewController (3.0.3)
   - CocoaSecurity (1.2.4)
-  - Crashlytics (3.8.3):
-    - Fabric (~> 1.6.3)
-  - CryptoSwift (0.6.7)
-  - DateTools (2.0.0-beta.3)
+  - Crashlytics (3.10.1):
+    - Fabric (~> 1.7.5)
+  - CryptoSwift (0.8.3)
+  - DateTools (2.0.0)
   - DGElasticPullToRefresh (1.1)
-  - Fabric (1.6.11)
-  - Gloss (1.2.0)
+  - Fabric (1.7.6)
+  - Gloss (2.0.0)
   - Hashids-Swift (0.3.1)
   - HPGrowingTextView (1.1)
-  - Keynode (1.6.0)
+  - Keynode (2.0.0)
   - KILabel (1.0.1)
-  - Kingfisher (3.3.2)
+  - Kingfisher (4.6.4)
   - KMPlaceholderTextView (1.3.0)
   - KZ (2.2.3):
     - PureLayout
     - Reusable
   - M13ProgressSuite (1.2.9)
-  - NYSegmentedControl (1.0.7)
+  - NYSegmentedControl (1.1.0)
   - PRTween (0.1.0)
   - PureLayout (3.0.2)
-  - Reusable (2.5.0):
-    - Reusable/Storyboard (= 2.5.0)
-    - Reusable/View (= 2.5.0)
-  - Reusable/Storyboard (2.5.0)
-  - Reusable/View (2.5.0)
+  - Reusable (4.0.2):
+    - Reusable/Storyboard (= 4.0.2)
+    - Reusable/View (= 4.0.2)
+  - Reusable/Storyboard (4.0.2)
+  - Reusable/View (4.0.2)
   - SAConfettiView (0.1.8)
   - SecureNSUserDefaults (1.0.1):
     - CocoaSecurity (~> 1.2.4)
-  - Socket.IO-Client-Swift (8.2.0)
+  - Socket.IO-Client-Swift (13.1.2):
+    - Starscream (~> 3.0.2)
   - SpinKit (1.2.0)
-  - StreamingKit (0.1.29)
-  - TwitterCore (2.8.0):
-    - Fabric
-  - TwitterKit (2.8.0):
-    - TwitterCore (= 2.8.0)
+  - Starscream (3.0.4)
+  - StreamingKit (0.1.30)
+  - TwitterCore (3.1.0)
+  - TwitterKit (3.3.0):
+    - TwitterCore (>= 3.1.0)
 
 DEPENDENCIES:
-  - Alamofire (~> 4.0)
+  - Alamofire
   - ALCameraViewController
   - Crashlytics
   - CryptoSwift
-  - DateTools (from `https://github.com/MatthewYork/DateTools.git`, commit `8fe563153128b57d2ee5f4742e778d39effb4375`, branch `swift`)
+  - DateTools (from `https://github.com/MatthewYork/DateTools.git`, branch `swift`)
   - DGElasticPullToRefresh
   - Fabric
   - Gloss
@@ -58,8 +59,8 @@ DEPENDENCIES:
   - NYSegmentedControl
   - PRTween
   - PureLayout
-  - Reusable (from `https://github.com/phatblat/Reusable.git`, branch `ben/swift3`)
-  - SAConfettiView (from `https://github.com/gokhanakkurt/SAConfettiView.git`, branch `swift3`)
+  - Reusable
+  - SAConfettiView
   - SecureNSUserDefaults
   - Socket.IO-Client-Swift
   - SpinKit
@@ -70,7 +71,6 @@ DEPENDENCIES:
 EXTERNAL SOURCES:
   DateTools:
     :branch: swift
-    :commit: 8fe563153128b57d2ee5f4742e778d39effb4375
     :git: https://github.com/MatthewYork/DateTools.git
   Hashids-Swift:
     :branch: master
@@ -78,16 +78,10 @@ EXTERNAL SOURCES:
   KZ:
     :branch: master
     :git: https://github.com/k3zi/KZ.git
-  Reusable:
-    :branch: ben/swift3
-    :git: https://github.com/phatblat/Reusable.git
-  SAConfettiView:
-    :branch: swift3
-    :git: https://github.com/gokhanakkurt/SAConfettiView.git
 
 CHECKOUT OPTIONS:
   DateTools:
-    :commit: b763d05a9bfa9d18235e5520a40d3bd4751fcc83
+    :commit: c36311e6c0b28103f32311b54f1d27a334785bcc
     :git: https://github.com/MatthewYork/DateTools.git
   Hashids-Swift:
     :commit: 34170e1b73787e89a7802831be8cf06bb82d648e
@@ -95,43 +89,38 @@ CHECKOUT OPTIONS:
   KZ:
     :commit: 7c29ca1c4fb76118dabb45d8f711d17e1fef9061
     :git: https://github.com/k3zi/KZ.git
-  Reusable:
-    :commit: 4edd5add3b22e61cbd51eaf609dcdbff99ea295b
-    :git: https://github.com/phatblat/Reusable.git
-  SAConfettiView:
-    :commit: ad562197a289cd2ce231effabe705fb6e00fadec
-    :git: https://github.com/gokhanakkurt/SAConfettiView.git
 
 SPEC CHECKSUMS:
-  Alamofire: 856a113053a7bc9cbe5d6367a555d773fc5cfef7
-  ALCameraViewController: 4a513b8d5ecfdb3f34c50b1d469c373aae1ec7b4
+  Alamofire: 907e0a98eb68cdb7f9d1f541a563d6ac5dc77b25
+  ALCameraViewController: 6398a9282057f709b87a1ecc52a83b48028ade64
   CocoaSecurity: d288a6f87e0f363823d2cb83e753814a6944f71a
-  Crashlytics: 2b6dbe138a42395577cfa73dfa1aa7248cadf39e
-  CryptoSwift: 685ae257941e5447474348a2b545583e1a16b573
-  DateTools: fe8ad1e2e77ebb9cf1db6becf077772dd83fdb63
+  Crashlytics: aee1a064cbbf99b32efa3f056a5f458d846bc8ff
+  CryptoSwift: 033efc3523865d19cc6ab6612fa17a62613b5dfa
+  DateTools: 9a92563d4567296fb6fa8ae586321159c514c8c6
   DGElasticPullToRefresh: 28f11a6026302a90f8ffebbc6e24748e584dddd3
-  Fabric: 5911403591946b8228ab1c51d98f1d7137e863c6
-  Gloss: ec49584b2e8144e39810b6db6285433316e0c1c7
+  Fabric: f8d42c893bb187326a7968b62abe55c36a987a46
+  Gloss: b67617f327406adfd47adf20172d00680a3a31bd
   Hashids-Swift: b327671abc1ac721e6cc9691ffd668525224b64a
   HPGrowingTextView: 88a716d97fb853bcb08a4a08e4727da17efc9b19
-  Keynode: e632595cd36332b3f58a541cca917d353c6a8173
+  Keynode: 7e07b14c1afd4f2bba33e77a54eb3bf76ebb076f
   KILabel: 4797807cdc0b4992dad8bf91175ddc973c3b569b
-  Kingfisher: 8e60094454aeb4746eb588eb57f794d891c6ea88
+  Kingfisher: 68498a706e46c2a050b0c9572f100e5db407f6e0
   KMPlaceholderTextView: 2bbcd19a273648a80a61e1e48f9743a24d8930e3
   KZ: bedfdcea546f4f4ecc014355d025559f74dcefb6
   M13ProgressSuite: ea9f7263e73e9215e6849dfa54e29ee0ad6a145c
-  NYSegmentedControl: 55b4f9eb652767cae9799623ec3e49e50029ef47
+  NYSegmentedControl: a92726c9e459919549f94328389ffcdaecefebfe
   PRTween: 6c58c7e32ebcf31e33e6a6e6bc727ebef3b668ef
   PureLayout: 4d550abe49a94f24c2808b9b95db9131685fe4cd
-  Reusable: 1775ede04719c488bb04e809d923cbb7214168b8
+  Reusable: 584a5629747c52e0f6a77841b400dc2643f6fa0f
   SAConfettiView: c87031a2280659261b730fce3669fb10e73636ee
   SecureNSUserDefaults: 8a07fc6a6fde31c7f8fa6ead73d3c9c3706a6364
-  Socket.IO-Client-Swift: 900cf511777045c80d1ce1f11f71261e87765dd1
+  Socket.IO-Client-Swift: 010d2f464bdd1849b859c0cd0500d68194401ac8
   SpinKit: 65906a8b534a4e14cbfd3f8b0b6c329131faef4a
-  StreamingKit: c329785aaef3ac142d4ae388345bfe1ed23cfd45
-  TwitterCore: e959987be23c767004d29eb7fab8d85d8585a2e5
-  TwitterKit: f7b0a1adcb800f6446ff0ef70164797376522ff3
+  Starscream: f5da93fe6984c77b694366bf7299b7dc63a76f26
+  StreamingKit: 70ca8608c206864b4d54a577eacb3c8bf7c72209
+  TwitterCore: 644d59e75abccb26cf0a9050d2c4dea0e5412241
+  TwitterKit: a2e60ddcedbf54091eac6f27685ca7a87681e1d7
 
-PODFILE CHECKSUM: 448234af8dc7ec3d2e0a1af506d0439ccd8a6a38
+PODFILE CHECKSUM: ed6a7d565a1e385d6e72a9676c1185bc3d03da78
 
-COCOAPODS: 1.1.1
+COCOAPODS: 1.4.0

@@ -30,6 +30,9 @@ Decodes JSON to objects.
 */
 public struct Decoder {
     
+    /// Default logger
+    public static var logger: Logger = GlossLogger()
+    
     /**
      Decodes JSON to a generic value.
     
@@ -37,12 +40,21 @@ public struct Decoder {
     
     - returns: Value decoded from JSON.
     */
-    public static func decode<T>(key: String, keyPathDelimiter: String = GlossKeyPathDelimiter) -> (JSON) -> T? {
+    public static func decode<T>(key: String, keyPathDelimiter: String = GlossKeyPathDelimiter, logger: Logger = logger) -> (JSON) -> T? {
         return {
             json in
             
             if let value = json.valueForKeyPath(keyPath: key, withDelimiter: keyPathDelimiter) as? T {
                 return value
+            }
+            
+            // If Gloss cannot determine the type being decoded, this generic decode function
+            // will be used. At times, this will result in a value being present in the JSON
+            // but Gloss returning nil - in this case, we log the failure.
+            if
+                let value = json.valueForKeyPath(keyPath: key, withDelimiter: keyPathDelimiter),
+                !(value is NSNull) {
+                logger.log(message: "Value found for key \"\(key)\" but decoding failed.")
             }
             
             return nil
@@ -122,13 +134,13 @@ public struct Decoder {
     }
     
     /**
-     Decodes JSON to a Decodable object.
+     Decodes JSON to a JSONDecodable object.
      
      - parameter key: Key used in JSON for decoded value.
      
      - returns: Value decoded from JSON.
      */
-    public static func decode<T: Decodable>(decodableForKey key: String, keyPathDelimiter: String = GlossKeyPathDelimiter) -> (JSON) -> T? {
+    public static func decode<T: JSONDecodable>(decodableForKey key: String, keyPathDelimiter: String = GlossKeyPathDelimiter) -> (JSON) -> T? {
         return {
             json in
             
@@ -142,13 +154,13 @@ public struct Decoder {
     }
     
     /**
-     Decodes JSON to a Decodable object array.
+     Decodes JSON to a JSONDecodable object array.
      
      - parameter key: Key used in JSON for decoded value.
      
      - returns: Value decoded from JSON.
      */
-    public static func decode<T: Decodable>(decodableArrayForKey key: String, keyPathDelimiter: String = GlossKeyPathDelimiter) -> (JSON) -> [T]? {
+    public static func decode<T: JSONDecodable>(decodableArrayForKey key: String, keyPathDelimiter: String = GlossKeyPathDelimiter) -> (JSON) -> [T]? {
         return {
             json in
             
@@ -171,13 +183,13 @@ public struct Decoder {
     }
     
     /**
-     Decodes JSON to a dictionary of String to Decodable.
+     Decodes JSON to a dictionary of String to JSONDecodable.
      
      - parameter key: Key used in JSON for decoded value.
      
      - returns: Value decoded from JSON.
      */
-    public static func decode<T:Decodable>(decodableDictionaryForKey key: String, keyPathDelimiter: String = GlossKeyPathDelimiter) -> (JSON) -> [String : T]? {
+    public static func decode<T:JSONDecodable>(decodableDictionaryForKey key: String, keyPathDelimiter: String = GlossKeyPathDelimiter) -> (JSON) -> [String : T]? {
         return {
             json in
             
@@ -198,13 +210,13 @@ public struct Decoder {
     }
     
     /**
-     Decodes JSON to a dictionary of String to Decodable array.
+     Decodes JSON to a dictionary of String to JSONDecodable array.
      
      - parameter key: Key used in JSON for decoded value.
      
      - returns: Value decoded from JSON.
      */
-    public static func decode<T:Decodable>(decodableDictionaryForKey key: String, keyPathDelimiter: String = GlossKeyPathDelimiter) -> (JSON) -> [String : [T]]? {
+    public static func decode<T:JSONDecodable>(decodableDictionaryForKey key: String, keyPathDelimiter: String = GlossKeyPathDelimiter) -> (JSON) -> [String : [T]]? {
         return {
             json in
             
@@ -529,6 +541,46 @@ public struct Decoder {
     }
     
     /**
+     Decodes JSON to an Double.
+     
+     - parameter key: Key used in JSON for decoded value.
+     
+     - returns: Value decoded from JSON.
+     */
+    public static func decode(doubleForKey key: String, keyPathDelimiter: String = GlossKeyPathDelimiter) -> (JSON) -> Double? {
+        return {
+            json in
+            
+            if let number = json.valueForKeyPath(keyPath: key, withDelimiter: keyPathDelimiter) as? NSNumber {
+                return number.doubleValue
+            }
+            
+            return nil
+        }
+    }
+    
+    /**
+     Decodes JSON to an Double array.
+     
+     - parameter key: Key used in JSON for decoded value.
+     
+     - returns: Value decoded from JSON.
+     */
+    public static func decode(doubleArrayForKey key: String, keyPathDelimiter: String = GlossKeyPathDelimiter) -> (JSON) -> [Double]? {
+        return {
+            json in
+            
+            if let numbers = json.valueForKeyPath(keyPath: key, withDelimiter: keyPathDelimiter) as? [NSNumber] {
+                let doubles: [Double] = numbers.map { $0.doubleValue }
+                
+                return doubles
+            }
+            
+            return nil
+        }
+    }
+    
+    /**
      Decodes JSON to a Decimal.
      
      - parameter key: Key used in JSON for decoded value.
@@ -569,3 +621,4 @@ public struct Decoder {
     }
     
 }
+

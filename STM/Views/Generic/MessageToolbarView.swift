@@ -77,7 +77,7 @@ class MessageToolbarView: UIView, HPGrowingTextViewDelegate {
 	func growingTextView(_ growingTextView: HPGrowingTextView!, shouldChangeTextIn range: NSRange, replacementText text: String!) -> Bool {
 		let currentText = growingTextView.text as NSString
 		let proposedText = currentText.replacingCharacters(in: range, with: text)
-		if proposedText.characters.count > 150 {
+		if proposedText.count > 150 {
 			return false
 		}
 
@@ -88,11 +88,11 @@ class MessageToolbarView: UIView, HPGrowingTextViewDelegate {
 		return true
 	}
 
-    func placeCursorAtEnd(_ growingTextView: HPGrowingTextView) {
-        growingTextView.selectedRange = NSRange(location: growingTextView.text.characters.count, length: 0)
+    @objc func placeCursorAtEnd(_ growingTextView: HPGrowingTextView) {
+        growingTextView.selectedRange = NSRange(location: growingTextView.text.count, length: 0)
     }
 
-	func send() {
+    @objc func send() {
         guard let currentText = toolBar.text else {
             return
         }

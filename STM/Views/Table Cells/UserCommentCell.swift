@@ -75,7 +75,7 @@ class UserCommentCell: KZTableViewCell {
         timer = Timer.scheduledTimer(timeInterval: 1.0, target: self, selector: #selector(CommentCell.updateTime), userInfo: nil, repeats: true)
 	}
 
-    func goToStream() {
+    @objc func goToStream() {
         guard let comment = model as? STMComment, let stream = comment.stream else {
             return
         }
@@ -95,7 +95,7 @@ class UserCommentCell: KZTableViewCell {
         }
     }
 
-    func toggleLike() {
+    @objc func toggleLike() {
         guard let comment = model as? STMComment else {
             return
         }
@@ -115,7 +115,7 @@ class UserCommentCell: KZTableViewCell {
         }
     }
 
-    func toggleRepost() {
+    @objc func toggleRepost() {
         guard let comment = model as? STMComment else {
             return
         }
@@ -139,7 +139,7 @@ class UserCommentCell: KZTableViewCell {
         }
     }
 
-    func goToUser() {
+    @objc func goToUser() {
         guard let comment = model as? STMComment else {
             return
         }
@@ -162,7 +162,7 @@ class UserCommentCell: KZTableViewCell {
 
 	override func updateConstraints() {
 		super.updateConstraints()
-		NSLayoutConstraint.autoSetPriority(999) { () -> Void in
+		NSLayoutConstraint.autoSetPriority(UILayoutPriority(rawValue: 999)) { () -> Void in
 			self.avatar.autoSetDimensions(to: CGSize(width: 45.0, height: 45.0))
 		}
 
@@ -199,7 +199,7 @@ class UserCommentCell: KZTableViewCell {
         statusView.autoPinEdge(toSuperviewEdge: .right, withInset: 5)
 	}
 
-    override func estimatedHeight() -> CGFloat {
+    @objc override func estimatedHeight() -> CGFloat {
         let rightSideWidth = Constants.UI.Screen.width - 12 - 45 - 10 - 10
         var height = CGFloat(13) //top padding
         height = height + nameLabel.estimatedHeight(rightSideWidth)
@@ -248,7 +248,7 @@ class UserCommentCell: KZTableViewCell {
         }
 	}
 
-    func updateTime() {
+    @objc func updateTime() {
         guard let comment = model as? STMComment else {
             return
         }

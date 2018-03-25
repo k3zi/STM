@@ -9,7 +9,7 @@
 import Foundation
 import Gloss
 
-class STMMessage: Decodable {
+class STMMessage: JSONDecodable {
 
     let id: Int
     let user: STMUser?
@@ -26,6 +26,6 @@ class STMMessage: Decodable {
         self.id = id
         self.user = "user" <~~ json
         self.text = "text" <~~ json
-        self.date = Decoder.decodeUnixTimestamp("date", json: json) as Date?
+        self.date = JSONDecoder.decodeUnixTimestamp("date", json: json) as Date?
     }
 }

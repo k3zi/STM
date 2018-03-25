@@ -35,7 +35,7 @@ class UpNextSongCell: MCSwipeCell {
         self.contentView.addSubview(songArtist)
     }
 
-    override func estimatedHeight() -> CGFloat {
+    @objc override func estimatedHeight() -> CGFloat {
         return 65
     }
 
@@ -45,7 +45,7 @@ class UpNextSongCell: MCSwipeCell {
 
     override func updateConstraints() {
         super.updateConstraints()
-        NSLayoutConstraint.autoSetPriority(999) { () -> Void in
+        NSLayoutConstraint.autoSetPriority(UILayoutPriority(rawValue: 999)) { () -> Void in
             self.poster.autoSetDimensions(to: CGSize(width: 65.0, height: 65.0))
         }
         poster.autoPinEdge(toSuperviewEdge: .top)

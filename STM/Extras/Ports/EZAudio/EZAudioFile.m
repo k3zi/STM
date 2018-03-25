@@ -149,13 +149,11 @@
 }
 
 #pragma mark - Events
-- (void)readFrames:(UInt32)frames
-  audioBufferList:(AudioBufferList *)audioBufferList
-       bufferSize:(UInt32 *)bufferSize
-              eof:(BOOL *)eof {
-    [EZAudio checkResult:ExtAudioFileRead(_audioFile,
-                                          &frames,
-                                          audioBufferList)
+- (void)readFrames:(UInt32) frames
+  audioBufferList:(AudioBufferList *) audioBufferList
+       bufferSize:(UInt32 *) bufferSize
+              eof:(BOOL *) eof {
+    [EZAudio checkResult:ExtAudioFileRead(_audioFile, &frames, audioBufferList)
                operation:"Failed to read audio data from audio file"];
     *bufferSize = audioBufferList->mBuffers[0].mDataByteSize/sizeof(STMAudioUnitSampleType);
     *eof = frames == 0;
@@ -168,7 +166,7 @@
     }
 }
 
-- (void)seekToFrame:(SInt64)frame {
+- (void)seekToFrame:(SInt64) frame {
     [EZAudio checkResult:ExtAudioFileSeek(_audioFile,frame)
                operation:"Failed to seek frame position within audio file"];
 
@@ -185,49 +183,47 @@
     return _waveformData != NULL;
 }
 
-- (void)getWaveformDataWithCompletionBlock:(WaveformDataCompletionBlock)waveformDataCompletionBlock {
+- (void)getWaveformDataWithCompletionBlock:(WaveformDataCompletionBlock) waveformDataCompletionBlock {
     
     SInt64 currentFramePosition = _frameIndex;
     
-    if( _waveformData != NULL ){
-        waveformDataCompletionBlock( _waveformData, _waveformTotalBuffers );
+    if (_waveformData != NULL) {
+        waveformDataCompletionBlock(_waveformData, _waveformTotalBuffers);
         return;
     }
     
-    _waveformFrameRate    = [self recommendedDrawingFrameRate];
+    _waveformFrameRate = [self recommendedDrawingFrameRate];
     _waveformTotalBuffers = [self minBuffersWithFrameRate:_waveformFrameRate];
-    _waveformData         = (float*)malloc(sizeof(float)*_waveformTotalBuffers);
+    _waveformData = (float*)malloc(sizeof(float)*_waveformTotalBuffers);
     
-    if( self.totalFrames == 0 ){
-        waveformDataCompletionBlock( _waveformData, _waveformTotalBuffers );
+    if (self.totalFrames == 0) {
+        waveformDataCompletionBlock(_waveformData, _waveformTotalBuffers);
         return;
     }
     
     dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT,0ul), ^{
         
-        for( int i = 0; i < _waveformTotalBuffers; i++ ){
+        for (int i = 0; i < self->_waveformTotalBuffers; i++) {
             
             // Take a snapshot of each buffer through the audio file to form the waveform
-            AudioBufferList *bufferList = [EZAudio audioBufferListWithNumberOfFrames:_waveformFrameRate
-                                                                    numberOfChannels:_clientFormat.mChannelsPerFrame
+            AudioBufferList *bufferList = [EZAudio audioBufferListWithNumberOfFrames:self->_waveformFrameRate
+                                                                    numberOfChannels:self->_clientFormat.mChannelsPerFrame
                                                                          interleaved:YES];
             UInt32 bufferSize;
             BOOL eof;
             
             // Read in the specified number of frames
-            [EZAudio checkResult:ExtAudioFileRead(_audioFile,
-                                                  &_waveformFrameRate,
-                                                  bufferList)
+            [EZAudio checkResult:ExtAudioFileRead(self->_audioFile, &self->_waveformFrameRate, bufferList)
                        operation:"Failed to read audio data from audio file"];
             bufferSize = bufferList->mBuffers[0].mDataByteSize/sizeof(STMAudioUnitSampleType);
             bufferSize = MAX(1, bufferSize);
-            eof = _waveformFrameRate == 0;
-            _frameIndex += _waveformFrameRate;
+            eof = self->_waveformFrameRate == 0;
+            self->_frameIndex += self->_waveformFrameRate;
             
             // Calculate RMS of each buffer
             float rms = [EZAudio RMS:bufferList->mBuffers[0].mData
                               length:bufferSize];
-            _waveformData[i] = rms;
+            self->_waveformData[i] = rms;
             
             // Since we malloc'ed, we should cleanup
             [EZAudio freeBufferList:bufferList];
@@ -235,13 +231,13 @@
         }
         
         // Seek the audio file back to the beginning
-        [EZAudio checkResult:ExtAudioFileSeek(_audioFile,currentFramePosition)
+        [EZAudio checkResult:ExtAudioFileSeek(self->_audioFile,currentFramePosition)
                    operation:"Failed to seek frame position within audio file"];
-        _frameIndex = currentFramePosition;
+        self->_frameIndex = currentFramePosition;
         
         // Once we're done send off the waveform data
         dispatch_async(dispatch_get_main_queue(), ^{
-            waveformDataCompletionBlock( _waveformData, _waveformTotalBuffers );
+            waveformDataCompletionBlock(self->_waveformData, self->_waveformTotalBuffers);
         });
         
     });

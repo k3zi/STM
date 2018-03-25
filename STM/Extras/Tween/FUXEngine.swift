@@ -9,7 +9,11 @@
 import UIKit
 import QuartzCore
 
-infix operator + { associativity left}
+precedencegroup FUXAdditivePrecedence {
+    associativity: left
+}
+
+infix operator +: FUXAdditivePrecedence
 public func + (left: FUXEngine, right: FUXTween) -> FUXTween {
     return left.addTween(right)
 }
@@ -87,7 +91,7 @@ open class FUXEngine: NSObject {
         _isRunning = false
     }
 
-    func update(_ displayLink: CADisplayLink) {
+    @objc func update(_ displayLink: CADisplayLink) {
 
         var index = 0
         for storedTween in _tweens {

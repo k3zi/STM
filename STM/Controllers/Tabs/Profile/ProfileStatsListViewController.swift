@@ -38,7 +38,7 @@ class ProfileStatsListViewController: KZViewController {
 
         tableView.delegate = self
         tableView.dataSource = self
-        tableView.registerReusableCell(SearchUserCell.self)
+        tableView.register(cellType: SearchUserCell.self)
         tableView.backgroundColor = UIColor.white
         view.addSubview(tableView)
     }
@@ -112,7 +112,7 @@ class ProfileStatsListViewController: KZViewController {
             self.handleResponse(response as AnyObject?, error: error as NSError?, successCompletion: { (result) -> Void in
                 self.users.removeAll()
                 if let result = result as? [JSON] {
-                    let users = [STMUser].from(jsonArray:result)
+                    let users = [STMUser].from(jsonArray: result)
                     users?.forEach({ self.users.append($0) })
                     self.tableView.reloadData()
                 }

@@ -9,7 +9,7 @@
 import Foundation
 import Gloss
 
-struct STMDashboardItem: Decodable {
+struct STMDashboardItem: JSONDecodable {
     var name: String?
     var items: [STMStream]?
 

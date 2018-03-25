@@ -50,7 +50,7 @@
 
 @interface EZOutput : NSObject
 
-@property (nonatomic,assign) UIViewController<EZOutputDataSource>*outputDataSource;
+@property (nonatomic, assign) UIViewController<EZOutputDataSource>*outputDataSource;
 @property (nonatomic, retain) YBMultiChannelMixer *mixerNode;
 @property (nonatomic, retain) YBMultiChannelMixer *fileMixerNode;
 @property (nonatomic, retain) YBAudioUnitNode  *converter1;
@@ -69,13 +69,13 @@
 + (EZOutput*)sharedOutput;
 - (YBAudioUnitNode *)remoteIONode;
 - (AudioComponentDescription)component;
-- (void)deinterleave:(float *)data left: (float*) left right: (float*) right length: (vDSP_Length)length;
-- (void)interleave:(float *)data left: (float*) left right: (float*) right length: (vDSP_Length)length;
+- (void)deinterleave:(float *)data left:(float *) left right: (float *) right length:(vDSP_Length) length;
+- (void)interleave:(float *)data left:(float *) left right: (float *) right length:(vDSP_Length) length;
 - (void)setPitchValue:(float)value;
 - (void)setReverbValue:(float)val;
 - (void)setRateValue:(float)value;
-- (void)setVolume:(float)volume forPlayer:(int)player;
-- (void)setActivePlayer:(int)activePlayer withCrossfadeDuration:(float)duration;
+- (void)setVolume:(float) volume forPlayer:(int) player;
+- (void)setActivePlayer:(int) activePlayer withCrossfadeDuration:(float) duration;
 + (BOOL)isStarted;
 - (BOOL)isPlaying;
 - (void)startPlayback;

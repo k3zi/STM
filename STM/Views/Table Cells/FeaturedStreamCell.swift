@@ -30,11 +30,11 @@ class FeaturedStreamCell: KZTableViewCell {
         contentView.addSubview(colorOverlay)
 
         streamTitleLabel.textColor = UIColor.white
-        streamTitleLabel.font = UIFont.systemFont(ofSize: 19, weight: UIFontWeightSemibold)
+        streamTitleLabel.font = UIFont.systemFont(ofSize: 19, weight: UIFont.Weight.semibold)
         contentView.addSubview(streamTitleLabel)
 
         streamHostLabel.textColor = UIColor.white
-        streamHostLabel.font = UIFont.systemFont(ofSize: 13, weight: UIFontWeightBold)
+        streamHostLabel.font = UIFont.systemFont(ofSize: 13, weight: UIFont.Weight.bold)
         streamHostLabel.alpha = 0.7
         contentView.addSubview(streamHostLabel)
 

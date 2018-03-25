@@ -74,6 +74,6 @@ class KZPlayerItem {
     }
 
     func subTitle() -> String {
-        return [artist, album].filter({ $0.characters.count > 0 }).joined(separator: " - ")
+        return [artist, album].filter({ $0.count > 0 }).joined(separator: " - ")
     }
 }

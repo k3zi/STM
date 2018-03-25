@@ -20,6 +20,7 @@ class PlayerViewController: KZViewController, UISearchBarDelegate, UIViewControl
     var player: STKAudioPlayer?
     var isPreviewing = false
 
+    var mainSocketManager: SocketManager?
     var commentSocket: SocketIOClient?
     let commentBackgroundQueue = DispatchQueue(label: "com.stormedgeapps.streamtome.comment", attributes: [])
 
@@ -57,7 +58,7 @@ class PlayerViewController: KZViewController, UISearchBarDelegate, UIViewControl
     let streamInfoHolder = PlayerInfoHolderView()
 
     // Keyboard Adjustment
-    lazy var keynode: Keynode.Connector = Keynode.Connector(view: self.view)
+    lazy var keynode = Keynode(view: self.view)
     var commentFieldKeyboardConstraint: NSLayoutConstraint?
 
     init() {
@@ -84,7 +85,7 @@ class PlayerViewController: KZViewController, UISearchBarDelegate, UIViewControl
         setupCommentView()
         setupToolbar()
 
-        keynode.animationsHandler = { [weak self] show, rect in
+        keynode.animations { [weak self] show, rect in
             if let me = self {
                 if let con = me.commentFieldKeyboardConstraint {
                     con.constant = (show ? rect.size.height - 44 : 0)
@@ -232,10 +233,10 @@ class PlayerViewController: KZViewController, UISearchBarDelegate, UIViewControl
             label.textColor = RGB(255)
             if label != songInfoLabel1 {
                 label.alpha = 0.66
-                label.font = UIFont.systemFont(ofSize: 12, weight: UIFontWeightMedium)
+                label.font = UIFont.systemFont(ofSize: 12, weight: UIFont.Weight.medium)
             } else {
                 label.text = "No Song Playing"
-                label.font = UIFont.systemFont(ofSize: 14, weight: UIFontWeightMedium)
+                label.font = UIFont.systemFont(ofSize: 14, weight: UIFont.Weight.medium)
             }
             songInfoHolderView.addSubview(label)
         }
@@ -259,8 +260,8 @@ class PlayerViewController: KZViewController, UISearchBarDelegate, UIViewControl
     func setupCommentView() {
         commentsTableView.delegate = self
         commentsTableView.dataSource = self
-        commentsTableView.registerReusableCell(CommentCell.self)
-        commentsTableView.registerReusableCell(TimelineItemCell.self)
+        commentsTableView.register(cellType: CommentCell.self)
+        commentsTableView.register(cellType: TimelineItemCell.self)
         commentsTableView.estimatedRowHeight = 50
         commentsTableView.rowHeight = UITableViewAutomaticDimension
         commentContentView.backgroundColor = RGB(255)
@@ -287,7 +288,7 @@ class PlayerViewController: KZViewController, UISearchBarDelegate, UIViewControl
 
     // MARK: View Changes/Updates
 
-    func closeButtonPressed() {
+    @objc func closeButtonPressed() {
         close(soft: false)
     }
 
@@ -337,7 +338,7 @@ class PlayerViewController: KZViewController, UISearchBarDelegate, UIViewControl
         }
     }
 
-    func showMenu() {
+    @objc func showMenu() {
         let menu = UIAlertController(title: "Player Menu", message: nil, preferredStyle: .actionSheet)
         menu.popoverPresentationController?.sourceView = miscBT
 
@@ -389,7 +390,7 @@ class PlayerViewController: KZViewController, UISearchBarDelegate, UIViewControl
         self.dismiss(animated: true, completion: nil)
     }
 
-    func toggleDismiss() {
+    @objc func toggleDismiss() {
         innerToggleDismiss(nil)
     }
 
@@ -463,7 +464,7 @@ class PlayerViewController: KZViewController, UISearchBarDelegate, UIViewControl
         }
     }
 
-    func didPressRewindBT() {
+    @objc func didPressRewindBT() {
 
     }
 
@@ -628,7 +629,7 @@ extension PlayerViewController: MessageToolbarDelegate {
      - parameter text: the text that was posted
      */
     func handlePost(_ text: String) {
-        guard text.characters.count > 0 else {
+        guard text.count > 0 else {
             return
         }
 
@@ -637,7 +638,7 @@ extension PlayerViewController: MessageToolbarDelegate {
         }
 
         commentBackgroundQueue.async { () -> Void in
-            while socket.status != .connected {
+            while socket.status == .notConnected {
                 RunLoop.main.run(mode: RunLoopMode.defaultRunLoopMode, before: Date.distantFuture)
             }
 
@@ -952,12 +953,8 @@ extension PlayerViewController: STKAudioPlayerDelegate {
             return
         }
 
-        let oForcePolling = SocketIOClientOption.forcePolling(true)
-        let oAuth = SocketIOClientOption.connectParams(["streamID": stream.id, "userID": user.id, "stmHash": Constants.Config.streamHash])
-        let commentHost = SocketIOClientOption.nsp("/comment")
-        let commentOptions = SocketIOClientConfiguration(arrayLiteral: oForcePolling, commentHost, oAuth)
-
-        self.commentSocket = SocketIOClient(socketURL: baseURL, config: commentOptions)
+        self.mainSocketManager = SocketManager(socketURL: baseURL, config: [.forcePolling(true), .log(false), .secure(true), .connectParams(["streamID": stream.id, "userID": user.id, "stmHash": Constants.Config.streamHash])])
+        self.commentSocket = self.mainSocketManager?.socket(forNamespace: "/comment")
         if let socket = self.commentSocket {
             socket.on("connect") { data, ack in
                 print("Comment: Socket Connected")

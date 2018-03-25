@@ -17,9 +17,9 @@ class SettingJoinedView: UIView {
     let padding = CGFloat(12.0)
 
     init(text: String, detailText: String = "", control: UIView) {
-        self.textLabel.font = UIFont.systemFont(ofSize: 16, weight: UIFontWeightMedium)
+        self.textLabel.font = UIFont.systemFont(ofSize: 16, weight: UIFont.Weight.medium)
         self.textLabel.numberOfLines = 0
-        self.detailLabel.font = UIFont.systemFont(ofSize: 13, weight: UIFontWeightLight)
+        self.detailLabel.font = UIFont.systemFont(ofSize: 13, weight: UIFont.Weight.light)
         self.detailLabel.numberOfLines = 0
 
         self.detailLabel.text = detailText
@@ -43,7 +43,7 @@ class SettingJoinedView: UIView {
 
         textLabel.autoPinEdgesToSuperviewEdges(with: UIEdgeInsets.zero, excludingEdge: .bottom)
 
-        if detailLabel.text?.characters.count == 0 {
+        if detailLabel.text?.count == 0 {
             textLabel.autoPinEdge(toSuperviewEdge: .bottom)
         } else {
             holdingView.addSubview(detailLabel)

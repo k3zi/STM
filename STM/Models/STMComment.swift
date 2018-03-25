@@ -9,7 +9,7 @@
 import Foundation
 import Gloss
 
-class STMComment: Decodable, Equatable {
+class STMComment: JSONDecodable, Equatable {
 
     let id: Int
     let user: STMUser?
@@ -34,7 +34,7 @@ class STMComment: Decodable, Equatable {
         self.user = "user" <~~ json
         self.stream = "stream" <~~ json
         self.text = "text" <~~ json
-        self.date = Decoder.decodeUnixTimestamp("date", json: json) as Date?
+        self.date = JSONDecoder.decodeUnixTimestamp("date", json: json) as Date?
         self.likes = ("likes" <~~ json) ?? 0
         self.didLike = ("didLike" <~~ json) ?? false
         self.reposts = ("reposts" <~~ json) ?? 0
@@ -60,7 +60,7 @@ class STMComment: Decodable, Equatable {
         let nsString = text as NSString
 
         do {
-            let matches = try NSRegularExpression(pattern: reg, options: NSRegularExpression.Options()).matches(in: text, options: NSRegularExpression.MatchingOptions(), range: NSRange(location: 0, length: text.characters.count))
+            let matches = try NSRegularExpression(pattern: reg, options: NSRegularExpression.Options()).matches(in: text, options: NSRegularExpression.MatchingOptions(), range: NSRange(location: 0, length: text.count))
 
             var stringMatches = matches.map({ nsString.substring(with: $0.range) })
             if !stringMatches.contains(username) {
@@ -83,7 +83,7 @@ func == (rhs: STMComment, lhs: STMComment) -> Bool {
     return rhs.isEqualTo(lhs)
 }
 
-extension Decoder {
+extension JSONDecoder {
     static func decodeUnixTimestamp(_ key: String, json: JSON) -> NSDate? {
 
         if let dateInt = json.valueForKeyPath(keyPath: key) as? Int {

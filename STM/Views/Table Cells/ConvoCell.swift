@@ -38,7 +38,7 @@ class ConvoCell: KZTableViewCell {
 
 	override func updateConstraints() {
 		super.updateConstraints()
-		NSLayoutConstraint.autoSetPriority(999) { () -> Void in
+        NSLayoutConstraint.autoSetPriority(UILayoutPriority(rawValue: 999)) { () -> Void in
 			self.avatar.autoSetDimensions(to: CGSize(width: 45.0, height: 45.0))
 		}
 
@@ -56,7 +56,7 @@ class ConvoCell: KZTableViewCell {
         messageLabel.autoPinEdge(toSuperviewEdge: .right, withInset: 10)
 	}
 
-    override func estimatedHeight() -> CGFloat {
+    @objc override func estimatedHeight() -> CGFloat {
         let rightSideWidth = Constants.UI.Screen.width - 10 - 45 - 10 - 10
         var height = CGFloat(13) //top padding
         height = height + nameLabel.estimatedHeight(rightSideWidth)

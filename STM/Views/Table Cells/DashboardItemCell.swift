@@ -37,7 +37,7 @@ class DashboardItemCell: KZTableViewCell, UICollectionViewDelegate, UICollection
             collectionView.backgroundColor = UIColor.darkGray
             collectionView.contentInset = UIEdgeInsets(top: 10, left: 10, bottom: 10, right: 10)
             collectionView.transform = CGAffineTransform(a: 1, b: 0, c: 0, d: -1, tx: 0, ty: 0)
-            collectionView.registerReusableCell(DashboardItemCollectionCell.self)
+            collectionView.register(cellType: DashboardItemCollectionCell.self)
             self.contentView.addSubview(collectionView)
         }
     }
@@ -62,7 +62,7 @@ class DashboardItemCell: KZTableViewCell, UICollectionViewDelegate, UICollection
             collectionView.autoPinEdge(toSuperviewEdge: .right)
             collectionView.autoPinEdge(toSuperviewEdge: .bottom)
 
-            NSLayoutConstraint.autoSetPriority(999, forConstraints: { () -> Void in
+            NSLayoutConstraint.autoSetPriority(UILayoutPriority(rawValue: 999), forConstraints: { () -> Void in
                 collectionView.autoSetDimension(.height, toSize: 62)
             })
         }
@@ -141,7 +141,7 @@ class DashboardItemCell: KZTableViewCell, UICollectionViewDelegate, UICollection
         })
     }
 
-    func startStreamClicked(_ startBT: UIButton) {
+    @objc func startStreamClicked(_ startBT: UIButton) {
         guard let item = model as? STMDashboardItem else {
             return
         }
@@ -173,7 +173,7 @@ class DashboardItemCell: KZTableViewCell, UICollectionViewDelegate, UICollection
         }
     }
 
-    func hideEffect() {
+    @objc func hideEffect() {
         AppDelegate.del().removeBlurEffects()
     }
 

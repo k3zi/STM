@@ -41,7 +41,7 @@ class SearchStreamCell: KZTableViewCell {
 
 	override func updateConstraints() {
 		super.updateConstraints()
-		NSLayoutConstraint.autoSetPriority(999) { () -> Void in
+		NSLayoutConstraint.autoSetPriority(UILayoutPriority(rawValue: 999)) { () -> Void in
 			self.avatar.autoSetDimensions(to: CGSize(width: 45.0, height: 45.0))
 		}
 
@@ -62,7 +62,7 @@ class SearchStreamCell: KZTableViewCell {
 		messageLabel.autoPinEdge(toSuperviewEdge: .bottom, withInset: 10, relation: .greaterThanOrEqual)
 	}
 
-    override func estimatedHeight() -> CGFloat {
+    @objc override func estimatedHeight() -> CGFloat {
         let minHeight = CGFloat(10 + 45 + 10)
         let rightWidth = Constants.UI.Screen.width - 10 - 10 - 45 - 10
 

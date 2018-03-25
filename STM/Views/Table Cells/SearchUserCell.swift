@@ -40,7 +40,7 @@ class SearchUserCell: KZTableViewCell {
         self.contentView.addSubview(followButton)
 	}
 
-    func toggleFollow() {
+    @objc func toggleFollow() {
         guard let user = model as? STMUser else {
             return
         }
@@ -58,7 +58,7 @@ class SearchUserCell: KZTableViewCell {
 
 	override func updateConstraints() {
 		super.updateConstraints()
-		NSLayoutConstraint.autoSetPriority(999) { () -> Void in
+		NSLayoutConstraint.autoSetPriority(UILayoutPriority(rawValue: 999)) { () -> Void in
 			self.avatar.autoSetDimensions(to: CGSize(width: 45.0, height: 45.0))
 		}
 
@@ -78,7 +78,7 @@ class SearchUserCell: KZTableViewCell {
         followButton.autoPinEdge(toSuperviewEdge: .right, withInset: 10)
         followButton.autoAlignAxis(.horizontal, toSameAxisOf: avatar)
         followButton.autoSetDimension(.height, toSize: 30.0)
-        NSLayoutConstraint.autoSetPriority(999) {
+        NSLayoutConstraint.autoSetPriority(UILayoutPriority(rawValue: 999)) {
             self.followButton.autoSetContentHuggingPriority(for: .horizontal)
         }
 	}

@@ -9,7 +9,7 @@
 import Foundation
 import Gloss
 
-struct STMTimelineItem: Decodable {
+struct STMTimelineItem: JSONDecodable {
     var message: String?
     var user: STMUser?
     var date: Date

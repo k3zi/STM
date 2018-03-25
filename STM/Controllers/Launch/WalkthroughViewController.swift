@@ -11,7 +11,7 @@ import UIKit
 class WalkthroughViewController: KZViewController {
 
     let getStartedButton = UIButton().with {
-        $0.titleLabel?.font = UIFont.systemFont(ofSize: 14, weight: UIFontWeightBold)
+        $0.titleLabel?.font = UIFont.systemFont(ofSize: 14, weight: UIFont.Weight.bold)
         $0.setTitleColor(RGB(255), for: .normal)
         $0.setBackgroundColor(Constants.UI.Color.tint2, forState: .normal)
         $0.setTitle("GET STARTED", for: .normal)
@@ -99,7 +99,7 @@ class WalkthroughViewController: KZViewController {
         pageControl.currentPage = currentPage
     }
 
-    func goBackAndCheck() {
+    @objc func goBackAndCheck() {
         UserDefaults.standard.set(true, forKey: "hasSeenWalkthrough")
         goBack()
     }

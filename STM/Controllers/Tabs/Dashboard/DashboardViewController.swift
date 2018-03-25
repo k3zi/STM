@@ -31,8 +31,8 @@ class DashboardViewController: KZViewController, UIViewControllerPreviewingDeleg
 
         tableView.delegate = self
         tableView.dataSource = self
-        tableView.registerReusableCell(FeaturedStreamCell.self)
-        tableView.registerReusableCell(UserCommentCell.self)
+        tableView.register(cellType: FeaturedStreamCell.self)
+        tableView.register(cellType: UserCommentCell.self)
         tableView.backgroundColor = UIColor.clear
         tableView.separatorInset = UIEdgeInsets(top: 2, left: 0, bottom: 2, right: 0)
         tableView.separatorColor = UIColor.clear
@@ -130,7 +130,7 @@ class DashboardViewController: KZViewController, UIViewControllerPreviewingDeleg
         fetchDataWithCompletion()
     }
 
-    func fetchDataWithForce() {
+    @objc func fetchDataWithForce() {
         fetchDataWithCompletion(true, completion: nil)
     }
 

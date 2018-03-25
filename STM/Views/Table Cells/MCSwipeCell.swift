@@ -197,7 +197,7 @@ class MCSwipeCell: KZTableViewCell {
 
     // MARK: Gestures
 
-    func handlePanGestureRecognizer(_ gesture: UIPanGestureRecognizer) {
+    @objc func handlePanGestureRecognizer(_ gesture: UIPanGestureRecognizer) {
         if _isExited {
             return
         }

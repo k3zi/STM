@@ -25,24 +25,48 @@ lane :post_beta do |options|
   new_version = get_version_string
   commit_version_bump(message: "bump version to: #{get_build_number}")
 
-  badge(shield: "#{get_version_number}-#{get_build_number}-blue", shield_no_resize: false)
+  badge(shield: "#{get_version_number}-#{get_build_number}-blue")
   match(type: 'adhoc', force_for_new_devices: true)
-  gym(scheme: "STM", configuration: "Release", export_method: "ad-hoc", include_symbols: true)
+  gym(
+      scheme: "STM",
+      configuration: "Release",
+      include_symbols: true,
+      include_bitcode: true,
+      skip_profile_detection: true,
+      export_method: "ad-hoc",
+      export_options: {
+        "signingStyle" => "manual",
+        "provisioningProfiles" => {
+            "com.stormedgeapps.streamtome" => "match AdHoc com.stormedgeapps.streamtome"
+        }
+      }
+  )
   dsym_zip
 
-  crashlytics(
-      notes: changelog
-  )
+  crashlytics(notes: changelog)
 
   if options[:testflight]
       match
-      gym(scheme: "STM", configuration: "Release", include_symbols: true, include_bitcode: true)
+      gym(
+          scheme: "STM",
+          configuration: "Release",
+          include_symbols: true,
+          include_bitcode: true,
+          skip_profile_detection: true,
+          export_method: "ad-hoc",
+          export_options: {
+            "signingStyle" => "manual",
+            "provisioningProfiles" => {
+                "com.stormedgeapps.streamtome" => "match AdHoc com.stormedgeapps.streamtome"
+            }
+          }
+      )
       pilot(team_id: "117924857", skip_waiting_for_build_processing: true)
   end
 
   reset_git_repo(force: true)
 
-  tag_name = "beta-#{new_version}"
+  tag_name = "beta/#{new_version}"
   add_git_tag(tag: tag_name)
   push_to_git_remote()
   sh "git push origin --tags"
@@ -53,14 +77,27 @@ lane :post_store do
   increment_build_number
   new_version = get_version_string
 
-  #match(type: "appstore")
-  gym(scheme: "STM", configuration: "Release", export_method: "app-store", include_symbols: true, include_bitcode: true)
+  match(type: "appstore")
+  gym(
+      scheme: "STM",
+      configuration: "Release",
+      include_symbols: true,
+      include_bitcode: true,
+      skip_profile_detection: true,
+      export_method: "app-store",
+      export_options: {
+        "signingStyle" => "manual",
+        "provisioningProfiles" => {
+            "com.stormedgeapps.streamtome" => "match AppStore com.stormedgeapps.streamtome"
+        }
+      }
+  )
   deliver(force: true, skip_screenshots: true, skip_metadata: true)
 
   commit_version_bump(message: "bump version: #{get_build_number}")
-  tag_name = "release-#{new_version}"
+  tag_name = "release/#{new_version}"
   add_git_tag(tag: tag_name)
-  push_to_git_remote()
+  push_to_git_remote
   sh "git push origin --tags"
 end
 

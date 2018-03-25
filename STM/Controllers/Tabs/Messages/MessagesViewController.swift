@@ -29,7 +29,7 @@ class MessagesViewController: KZViewController, UIViewControllerPreviewingDelega
 
         tableView.delegate = self
         tableView.dataSource = self
-        tableView.registerReusableCell(ConvoCell.self)
+        tableView.register(cellType: ConvoCell.self)
         view.addSubview(tableView)
 
         registerForPreviewing(with: self, sourceView: tableView)
@@ -50,7 +50,7 @@ class MessagesViewController: KZViewController, UIViewControllerPreviewingDelega
         fetchData()
     }
 
-    func createNewMessage() {
+    @objc func createNewMessage() {
         let vc = NewMessageViewController()
         self.navigationController?.pushViewController(vc, animated: true)
     }

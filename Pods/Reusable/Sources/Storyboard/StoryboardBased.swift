@@ -17,27 +17,17 @@ import UIKit
 /// to be able to instantiate them from the Storyboard in a type-safe manner
 public protocol StoryboardBased: class {
   /// The UIStoryboard to use when we want to instantiate this ViewController
-  static var storyboard: UIStoryboard { get }
+  static var sceneStoryboard: UIStoryboard { get }
 }
-
-
-
 
 // MARK: Default Implementation
 
 public extension StoryboardBased {
   /// By default, use the storybaord with the same name as the class
-  static var storyboard: UIStoryboard {
-    #if swift(>=3.0)
-      return UIStoryboard(name: String(describing: self), bundle: Bundle(for: self))
-    #else
-      return UIStoryboard(name: String(self), bundle: NSBundle(forClass: self))
-    #endif
+  static var sceneStoryboard: UIStoryboard {
+    return UIStoryboard(name: String(describing: self), bundle: Bundle(for: self))
   }
 }
-
-
-
 
 // MARK: Support for instantiation from Storyboard
 
@@ -48,8 +38,8 @@ public extension StoryboardBased where Self: UIViewController {
    - returns: instance of the conforming ViewController
    */
   static func instantiate() -> Self {
-    guard let vc = storyboard.instantiateInitialViewController() as? Self else {
-      fatalError("The initialViewController of '\(storyboard)' is not of class '\(self)'")
+    guard let vc = sceneStoryboard.instantiateInitialViewController() as? Self else {
+      fatalError("The initialViewController of '\(sceneStoryboard)' is not of class '\(self)'")
     }
     return vc
   }

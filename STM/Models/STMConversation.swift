@@ -9,7 +9,7 @@
 import Foundation
 import Gloss
 
-class STMConversation: Decodable {
+class STMConversation: JSONDecodable {
 
     let id: Int
     let users: [STMUser]?

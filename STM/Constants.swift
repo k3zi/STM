@@ -40,13 +40,15 @@ struct Constants {
 	struct Config {
         static let apiVersion = "2"
 
-        static let siteBaseURL = "https://stm.io"
+        static let siteBaseURL = "https://stm.kez.io"
         /*#if DEBUG
         static let apiBaseURL = "https://api-dev.stm.io/v\(apiVersion)"
         static let systemCredentials = URLCredential(user: "STM-DEV-API", password: "C/=}SU,nv)A**9cX.L&ML56", persistence: .forSession)
         #else*/
-        static let apiBaseURL = "https://api.stm.io/v\(apiVersion)"
-        static let systemCredentials = URLCredential(user: "STM-API", password: "PXsd<rhKG0r'@U.-Z`>!9V%-Z<Z", persistence: .forSession)
+        static let apiBaseURL = "https://api.stm.kez.io/v\(apiVersion)"
+        static func systemCredentials() -> URLCredential {
+            return URLCredential(user: "STM-API", password: "PXsd<rhKG0r'@U.-Z`>!9V%-Z<Z", persistence: .permanent)
+        }
         //#endif
 		static let hashids = Hashids(salt: "pepper", minHashLength: 4, alphabet: "abcdefghijkmnpqrstuxyACDEFGHKMNPQRSTUQY23456789")
 		static let streamHash = "WrfN'/:_f.#8fYh(=RY(LxTDRrU"
@@ -56,12 +58,10 @@ struct Constants {
         static let twitterConsumerSecret = "l2iuaqf8bKyW01El13M0NkC3M6fNGFlQAVWByhnZROsQwFIbFn"
 
         static func sessionConfig() -> URLSessionConfiguration {
-            let sessionConfig = URLSessionConfiguration.default
-            let credentialStorage = URLCredentialStorage.shared
-            credentialStorage.set(Constants.Config.systemCredentials, for: URLProtectionSpace(host: "api.stm.io", port: 443, protocol: "https", realm: nil, authenticationMethod: NSURLAuthenticationMethodHTTPBasic))
-            credentialStorage.set(Constants.Config.systemCredentials, for: URLProtectionSpace(host: "api-dev.stm.io", port: 443, protocol: "https", realm: nil, authenticationMethod: NSURLAuthenticationMethodHTTPBasic))
-            sessionConfig.urlCredentialStorage = credentialStorage
-            return sessionConfig
+            URLCredentialStorage.shared.setDefaultCredential(Constants.Config.systemCredentials(), for: URLProtectionSpace(host: "api.stm.kez.io", port: 443, protocol: "https", realm: nil, authenticationMethod: NSURLAuthenticationMethodHTTPBasic))
+            URLCredentialStorage.shared.setDefaultCredential(Constants.Config.systemCredentials(), for: URLProtectionSpace(host: "api-dev.stm.kez.io", port: 443, protocol: "https", realm: nil, authenticationMethod: NSURLAuthenticationMethodHTTPBasic))
+            URLSessionConfiguration.default.urlCredentialStorage = URLCredentialStorage.shared
+            return URLSessionConfiguration.default
         }
 	}
 
@@ -115,7 +115,7 @@ struct Constants {
             }
 
             Alamofire.request(request)
-                .authenticate(usingCredential: Constants.Config.systemCredentials).responseJSON { (response) in
+                .authenticate(usingCredential: Constants.Config.systemCredentials()).responseJSON { (response) in
                     switch response.result {
                     case .success:
                         if let json = response.result.value as? JSON {
@@ -147,7 +147,7 @@ struct Constants {
             }
 
             Alamofire.request(request)
-                .authenticate(usingCredential: Constants.Config.systemCredentials).responseJSON { (response) in
+                .authenticate(usingCredential: Constants.Config.systemCredentials()).responseJSON { (response) in
                     switch response.result {
                     case .success:
                         if let json = response.result.value as? JSON {
@@ -161,7 +161,7 @@ struct Constants {
 
         static func UPLOAD(_ url: String, data: Data, progressHandler: @escaping (Double) -> Void, completionHandler: @escaping CompletionBlock) {
             Alamofire.upload(data, to: Constants.Config.apiBaseURL + url, headers: Constants.Network.defaultHeaders())
-                .authenticate(usingCredential: Constants.Config.systemCredentials)
+                .authenticate(usingCredential: Constants.Config.systemCredentials())
                 .uploadProgress { progress in // main queue by default
                     progressHandler(progress.fractionCompleted)
                 }
@@ -297,14 +297,14 @@ extension UIView {
 
 	class func lineWithBGColor(_ backgroundColor: UIColor, vertical: Bool = false, lineHeight: CGFloat = 1.0) -> UIView {
 		let view = UIView()
-		NSLayoutConstraint.autoSetPriority(999) { () -> Void in
+		NSLayoutConstraint.autoSetPriority(UILayoutPriority(rawValue: 999)) { () -> Void in
 			view.autoSetDimension(vertical ? .width : .height, toSize: (lineHeight / UIScreen.main.scale))
 		}
 		view.backgroundColor = backgroundColor
 		return view
 	}
 
-    func estimatedHeight(_ maxWidth: CGFloat) -> CGFloat {
+    @objc func estimatedHeight(_ maxWidth: CGFloat) -> CGFloat {
         return self.sizeThatFits(CGSize(width: maxWidth, height: CGFloat.greatestFiniteMagnitude)).height
     }
 
@@ -362,7 +362,7 @@ extension Date {
             return String(format: "%.fm", timeInterval / 60)
         case (60 * 60)..<(60 * 60 * 24):
             return String(format: "%.fh", timeInterval / (60 * 60))
-        case (60 * 60 * 24)..<(60 * 60 * 24 * 365):
+        case 86400..<31536000:
             return String(format: "%.fd", timeInterval / (60 * 60 * 24))
         default:
             return String(format: "%.fy", timeInterval / (60 * 60 * 24 * 365))
@@ -416,11 +416,11 @@ extension UIImage {
 
 extension UIViewController {
 
-    func donePressed() {
+    @objc func donePressed() {
         cancelPressed()
     }
 
-    func cancelPressed() {
+    @objc func cancelPressed() {
         view.endEditing(true)
     }
 
@@ -430,7 +430,7 @@ extension UIViewController {
         self.present(alert, animated: true, completion: nil)
     }
 
-    func dismissPopup() {
+    @objc func dismissPopup() {
         self.dismiss(animated: true, completion: nil)
     }
 
@@ -482,11 +482,11 @@ func numberOfLinesInLabel(_ yourString: String, labelWidth: CGFloat, labelHeight
     paragraphStyle.maximumLineHeight = labelHeight
     paragraphStyle.lineBreakMode = .byWordWrapping
 
-    let attributes: [String: AnyObject] = [NSFontAttributeName: font, NSParagraphStyleAttributeName: paragraphStyle]
+    let attributes: [NSAttributedStringKey: AnyObject] = [NSAttributedStringKey.font: font, NSAttributedStringKey.paragraphStyle: paragraphStyle]
 
     let constrain = CGSize(width: labelWidth, height: CGFloat(Float.infinity))
 
-    let size = yourString.size(attributes: attributes)
+    let size = yourString.size(withAttributes: attributes)
     let stringWidth = size.width
 
     let numberOfLines = ceil(Double(stringWidth/constrain.width))

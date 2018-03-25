@@ -36,12 +36,12 @@ public typealias JSON = [String : Any]
 /**
 Convenience protocol for objects that can be translated from and to JSON.
 */
-public protocol Glossy: Decodable, Encodable { }
+public protocol Glossy: JSONDecodable, JSONEncodable { }
 
 /**
 Enables an object to be decoded from JSON.
 */
-public protocol Decodable {
+public protocol JSONDecodable {
 
     /**
      Returns new instance created from provided JSON.
@@ -57,7 +57,7 @@ public protocol Decodable {
 /**
 Enables an object to be encoded to JSON.
 */
-public protocol Encodable {
+public protocol JSONEncodable {
     
     /**
     Encodes and object as JSON.
@@ -95,7 +95,7 @@ public private(set) var GlossDateFormatterISO8601: DateFormatter = {
     
 }()
 
-// MARK: GlossJSONSerializer
+// MARK: JSONSerializer
 
 /// Creates JSON from data.
 public protocol JSONSerializer {
@@ -124,6 +124,9 @@ public protocol JSONSerializer {
 
 /// Gloss JSON Serializer.
 public struct GlossJSONSerializer: JSONSerializer {
+    
+    /// Creates a new instance.
+    public init() { }
 
     public func json(from data: Data, options: JSONSerialization.ReadingOptions) -> JSON? {
         guard let json = (try? JSONSerialization.jsonObject(with: data, options: options)) as? JSON else {
@@ -141,6 +144,30 @@ public struct GlossJSONSerializer: JSONSerializer {
         return jsonArray
     }
 
+}
+
+// MARK: Logger
+
+/// Logs messages about unexpected behavior.
+public protocol Logger {
+    
+    /// Logs provided message.
+    ///
+    /// - Parameter message: Message.
+    func log(message: String)
+    
+}
+
+/// Gloss Logger.
+public struct GlossLogger: Logger {
+
+    /// Creates a new instance.
+    public init() { }
+    
+    public func log(message: String) {
+        print("[Gloss] \(message)")
+    }
+    
 }
 
 // MARK: GlossKeyPathDelimiter

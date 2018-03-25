@@ -80,7 +80,7 @@ class ExtendedUserCommentCell: KZTableViewCell {
         timer = Timer.scheduledTimer(timeInterval: 1.0, target: self, selector: #selector(CommentCell.updateTime), userInfo: nil, repeats: true)
 	}
 
-    func goToStream() {
+    @objc func goToStream() {
         guard let comment = model as? STMComment, let stream = comment.stream else {
             return
         }
@@ -101,7 +101,7 @@ class ExtendedUserCommentCell: KZTableViewCell {
         }
     }
 
-    func toggleLike() {
+    @objc func toggleLike() {
         guard let comment = model as? STMComment else {
             return
         }
@@ -121,7 +121,7 @@ class ExtendedUserCommentCell: KZTableViewCell {
         }
     }
 
-    func toggleRepost() {
+    @objc func toggleRepost() {
         guard let comment = model as? STMComment else {
             return
         }
@@ -147,7 +147,7 @@ class ExtendedUserCommentCell: KZTableViewCell {
         }
     }
 
-    func goToUser() {
+    @objc func goToUser() {
         guard let comment = model as? STMComment else {
             return
         }
@@ -170,7 +170,7 @@ class ExtendedUserCommentCell: KZTableViewCell {
 
 	override func updateConstraints() {
 		super.updateConstraints()
-		NSLayoutConstraint.autoSetPriority(999) { () -> Void in
+        NSLayoutConstraint.autoSetPriority(UILayoutPriority(rawValue: 999)) { () -> Void in
 			self.avatar.autoSetDimensions(to: CGSize(width: 45.0, height: 45.0))
 		}
 
@@ -189,7 +189,7 @@ class ExtendedUserCommentCell: KZTableViewCell {
 		messageLabel.autoPinEdge(.left, to: .right, of: avatar, withOffset: 10)
 		messageLabel.autoPinEdge(toSuperviewEdge: .right, withInset: 10)
 
-        NSLayoutConstraint.autoSetPriority(999) {
+        NSLayoutConstraint.autoSetPriority(UILayoutPriority(rawValue: 999)) {
             self.line1.autoPinEdge(.top, to: .bottom, of: self.messageLabel, withOffset: 10, relation: .greaterThanOrEqual)
             self.line1.autoPinEdge(.top, to: .bottom, of: self.avatar, withOffset: 10, relation: .greaterThanOrEqual)
         }
@@ -214,17 +214,17 @@ class ExtendedUserCommentCell: KZTableViewCell {
         statusView.autoPinEdge(toSuperviewEdge: .right, withInset: 5)
 	}
 
-    override func estimatedHeight() -> CGFloat {
+    @objc override func estimatedHeight() -> CGFloat {
         let rightSideWidth = Constants.UI.Screen.width - 12 - 45 - 10 - 10
         var height = CGFloat(13) //top padding
         height = height + nameLabel.estimatedHeight(rightSideWidth)
-        height = height + 2 //padding
+        height = height + 2 // padding
         height = height + messageLabel.estimatedHeight(rightSideWidth)
-        height = height + 10 //padding
+        height = height + 10 // padding
         height = height + line1.estimatedHeight(Constants.UI.Screen.width)
-        height = height + 10 //padding
+        height = height + 10 // padding
         height = height + likeButton.estimatedHeight(rightSideWidth)
-        height = height + 8 //bottom padding
+        height = height + 8 // bottom padding
         return ceil(height)
     }
 
@@ -261,7 +261,7 @@ class ExtendedUserCommentCell: KZTableViewCell {
         }
 	}
 
-    func updateTime() {
+    @objc func updateTime() {
         if let comment = model as? STMComment {
             if let date = comment.date {
                 dateLabel.text = date.shortRelativeDate()

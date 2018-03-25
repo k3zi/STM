@@ -25,7 +25,7 @@ class InitialViewController: KZViewController {
 
         view.addSubview(launchLogoWithText)
 
-        //Buttons
+        // Buttons
 
         signInBT.setTitle("Sign In", for: UIControlState())
         signInBT.addTarget(self, action: #selector(InitialViewController.signIn), for: .touchUpInside)
@@ -95,14 +95,14 @@ class InitialViewController: KZViewController {
         createAccountBT.autoPin(toBottomLayoutGuideOf: self, withInset: 15)
     }
 
-    func createAccount() {
+    @objc func createAccount() {
         if let nav = self.navigationController {
             let vc = CreateAccountViewController()
             nav.pushViewController(vc, animated: true)
         }
     }
 
-    func signIn() {
+    @objc func signIn() {
         if let nav = self.navigationController {
             let vc = SignInViewController()
             nav.pushViewController(vc, animated: true)

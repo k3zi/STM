@@ -47,7 +47,7 @@ class STMMessageOtherCell: KZTableViewCell {
         timer = Timer.scheduledTimer(timeInterval: 1.0, target: self, selector: #selector(CommentCell.updateTime), userInfo: nil, repeats: true)
     }
 
-    func goToUser() {
+    @objc func goToUser() {
         guard let message = model as? STMMessage else {
             return
         }
@@ -71,7 +71,7 @@ class STMMessageOtherCell: KZTableViewCell {
     override func updateConstraints() {
         super.updateConstraints()
 
-        NSLayoutConstraint.autoSetPriority(999) { () -> Void in
+        NSLayoutConstraint.autoSetPriority(UILayoutPriority(rawValue: 999)) { () -> Void in
             self.avatar.autoSetDimensions(to: CGSize(width: 40, height: 40))
         }
         avatar.autoPinEdge(toSuperviewEdge: .top, withInset: 12)
@@ -83,7 +83,7 @@ class STMMessageOtherCell: KZTableViewCell {
         messageLabel.autoPinEdge(toSuperviewEdge: .bottom, withInset: 12)
         messageLabel.translatesAutoresizingMaskIntoConstraints = false
 
-        NSLayoutConstraint.autoSetPriority(999) { () -> Void in
+        NSLayoutConstraint.autoSetPriority(UILayoutPriority(rawValue: 999)) { () -> Void in
             self.messageLabel.autoSetDimension(.height, toSize: 40, relation: .greaterThanOrEqual)
         }
         let layoutAttribute = NSLayoutConstraint.al_layoutAttribute(for: .width)
@@ -95,7 +95,7 @@ class STMMessageOtherCell: KZTableViewCell {
         timeLabel.autoAlignAxis(.horizontal, toSameAxisOf: messageLabel)
     }
 
-    override func estimatedHeight() -> CGFloat {
+    @objc override func estimatedHeight() -> CGFloat {
         let width = Constants.UI.Screen.width*0.7 - (40 + 12 + 12)
         var height = CGFloat(12) //top padding
         height = height + messageLabel.estimatedHeight(width)
@@ -130,7 +130,7 @@ class STMMessageOtherCell: KZTableViewCell {
         timeLabel.text = message.date?.shortRelativeDate()
     }
 
-    func updateTime() {
+    @objc func updateTime() {
         if let message = model as? STMMessage {
             timeLabel.text = message.date?.shortRelativeDate()
         }

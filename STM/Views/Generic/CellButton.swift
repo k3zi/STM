@@ -59,7 +59,7 @@ class CellButton: UIView {
         countLabel.autoAlignAxis(.horizontal, toSameAxisOf: actionButton)
     }
 
-    override func estimatedHeight(_ maxWidth: CGFloat) -> CGFloat {
+    @objc override func estimatedHeight(_ maxWidth: CGFloat) -> CGFloat {
         var height = CGFloat(2)
         height = height + actionButton.estimatedHeight(maxWidth)
         height = height + 2

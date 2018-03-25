@@ -14,8 +14,8 @@ extension UIButton {
 
     class func styleForCreateAccountButton() -> UIButton {
         let string = NSMutableAttributedString()
-        string.append(NSAttributedString(string: "New to STM?", attributes: [NSFontAttributeName: UIFont.systemFont(ofSize: 14), NSForegroundColorAttributeName: UIColor.white]))
-        string.append(NSAttributedString(string: " Create Account ->", attributes: [NSFontAttributeName: UIFont.boldSystemFont(ofSize: 14), NSForegroundColorAttributeName: RGB(129, g: 136, b: 168)]))
+        string.append(NSAttributedString(string: "New to STM?", attributes: [NSAttributedStringKey.font: UIFont.systemFont(ofSize: 14), NSAttributedStringKey.foregroundColor: UIColor.white]))
+        string.append(NSAttributedString(string: " Create Account ->", attributes: [NSAttributedStringKey.font: UIFont.boldSystemFont(ofSize: 14), NSAttributedStringKey.foregroundColor: RGB(129, g: 136, b: 168)]))
         let button = ExtendedButton()
         button.setAttributedTitle(string, for: .normal)
         return button
@@ -49,7 +49,7 @@ extension UIButton {
 
     class func styledForLaunchScreen() -> UIButton {
         let button = UIButton()
-        button.titleLabel?.font = UIFont.systemFont(ofSize: 17, weight: UIFontWeightMedium)
+        button.titleLabel?.font = UIFont.systemFont(ofSize: 17, weight: UIFont.Weight.medium)
         button.setTitleColor(RGB(255), for: .normal)
         button.setBackgroundColor(UIColor.clear, forState: .normal)
         button.setTitleColor(Constants.UI.Color.tint, for: .highlighted)
@@ -65,7 +65,7 @@ extension UIButton {
     class func styledForStreamInfoView() -> UIButton {
         let button = UIButton()
         button.autoSetDimension(.height, toSize: 50)
-        button.titleLabel?.font = UIFont.systemFont(ofSize: 17, weight: UIFontWeightMedium)
+        button.titleLabel?.font = UIFont.systemFont(ofSize: 17, weight: UIFont.Weight.medium)
         button.setTitleColor(RGB(255), for: .normal)
         button.setBackgroundColor(Constants.UI.Color.tint, forState: .normal)
         button.setBackgroundColor(Constants.UI.Color.off, forState: .disabled)
@@ -84,7 +84,7 @@ extension UIButton {
         button.setTitle(normalTitle, for: UIControlState())
         button.setTitle(selectedTitle, for: .selected)
 
-        button.titleLabel?.font = UIFont.systemFont(ofSize: 14, weight: UIFontWeightMedium)
+        button.titleLabel?.font = UIFont.systemFont(ofSize: 14, weight: UIFont.Weight.medium)
         button.contentEdgeInsets = UIEdgeInsets(top: 5, left: 15, bottom: 5, right: 15)
         button.clipsToBounds = true
         button.layer.cornerRadius = 10

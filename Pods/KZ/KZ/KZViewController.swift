@@ -88,7 +88,7 @@ open class KZViewController: UIViewController, UITableViewDelegate, UITableViewD
     /**
      Make calls to the network here. NOTICE: By default this is called every 15 seconds
      */
-    open dynamic func fetchData() {
+    @objc open dynamic func fetchData() {
 
     }
 
@@ -166,7 +166,7 @@ open class KZViewController: UIViewController, UITableViewDelegate, UITableViewD
             cell.textLabel?.numberOfLines = 0
             cell.textLabel?.text = tableViewNoDataText(tableView)
             if #available(iOS 8.2, *) {
-                cell.textLabel?.font = UIFont.systemFont(ofSize: 20, weight: UIFontWeightLight)
+                cell.textLabel?.font = UIFont.systemFont(ofSize: 20, weight: UIFont.Weight.light)
             } else {
                 cell.textLabel?.font = UIFont.systemFont(ofSize: 20)
             }

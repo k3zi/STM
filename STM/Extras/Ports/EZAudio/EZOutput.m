@@ -210,7 +210,7 @@ static OSStatus EQConverterRenderCallback(void *inRefCon, AudioUnitRenderActionF
 }
 
 - (void)playedDataPCM:(NSData *)buffer frames:(int)frames {
-    if([UIApplication sharedApplication].applicationState == UIApplicationStateActive) {
+    if ([UIApplication sharedApplication].applicationState == UIApplicationStateActive) {
         size_t length = frames;
         NSInteger sampleTally = 0;
         NSInteger samplesPerPixel = floor((length / [EZOutput sharedOutput].outputASBD.mBytesPerFrame)/50);
@@ -219,7 +219,7 @@ static OSStatus EQConverterRenderCallback(void *inRefCon, AudioUnitRenderActionF
         float power = [[EZOutput sharedOutput].mixerNode averagePower];
         float level = [[MeterTable sharedTable] ValueAt:power];
 
-        if([[EZOutput sharedOutput].mixerNode volumeForBus:1] > 0.0) {
+        if ([[EZOutput sharedOutput].mixerNode volumeForBus:1] > 0.0) {
             dispatch_async(dispatch_get_main_queue(), ^{
                 [self.outputDataSource updateMicLevel:level];
             });

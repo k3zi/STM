@@ -8,7 +8,6 @@
 
 import UIKit
 
-
 // MARK: Protocol definition
 
 /// Make your `UITableViewCell` and `UICollectionViewCell` subclasses
@@ -20,22 +19,15 @@ public protocol Reusable: class {
 }
 
 /// Make your `UITableViewCell` and `UICollectionViewCell` subclasses
-/// conform to this protocol when they *are* NIB-based
+/// conform to this typealias when they *are* NIB-based
 /// to be able to dequeue them in a type-safe manner
-public protocol NibReusable: Reusable, NibLoadable {}
-
-
-
+public typealias NibReusable = Reusable & NibLoadable
 
 // MARK: - Default implementation
 
 public extension Reusable {
   /// By default, use the name of the class as String for its reuseIdentifier
   static var reuseIdentifier: String {
-    #if swift(>=3.0)
-      return String(describing: self)
-    #else
-      return String(self)
-    #endif
+    return String(describing: self)
   }
 }

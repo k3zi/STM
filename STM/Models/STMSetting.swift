@@ -9,7 +9,7 @@
 import Foundation
 import Gloss
 
-struct STMSetting: Decodable {
+struct STMSetting: JSONDecodable {
 
     let id: Int
     let name: String?

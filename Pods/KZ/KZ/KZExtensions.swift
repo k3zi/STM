@@ -25,7 +25,7 @@ public extension UIView {
      */
     class public func lineWithBGColor(_ color: UIColor, vertical: Bool = false, lineHeight: CGFloat = 1.0) -> UIView {
         let view = UIView()
-        NSLayoutConstraint.autoSetPriority(999) { () -> Void in
+        NSLayoutConstraint.autoSetPriority(UILayoutPriority(rawValue: 999)) { () -> Void in
             view.autoSetDimension(vertical ? .width : .height, toSize: (lineHeight / UIScreen.main.scale))
         }
         view.backgroundColor = color

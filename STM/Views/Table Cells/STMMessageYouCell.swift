@@ -58,11 +58,11 @@ class STMMessageYouCell: KZTableViewCell {
         timeLabel.autoAlignAxis(.horizontal, toSameAxisOf: messageLabel)
     }
 
-    override func estimatedHeight() -> CGFloat {
+    @objc override func estimatedHeight() -> CGFloat {
         let width = Constants.UI.Screen.width*0.7
-        var height = CGFloat(12) //top padding
+        var height = CGFloat(12) // top padding
         height = height + messageLabel.estimatedHeight(width)
-        height = height + 12 //bottom padding
+        height = height + 12 // bottom padding
         return ceil(height)
     }
 
@@ -82,7 +82,7 @@ class STMMessageYouCell: KZTableViewCell {
         }
     }
 
-    func updateTime() {
+    @objc func updateTime() {
         if let message = model as? STMMessage {
             timeLabel.text = message.date?.shortRelativeDate()
         }

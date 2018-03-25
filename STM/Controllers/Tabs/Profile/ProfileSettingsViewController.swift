@@ -23,9 +23,9 @@ class ProfileSettingsViewController: KZViewController {
 
         tableView.delegate = self
         tableView.dataSource = self
-        tableView.registerReusableCell(SettingsProfilePictureCell.self)
-        tableView.registerReusableCell(SettingsUserCell.self)
-        tableView.registerReusableCell(SettingsNameCell.self.self)
+        tableView.register(cellType: SettingsProfilePictureCell.self)
+        tableView.register(cellType: SettingsUserCell.self)
+        tableView.register(cellType: SettingsNameCell.self.self)
         tableView.backgroundColor = UIColor.white
 
         let footerView = UIView()
@@ -97,11 +97,13 @@ class ProfileSettingsViewController: KZViewController {
     }
 
     func changeProfilePiture() {
-        let vc = CameraViewController(croppingEnabled: true) { image in
-            self.dismiss(animated: true, completion: nil)
-            guard let image = image.0 else {
+        let params = CroppingParameters(isEnabled: true)
+        let vc = CameraViewController(croppingParameters: params) { image, asset in
+            guard let image = image else {
                 return
             }
+
+            self.dismiss(animated: true, completion: nil)
 
             guard let imageData = UIImagePNGRepresentation(resizeImage(image, newWidth: 200)) else {
                 return

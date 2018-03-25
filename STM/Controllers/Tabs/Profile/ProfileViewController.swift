@@ -72,7 +72,7 @@ class ProfileViewController: KZViewController, UIViewControllerPreviewingDelegat
         avatarImageView.clipsToBounds = true
         headerView.addSubview(avatarImageView)
 
-        displayNameLabel.font = UIFont.systemFont(ofSize: 19, weight: UIFontWeightBold)
+        displayNameLabel.font = UIFont.systemFont(ofSize: 19, weight: UIFont.Weight.bold)
         displayNameLabel.textColor = RGB(255)
         headerView.addSubview(displayNameLabel)
 
@@ -98,26 +98,24 @@ class ProfileViewController: KZViewController, UIViewControllerPreviewingDelegat
         leftSideHolder.addSubview(messageButton)
         headerView.addSubview(leftSideHolder)
 
-        segmentControl?.titleTextColor = Constants.UI.Color.tint
-        segmentControl?.selectedTitleTextColor = RGB(255)
-        segmentControl?.selectedTitleFont = UIFont.systemFont(ofSize: 15)
-        segmentControl?.segmentIndicatorBackgroundColor = headerView.backgroundColor
-        segmentControl?.backgroundColor = RGB(255)
-        segmentControl?.borderWidth = 0.0
-        segmentControl?.segmentIndicatorBorderWidth = 0.0
-        segmentControl?.segmentIndicatorInset = 2.0
-        segmentControl?.segmentIndicatorBorderColor = self.view.backgroundColor
-        segmentControl?.usesSpringAnimations = true
-        segmentControl?.addTarget(self, action: #selector(self.segmentDidChange), for: .valueChanged)
+        segmentControl.titleTextColor = Constants.UI.Color.tint
+        segmentControl.selectedTitleTextColor = RGB(255)
+        segmentControl.selectedTitleFont = UIFont.systemFont(ofSize: 15)
+        segmentControl.segmentIndicatorBackgroundColor = headerView.backgroundColor!
+        segmentControl.backgroundColor = RGB(255)
+        segmentControl.borderWidth = 0.0
+        segmentControl.segmentIndicatorBorderWidth = 0.0
+        segmentControl.segmentIndicatorInset = 2.0
+        segmentControl.segmentIndicatorBorderColor = self.view.backgroundColor!
+        segmentControl.usesSpringAnimations = true
+        segmentControl.addTarget(self, action: #selector(self.segmentDidChange), for: .valueChanged)
 
         let tap1 = UITapGestureRecognizer(target: self, action: #selector(viewUserFollowing))
         followingStatView.addGestureRecognizer(tap1)
         let tap2 = UITapGestureRecognizer(target: self, action: #selector(viewUserFollowers))
         followersStatView.addGestureRecognizer(tap2)
         [commentsStatView, followersStatView, followingStatView, segmentControl].forEach({
-            if let x = $0 {
-                headerView.addSubview(x)
-            }
+            headerView.addSubview($0)
         })
 
         tableView.delegate = self
@@ -125,8 +123,8 @@ class ProfileViewController: KZViewController, UIViewControllerPreviewingDelegat
         tableView.showsVerticalScrollIndicator = false
         tableView.backgroundColor = RGB(250, g: 251, b: 252)
         tableView.tableHeaderView = headerView
-        tableView.registerReusableCell(UserCommentCell.self)
-        tableView.registerReusableCell(SearchStreamCell.self)
+        tableView.register(cellType: UserCommentCell.self)
+        tableView.register(cellType: SearchStreamCell.self)
         view.addSubview(tableView)
 
         registerForPreviewing(with: self, sourceView: tableView)
@@ -162,7 +160,7 @@ class ProfileViewController: KZViewController, UIViewControllerPreviewingDelegat
             }
         }
 
-        segmentControl?.cornerRadius = (segmentControl?.frame.size.height)!/2.0
+        segmentControl.cornerRadius = segmentControl.frame.size.height / 2.0
         avatarImageView.kf.setImage(with: user.profilePictureURL(), placeholder: UIImage(named: "defaultProfilePicture"))
         displayNameLabel.text = user.displayName
         descriptionLabel.text = user.description
@@ -211,7 +209,7 @@ class ProfileViewController: KZViewController, UIViewControllerPreviewingDelegat
 
         avatarImageView.autoPinEdge(toSuperviewEdge: .top, withInset: 20)
         avatarImageView.autoAlignAxis(toSuperviewAxis: .vertical)
-        NSLayoutConstraint.autoSetPriority(999) {
+        NSLayoutConstraint.autoSetPriority(UILayoutPriority(rawValue: 999)) {
             self.avatarImageView.autoSetDimensions(to: CGSize(width: 140, height: 140))
         }
 
@@ -241,7 +239,7 @@ class ProfileViewController: KZViewController, UIViewControllerPreviewingDelegat
         descriptionLabel.autoSetDimension(.width, toSize: 250, relation: .lessThanOrEqual)
         descriptionLabel.autoAlignAxis(toSuperviewAxis: .vertical)
 
-        NSLayoutConstraint.autoSetPriority(999) {
+        NSLayoutConstraint.autoSetPriority(UILayoutPriority(rawValue: 999)) {
             self.commentsStatView.autoPinEdge(.top, to: .bottom, of: self.descriptionLabel, withOffset: 15)
         }
         commentsStatView.autoPinEdge(toSuperviewEdge: .left)
@@ -255,23 +253,23 @@ class ProfileViewController: KZViewController, UIViewControllerPreviewingDelegat
         followingStatView.autoMatch(.width, to: .width, of: commentsStatView)
         followingStatView.autoPinEdge(toSuperviewEdge: .right)
 
-        segmentControl?.autoPinEdge(.top, to: .bottom, of: commentsStatView, withOffset: 20)
-        segmentControl?.autoPinEdge(toSuperviewEdge: .bottom, withInset: 10)
-        segmentControl?.autoPinEdge(toSuperviewEdge: .left, withInset: 10)
+        segmentControl.autoPinEdge(.top, to: .bottom, of: commentsStatView, withOffset: 20)
+        segmentControl.autoPinEdge(toSuperviewEdge: .bottom, withInset: 10)
+        segmentControl.autoPinEdge(toSuperviewEdge: .left, withInset: 10)
 
-        NSLayoutConstraint.autoSetPriority(999) {
-            self.segmentControl?.autoPinEdge(toSuperviewEdge: .right, withInset: 10)
+        NSLayoutConstraint.autoSetPriority(UILayoutPriority(rawValue: 999)) {
+            self.segmentControl.autoPinEdge(toSuperviewEdge: .right, withInset: 10)
         }
     }
 
-    func segmentDidChange() {
+    @objc func segmentDidChange() {
         self.tableView.reloadData()
     }
 
     // MARK: Table View Delegate
 
     override func tableViewCellClass(_ tableView: UITableView, indexPath: IndexPath?) -> KZTableViewCell.Type {
-        let value = Int(segmentControl?.selectedSegmentIndex ?? 27)
+        let value = Int(segmentControl.selectedSegmentIndex)
         switch value {
         case 0:
             return UserCommentCell.self
@@ -285,7 +283,7 @@ class ProfileViewController: KZViewController, UIViewControllerPreviewingDelegat
     }
 
     override func tableViewCellData(_ tableView: UITableView, section: Int) -> [Any] {
-        let value = Int(segmentControl?.selectedSegmentIndex ?? 27)
+        let value = Int(segmentControl.selectedSegmentIndex)
         switch value {
         case 0:
             return comments
@@ -299,7 +297,7 @@ class ProfileViewController: KZViewController, UIViewControllerPreviewingDelegat
     }
 
     override func tableViewNoDataText(_ tableView: UITableView) -> String {
-        let value = Int(segmentControl?.selectedSegmentIndex ?? 27)
+        let value = Int(segmentControl.selectedSegmentIndex)
         switch value {
         case 0:
             return isOwner ? "You haven't posted anything :(" : "This user hasn't posted anything"
@@ -413,7 +411,7 @@ class ProfileViewController: KZViewController, UIViewControllerPreviewingDelegat
         followButton.isEnabled = !isOwner
         followButton.isSelected = user.isFollowing
 
-        if descriptionLabel.text?.characters.count == 0 {
+        if descriptionLabel.text?.count == 0 {
             descriptionLabelPadding?.constant = 0
         } else {
             descriptionLabelPadding?.constant = 10
@@ -480,7 +478,7 @@ class ProfileViewController: KZViewController, UIViewControllerPreviewingDelegat
                 let comments = [STMComment].from(jsonArray:results)
                 comments?.forEach({ self.comments.append($0) })
 
-                if self.segmentControl?.selectedSegmentIndex == 0 {
+                if self.segmentControl.selectedSegmentIndex == 0 {
                     self.tableView.reloadData()
                 }
             })
@@ -496,7 +494,7 @@ class ProfileViewController: KZViewController, UIViewControllerPreviewingDelegat
                     let streams = [STMStream].from(jsonArray:result)
                     streams?.forEach({ self.streams.append($0) })
 
-                    if self.segmentControl?.selectedSegmentIndex == 1 {
+                    if self.segmentControl.selectedSegmentIndex == 1 {
                         self.tableView.reloadData()
                     }
                 }
@@ -513,7 +511,7 @@ class ProfileViewController: KZViewController, UIViewControllerPreviewingDelegat
                     let likes = [STMComment].from(jsonArray:result)
                     likes?.forEach({ self.likes.append($0) })
 
-                    if self.segmentControl?.selectedSegmentIndex == 2 {
+                    if self.segmentControl.selectedSegmentIndex == 2 {
                         self.tableView.reloadData()
                     }
                 }
@@ -525,12 +523,12 @@ class ProfileViewController: KZViewController, UIViewControllerPreviewingDelegat
 
     // MARK: Handle Actions
 
-    func editProfile() {
+    @objc func editProfile() {
         let vc = ProfileSettingsViewController()
         self.navigationController?.pushViewController(vc, animated: true)
     }
 
-    func toggleFollow() {
+    @objc func toggleFollow() {
         let method = followButton.isSelected ? "unfollow" : "follow"
         UIView.transition(with: self.followButton, duration: 0.2, options: .transitionCrossDissolve, animations: {
             self.followButton.isSelected = !self.followButton.isSelected
@@ -542,7 +540,7 @@ class ProfileViewController: KZViewController, UIViewControllerPreviewingDelegat
         }
     }
 
-    func messageUser() {
+    @objc func messageUser() {
         guard let tabVC = self.navigationController?.tabBarController else {
             return
         }
@@ -617,12 +615,12 @@ class ProfileViewController: KZViewController, UIViewControllerPreviewingDelegat
         })
     }
 
-    func viewUserFollowing() {
+    @objc func viewUserFollowing() {
         let vc = ProfileStatsListViewController(user: user, type: .following)
         self.navigationController?.pushViewController(vc, animated: true)
     }
 
-    func viewUserFollowers() {
+    @objc func viewUserFollowers() {
         let vc = ProfileStatsListViewController(user: user, type: .followers)
         self.navigationController?.pushViewController(vc, animated: true)
     }

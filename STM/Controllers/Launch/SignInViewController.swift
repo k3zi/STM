@@ -80,12 +80,12 @@ class SignInViewController: KZViewController {
         crowdBGGOverlay.frame = crowdBG.bounds
     }
 
-    func signIn() {
+    @objc func signIn() {
         guard let username = usernameTextField.text else {
             return showError("No Username Entered")
         }
 
-        guard username.characters.count > 0 else {
+        guard username.count > 0 else {
             return showError("No Username Entered")
         }
 
@@ -93,7 +93,7 @@ class SignInViewController: KZViewController {
             return showError("No Password Entered")
         }
 
-        guard password.characters.count > 0 else {
+        guard password.count > 0 else {
             return showError("No Password Entered")
         }
 
@@ -116,7 +116,7 @@ class SignInViewController: KZViewController {
         })
     }
 
-    func popVC() {
+    @objc func popVC() {
         if let vc = self.navigationController {
             vc.popViewController(animated: true)
         }

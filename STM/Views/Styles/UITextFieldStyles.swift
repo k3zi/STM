@@ -12,7 +12,7 @@ extension UITextField {
 
     class func styledForLaunchScreen() -> UITextField {
         let textField = UITextField()
-        textField.font = UIFont.systemFont(ofSize: 15, weight: UIFontWeightMedium)
+        textField.font = UIFont.systemFont(ofSize: 15, weight: UIFont.Weight.medium)
         textField.textColor = RGB(255)
         textField.backgroundColor = RGB(0, a: 0.2)
         textField.clipsToBounds = true

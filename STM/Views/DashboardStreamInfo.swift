@@ -37,7 +37,7 @@ class DashboardStreamInfoView: UIView {
         infoViewHolder.addSubview(statusView)
 
         streamNameLabel.textColor = Constants.UI.Color.tint
-        streamNameLabel.font = UIFont.systemFont(ofSize: 17, weight: UIFontWeightMedium)
+        streamNameLabel.font = UIFont.systemFont(ofSize: 17, weight: UIFont.Weight.medium)
         streamNameLabel.text = stream.name
         infoViewHolder.addSubview(streamNameLabel)
 

@@ -64,8 +64,8 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 
     func configureApp() {
         UserDefaults.standard.setSecret(Constants.Config.userDefaultsSecret)
-        Twitter.sharedInstance().start(withConsumerKey: Constants.Config.twitterConsumerKey, consumerSecret: Constants.Config.twitterConsumerSecret)
-        Fabric.with([Crashlytics.self, Twitter.self])
+        TWTRTwitter.sharedInstance().start(withConsumerKey: Constants.Config.twitterConsumerKey, consumerSecret: Constants.Config.twitterConsumerSecret)
+        Fabric.with([Crashlytics.self])
 
         ImageDownloader.default.sessionConfiguration = Constants.Config.sessionConfig()
 
@@ -78,8 +78,8 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         NSSetUncaughtExceptionHandler(exceptionHandler)
 
         UITabBar.appearance().tintColor = Constants.UI.Color.tint2
-        UITabBarItem.appearance().setTitleTextAttributes([NSForegroundColorAttributeName: UIColor.white], for: .normal)
-        UITabBarItem.appearance().setTitleTextAttributes([NSForegroundColorAttributeName: Constants.UI.Color.tint2], for: .selected)
+        UITabBarItem.appearance().setTitleTextAttributes([NSAttributedStringKey.foregroundColor: UIColor.white], for: .normal)
+        UITabBarItem.appearance().setTitleTextAttributes([NSAttributedStringKey.foregroundColor: Constants.UI.Color.tint2], for: .selected)
 
         setUpAudioSession(false)
     }
@@ -378,7 +378,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 		}
 	}
 
-    func audioWasInterupted(_ notification: Notification) {
+    @objc func audioWasInterupted(_ notification: Notification) {
         if let type = (notification as NSNotification).userInfo?[AVAudioSessionInterruptionTypeKey] as? NSNumber {
             switch type.uintValue {
             case AVAudioSessionInterruptionType.began.rawValue:

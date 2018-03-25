@@ -18,7 +18,7 @@ class NewMessageViewController: KZViewController, UISearchBarDelegate {
 
     var selectedUsers = [Int]()
 
-    lazy var keynode: Keynode.Connector = Keynode.Connector(view: self.view)
+    lazy var keynode: Keynode = Keynode(view: self.view)
     var tableViewBottomConstraint: NSLayoutConstraint?
 
     init() {
@@ -43,10 +43,10 @@ class NewMessageViewController: KZViewController, UISearchBarDelegate {
         tableView.delegate = self
         tableView.dataSource = self
         tableView.allowsMultipleSelection = true
-        tableView.registerReusableCell(UserSelectionCell.self)
+        tableView.register(cellType: UserSelectionCell.self)
         view.addSubview(tableView)
 
-        keynode.animationsHandler = { [weak self] show, rect in
+        keynode.animations { [weak self] show, rect in
             guard let me = self else {
                 return
             }
@@ -86,7 +86,7 @@ class NewMessageViewController: KZViewController, UISearchBarDelegate {
 
     override func tableViewNoDataText(_ tableView: UITableView) -> String {
         if let text = searchBar.text {
-            if text.characters.count == 0 {
+            if text.count == 0 {
                 return "Search for a user using the field above"
             }
         } else {
@@ -142,7 +142,7 @@ class NewMessageViewController: KZViewController, UISearchBarDelegate {
             return
         }
 
-        guard text.characters.count > 0 else {
+        guard text.count > 0 else {
             return
         }
 

@@ -37,7 +37,7 @@ class SettingsProfilePictureCell: KZTableViewCell {
         nameLabel.autoAlignAxis(toSuperviewAxis: .horizontal)
         nameLabel.autoPinEdge(toSuperviewEdge: .left, withInset: 11)
 
-        NSLayoutConstraint.autoSetPriority(999) {
+        NSLayoutConstraint.autoSetPriority(UILayoutPriority(rawValue: 999)) {
             self.avatar.autoSetDimension(.height, toSize: 85)
         }
         avatar.autoSetDimension(.width, toSize: 85)

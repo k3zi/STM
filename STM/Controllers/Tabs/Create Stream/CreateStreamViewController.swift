@@ -27,7 +27,7 @@ class CreateStreamViewController: KZViewController {
     var selectedCategory = STMStreamType.radio
 
     // UI Adjustments
-    lazy var keynode: Keynode.Connector = Keynode.Connector(view: self.contentView)
+    lazy var keynode: Keynode = Keynode(view: self.contentView)
     var scrollViewBottomConstraint: NSLayoutConstraint?
     var passcodeHeightConstraint: NSLayoutConstraint?
     var passcodePaddingConstraint: NSLayoutConstraint?
@@ -110,7 +110,7 @@ class CreateStreamViewController: KZViewController {
         contentView.addSubview(streamDescriptionTextView)
 
         hostBT.setTitle("Host", for: UIControlState())
-        hostBT.titleLabel?.font = UIFont.systemFont(ofSize: 15, weight: UIFontWeightMedium)
+        hostBT.titleLabel?.font = UIFont.systemFont(ofSize: 15, weight: UIFont.Weight.medium)
         hostBT.setTitleColor(Constants.UI.Color.tint, for: .normal)
         hostBT.setBackgroundColor(UIColor.clear, forState: .normal)
         hostBT.setTitleColor(RGB(255), for: .highlighted)
@@ -128,10 +128,10 @@ class CreateStreamViewController: KZViewController {
         tableView.bounces = false
         tableView.showsVerticalScrollIndicator = false
         tableView.backgroundColor = RGB(255)
-        tableView.registerReusableCell(HostStreamCell.self)
+        tableView.register(cellType: HostStreamCell.self)
         contentView.addSubview(tableView)
 
-        keynode.animationsHandler = { [weak self] show, rect in
+        keynode.animations { [weak self] show, rect in
             guard let me = self else {
                 return
             }
@@ -211,7 +211,7 @@ class CreateStreamViewController: KZViewController {
         tableView.autoPinEdge(toSuperviewEdge: .bottom)
     }
 
-    func selectedType(_ button: UIButton) {
+    @objc func selectedType(_ button: UIButton) {
         for x in [categoryLiveBT, categoryPodcastBT, categoryRadioBT] {
             x.alpha = (button == x) ? 1.0 : 0.5
         }
@@ -221,7 +221,7 @@ class CreateStreamViewController: KZViewController {
         }
     }
 
-    func togglePrivacy() {
+    @objc func togglePrivacy() {
         let enabled = privacySwitch.isOn
         passcodeTextField.isEnabled = enabled
         passcodeTextField.text = ""
@@ -234,12 +234,12 @@ class CreateStreamViewController: KZViewController {
         })
     }
 
-    func host() {
+    @objc func host() {
         guard let name = streamNameTextField.text else {
             return showError("No Stream Name Entered")
         }
 
-        guard name.characters.count > 0 else {
+        guard name.count > 0 else {
             return showError("No Stream Name Entered")
         }
 
@@ -247,7 +247,7 @@ class CreateStreamViewController: KZViewController {
             return showError("No Description Entered")
         }
 
-        guard description.characters.count > 0 else {
+        guard description.count > 0 else {
             return showError("No Description Entered")
         }
 
@@ -295,12 +295,14 @@ class CreateStreamViewController: KZViewController {
             return activeVC.showError("You are already hosting/playing a stream. Please close it before starting another")
         }
 
-        if let stream = self.tableViewCellData(tableView, section: indexPath.section)[indexPath.row] as? STMStream {
-            let vc = HostViewController()
-            vc.start(stream) { (nothing, error) -> Void in
-                if error == nil {
-                    AppDelegate.del().presentStreamController(vc)
-                }
+        guard let stream = self.tableViewCellData(tableView, section: indexPath.section)[indexPath.row] as? STMStream else {
+            return
+        }
+
+        let vc = HostViewController()
+        vc.start(stream) { (nothing, error) -> Void in
+            if error == nil {
+                AppDelegate.del().presentStreamController(vc)
             }
         }
     }
@@ -312,19 +314,21 @@ class CreateStreamViewController: KZViewController {
     }
 
     func tableView(_ tableView: UITableView, commitEditingStyle editingStyle: UITableViewCellEditingStyle, forRowAtIndexPath indexPath: IndexPath) {
-        if editingStyle == .delete {
-            guard let stream = items[indexPath.row] as? STMStream else {
-                return
-            }
-
-            Constants.Network.GET("/stream/\(stream.id)/delete", parameters: nil, completionHandler: { (response, error) -> Void in
-                self.handleResponse(response as AnyObject?, error: error as NSError?, successCompletion: { (result) -> Void in
-                    self.items.remove(at: indexPath.row)
-                    tableView.reloadSections(NSIndexSet(index: 0) as IndexSet, with: .fade)
-                    self.fetchData()
-                })
-            })
+        guard editingStyle == .delete else {
+            return
         }
+
+        guard let stream = items[indexPath.row] as? STMStream else {
+            return
+        }
+
+        Constants.Network.GET("/stream/\(stream.id)/delete", parameters: nil, completionHandler: { (response, error) -> Void in
+            self.handleResponse(response as AnyObject?, error: error as NSError?, successCompletion: { (result) -> Void in
+                self.items.remove(at: indexPath.row)
+                tableView.reloadSections(NSIndexSet(index: 0) as IndexSet, with: .fade)
+                self.fetchData()
+            })
+        })
     }
 
     // MARK: Data Functions
@@ -337,11 +341,13 @@ class CreateStreamViewController: KZViewController {
         Constants.Network.GET("/user/\(user.id)/streams", parameters: nil) { (response, error) -> Void in
             self.handleResponse(response as AnyObject?, error: error as NSError?, successCompletion: { (result) -> Void in
                 self.items.removeAll()
-                if let result = result as? [JSON] {
-                    let streams = [STMStream].from(jsonArray:result)
-                    streams?.forEach({ self.items.append($0) })
-                    self.tableView.reloadData()
+                guard let result = result as? [JSON] else {
+                    return
                 }
+
+                let streams = [STMStream].from(jsonArray:result)
+                streams?.forEach({ self.items.append($0) })
+                self.tableView.reloadData()
             })
         }
     }

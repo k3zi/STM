@@ -8,7 +8,6 @@
 
 import UIKit
 
-
 // MARK: Protocol Definition
 
 /// Make your UIView subclasses conform to this protocol when:
@@ -21,25 +20,15 @@ public protocol NibLoadable: class {
   static var nib: UINib { get }
 }
 
-
-
-
 // MARK: Default implementation
 
 public extension NibLoadable {
   /// By default, use the nib which have the same name as the name of the class,
   /// and located in the bundle of that class
   static var nib: UINib {
-    #if swift(>=3.0)
-      return UINib(nibName: String(describing: self), bundle: Bundle(for: self))
-    #else
-      return UINib(nibName: String(self), bundle: NSBundle(forClass: self))
-    #endif
+    return UINib(nibName: String(describing: self), bundle: Bundle(for: self))
   }
 }
-
-
-
 
 // MARK: Support for instantiation from NIB
 
@@ -50,15 +39,9 @@ public extension NibLoadable where Self: UIView {
    - returns: A `NibLoadable`, `UIView` instance
    */
   static func loadFromNib() -> Self {
-    #if swift(>=3.0)
-      let view = nib.instantiate(withOwner: nil, options: nil).first
-    #else
-      let view = nib.instantiateWithOwner(nil, options: nil).first
-    #endif
-
-    guard let typedView = view as? Self else {
+    guard let view = nib.instantiate(withOwner: nil, options: nil).first as? Self else {
       fatalError("The nib \(nib) expected its root view to be of type \(self)")
     }
-    return typedView
+    return view
   }
 }

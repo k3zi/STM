@@ -91,18 +91,18 @@ class CreateAccountViewController: KZViewController {
         crowdBGGOverlay.frame = crowdBG.bounds
     }
 
-    func popVC() {
+    @objc func popVC() {
         if let vc = self.navigationController {
             vc.popViewController(animated: true)
         }
     }
 
-    func createAccount() {
+    @objc func createAccount() {
         guard let displayName = displayNameTextField.text else {
             return showError("No Display Name Entered")
         }
 
-        guard displayName.characters.count > 0 else {
+        guard displayName.count > 0 else {
             return showError("No Display Name Entered")
         }
 
@@ -110,7 +110,7 @@ class CreateAccountViewController: KZViewController {
             return showError("No Username Entered")
         }
 
-        guard username.characters.count > 0 else {
+        guard username.count > 0 else {
             return showError("No Username Entered")
         }
 
@@ -118,7 +118,7 @@ class CreateAccountViewController: KZViewController {
             return showError("No Password Entered")
         }
 
-        guard password.characters.count > 0 else {
+        guard password.count > 0 else {
             return showError("No Password Entered")
         }
 
@@ -126,7 +126,7 @@ class CreateAccountViewController: KZViewController {
             return showError("No Email Entered")
         }
 
-        guard email.characters.count > 0 else {
+        guard email.count > 0 else {
             return showError("No Email Entered")
         }
 

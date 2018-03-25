@@ -53,7 +53,7 @@ class StreamStatusView: UIView {
         fatalError("init(coder:) has not been implemented")
     }
 
-    func updateStatus() {
+    @objc func updateStatus() {
         guard let stream = stream else {
             return
         }

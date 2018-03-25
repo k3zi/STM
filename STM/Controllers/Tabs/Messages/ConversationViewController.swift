@@ -15,7 +15,7 @@ class ConversationViewController: KZViewController, MessageToolbarDelegate {
     let convo: STMConversation
     var messages = [Any]()
 
-    lazy var keynode: Keynode.Connector = Keynode.Connector(view: self.view)
+    lazy var keynode: Keynode = Keynode(view: self.view)
     var toolbarBottomConstraint: NSLayoutConstraint?
     let commentToolbar = MessageToolbarView()
 
@@ -45,14 +45,14 @@ class ConversationViewController: KZViewController, MessageToolbarDelegate {
         tableView.delegate = self
         tableView.dataSource = self
         tableView.separatorStyle = .none
-        tableView.registerReusableCell(STMMessageYouCell.self)
-        tableView.registerReusableCell(STMMessageOtherCell.self)
+        tableView.register(cellType: STMMessageYouCell.self)
+        tableView.register(cellType: STMMessageOtherCell.self)
         view.addSubview(tableView)
 
         commentToolbar.delegate = self
         view.addSubview(commentToolbar)
 
-        keynode.animationsHandler = { [weak self] show, rect in
+        keynode.animations { [weak self] show, rect in
             guard let me = self else {
                 return
             }
@@ -76,7 +76,7 @@ class ConversationViewController: KZViewController, MessageToolbarDelegate {
         tableView.dg_setPullToRefreshFillColor(RGB(250, g: 251, b: 252))
     }
 
-    func goToProfile() {
+    @objc func goToProfile() {
         guard let users = convo.users else {
             return
         }
@@ -96,7 +96,7 @@ class ConversationViewController: KZViewController, MessageToolbarDelegate {
      - parameter text: the text that was posted
      */
     func handlePost(_ text: String) {
-        guard text.characters.count > 0 else {
+        guard text.count > 0 else {
             return
         }
 

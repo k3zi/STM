@@ -136,19 +136,19 @@ class FinishTwitterAccountViewController: KZViewController, UITextFieldDelegate 
             return showError("All fields are required")
         }
 
-        guard displayName.characters.count > 0 else {
+        guard displayName.count > 0 else {
             return showError("No Display Name Entered")
         }
 
-        guard username.characters.count > 0 else {
+        guard username.count > 0 else {
             return showError("No Username Entered")
         }
 
-        guard password.characters.count > 0 else {
+        guard password.count > 0 else {
             return showError("No Password Entered")
         }
 
-        guard email.characters.count > 0 else {
+        guard email.count > 0 else {
             return showError("No Email Entered")
         }
 

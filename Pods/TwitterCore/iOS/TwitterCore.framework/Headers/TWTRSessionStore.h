@@ -1,9 +1,19 @@
-//
-//  TWTRSessionStore.h
-//  TwitterCore
-//
-//  Copyright (c) 2015 Twitter Inc. All rights reserved.
-//
+/*
+ * Copyright (C) 2017 Twitter, Inc.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ *
+ */
 
 @class TWTRAuthConfig;
 @class TWTRGuestSession;
@@ -22,7 +32,7 @@ NS_ASSUME_NONNULL_BEGIN
  *  @param refreshedSession The refreshed session
  *  @param error            Error that will be non nil if the refresh request failed
  */
-typedef void (^TWTRSessionStoreRefreshCompletion)(id _Nullable refreshedSession, NSError * _Nullable error);
+typedef void (^TWTRSessionStoreRefreshCompletion)(id _Nullable refreshedSession, NSError *_Nullable error);
 
 /**
  *  Protocol for session stores that can refresh expired sessions.
@@ -68,7 +78,7 @@ typedef void (^TWTRSessionStoreRefreshCompletion)(id _Nullable refreshedSession,
  *  @param session The saved session
  *  @param error   Error that will be non nil if the save request fails.
  */
-typedef void (^TWTRSessionStoreSaveCompletion)(id<TWTRAuthSession> _Nullable session, NSError * _Nullable error);
+typedef void (^TWTRSessionStoreSaveCompletion)(id<TWTRAuthSession> _Nullable session, NSError *_Nullable error);
 
 /**
  *  Completion block called when fetching all stored user sessions completes or fails.
@@ -121,6 +131,13 @@ typedef void (^TWTRSessionStoreDeleteCompletion)(id<TWTRAuthSession> _Nullable s
 - (NSArray *)existingUserSessions;
 
 /**
+ *  Returns YES if there are existing user sessions.
+ *
+ *  @note This is a blocking call.
+ */
+- (BOOL)hasLoggedInUsers;
+
+/**
  *  Retrieves the last logged in user session.
  *
  *  @return The last logged in user session.
@@ -144,7 +161,7 @@ typedef void (^TWTRSessionStoreDeleteCompletion)(id<TWTRAuthSession> _Nullable s
  *  @param guestSession The retrieved guest session
  *  @param error        Error that will be non nil if the save request fails.
  */
-typedef void (^TWTRSessionGuestLogInCompletion)(TWTRGuestSession * _Nullable guestSession, NSError * _Nullable error);
+typedef void (^TWTRSessionGuestLogInCompletion)(TWTRGuestSession *_Nullable guestSession, NSError *_Nullable error);
 
 /**
  *  Protocol for session stores that can manage guest sessions.
@@ -176,7 +193,6 @@ typedef void (^TWTRSessionGuestLogInCompletion)(TWTRGuestSession * _Nullable gue
 
 @end
 
-
 #pragma mark - Concrete Session Store Class
 
 /**
@@ -192,23 +208,37 @@ typedef void (^TWTRSessionGuestLogInCompletion)(TWTRGuestSession * _Nullable gue
 
 /**
  * Provides a mechanism for reloading the session store. This method will force the session store
- * to find any sessions that may have been saved by another session store or application that is 
+ * to find any sessions that may have been saved by another session store or application that is
  * using the same keychain access groups.
  *
  * Most applications will not need to call this method. You may need to call this method if you are
  * using multiple stores within your application and you need to synchronize when one writes to the
  * store. The more likely case for needing to call this method is if you are sharing credentials
  * between applications. In this situation you will want to call this method when the application
- * comes back to the foreground. 
- * 
+ * comes back to the foreground.
+ *
  * This method does not need to be called when the store is created because this process happens
  * by default at time of instantiation.
- * 
+ *
  * You should avoid calling this method if you do not have a specific reason to do so, like the reasons
  * mentioned above as this method does cause disk I/O and multiple calls can cause performance problems.
  */
 - (void)reloadSessionStore;
 
+/**
+ *  Sets a local string which can be used to verify the auth token using
+ *  isValidOauthToken:
+ */
+- (void)saveOauthToken:(NSString *)token;
+
+/**
+ *  If saveOauthToken is called then this will compare the set to the token passed by the token parameter.
+ *  This is used to verify the token generated from the oauth/request_token request after a URL has been passed
+ *  back from web authenticatoin.
+ *
+ *  Returns YES is the token string matches the internal OAuth token.
+ */
+- (BOOL)isValidOauthToken:(NSString *)token;
 @end
 
 NS_ASSUME_NONNULL_END

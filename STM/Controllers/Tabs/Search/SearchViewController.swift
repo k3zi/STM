@@ -15,7 +15,7 @@ class SearchViewController: KZViewController, UISearchBarDelegate, UIViewControl
     var searchResults = [Any]()
     var searchAttempt = 0
 
-    lazy var keynode: Keynode.Connector = Keynode.Connector(view: self.view)
+    lazy var keynode: Keynode = Keynode(view: self.view)
     var tableViewBottomConstraint: NSLayoutConstraint?
 
     override func viewDidLoad() {
@@ -28,13 +28,13 @@ class SearchViewController: KZViewController, UISearchBarDelegate, UIViewControl
 
         tableView.delegate = self
         tableView.dataSource = self
-        tableView.registerReusableCell(SearchUserCell.self)
-        tableView.registerReusableCell(SearchStreamCell.self)
+        tableView.register(cellType: SearchUserCell.self)
+        tableView.register(cellType: SearchStreamCell.self)
         view.addSubview(tableView)
 
         registerForPreviewing(with: self, sourceView: tableView)
 
-        keynode.animationsHandler = { [weak self] show, rect in
+        keynode.animations { [weak self] show, rect in
             guard let me = self else {
                 return
             }
@@ -81,7 +81,7 @@ class SearchViewController: KZViewController, UISearchBarDelegate, UIViewControl
 
     override func tableViewNoDataText(_ tableView: UITableView) -> String {
         if let text = searchBar.text {
-            if text.characters.count == 0 {
+            if text.count == 0 {
                 return "Search for a user or stream using the field above"
             }
         } else {
@@ -132,7 +132,7 @@ class SearchViewController: KZViewController, UISearchBarDelegate, UIViewControl
             return
         }
 
-        guard text.characters.count > 0 else {
+        guard text.count > 0 else {
             return
         }
 

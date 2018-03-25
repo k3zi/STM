@@ -20,6 +20,7 @@ class HostViewController: KZViewController, UISearchBarDelegate, UIViewControlle
 	var streamType: StreamType?
 	var stream: STMStream?
 
+    var mainSocketManager: SocketManager?
 	var socket: SocketIOClient?
     var commentSocket: SocketIOClient?
 	let backgroundQueue = DispatchQueue(label: "com.stormedgeapps.streamtome.stream", attributes: [])
@@ -119,7 +120,7 @@ class HostViewController: KZViewController, UISearchBarDelegate, UIViewControlle
 	// Keyboard Adjustment
 	var commentFieldKeyboardConstraint: NSLayoutConstraint?
     var settingsieldKeyboardConstraint: NSLayoutConstraint?
-    lazy var keynode: Keynode.Connector = Keynode.Connector(view: self.view)
+    lazy var keynode: Keynode = Keynode(view: self.view)
 
     init() {
         super.init(nibName: nil, bundle: nil)
@@ -150,7 +151,7 @@ class HostViewController: KZViewController, UISearchBarDelegate, UIViewControlle
 
         loadLibrary()
 
-        keynode.animationsHandler = { [weak self] show, rect in
+        keynode.animations { [weak self] show, rect in
             if let me = self {
                 me.toggleTop(!show)
 
@@ -393,10 +394,10 @@ class HostViewController: KZViewController, UISearchBarDelegate, UIViewControlle
 			label.textColor = RGB(255)
 			if label != songInfoLabel1 {
 				label.alpha = 0.66
-				label.font = UIFont.systemFont(ofSize: 13, weight: UIFontWeightMedium)
+				label.font = UIFont.systemFont(ofSize: 13, weight: UIFont.Weight.medium)
 			} else {
 				label.text = "No Song Playing"
-				label.font = UIFont.systemFont(ofSize: 18, weight: UIFontWeightMedium)
+				label.font = UIFont.systemFont(ofSize: 18, weight: UIFont.Weight.medium)
 			}
 			songInfoHolderView.addSubview(label)
 		}
@@ -408,7 +409,7 @@ class HostViewController: KZViewController, UISearchBarDelegate, UIViewControlle
 
 		switcherControl.selectedSegmentIndex = 0
 		switcherControl.tintColor = Constants.UI.Color.tint
-		switcherControl.setTitleTextAttributes([NSForegroundColorAttributeName: RGB(255)], for: .selected)
+		switcherControl.setTitleTextAttributes([NSAttributedStringKey.foregroundColor: RGB(255)], for: .selected)
 		switcherControl.addTarget(self, action: #selector(HostViewController.didChangeSegmentIndex), for: .valueChanged)
 		switcherControlHolder.addSubview(switcherControl)
 
@@ -424,19 +425,19 @@ class HostViewController: KZViewController, UISearchBarDelegate, UIViewControlle
 
 		songsTableView.delegate = self
 		songsTableView.dataSource = self
-		songsTableView.registerReusableCell(SelectSongCell.self)
+		songsTableView.register(cellType: SelectSongCell.self)
 		switcherContentView.addSubview(songsTableView)
 
 		queueTableView.delegate = self
 		queueTableView.dataSource = self
-		queueTableView.registerReusableCell(UpNextSongCell.self)
+		queueTableView.register(cellType: UpNextSongCell.self)
         queueTableView.setEditing(true, animated: false)
 		switcherContentView.addSubview(queueTableView)
 
         commentsTableView.delegate = self
         commentsTableView.dataSource = self
-        commentsTableView.registerReusableCell(CommentCell.self)
-        commentsTableView.registerReusableCell(TimelineItemCell.self)
+        commentsTableView.register(cellType: CommentCell.self)
+        commentsTableView.register(cellType: TimelineItemCell.self)
 		switcherContentView.addSubview(commentContentView)
 		commentContentView.addSubview(commentsTableView)
 
@@ -671,7 +672,7 @@ class HostViewController: KZViewController, UISearchBarDelegate, UIViewControlle
         }
     }
 
-    func showMenu() {
+    @objc func showMenu() {
         let menu = UIAlertController(title: "Host Menu", message: nil, preferredStyle: .actionSheet)
         menu.popoverPresentationController?.sourceView = miscBT
 
@@ -702,7 +703,7 @@ class HostViewController: KZViewController, UISearchBarDelegate, UIViewControlle
         self.present(vc, animated: true, completion: nil)
     }
 
-    func toggleDismiss() {
+    @objc func toggleDismiss() {
         innerToggleDismiss(nil)
     }
 
@@ -799,7 +800,7 @@ class HostViewController: KZViewController, UISearchBarDelegate, UIViewControlle
         }
 	}
 
-    func togglePause() {
+    @objc func togglePause() {
         setPaused(!pauseBT.isSelected)
     }
 
@@ -812,7 +813,7 @@ class HostViewController: KZViewController, UISearchBarDelegate, UIViewControlle
 	/**
 	 Toggles the output of the mic to the stream
 	 */
-	func toggleMic() {
+	@objc func toggleMic() {
 		micToggleBT.isSelected = !micToggleBT.isSelected
 
 		// Music Bus = 0, Mic Bus = 1
@@ -822,11 +823,11 @@ class HostViewController: KZViewController, UISearchBarDelegate, UIViewControlle
 		let bus0ToVolume = micToggleBT.isSelected ? micActiveMusicVolumeSlider.value : musicVolumeSlider.value
 		let bus1ToVolume = micToggleBT.isSelected ? micVolumeSlider.value : 0.0
 
-		engine + FUXTween.tween(micFadeTimeSlider.value, fromToValueFunc(bus0Volume, to: bus0ToVolume, valueFunc: { (value) -> () in
+		_ = engine + FUXTween.tween(micFadeTimeSlider.value, fromToValueFunc(bus0Volume, to: bus0ToVolume, valueFunc: { (value) -> () in
 			EZOutput.shared().mixerNode.setVolume(value, forBus: 0)
 			}))
 
-		engine + FUXTween.tween(micFadeTimeSlider.value, fromToValueFunc(bus1Volume, to: bus1ToVolume, valueFunc: { (value) -> () in
+		_ = engine + FUXTween.tween(micFadeTimeSlider.value, fromToValueFunc(bus1Volume, to: bus1ToVolume, valueFunc: { (value) -> () in
 			EZOutput.shared().mixerNode.setVolume(value, forBus: 1)
 			}))
 
@@ -836,7 +837,7 @@ class HostViewController: KZViewController, UISearchBarDelegate, UIViewControlle
 	/**
 	 Called when UISwitch is toggled for recording
 	 */
-	func didToggleOnAir() {
+	@objc func didToggleOnAir() {
 		UIView.transition(with: recordingStatusLabel, duration: 0.5, options: (isOnAir() ? .transitionFlipFromBottom : .transitionFlipFromTop), animations: { () -> Void in
 			self.refreshRecordingLabel()
 			}, completion: nil)
@@ -845,7 +846,7 @@ class HostViewController: KZViewController, UISearchBarDelegate, UIViewControlle
 	/**
 	 Changes UIScrollView offset when UISegmentControl changes index
 	 */
-	func didChangeSegmentIndex() {
+	@objc func didChangeSegmentIndex() {
 		UIView.animate(withDuration: 0.4, animations: { () -> Void in
 			self.switcherScrollView.contentOffset = CGPoint(x: CGFloat(self.switcherControl.selectedSegmentIndex) * self.switcherScrollView.frame.width, y: 0)
 		})
@@ -853,26 +854,26 @@ class HostViewController: KZViewController, UISearchBarDelegate, UIViewControlle
 		view.endEditing(true)
 	}
 
-    func didChangeMusicVolume(_ sender: UISlider) {
+    @objc func didChangeMusicVolume(_ sender: UISlider) {
         if !micToggleBT.isSelected {
             EZOutput.shared().mixerNode.setVolume(sender.value, forBus: 0)
         }
     }
 
-    func didChangeMusicVolumeMicActive(_ sender: UISlider) {
+    @objc func didChangeMusicVolumeMicActive(_ sender: UISlider) {
         if micToggleBT.isSelected {
             EZOutput.shared().mixerNode.setVolume(sender.value, forBus: 0)
         }
     }
 
-    func didChangeMicVolume(_ sender: UISlider) {
+    @objc func didChangeMicVolume(_ sender: UISlider) {
         EZOutput.shared().mixerNode.setVolume(sender.value, forBus: 1)
     }
 
 	/**
 	 Refreshes various times & numbers
 	 */
-	func refresh() {
+	@objc func refresh() {
 		streamInfoHolder.bandwidth = statsPacketsReceived
         streamInfoHolder.listeners = statsNumberOfListeners
         streamInfoHolder.comments = comments.count
@@ -956,9 +957,9 @@ class HostViewController: KZViewController, UISearchBarDelegate, UIViewControlle
 			songInfoLabel3.text = nil
 		}
 
-		if (songInfoLabel2.text?.characters.count == 0 && songInfoLabel3.text?.characters.count == 0) || (songInfoLabel2.text == nil || songInfoLabel3.text == nil) {
+		if (songInfoLabel2.text?.count == 0 && songInfoLabel3.text?.count == 0) || (songInfoLabel2.text == nil || songInfoLabel3.text == nil) {
 			songInfoHolderViewTopPadding?.constant = 15
-		} else if (songInfoLabel2.text?.characters.count != 0 && songInfoLabel3.text?.characters.count != 0) || (songInfoLabel2.text != nil && songInfoLabel3.text != nil) {
+		} else if (songInfoLabel2.text?.count != 0 && songInfoLabel3.text?.count != 0) || (songInfoLabel2.text != nil && songInfoLabel3.text != nil) {
 			songInfoHolderViewTopPadding?.constant = 5
 		} else {
 			songInfoHolderViewTopPadding?.constant = 10
@@ -1007,7 +1008,7 @@ class HostViewController: KZViewController, UISearchBarDelegate, UIViewControlle
         }
     }
 
-    func didChangeThemeColor(_ color: UIColor) {
+    @objc func didChangeThemeColor(_ color: UIColor) {
         let hexString = color.hexString
         stream?.colorHex = hexString
         self.updateStream("colorHex", value: hexString as AnyObject)
@@ -1082,7 +1083,7 @@ class HostViewController: KZViewController, UISearchBarDelegate, UIViewControlle
 			cell.defaultColor = RGB(227)
 			cell.setSwipeGestureWith(SelectSongCell.viewWithImageName("selectCell_playBT"), color: RGB(85, g: 213, b: 80), mode: .switch, state: .state4, completionBlock: { (cell, state, mode) -> Void in
 				if let item = self.tableViewCellData(tableView, section: indexPath.section)[indexPath.row] as? KZPlayerItem {
-					self.playSong(item)
+					_ = self.playSong(item)
 				}
 			})
 
@@ -1214,7 +1215,7 @@ class HostViewController: KZViewController, UISearchBarDelegate, UIViewControlle
             return
         }
 
-        guard text.characters.count > 0 else {
+        guard text.count > 0 else {
             return
         }
 
@@ -1226,7 +1227,7 @@ class HostViewController: KZViewController, UISearchBarDelegate, UIViewControlle
     // MARK: UITextField Delegate
 
     func textFieldDidEndEditing(_ textField: UITextField) {
-        textFieldShouldReturn(textField)
+        _ = textFieldShouldReturn(textField)
     }
 
     func textFieldShouldReturn(_ textField: UITextField) -> Bool {
@@ -1234,7 +1235,7 @@ class HostViewController: KZViewController, UISearchBarDelegate, UIViewControlle
             return false
         }
 
-        guard text.characters.count > 0 else {
+        guard text.count > 0 else {
             return false
         }
 
@@ -1290,14 +1291,15 @@ class HostViewController: KZViewController, UISearchBarDelegate, UIViewControlle
         }
     }
 
-    func changePicture() {
+    @objc func changePicture() {
         guard let stream = stream else {
             return
         }
 
-        let vc = CameraViewController(croppingEnabled: true) { image in
+        let params = CroppingParameters(isEnabled: true)
+        let vc = CameraViewController(croppingParameters: params) { image, asset in
             self.dismiss(animated: true, completion: nil)
-            guard let image = image.0 else {
+            guard let image = image else {
                 return
             }
 
@@ -1348,7 +1350,7 @@ extension HostViewController: MessageToolbarDelegate {
 	 - parameter text: the text that was posted
 	 */
 	func handlePost(_ text: String) {
-		guard text.characters.count > 0 else {
+		guard text.count > 0 else {
 			return
 		}
 
@@ -1593,15 +1595,9 @@ extension HostViewController: EZOutputDataSource {
             socket.disconnect()
         }
 
-        let oForcePolling = SocketIOClientOption.forcePolling(true)
-        let oHost = SocketIOClientOption.nsp("/host")
-        let streamQueue = SocketIOClientOption.handleQueue(backgroundQueue)
-        let oAuth = SocketIOClientOption.connectParams(["streamID": stream.id, "securityHash": securityHash, "userID": user.id, "stmHash": Constants.Config.streamHash])
-        let oLog = SocketIOClientOption.log(false)
-        let oForceNew = SocketIOClientOption.forceNew(true)
-        let options = SocketIOClientConfiguration(arrayLiteral: oForcePolling, oHost, oAuth, streamQueue, oForceNew)
-
-        self.socket = SocketIOClient(socketURL: baseURL, config: options)
+        let manager = SocketManager(socketURL: baseURL, config: [.forcePolling(true), .forceNew(true), .handleQueue(backgroundQueue), .log(false), .secure(true), .connectParams(["streamID": stream.id, "securityHash": securityHash, "userID": user.id, "stmHash": Constants.Config.streamHash])])
+        self.mainSocketManager = manager
+        self.socket = self.mainSocketManager?.socket(forNamespace: "/host")
         if let socket = self.socket {
             socket.on("connect") { data, ack in
                 print("Stream: Socket Connected")
@@ -1611,9 +1607,7 @@ extension HostViewController: EZOutputDataSource {
             socket.connect()
         }
 
-        let commentHost = SocketIOClientOption.nsp("/comment")
-        let commentOptions = SocketIOClientConfiguration(arrayLiteral: oForcePolling, commentHost, oAuth, oLog, oForceNew)
-        self.commentSocket = SocketIOClient(socketURL: baseURL, config: commentOptions)
+        self.commentSocket = self.mainSocketManager?.socket(forNamespace: "/comment")
         if let socket = self.commentSocket {
             socket.on("connect") { data, ack in
                 print("Comment: Socket Connected")
@@ -1638,7 +1632,7 @@ extension HostViewController: EZOutputDataSource {
         if #available(iOS 9.3, *) {
             MPMediaLibrary.requestAuthorization { (status) in
                 if status == .authorized {
-                    DispatchQueue.global(priority: DispatchQueue.GlobalQueuePriority.low).async {
+                    DispatchQueue.global(qos: DispatchQoS.QoSClass.background).async {
                         self.songs.removeAll()
                         let predicate1 = MPMediaPropertyPredicate(value: MPMediaType.anyAudio.rawValue, forProperty: MPMediaItemPropertyMediaType)
                         let predicate12 = MPMediaPropertyPredicate(value: 0, forProperty: MPMediaItemPropertyIsCloudItem)
@@ -1647,7 +1641,7 @@ extension HostViewController: EZOutputDataSource {
                         if let items = query.items {
                             for item in items {
                                 let newItem = KZPlayerItem(item: item)
-                                if newItem.assetURL.characters.count > 0 {
+                                if newItem.assetURL.count > 0 {
                                     songs.append(newItem)
                                 }
                             }
@@ -1661,7 +1655,7 @@ extension HostViewController: EZOutputDataSource {
                 }
             }
         } else {
-            DispatchQueue.global(priority: DispatchQueue.GlobalQueuePriority.low).async {
+            DispatchQueue.global(qos: DispatchQoS.QoSClass.background).async {
                 self.songs.removeAll()
                 let predicate1 = MPMediaPropertyPredicate(value: MPMediaType.anyAudio.rawValue, forProperty: MPMediaItemPropertyMediaType)
                 let predicate12 = MPMediaPropertyPredicate(value: 0, forProperty: MPMediaItemPropertyIsCloudItem)
@@ -1670,7 +1664,7 @@ extension HostViewController: EZOutputDataSource {
                 if let items = query.items {
                     for item in items {
                         let newItem = KZPlayerItem(item: item)
-                        if newItem.assetURL.characters.count > 0 {
+                        if newItem.assetURL.count > 0 {
                             songs.append(newItem)
                         }
                     }
@@ -1803,21 +1797,21 @@ extension HostViewController: EZOutputDataSource {
 
 // MARK: Audio Playback
 extension HostViewController: EZAudioFileDelegate {
-	func play() {
+	@objc func play() {
         EZOutput.shared().startPlayback()
         setPaused(false)
         toggleAudioSession(true)
         MPRemoteCommandCenter.shared().pauseCommand.isEnabled = true
 	}
 
-    func stop() {
+    @objc func stop() {
         EZOutput.shared().stopPlayback()
         setPaused(true)
         toggleAudioSession(false)
         MPRemoteCommandCenter.shared().playCommand.isEnabled = true
     }
 
-	func pause() {
+	@objc func pause() {
         setPaused(true)
 	}
 
@@ -1825,7 +1819,7 @@ extension HostViewController: EZAudioFileDelegate {
 		return recordSwitch.isOn
 	}
 
-	func next() {
+	@objc func next() {
 		var didPlay = false
 
 		while true {
@@ -1868,7 +1862,7 @@ extension HostViewController: EZAudioFileDelegate {
 		return true
 	}
 
-	func finishedCrossfade() {
+	@objc func finishedCrossfade() {
 		if EZOutput.shared().activePlayer == 0 {
 			audioFile1 = nil
 		} else {
@@ -1878,7 +1872,7 @@ extension HostViewController: EZAudioFileDelegate {
 
 	func addToUpNext(_ item: KZPlayerItem) {
 		if playbackReachedEnd {
-			playSong(item)
+			_ = playSong(item)
 		} else {
 			upNextSongs.append(item)
 			updateUpNext()
@@ -1903,7 +1897,7 @@ extension HostViewController: EZAudioFileDelegate {
 		return x
 	}
 
-	func updateUpNext() {
+	@objc func updateUpNext() {
 		DispatchQueue.main.async { () -> Void in
 			self.queueTableView.reloadSections(IndexSet(integer: 0), with: .fade)
 

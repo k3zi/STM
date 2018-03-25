@@ -44,7 +44,7 @@ class SettingsUserCell: KZTableViewCell, UITextFieldDelegate, UITextViewDelegate
         nameField.autoPinEdge(toSuperviewEdge: .top, withInset: 12)
         nameField.autoPinEdge(toSuperviewEdge: .left, withInset: 12)
         nameField.autoPinEdge(toSuperviewEdge: .right, withInset: 12)
-        NSLayoutConstraint.autoSetPriority(999) {
+        NSLayoutConstraint.autoSetPriority(UILayoutPriority(rawValue: 999)) {
             self.nameField.autoSetDimension(.height, toSize: 35)
         }
 
@@ -53,7 +53,7 @@ class SettingsUserCell: KZTableViewCell, UITextFieldDelegate, UITextViewDelegate
         descriptionField.autoPinEdge(toSuperviewEdge: .right, withInset: 12)
         descriptionField.autoPinEdge(toSuperviewEdge: .bottom, withInset: 12)
 
-        NSLayoutConstraint.autoSetPriority(999) {
+        NSLayoutConstraint.autoSetPriority(UILayoutPriority(rawValue: 999)) {
             self.descriptionField.autoSetDimension(.height, toSize: 100)
         }
     }
@@ -89,11 +89,11 @@ class SettingsUserCell: KZTableViewCell, UITextFieldDelegate, UITextViewDelegate
         return toolBar
     }
 
-    func donePressed() {
+    @objc func donePressed() {
         cancelPressed()
     }
 
-    func cancelPressed() {
+    @objc func cancelPressed() {
         self.endEditing(true)
     }
 
@@ -137,7 +137,7 @@ class SettingsUserCell: KZTableViewCell, UITextFieldDelegate, UITextViewDelegate
             return false
         }
 
-        guard text.characters.count > 0 else {
+        guard text.count > 0 else {
             return false
         }
 

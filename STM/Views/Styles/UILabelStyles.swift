@@ -15,7 +15,7 @@ extension UILabel {
         label.backgroundColor = Constants.UI.Color.tint
         label.text = text
         label.textAlignment = .center
-        label.font = UIFont.systemFont(ofSize: 13, weight: UIFontWeightLight)
+        label.font = UIFont.systemFont(ofSize: 13, weight: UIFont.Weight.light)
         label.textColor = RGB(255)
         label.autoSetDimension(.height, toSize: 22)
         return label
@@ -25,7 +25,7 @@ extension UILabel {
         let label = UILabel()
         label.textColor = Constants.UI.Color.tint3
         label.text = text.uppercased()
-        label.font = UIFont.systemFont(ofSize: 13, weight: UIFontWeightBold)
+        label.font = UIFont.systemFont(ofSize: 13, weight: UIFont.Weight.bold)
         label.backgroundColor = UIColor.clear
         label.autoSetDimension(.height, toSize: 20)
         return label

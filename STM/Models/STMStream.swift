@@ -9,7 +9,7 @@
 import Foundation
 import Gloss
 
-struct STMStream: Decodable {
+struct STMStream: JSONDecodable {
 
     let id: Int
     let isPrivate: Bool?
@@ -57,7 +57,7 @@ struct STMStream: Decodable {
             return Constants.UI.Color.tint
         }
 
-        guard colorHex.characters.count == 6 else {
+        guard colorHex.count == 6 else {
             return Constants.UI.Color.tint
         }
 

@@ -8,6 +8,7 @@
 
 import Foundation
 import DGElasticPullToRefresh
+import Keynode
 
 class CommentViewController: KZViewController, UIViewControllerPreviewingDelegate, MessageToolbarDelegate {
 
@@ -15,7 +16,7 @@ class CommentViewController: KZViewController, UIViewControllerPreviewingDelegat
     var replys = [Any]()
     let comment: STMComment
 
-    lazy var keynode: Keynode.Connector = Keynode.Connector(view: self.view)
+    lazy var keynode: Keynode = Keynode(view: self.view)
     var toolbarBottomConstraint: NSLayoutConstraint?
     let commentToolbar = MessageToolbarView()
 
@@ -40,8 +41,8 @@ class CommentViewController: KZViewController, UIViewControllerPreviewingDelegat
 
         tableView.delegate = self
         tableView.dataSource = self
-        tableView.registerReusableCell(ExtendedUserCommentCell.self)
-        tableView.registerReusableCell(UserCommentCell.self)
+        tableView.register(cellType: ExtendedUserCommentCell.self)
+        tableView.register(cellType: UserCommentCell.self)
         view.addSubview(tableView)
 
         commentToolbar.delegate = self
@@ -51,7 +52,7 @@ class CommentViewController: KZViewController, UIViewControllerPreviewingDelegat
 
         registerForPreviewing(with: self, sourceView: tableView)
 
-        keynode.animationsHandler = { [weak self] show, rect in
+        keynode.animations { [weak self] show, rect in
             guard let me = self else {
                 return
             }
@@ -82,7 +83,7 @@ class CommentViewController: KZViewController, UIViewControllerPreviewingDelegat
      - parameter text: the text that was posted
      */
     func handlePost(_ text: String) {
-        guard text.characters.count > 0 else {
+        guard text.count > 0 else {
             return
         }
 
@@ -117,7 +118,7 @@ class CommentViewController: KZViewController, UIViewControllerPreviewingDelegat
         tableView.autoPin(toTopLayoutGuideOf: self, withInset: 0)
         tableView.autoPinEdge(toSuperviewEdge: .left)
         tableView.autoPinEdge(toSuperviewEdge: .right)
-        
+
         commentToolbar.autoPinEdge(.top, to: .bottom, of: tableView)
         commentToolbar.autoPinEdge(toSuperviewEdge: .left)
         commentToolbar.autoPinEdge(toSuperviewEdge: .right)

@@ -16,7 +16,7 @@ class NavigationController: UINavigationController, UINavigationControllerDelega
 
         //Edit NavBar
         self.navigationBar.tintColor = UIColor.white
-        self.navigationBar.titleTextAttributes = [NSForegroundColorAttributeName: UIColor.white]
+        self.navigationBar.titleTextAttributes = [NSAttributedStringKey.foregroundColor: UIColor.white]
         self.navigationBar.shadowImage = UIImage()
         self.navigationBar.setBackgroundImage(imageLayerForGradientBackground(), for: .default)
         self.navigationBar.isTranslucent = true

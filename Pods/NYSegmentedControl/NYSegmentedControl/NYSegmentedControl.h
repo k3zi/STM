@@ -1,62 +1,55 @@
-//
-//  NYSegmentedControl.m
-//  NYSegmentedControl
-//
-//  Copyright (c) 2014 Nealon Young. All rights reserved.
-//
-//  https://github.com/nealyoung/NYSegmentedControl
-//
-
 #import <UIKit/UIKit.h>
+
+NS_ASSUME_NONNULL_BEGIN
 
 @class NYSegmentedControl;
 
 @protocol NYSegmentedControlDataSource <NSObject>
 
-- (NSUInteger) numberOfSegmentsOfControl:(NYSegmentedControl *)control;
-- (NSString *) segmentedControl:(NYSegmentedControl *)control titleAtIndex:(NSInteger)index;
+- (NSUInteger)numberOfSegments:(NYSegmentedControl *)control;
+- (NSString *)segmentedControl:(NYSegmentedControl *)control titleForSegmentAtIndex:(NSUInteger)index;
 
 @end
 
 @interface NYSegmentedControl : UIControl
 
 /**
- Data source of segment items
+ The segmented control's data source object.
  */
-@property (weak, nonatomic) IBOutlet id <NYSegmentedControlDataSource> dataSource;
+@property (nonatomic, weak, nullable) IBOutlet id <NYSegmentedControlDataSource> dataSource;
 
 /**
- If YES, selectedTitleFont and SelectedTitleTextColor are used for the selected segment's title label. The default value is YES.
+ If YES, selectedTitleFont and selectedTitleTextColor are used for the selected segment's title label. The default value is YES.
  */
 @property (nonatomic) BOOL stylesTitleForSelectedSegment;
 
 /**
- The font used for the segment titles
+ The font used for the segment titles.
  */
 @property (nonatomic) UIFont *titleFont UI_APPEARANCE_SELECTOR;
 
 /**
- The color of the segment titles
+ The color of the segment titles.
  */
 @property (nonatomic) UIColor *titleTextColor UI_APPEARANCE_SELECTOR;
 
 /**
- The font used for the selected segment's title
+ The font used for the selected segment's title.
  */
 @property (nonatomic) UIFont *selectedTitleFont UI_APPEARANCE_SELECTOR;
 
 /**
- The color of the selected segment's title
+ The color of the selected segment's title.
  */
 @property (nonatomic) UIColor *selectedTitleTextColor UI_APPEARANCE_SELECTOR;
 
 /**
- The radius of the control's corners
+ The radius of the control's corners.
  */
 @property (nonatomic) CGFloat cornerRadius UI_APPEARANCE_SELECTOR;
 
 /**
- The color of the control's border
+ The color of the control's border.
  */
 @property (nonatomic) UIColor *borderColor UI_APPEARANCE_SELECTOR;
 
@@ -125,48 +118,48 @@
 @property (nonatomic) UIColor *segmentIndicatorGradientBottomColor UI_APPEARANCE_SELECTOR;
 
 /**
- The color of the selected segment indicator's border
+ The color of the selected segment indicator's border.
  */
 @property (nonatomic) UIColor *segmentIndicatorBorderColor UI_APPEARANCE_SELECTOR;
 
 /**
- The width of the selected segment indicator's border
+ The width of the selected segment indicator's border.
  */
 @property (nonatomic) CGFloat segmentIndicatorBorderWidth UI_APPEARANCE_SELECTOR;
 
 /**
- The number of segments in the control (read-only)
+ The number of segments in the control (read-only).
  */
 @property (nonatomic, readonly) NSUInteger numberOfSegments;
 
 /**
- The index of the currently selected segment
+ The index of the currently selected segment.
  */
 @property (nonatomic) NSUInteger selectedSegmentIndex;
 
 #if __IPHONE_OS_VERSION_MAX_ALLOWED >= __IPHONE_7_0
 
 /**
- If set to YES, UIView spring animations will be used to animate the position of the segment indicator
+ If set to YES, UIView spring animations will be used to animate the position of the segment indicator.
  */
 @property (nonatomic) BOOL usesSpringAnimations UI_APPEARANCE_SELECTOR;
 
 /**
- The animation duration used if spring animations are enabled
+ The animation duration used if spring animations are enabled.
  
  @see usesSpringAnimations
  */
 @property (nonatomic) CGFloat springAnimationDuration UI_APPEARANCE_SELECTOR;
 
 /**
- The damping ratio for the spring animation used if spring animations are enabled
+ The damping ratio for the spring animation used if spring animations are enabled.
  
  @see usesSpringAnimations
  */
 @property (nonatomic) CGFloat springAnimationDampingRatio UI_APPEARANCE_SELECTOR;
 
 /**
- The initial spring velocity used if spring animations are enabled
+ The initial spring velocity used if spring animations are enabled.
  
  @see usesSpringAnimations
  */
@@ -204,7 +197,7 @@
 - (void)removeAllSegments;
 
 /**
- Sets the title for a segment in the control
+ Sets the title for a segment in the control.
  
  @param title A string to display in the segment as its title.
  @param index The index of the segment. It must be a number between 0 and the number of segments (numberOfSegments) minus 1; values exceeding this upper range are pinned to it.
@@ -229,10 +222,12 @@
 - (void)setSelectedSegmentIndex:(NSUInteger)selectedSegmentIndex animated:(BOOL)animated;
 
 /**
- Reloads the control's items from its data source, if defined
+ Reloads the control's items from its data source, if defined.
  
  @see dataSource
  */
 - (void)reloadData;
 
 @end
+
+NS_ASSUME_NONNULL_END

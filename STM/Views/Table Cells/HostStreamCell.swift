@@ -26,7 +26,7 @@ class HostStreamCell: KZTableViewCell {
         self.contentView.addSubview(nameLabel)
 
         tagLabel.textColor = RGB(127, g: 127, b: 127)
-        tagLabel.font = UIFont.systemFont(ofSize: 12, weight: UIFontWeightBold)
+        tagLabel.font = UIFont.systemFont(ofSize: 12, weight: UIFont.Weight.bold)
         tagLabel.setContentEdgeInsets(UIEdgeInsets(top: 4, left: 5, bottom: 4, right: 5))
         tagLabel.backgroundColor = RGB(230)
         tagLabel.layer.cornerRadius = 5
@@ -37,7 +37,7 @@ class HostStreamCell: KZTableViewCell {
 
     override func updateConstraints() {
         super.updateConstraints()
-        NSLayoutConstraint.autoSetPriority(999) { () -> Void in
+        NSLayoutConstraint.autoSetPriority(UILayoutPriority(rawValue: 999)) { () -> Void in
             self.avatar.autoSetDimensions(to: CGSize(width: 35.0, height: 35.0))
         }
 
@@ -53,7 +53,7 @@ class HostStreamCell: KZTableViewCell {
         tagLabel.autoAlignAxis(.horizontal, toSameAxisOf: nameLabel)
     }
 
-    override func estimatedHeight() -> CGFloat {
+    @objc override func estimatedHeight() -> CGFloat {
         return 10 + 35 + 10
     }
 

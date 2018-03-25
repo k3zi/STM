@@ -46,7 +46,7 @@ class CommentCell: KZTableViewCell {
         timer = Timer.scheduledTimer(timeInterval: 1.0, target: self, selector: #selector(CommentCell.updateTime), userInfo: nil, repeats: true)
 	}
 
-    func goToUser() {
+    @objc func goToUser() {
         guard let comment = model as? STMComment else {
             return
         }
@@ -69,7 +69,7 @@ class CommentCell: KZTableViewCell {
 
 	override func updateConstraints() {
 		super.updateConstraints()
-		NSLayoutConstraint.autoSetPriority(999) { () -> Void in
+        NSLayoutConstraint.autoSetPriority(UILayoutPriority(rawValue: 999)) { () -> Void in
 			self.avatar.autoSetDimensions(to: CGSize(width: 45.0, height: 45.0))
 		}
 
@@ -90,7 +90,7 @@ class CommentCell: KZTableViewCell {
 		messageLabel.autoPinEdge(toSuperviewEdge: .bottom, withInset: 10, relation: .greaterThanOrEqual)
 	}
 
-    override func estimatedHeight() -> CGFloat {
+    @objc override func estimatedHeight() -> CGFloat {
         let minHeight = CGFloat(10 + 45 + 10)
 
         let rightSideWidth = Constants.UI.Screen.width - 10 - 45 - 10 - 10
@@ -120,7 +120,7 @@ class CommentCell: KZTableViewCell {
 		}
 	}
 
-    func updateTime() {
+    @objc func updateTime() {
         if let comment = model as? STMComment {
             if let date = comment.date {
                 dateLabel.text = date.shortRelativeDate()

@@ -47,21 +47,17 @@ extension UIVisualEffectView {
         }
     }
 
-    open override class func initialize() {
-        swizzle_setBounds()
+    struct Static {
+        static let onceToken = NSUUID().uuidString
     }
 
-    private class func swizzle_setBounds() {
-        struct Static {
-            static let onceToken = NSUUID().uuidString
-        }
-
+    @objc public static func swizzle_setBounds() {
         DispatchQueue.once(token: Static.onceToken) {
             let selector: Selector = #selector(setter: CALayer.bounds)
 
             let method = class_getInstanceMethod(self, selector)
 
-            let imp_original = method_getImplementation(method)
+            let imp_original = method_getImplementation(method!)
 
             before_setBounds = unsafeBitCast(imp_original, to: ObjcRawUIVisualEffectViewSelCGRect.self)
 
@@ -71,8 +67,9 @@ extension UIVisualEffectView {
 
     public func setNeedsUpdateMaskLayer() {
         needsUpdateMaskLayer = true
-        OperationQueue.main.addOperation { [weak self] _ in
-            self?.updateMaskLayerIfNeeded()
+        weak var weakSelf = self
+        OperationQueue.main.addOperation {
+            weakSelf?.updateMaskLayerIfNeeded()
         }
     }
 
@@ -101,11 +98,11 @@ extension UIVisualEffectView {
             }
         }
 
-        assert(filterViewFound == true, "Filter view was not found! Check your hacking!")
+        // assert(filterViewFound == true, "Filter view was not found! Check your hacking!")
     }
 }
 
-private var before_setBounds: ObjcRawUIVisualEffectViewSelCGRect = { _ in
+private var before_setBounds: ObjcRawUIVisualEffectViewSelCGRect = { _, _, _  in
     fatalError("No implementation found")
 }
 
@@ -132,7 +129,7 @@ public extension DispatchQueue {
      - parameter token: A unique reverse DNS style name such as com.vectorform.<name> or a GUID
      - parameter block: Block to execute once
      */
-    public class func once(token: String, block: (Void) -> Void) {
+    public class func once(token: String, block: () -> Void) {
         objc_sync_enter(self)
         defer {
             objc_sync_exit(self)

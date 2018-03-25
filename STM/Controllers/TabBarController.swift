@@ -41,7 +41,7 @@ class TabBarController: UITabBarController, UITabBarControllerDelegate {
         middleLogo.setImage(UIImage(named: "launchLogo"), for: .normal)
         middleLogo.setImage(UIImage(named: "launchLogo")?.withRenderingMode(.alwaysTemplate), for: .selected)
         middleLogo.tintColor = Constants.UI.Color.tint2
-        buttonBlur.addSubview(middleLogo)
+        buttonBlur.contentView.addSubview(middleLogo)
         middleLogo.autoPinEdgesToSuperviewEdges()
     }
 
