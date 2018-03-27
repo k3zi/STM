@@ -21,6 +21,7 @@ target 'STM' do
     pod 'SpinKit'
     pod 'Socket.IO-Client-Swift'
     pod 'StreamingKit'
+    pod 'SWXMLHash'
     pod 'Keynode'
     pod 'ALCameraViewController'
     pod 'DGElasticPullToRefresh'

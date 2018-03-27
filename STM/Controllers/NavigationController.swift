@@ -27,7 +27,7 @@ class NavigationController: UINavigationController, UINavigationControllerDelega
         visualEffectView.frame = self.navigationBar.bounds
         visualEffectView.frame = view.bounds
 
-        self.navigationBar.addSubview(visualEffectView)
+        self.navigationBar.insertSubview(visualEffectView, at: 1)
         visualEffectView.autoPinEdgesToSuperviewEdges(with: .zero, excludingEdge: .top)
         visualEffectView.autoPinEdge(toSuperviewEdge: .top, withInset: -20)
     }

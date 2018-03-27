@@ -35,6 +35,7 @@ PODS:
   - SpinKit (1.2.0)
   - Starscream (3.0.4)
   - StreamingKit (0.1.30)
+  - SWXMLHash (4.6.0)
   - TwitterCore (3.1.0)
   - TwitterKit (3.3.0):
     - TwitterCore (>= 3.1.0)
@@ -65,6 +66,7 @@ DEPENDENCIES:
   - Socket.IO-Client-Swift
   - SpinKit
   - StreamingKit
+  - SWXMLHash
   - TwitterCore
   - TwitterKit
 
@@ -118,9 +120,10 @@ SPEC CHECKSUMS:
   SpinKit: 65906a8b534a4e14cbfd3f8b0b6c329131faef4a
   Starscream: f5da93fe6984c77b694366bf7299b7dc63a76f26
   StreamingKit: 70ca8608c206864b4d54a577eacb3c8bf7c72209
+  SWXMLHash: 3c39a53723202800e9e1a87f14b2fe7ac1da98ec
   TwitterCore: 644d59e75abccb26cf0a9050d2c4dea0e5412241
   TwitterKit: a2e60ddcedbf54091eac6f27685ca7a87681e1d7
 
-PODFILE CHECKSUM: ed6a7d565a1e385d6e72a9676c1185bc3d03da78
+PODFILE CHECKSUM: 4b551572c7160cc1db72d4613c3a0209df5f6632
 
 COCOAPODS: 1.4.0

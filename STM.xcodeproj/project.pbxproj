@@ -11,6 +11,9 @@
 		290F8C4D1DA8A728007237AE /* UIVisualViewEffect.swift in Sources */ = {isa = PBXBuildFile; fileRef = 290F8C4C1DA8A728007237AE /* UIVisualViewEffect.swift */; };
 		290F8C4F1DA9318A007237AE /* FeaturedStreamCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 290F8C4E1DA9318A007237AE /* FeaturedStreamCell.swift */; };
 		291DA57A20674E5E0095A4AE /* UIVisualEffectView.m in Sources */ = {isa = PBXBuildFile; fileRef = 291DA57920674E5E0095A4AE /* UIVisualEffectView.m */; };
+		291DA57D2068C8D90095A4AE /* PlexMediaServerInformation.swift in Sources */ = {isa = PBXBuildFile; fileRef = 291DA57C2068C8D90095A4AE /* PlexMediaServerInformation.swift */; };
+		291DA57F2068CCCF0095A4AE /* PlexUserInformation.swift in Sources */ = {isa = PBXBuildFile; fileRef = 291DA57E2068CCCF0095A4AE /* PlexUserInformation.swift */; };
+		291DA5812068D0DD0095A4AE /* PlexAPI.swift in Sources */ = {isa = PBXBuildFile; fileRef = 291DA5802068D0DD0095A4AE /* PlexAPI.swift */; };
 		29DA0B261CFA031600E30ADE /* STMTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 29DA0B251CFA031600E30ADE /* STMTests.swift */; };
 		29E6E3231DA1364700E2D2CD /* WalkthroughViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 29E6E3221DA1364700E2D2CD /* WalkthroughViewController.swift */; };
 		EA01AF8A1C5CB3C500F56792 /* SignInViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = EA01AF891C5CB3C500F56792 /* SignInViewController.swift */; };
@@ -132,6 +135,9 @@
 		290F8C4C1DA8A728007237AE /* UIVisualViewEffect.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = UIVisualViewEffect.swift; sourceTree = "<group>"; };
 		290F8C4E1DA9318A007237AE /* FeaturedStreamCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FeaturedStreamCell.swift; sourceTree = "<group>"; };
 		291DA57920674E5E0095A4AE /* UIVisualEffectView.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = UIVisualEffectView.m; sourceTree = "<group>"; };
+		291DA57C2068C8D90095A4AE /* PlexMediaServerInformation.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlexMediaServerInformation.swift; sourceTree = "<group>"; };
+		291DA57E2068CCCF0095A4AE /* PlexUserInformation.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlexUserInformation.swift; sourceTree = "<group>"; };
+		291DA5802068D0DD0095A4AE /* PlexAPI.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlexAPI.swift; sourceTree = "<group>"; };
 		29DA0B231CFA031600E30ADE /* STMTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = STMTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		29DA0B251CFA031600E30ADE /* STMTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = STMTests.swift; sourceTree = "<group>"; };
 		29DA0B271CFA031600E30ADE /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
@@ -294,6 +300,16 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		291DA57B2068C8C60095A4AE /* Plex */ = {
+			isa = PBXGroup;
+			children = (
+				291DA57C2068C8D90095A4AE /* PlexMediaServerInformation.swift */,
+				291DA57E2068CCCF0095A4AE /* PlexUserInformation.swift */,
+				291DA5802068D0DD0095A4AE /* PlexAPI.swift */,
+			);
+			path = Plex;
+			sourceTree = "<group>";
+		};
 		2936AA581CFC19E400C647D0 /* Recovered References */ = {
 			isa = PBXGroup;
 			children = (
@@ -445,6 +461,7 @@
 		EA09CAC11C5C5C360067FF6A /* Extras */ = {
 			isa = PBXGroup;
 			children = (
+				291DA57B2068C8C60095A4AE /* Plex */,
 				EAB0E6991C78138F008945FF /* Tween */,
 				EA4F49341C5EBE8E00103559 /* Ports */,
 				EA27B1FD1C5D32F6006F269D /* Player */,
@@ -822,6 +839,7 @@
 				"${BUILT_PRODUCTS_DIR}/PureLayout/PureLayout.framework",
 				"${BUILT_PRODUCTS_DIR}/Reusable/Reusable.framework",
 				"${BUILT_PRODUCTS_DIR}/SAConfettiView/SAConfettiView.framework",
+				"${BUILT_PRODUCTS_DIR}/SWXMLHash/SWXMLHash.framework",
 				"${BUILT_PRODUCTS_DIR}/SecureNSUserDefaults/SecureNSUserDefaults.framework",
 				"${BUILT_PRODUCTS_DIR}/Socket.IO-Client-Swift/SocketIO.framework",
 				"${BUILT_PRODUCTS_DIR}/SpinKit/SpinKit.framework",
@@ -852,6 +870,7 @@
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/PureLayout.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/Reusable.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/SAConfettiView.framework",
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/SWXMLHash.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/SecureNSUserDefaults.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/SocketIO.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/SpinKit.framework",
@@ -1015,11 +1034,13 @@
 				EA01AF911C5CB8DC00F56792 /* DashboardViewController.swift in Sources */,
 				EA6F5B8D1CD224A400C9638D /* UserCommentCell.swift in Sources */,
 				EA79C7A81CDD423E00A5CA94 /* FinishTwitterAccountViewController.swift in Sources */,
+				291DA57D2068C8D90095A4AE /* PlexMediaServerInformation.swift in Sources */,
 				EA4F49621C5EBFA000103559 /* YBAudioUnitNode.m in Sources */,
 				290F8C4D1DA8A728007237AE /* UIVisualViewEffect.swift in Sources */,
 				EA2898A21CD328520025F43B /* CellButton.swift in Sources */,
 				EAE545041C76978F00180241 /* MeterTable.m in Sources */,
 				EA09CAD01C5C84B00067FF6A /* UIButtonStyles.swift in Sources */,
+				291DA57F2068CCCF0095A4AE /* PlexUserInformation.swift in Sources */,
 				EAB0E6A01C7813B5008945FF /* FUXEasingCombinators.swift in Sources */,
 				EA6F5B871CD1A90000C9638D /* ProfileSettingsViewController.swift in Sources */,
 				EAFFCB171C8A1B1C00258C16 /* PlayerInfoHolderView.swift in Sources */,
@@ -1033,6 +1054,7 @@
 				EA4F495D1C5EBFA000103559 /* YBPresetEQNode.m in Sources */,
 				EA4F498F1C5F2D3800103559 /* EZOutput.m in Sources */,
 				EA4F49851C5EC05700103559 /* EZAudio.m in Sources */,
+				291DA5812068D0DD0095A4AE /* PlexAPI.swift in Sources */,
 				EA79C7A61CDBEF2B00A5CA94 /* GradientSlider.swift in Sources */,
 				EAFFCB121C876F5800258C16 /* PlayerViewController.swift in Sources */,
 				EA3EF7D81CCF028F009E4524 /* SearchStreamCell.swift in Sources */,

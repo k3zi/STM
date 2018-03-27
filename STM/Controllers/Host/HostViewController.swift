@@ -10,6 +10,7 @@ import UIKit
 import ALCameraViewController
 import M13ProgressSuite
 import MediaPlayer
+import SWXMLHash
 
 struct HostSettings {
 	var crossfadeDuration = Float(5.0)
@@ -71,6 +72,9 @@ class HostViewController: KZViewController, UISearchBarDelegate, UIViewControlle
 
 	let searchBar = UISearchBar()
 	var searchResults: [Any]?
+    var plexSearchResults: [Any]?
+    var showingPlex = false
+    var selectedPlexServer: (key: String, value: PlexMediaServerInformation)?
 
 	let commentContentView = UIView()
 	let commentToolbar = MessageToolbarView()
@@ -426,6 +430,7 @@ class HostViewController: KZViewController, UISearchBarDelegate, UIViewControlle
 		songsTableView.delegate = self
 		songsTableView.dataSource = self
 		songsTableView.register(cellType: SelectSongCell.self)
+        searchBar.placeholder = "Search Device Library"
 		switcherContentView.addSubview(songsTableView)
 
 		queueTableView.delegate = self
@@ -1038,7 +1043,7 @@ class HostViewController: KZViewController, UISearchBarDelegate, UIViewControlle
 	// MARK: TableView Data Source
 	override func tableViewCellData(_ tableView: UITableView, section: Int) -> [Any] {
 		if tableView == songsTableView {
-			return searchResults ?? songs
+			return plexSearchResults ?? searchResults ?? songs
 		} else if tableView == queueTableView {
 			return upNextSongs
         } else if tableView == commentsTableView {
@@ -1066,7 +1071,7 @@ class HostViewController: KZViewController, UISearchBarDelegate, UIViewControlle
 
 	override func tableViewNoDataText(_ tableView: UITableView) -> String {
 		if tableView == songsTableView {
-			return searchResults != nil ? "No Results" : "No Songs in Library"
+			return (searchResults != nil || plexSearchResults != nil) ? "No Results" : "No Songs in Library"
 		} else if tableView == queueTableView {
 			return "No Songs in Queue"
         } else if tableView == commentsTableView {
@@ -1081,16 +1086,20 @@ class HostViewController: KZViewController, UISearchBarDelegate, UIViewControlle
 
 		if let cell = cell as? SelectSongCell {
 			cell.defaultColor = RGB(227)
-			cell.setSwipeGestureWith(SelectSongCell.viewWithImageName("selectCell_playBT"), color: RGB(85, g: 213, b: 80), mode: .switch, state: .state4, completionBlock: { (cell, state, mode) -> Void in
-				if let item = self.tableViewCellData(tableView, section: indexPath.section)[indexPath.row] as? KZPlayerItem {
-					_ = self.playSong(item)
-				}
-			})
+            if !showingPlex {
+                cell.setSwipeGestureWith(SelectSongCell.viewWithImageName("selectCell_playBT"), color: RGB(85, g: 213, b: 80), mode: .switch, state: .state4, completionBlock: { (cell, state, mode) -> Void in
+                    if let item = self.tableViewCellData(tableView, section: indexPath.section)[indexPath.row] as? KZPlayerItem {
+                        _ = self.playSong(item)
+                    }
+                })
+            }
 
 			cell.setSwipeGestureWith(SelectSongCell.viewWithImageName("selectCell_addBT"), color: RGB(254, g: 217, b: 56), mode: .switch, state: .state3, completionBlock: { (cell, state, mode) -> Void in
 				if let item = self.tableViewCellData(tableView, section: indexPath.section)[indexPath.row] as? KZPlayerItem {
-					self.addToUpNext(item)
-				}
+                    self.addToUpNext(item)
+                } else if let item = self.tableViewCellData(tableView, section: indexPath.section)[indexPath.row] as? XMLIndexer {
+                    self.downloadPlex(media: item)
+                }
 			})
 		}
 
@@ -1116,10 +1125,23 @@ class HostViewController: KZViewController, UISearchBarDelegate, UIViewControlle
 
 	override func tableView(_ tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {
 		if tableView == songsTableView {
+            let view = UIView()
+            view.frame.size.height = 44
+            view.frame.size.width = tableView.frame.width
+
 			searchBar.delegate = self
 			searchBar.frame.size.height = 44
-			searchBar.frame.size.width = tableView.frame.width
-			return searchBar
+			searchBar.frame.size.width = tableView.frame.width - 44
+            view.addSubview(searchBar)
+
+            let plexButton = UIButton(type: .custom)
+            plexButton.setImage(#imageLiteral(resourceName: "plexBT"), for: .normal)
+            plexButton.frame.size = .init(width: 30, height: 30)
+            plexButton.frame.origin.x = tableView.frame.width - 44 + 7
+            plexButton.frame.origin.y = 7
+            plexButton.addTarget(self, action: #selector(togglePlex), for: .touchUpInside)
+            view.addSubview(plexButton)
+			return view
 		}
 
 		return super.tableView(tableView, viewForHeaderInSection: section)
@@ -1183,16 +1205,26 @@ class HostViewController: KZViewController, UISearchBarDelegate, UIViewControlle
 	}
 
 	func searchBar(_ searchBar: UISearchBar, textDidChange searchText: String) {
-		searchResults = [Any]()
-		songsTableView.reloadData()
+        if showingPlex {
+            DispatchQueue.global(qos: .background).async {
+                self.plexSearchResults = searchForMedia(search: searchText, server: self.selectedPlexServer?.key ?? "0")
+                DispatchQueue.main.async {
+                    self.songsTableView.reloadData()
+                }
+            }
+        } else {
+            plexSearchResults = nil
+            searchResults = [Any]()
+            songsTableView.reloadData()
 
-		searchResults = songs.filter({ (song) -> Bool in
-			if let song = song as? KZPlayerItem {
-				return song.aggregateText().lowercased().contains(searchText.lowercased())
-			}
+            searchResults = songs.filter({ (song) -> Bool in
+                if let song = song as? KZPlayerItem {
+                    return song.aggregateText().lowercased().contains(searchText.lowercased())
+                }
 
-			return false
-		})
+                return false
+            })
+        }
 
 		songsTableView.reloadData()
 	}
@@ -1637,7 +1669,7 @@ extension HostViewController: EZOutputDataSource {
                         let predicate1 = MPMediaPropertyPredicate(value: MPMediaType.anyAudio.rawValue, forProperty: MPMediaItemPropertyMediaType)
                         let predicate12 = MPMediaPropertyPredicate(value: 0, forProperty: MPMediaItemPropertyIsCloudItem)
                         let query = MPMediaQuery(filterPredicates: [predicate1, predicate12])
-                        var songs = [Any]()
+                        var songs = [KZPlayerItem]()
                         if let items = query.items {
                             for item in items {
                                 let newItem = KZPlayerItem(item: item)
@@ -1647,8 +1679,20 @@ extension HostViewController: EZOutputDataSource {
                             }
                         }
 
+                        if let plexMedia = UserDefaults.standard.array(forKey: "plexMedia") as? [Data] {
+                            for data in plexMedia {
+                                if let item = NSKeyedUnarchiver.unarchiveObject(with: data) as? KZPlayerItem {
+                                    songs.append(item)
+                                }
+                            }
+                        }
+
+                        let sortedSongs = songs.sorted(by: { (a, b) -> Bool in
+                            return a.title.localizedCaseInsensitiveCompare(b.title) == .orderedAscending
+                        })
+
                         DispatchQueue.main.async(execute: {
-                            self.songs = songs
+                            self.songs = sortedSongs
                             self.songsTableView.reloadData()
                         })
                     }
@@ -1660,7 +1704,7 @@ extension HostViewController: EZOutputDataSource {
                 let predicate1 = MPMediaPropertyPredicate(value: MPMediaType.anyAudio.rawValue, forProperty: MPMediaItemPropertyMediaType)
                 let predicate12 = MPMediaPropertyPredicate(value: 0, forProperty: MPMediaItemPropertyIsCloudItem)
                 let query = MPMediaQuery(filterPredicates: [predicate1, predicate12])
-                var songs = [Any]()
+                var songs = [KZPlayerItem]()
                 if let items = query.items {
                     for item in items {
                         let newItem = KZPlayerItem(item: item)
@@ -1670,8 +1714,20 @@ extension HostViewController: EZOutputDataSource {
                     }
                 }
 
+                if let plexMedia = UserDefaults.standard.array(forKey: "plexMedia") as? [Data] {
+                    for data in plexMedia {
+                        if let item = NSKeyedUnarchiver.unarchiveObject(with: data) as? KZPlayerItem {
+                            songs.append(item)
+                        }
+                    }
+                }
+
+                let sortedSongs = songs.sorted(by: { (a, b) -> Bool in
+                    return a.title.localizedCaseInsensitiveCompare(b.title) == .orderedAscending
+                })
+
                 DispatchQueue.main.async(execute: {
-                    self.songs = songs
+                    self.songs = sortedSongs
                     self.songsTableView.reloadData()
                 })
             }
@@ -1909,4 +1965,168 @@ extension HostViewController: EZAudioFileDelegate {
 		AudioServicesPlayAlertSound(kSystemSoundID_Vibrate)
 		updateCurrentSong(nil)
 	}
+}
+
+
+//**********************************************************************
+//**********************************************************************
+//**********************************************************************
+
+// MARK: Plex Support
+extension HostViewController {
+
+    @objc func togglePlex() {
+        if showingPlex {
+            requestPlexServer()
+        } else {
+            showPlex()
+        }
+    }
+
+    func showPlex() {
+        if !plexUserInformation.loggedIn() {
+            let alert = UIAlertController(title: "Plex Access", message: "Please login to Plex", preferredStyle: .alert)
+            alert.addTextField { (field) in
+                field.placeholder = "Username/Email"
+                field.autocorrectionType = .no
+                field.autocapitalizationType = .none
+            }
+
+            alert.addTextField { (field) in
+                field.placeholder = "Password"
+                field.autocorrectionType = .no
+                field.isSecureTextEntry = true
+                field.autocapitalizationType = .none
+            }
+
+            alert.addAction(UIAlertAction(title: "Login", style: .default, handler: { (action) in
+                let username = alert.textFields?[0].text ?? ""
+                let password = alert.textFields?[1].text ?? ""
+
+                myPlexSignIn(username: username, password: password)
+                self.showPlex()
+            }))
+
+            alert.addAction(UIAlertAction(title: "Cancel", style: .cancel, handler: nil))
+
+            self.present(alert, animated: true, completion: nil)
+        } else {
+            searchBar.placeholder = "Search Plex Library"
+            showingPlex = true
+
+            let progressView = M13ProgressViewRing()
+            progressView.primaryColor = Constants.UI.Color.tint
+            progressView.secondaryColor = Constants.UI.Color.disabled
+            progressView.indeterminate = true
+
+            hud = M13ProgressHUD(progressView: progressView)
+            if let hud = hud {
+                hud.frame = (AppDelegate.del().window?.bounds)!
+                hud.progressViewSize = CGSize(width: 60, height: 60)
+                hud.animationPoint = CGPoint(x: UIScreen.main.bounds.size.width / 2, y: UIScreen.main.bounds.size.height / 2)
+                hud.status = "Discovering Servers"
+                hud.applyBlurToBackground = true
+                hud.maskType = M13ProgressHUDMaskTypeIOS7Blur
+                AppDelegate.del().window?.addSubview(hud)
+                hud.show(true)
+            }
+
+            DispatchQueue.main.asyncAfter(deadline: .now() + .seconds(5)) {
+                if let hud = self.hud {
+                    hud.dismiss(true)
+                }
+
+                self.requestPlexServer()
+            }
+        }
+    }
+
+    func hidePlex() {
+        searchBar.placeholder = "Search Device Library"
+        showingPlex = false
+    }
+
+    func requestPlexServer() {
+        let alert = UIAlertController(title: "Plex Server", message: "Please select the server you wish to access:", preferredStyle: .alert)
+        for server in plexMediaServerInformation {
+            alert.addAction(UIAlertAction(title: server.value.getAttribute(key: "name"), style: .default, handler: { (action) in
+                self.selectedPlexServer = server
+                self.searchBar.text = ""
+                self.searchBar.placeholder = "Search Plex: " + server.value.getAttribute(key: "name")
+            }))
+        }
+
+        alert.addAction(UIAlertAction(title: "Logout", style: .destructive, handler: { (action) in
+            myPlexSignOut()
+            self.hidePlex()
+        }))
+
+        alert.addAction(UIAlertAction(title: "Switch to Library Media", style: .default, handler: { (action) in
+            self.hidePlex()
+        }))
+
+        alert.addAction(UIAlertAction(title: "Cancel", style: .cancel, handler: nil))
+
+        self.present(alert, animated: true, completion: nil)
+    }
+
+    func getSaveFileUrl(fileName: String) -> URL {
+        let documentsURL = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask)[0]
+        return documentsURL.appendingPathComponent("savedPlexMediaFiles").appendingPathComponent(fileName)
+    }
+
+    func downloadPlex(media: XMLIndexer) {
+        let audioPath = getAudioPath(audio: media, pmsId: "0", pmsPath: nil)
+        let savePath = getSaveFileUrl(fileName: (media.value(ofAttribute: "key") ?? "") + "." + URL(string: audioPath)!.pathExtension)
+
+        let progressView = M13ProgressViewRing()
+        progressView.primaryColor = Constants.UI.Color.tint
+        progressView.secondaryColor = Constants.UI.Color.disabled
+        progressView.indeterminate = audioPath.contains("transcode") ? true : false
+
+        hud = M13ProgressHUD(progressView: progressView)
+        if let hud = hud {
+            hud.frame = (AppDelegate.del().window?.bounds)!
+            hud.progressViewSize = CGSize(width: 60, height: 60)
+            hud.animationPoint = CGPoint(x: UIScreen.main.bounds.size.width / 2, y: UIScreen.main.bounds.size.height / 2)
+            hud.status = "Downloading: \(media.value(ofAttribute: "title") ?? "")"
+            hud.applyBlurToBackground = true
+            hud.maskType = M13ProgressHUDMaskTypeIOS7Blur
+            AppDelegate.del().window?.addSubview(hud)
+            hud.show(true)
+        }
+
+        let destination: DownloadRequest.DownloadFileDestination = { _, _ in
+            return (savePath, [.removePreviousFile, .createIntermediateDirectories])
+        }
+
+        Alamofire.download(audioPath, to: destination)
+            .downloadProgress { (progress) in
+                self.hud?.setProgress(CGFloat(progress.fractionCompleted), animated: true)
+            }
+            .responseData { (data) in
+                if let hud = self.hud {
+                    hud.dismiss(true)
+                }
+
+                let item = KZPlayerItem()
+                item.title = media.value(ofAttribute: "title") ?? ""
+                item.artist = media.value(ofAttribute: "originalTitle") ?? ""
+                item.album = media.value(ofAttribute: "parentTitle") ?? ""
+                item.assetURL = savePath.absoluteString
+                let encodedData: Data = NSKeyedArchiver.archivedData(withRootObject: item)
+                var plexMedia = UserDefaults.standard.array(forKey: "plexMedia")
+                plexMedia?.append(encodedData)
+                UserDefaults.standard.set(plexMedia, forKey: "plexMedia")
+                UserDefaults.standard.synchronize()
+
+                if var songs = self.songs as? [KZPlayerItem] {
+                    songs.append(item)
+                    let sortedSongs = songs.sorted(by: { (a, b) -> Bool in
+                        return a.title.localizedCaseInsensitiveCompare(b.title) == .orderedAscending
+                    })
+                    self.songs = sortedSongs
+                }
+        }
+    }
 }

@@ -7,6 +7,7 @@
 //
 
 import UIKit
+import SWXMLHash
 
 class SelectSongCell: MCSwipeCell {
     let poster = UIImageView()
@@ -56,16 +57,21 @@ class SelectSongCell: MCSwipeCell {
     }
 
     override func fillInCellData(_ shallow: Bool) {
-        if !shallow {
-            guard let song = model as? KZPlayerItem else {
-                return
-            }
+        guard !shallow else {
+            return
+        }
+        if let song = model as? KZPlayerItem {
             songNameLabel.text = song.title
             songArtist.text = song.subTitle()
 
             if let artwork = song.artwork() {
                 poster.image = artwork.image(at: CGSize(width: 65, height: 65))
             }
+        } else if let song = model as? XMLIndexer {
+            songNameLabel.text = song.value(ofAttribute: "title")
+            let artist: String = song.value(ofAttribute: "originalTitle") ?? ""
+            let album: String = song.value(ofAttribute: "parentTitle") ?? ""
+            songArtist.text = [artist, album].filter({ $0.count > 0 }).joined(separator: " - ")
         }
     }
 

@@ -56,7 +56,6 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 
 		application.registerUserNotificationSettings(UIUserNotificationSettings(types: [.alert, .badge, .sound], categories: nil))
 		application.registerForRemoteNotifications()
-
 		return true
 	}
 
@@ -82,6 +81,10 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         UITabBarItem.appearance().setTitleTextAttributes([NSAttributedStringKey.foregroundColor: Constants.UI.Color.tint2], for: .selected)
 
         setUpAudioSession(false)
+
+        if UserDefaults.standard.array(forKey: "plexMedia") == nil {
+            UserDefaults.standard.set([Data](), forKey: "plexMedia")
+        }
     }
 
 	func application(_ application: UIApplication, didRegisterForRemoteNotificationsWithDeviceToken deviceToken: Data) {
